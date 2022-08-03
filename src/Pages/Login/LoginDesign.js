@@ -12,13 +12,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Login.css";
 import { IconButton, InputAdornment, Stack } from "@mui/material";
 import LoginLogic from "./LoginLogic";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
 
 function Copyright(props) {
-
   return (
     <Typography
       variant="body2"
@@ -29,7 +28,7 @@ function Copyright(props) {
     >
       {"Admin © "}
       <Link color="inherit" href="#">
-         Fieldhero
+        Fieldhero
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -40,12 +39,14 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function LoginDesign() {
-    let {
-        errorTextEmail,
-        email,errorTextPass,setErrorTextPass,pass,setPass,password,
-        onChange,onChangePass,showPass,setShowPass
+  let {
+    errorTextEmail,
+    errorTextPass,
+    setErrorTextPass,
+    showPass,
+    setShowPass,handleReset,setErrorTextEmail,validateEmail
+  } = LoginLogic();
 
-    } = LoginLogic()
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -56,8 +57,8 @@ export default function LoginDesign() {
   };
 
   return (
-    <ThemeProvider theme={theme} sx={{bgcolor:'rgb(188 195 219)'}}>
-      <Container component="main" maxWidth="md" >
+    <ThemeProvider theme={theme} sx={{ bgcolor: "rgb(188 195 219)" }}>
+      <Container component="main" maxWidth="md">
         <CssBaseline />
         <Box
           sx={{
@@ -67,61 +68,64 @@ export default function LoginDesign() {
             alignItems: "center",
           }}
         >
-            {/* <Avatar alt="Example Alt" src="../../../public/logo.jpg" /> */}
-          
-            <img src="https://admin.fieldhero.in/img/logo.a3b1bafb.png" style={{width:"200px", height:"200px",
-        }} ></img>
-          
-          <Typography component="h1" variant="h5" style={{fontWeight: 'bold'}}>
-          Admin - Login
+          {/* <Avatar alt="Example Alt" src="../../../public/logo.jpg" /> */}
+
+          <img
+            src="https://admin.fieldhero.in/img/logo.a3b1bafb.png"
+            style={{ width: "200px", height: "200px" }}
+          ></img>
+
+          <Typography
+            component="h1"
+            variant="h5"
+            style={{ fontWeight: "bold" }}
+          >
+            Admin - Login
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
-            Validate
+            noValidate
             sx={{ mt: 2 }}
           >
             <TextField
               margin="normal"
+              type="email"
               required
               fullWidth
-              value={email}
-              helperText={errorTextEmail}
-              error={errorTextEmail}
-              onMouseLeave={onChange}
+              value={errorTextEmail}
+              helperText={errorTextEmail ===""?"Email is required":""}
+              error={errorTextEmail===""}
+              onChange={(event)=>{setErrorTextEmail(event.target.value)
+                }}
               variant="standard"
               id="email"
               label="Email"
               name="email"
               autoComplete="email"
-              
               style={{
                 backgroundColor: "white",
-                borderRadius:'6px'
+                borderRadius: "6px",
               }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton>
-
-                    <EmailIcon></EmailIcon>
+                      <EmailIcon></EmailIcon>
                     </IconButton>
-                   
                   </InputAdornment>
-                )
+                ),
               }}
-              
             />
             <TextField
-            
               margin="normal"
               required
               fullWidth
-              value={pass}
-              helperText={errorTextPass}
-              error={errorTextPass}
-              onMouseLeave={onChangePass}
-              id="password" 
+              value={errorTextPass}
+              helperText={errorTextPass===""?"Password is required":""}
+              error={errorTextPass===""}
+              onChange={(event)=>{setErrorTextPass(event.target.value)}}
+              id="password"
               variant="standard"
               name="password"
               label=" Password"
@@ -132,16 +136,16 @@ export default function LoginDesign() {
                       {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </IconButton>
                   </InputAdornment>
-                )
+                ),
               }}
               type={showPass ? "text" : "password"}
               sx={{ mt: 3 }}
               style={{
                 backgroundColor: "white",
-                borderRadius:'6px'
+                borderRadius: "6px",
               }}
             />
-            
+
             <Stack
               sx={{ pt: 4 }}
               direction="row"
@@ -152,39 +156,49 @@ export default function LoginDesign() {
                 style={{
                   backgroundColor: "#b2363a",
                   width: "10px",
-
                 }}
+                id="loginbtn"
                 type="submit"
                 fullWidth
                 className="sign-btn"
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
+                onSubmit={handleSubmit}
+                noValidate
               >
                 Login
               </Button>
-              <Button style={{
-                  color:"black",
-
-                }}>Clear</Button>
+              <Button
+                style={{
+                  color: "black",
+                }}
+                id="clrbtn"
+                onClick={handleReset}
+              >
+                Clear
+              </Button>
             </Stack>
 
             <Grid container>
               <Grid item xs></Grid>
               <Grid item sx={{ mt: 3 }}>
-                <Link variant="body2" style={{
-                  color: "#b2363a",
-                  fontSize:"17px"
-                }}><NavLink to="/forgot-password" exact
-                 >{"Forgot password?"}</NavLink>  
-                  
+                <Link
+                  variant="body2"
+                  style={{
+                    color: "#b2363a",
+                    fontSize: "17px",
+                  }}
+                >
+                  <NavLink id="forgotbtn" to="/forgot-password" exact>
+                    {"Forgot password?"}
+                  </NavLink>
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        
-      </Container >
-      <Copyright style={{backgroundColor:"white"}}/>
+      </Container>
+      <Copyright style={{ backgroundColor: "white" }} />
     </ThemeProvider>
   );
 }

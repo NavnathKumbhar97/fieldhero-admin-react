@@ -1,4 +1,4 @@
-import * as React from "react";
+import {React,useState} from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import EmailIcon from '@mui/icons-material/Email';
 
 function Copyright(props) {
-
+  
   return (
     <Typography
       variant="body2"
@@ -35,6 +35,22 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function ForgotPass() {
+  const [errorTextEmail, setErrorTextEmail] = useState();
+  const [email, setEmail] = useState();
+
+  const onChange = (event) => {
+    if (event.target.value) {
+      setErrorTextEmail("");
+      // setErrorTextPass("")
+
+      // setPass(event.target.value);
+      setEmail(event.target.value);
+    } else {
+      setErrorTextEmail("E-mail is required");
+      // setErrorTextPass("Password is required");
+    }
+  };
+
     
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -76,9 +92,13 @@ export default function ForgotPass() {
               required
               fullWidth
               variant="standard"
-              id="email"
+              id="email2"
               label="Email"
               name="Email"
+              value={email}
+              helperText={errorTextEmail}
+              error={errorTextEmail}
+              onClick={onChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -110,6 +130,7 @@ export default function ForgotPass() {
                   backgroundColor: "#b2363a",
                     
                 }}
+                id="sendbtn"
                 type="submit"
                 fullWidth
                 className="sign-btn"
@@ -129,7 +150,7 @@ export default function ForgotPass() {
                   color: "#b2363a",
                   fontSize:"17px"
 
-                }}><NavLink to="/" exact
+                }}><NavLink id="lgnbtn" to="/" exact
                 >{"Login"}</NavLink>
                   
                 </Link>

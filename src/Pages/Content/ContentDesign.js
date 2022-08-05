@@ -10,9 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
 import ContentLogic from "./ContentLogic";
 
-
 export default function ContentDesign(props) {
-
   const { data } = props;
 
   let {
@@ -58,16 +56,14 @@ export default function ContentDesign(props) {
     agentMaster,
     agentPricingTemplate,
     adminCanUploadBatch,
-
   } = ContentLogic();
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(data);
-    setPageTitle(data.pageTitle)
+    setPageTitle(data.pageTitle);
 
     if (data.page === "candidate-master") {
       setTblHeader(canMasterTblHerader);
-      
     }
     if (data.page === "candidate-upload-batch") {
       setTblHeader(candUploadBatch);
@@ -84,8 +80,7 @@ export default function ContentDesign(props) {
     if (data.page === "candidate-upload-batch-admin") {
       setTblHeader(adminCanUploadBatch);
     }
-    
-  },[data.page])
+  }, [data.page]);
 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>

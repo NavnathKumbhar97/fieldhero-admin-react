@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Avatar, Divider } from '@mui/material';
 
-export default function PositionedMenu() {
+export default function Profile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -44,11 +44,13 @@ export default function PositionedMenu() {
           horizontal: 'left',
         }}
       >
+        <MenuItem>
         <Avatar
         style={{alignSelf:'center'}}
       >
         NK
       </Avatar>
+        </MenuItem>
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>Change Password</MenuItem>
         <Divider/>

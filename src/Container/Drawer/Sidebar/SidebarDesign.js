@@ -25,10 +25,12 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import { Grid } from "@mui/material";
-import HelpIcon from '@mui/icons-material/Help';import Profile from "../../Profile/Profile";
+import HelpIcon from '@mui/icons-material/Help';
+import Profile from "../../../Pages/Profile/Profile";
 import OtherMaster from "../Other Master/OtherMaster";
 import Admin from "../Admin/Admin";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import SidebarLogic from "./SidebarLogic";
 
 const drawerWidth = 300;
 
@@ -97,17 +99,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function SidebarDesign() {
+function SidebarDesign() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  let {
+    open,
+    setOpen,
+    handleDrawerClose,
+    handleDrawerOpen
+  } = SidebarLogic()
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -151,9 +150,9 @@ export default function SidebarDesign() {
         </DrawerHeader>
 
         <List style={{ backgroundColor: "brown", color: "white" }}>
-          
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
-            <ListItemButton to="/dashboard">
+          {/* <Link to=""> */}
+          <ListItem component={Link} to={""} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+            <ListItemButton >
               <ListItemIcon style={{ color: "white" }}>
                 <DashboardIcon />
               </ListItemIcon>
@@ -161,9 +160,10 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-          
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
-            <ListItemButton to="/candidate-master">
+          {/* </Link> */}
+          {/* <Link to="/candidate-master"> */}
+          <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+            <ListItemButton >
               <ListItemIcon style={{ color: "white" }}>
                 <PermContactCalendarIcon />
               </ListItemIcon>
@@ -171,8 +171,9 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-         
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
+          {/* </Link> */}
+          {/* <Link to=''> */}
+          <ListItem component={Link} to={"/candidate-upload-batch"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <LayersIcon />
@@ -181,7 +182,9 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
+          {/* </Link> */}
+          {/* <Link to='/candidate-verification'> */}
+          <ListItem component={Link} to={"/candidate-verification"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <HowToRegIcon />
@@ -190,7 +193,9 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
+          {/* </Link> */}
+          {/* <Link to='/agent-master'> */}
+          <ListItem component={Link} to={"/agent-master"} disablePadding style={{ paddingBottom: "10px",color:'white'}}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <SupervisorAccountIcon />
@@ -199,7 +204,9 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding style={{ paddingBottom: "0px" }}>
+          {/* </Link> */}
+          {/* <Link to='/agent-pricing-template'> */}
+          <ListItem component={Link} to={"/agent-pricing-template"} disablePadding style={{ paddingBottom: "0px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <PriceChangeIcon />
@@ -208,10 +215,12 @@ export default function SidebarDesign() {
               <ListItemText />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* </Link> */}
+
+          <ListItem disablePadding sx={{ p:0,mt:0,mb:0 }}>
             <Admin />
           </ListItem>
-          <ListItem disablePadding>
+          <ListItem disablePadding sx={{ pt: 0,pb:0.3 }}>
             <OtherMaster />
           </ListItem>
           <ListItem disablePadding style={{ paddingBottom: "10px" }}>
@@ -237,28 +246,12 @@ export default function SidebarDesign() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Typography paragraph>
-          <Grid
-            style={{ backgroundColor: "white", borderRadius: "10px" }}
-            item
-            md={6}
-            xs={12}
-          >
-            <Box
-              m={1}
-              display="flex"
-              alignItems="center"
-              flexDirection="column"
-            >
-              <Box mb={2} alignSelf="start">
-                <h2>Dashboard</h2>
-              </Box>
-            </Box>
-          </Grid>
-        </Typography>
-        <Typography paragraph>
-          
-        </Typography>
+          {/* <TheContent/> */}
+          <Outlet/>
+          </Typography>
       </Box>
     </Box>
   );
 }
+
+export default SidebarDesign;

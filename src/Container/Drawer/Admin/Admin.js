@@ -8,6 +8,7 @@ import Collapse from "@mui/material/Collapse";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { ExpandLess } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export default function Admin() {
   const [open, setOpen] = React.useState(true);
@@ -31,13 +32,13 @@ export default function Admin() {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List style={{ paddingLeft: "60px" }} component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
             <ListItemText primary="Candidate Upload Batch" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
             <ListItemText primary="Batch Priority" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
             <ListItemText primary="Other Industry Category" />
           </ListItemButton>
         </List>

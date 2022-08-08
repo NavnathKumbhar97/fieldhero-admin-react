@@ -15,7 +15,13 @@ export default function () {
     canVerification,
     agentMaster,
     agentPricingTemplate,
-    adminCanUploadBatch
+    adminCanUploadBatch,
+    categoryMaster,
+    companyMaster,
+    customerMaster,
+    industyMaster,roleMaster,
+    skillsetMaster,
+    subscriptionMaster,userMaster
   } = pageData()
   return (
     <Router>
@@ -38,14 +44,14 @@ export default function () {
           <Route path="candidate-upload-batch-admin" element={<ContentDesign data={adminCanUploadBatch} />} />
           <Route path="batch-priority" element={<TheContent />} />
           <Route path="other-industry-category" element={<TheContent />} />
-          <Route path="category" element={<TheContent />} />
-          <Route path="company" element={<TheContent />} />
-          <Route path="customer" element={<TheContent />} />
-          <Route path="industry" element={<TheContent />} />
-          <Route path="role" element={<TheContent />} />
-          <Route path="skillset" element={<TheContent />} />
-          <Route path="subscriptions" element={<TheContent />} />
-          <Route path="user" element={<TheContent />} />
+          <Route path="category" element={<ContentDesign data={categoryMaster} />} />
+          <Route path="company" element={<ContentDesign data={companyMaster} />} />
+          <Route path="customer" element={<ContentDesign data={customerMaster} />} />
+          <Route path="industry" element={<ContentDesign data={industyMaster} />} />
+          <Route path="role" element={<ContentDesign data={roleMaster} />} />
+          <Route path="skillset" element={<ContentDesign data={skillsetMaster} />} />
+          <Route path="subscription" element={<ContentDesign data={subscriptionMaster} />} />
+          <Route path="user" element={<ContentDesign data={userMaster} />} />
           <Route path="help" element={<TheContent />} />
           <Route path="about" element={<TheContent />} />
 

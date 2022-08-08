@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   Button,
   Dialog,
@@ -29,6 +30,10 @@ import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
+import CandidateMasterLogic from "../../Container/Drawer/Candidate Master/CandidateMasterLogic";
+import CandidateUploadBatch from "../../Container/Drawer/Candidate Upload Batch/CandidateUploadBatch";
+import CandidateVerification from "../../Container/Drawer/Candidate Verification/CandidateVerification";
+import AdminCanUploadBatch from "../../Container/Drawer/Admin-Candidate Upload Batch/AdminCanUploadBatch";
 
 const ContentLogic = (props) => {
   // const {data} = props
@@ -39,7 +44,8 @@ const ContentLogic = (props) => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [pageTitle,setPageTitle] = useState();
+  const [pageTitle, setPageTitle] = useState();
+  const [buttonText, setButtonText] = useState();
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
     return {
@@ -313,7 +319,7 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Total Amount",
     },
-    
+
     {
       id: "status",
       numeric: true,
@@ -352,7 +358,7 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
-    
+
     {
       id: "inProgress",
       numeric: true,
@@ -394,6 +400,148 @@ const ContentLogic = (props) => {
       numeric: true,
       disablePadding: false,
       label: "Action",
+    },
+  ];
+  const categoryMaster = [
+    {
+      id: "categoryName",
+      numeric: false,
+      disablePadding: true,
+      label: "Category Name",
+    },
+    {
+      id: "status",
+      numeric: true,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const companyMaster = [
+    {
+      id: "companyName",
+      numeric: false,
+      disablePadding: true,
+      label: "Company Name",
+    },
+    {
+      id: "industry",
+      numeric: true,
+      disablePadding: false,
+      label: "Industry",
+    },
+    {
+      id: "status",
+      numeric: true,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const customerMaster = [
+    {
+      id: "fullName",
+      numeric: false,
+      disablePadding: true,
+      label: "Full Name",
+    },
+    {
+      id: "email",
+      numeric: true,
+      disablePadding: false,
+      label: "Email",
+    },
+    {
+      id: "status",
+      numeric: true,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const industryMaster = [
+    {
+      id: "industryName",
+      numeric: false,
+      disablePadding: true,
+      label: "Industry Name",
+    },
+    {
+      id: "status",
+      numeric: true,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const roleMaster = [
+    {
+      id: "roleName",
+      numeric: false,
+      disablePadding: false,
+      label: "Role Name",
+    },
+    {
+      id: "status",
+      numeric: false,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const skillSetMaster = [
+    {
+      id: "skillName",
+      numeric: false,
+      disablePadding: false,
+      label: "Skill Name",
+    },
+    {
+      id: "status",
+      numeric: true,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const subscriptionMaster = [
+    {
+      id: "subscriptionName",
+      numeric: false,
+      disablePadding: false,
+      label: "Subscription Name",
+    },
+    {
+      id: "Data Count",
+      numeric: false,
+      disablePadding: false,
+      label: "Data Count",
+    },
+    {
+      id: "status",
+      numeric: false,
+      disablePadding: false,
+      label: "Status",
+    },
+  ];
+  const userMaster = [
+    {
+      id: "fullName",
+      numeric: false,
+      disablePadding: false,
+      label: "Full Name",
+    },
+    {
+      id: "email",
+      numeric: false,
+      disablePadding: false,
+      label: "Email",
+    },
+    {
+      id: "role",
+      numeric: false,
+      disablePadding: false,
+      label: "Role",
+    },
+    {
+      id: "status",
+      numeric: false,
+      disablePadding: false,
+      label: "Status",
     },
   ];
 
@@ -463,10 +611,10 @@ const ContentLogic = (props) => {
   };
 
   const EnhancedTableToolbar = (props) => {
-
     const { numSelected } = props;
     const classes = useStyles();
     const [openModal, setOpenModal] = useState(false);
+    const [candidateMaster, setCandidateMaster] = useState();
 
     const handleClickOpen = () => {
       setOpenModal(true);
@@ -474,6 +622,50 @@ const ContentLogic = (props) => {
 
     const handleClose = () => {
       setOpenModal(false);
+    };
+
+    const renderDesign = () => {
+      switch (pageTitle) {
+        case "Candidate Master":
+          return <CandidateMasterLogic />;
+
+        case "Candidate Upload Batch":
+          return null;
+
+        case "Agent Master":
+          return null;
+
+        case "Admin - Candidate Upload Batch":
+          return <AdminCanUploadBatch />;
+        case "Candidate Verification":
+          return (
+            <>
+              <CandidateVerification />
+              <TextField
+                id="filled-basic"
+                label="Search"
+                variant="filled"
+                style={{
+                  width: "700px",
+                  marginBottom: "20px",
+                }}
+              />
+            </>
+          );
+
+        default:
+          return (
+            <TextField
+              id="filled-basic"
+              label="Search"
+              variant="filled"
+              style={{
+                width: "700px",
+                marginBottom: "20px",
+              }}
+            />
+          );
+      }
     };
 
     return (
@@ -508,44 +700,37 @@ const ContentLogic = (props) => {
           >
             <h2>{pageTitle}</h2>
 
-            <TextField
-              id="filled-basic"
-              label="Search"
-              variant="filled"
-              style={{
-                marginLeft: "70px",
-                width: "700px",
-                marginBottom: "20px",
-              }}
-            ></TextField>
+            {renderDesign()}
           </Typography>
         )}
 
-        {numSelected > 0 ? (
-          <Button
-            style={{ marginTop: "80px", marginRight: "50px" }}
-            variant="outlined"
-            href="#outlined-buttons"
-          >
-            <EditIcon />
-            Edit
-          </Button>
-        ) : (
-          <Button
-            onClick={handleClickOpen}
-            style={{
-              marginTop: "80px",
-              marginRight: "50px",
-              backgroundColor: "brown",
-              color: "white",
-            }}
-            variant="outlined"
-            href="#outlined-buttons"
-          >
-            <AddIcon />
-            New
-          </Button>
-        )}
+        <Typography>
+          {numSelected === 1 ? (
+            <Button
+              style={{ marginTop: "80px", marginRight: "50px" }}
+              variant="outlined"
+              href="#outlined-buttons"
+            >
+              <EditIcon />
+              Edit
+            </Button>
+          ) : (
+            <Button
+              onClick={handleClickOpen}
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+              href="#outlined-buttons"
+            >
+              {buttonText === "Upload" ? <FileUploadIcon /> : <AddIcon />}
+              {buttonText}
+            </Button>
+          )}
+        </Typography>
 
         {numSelected > 0 ? (
           <Tooltip title="Delete">
@@ -553,13 +738,7 @@ const ContentLogic = (props) => {
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        ) : null}
         <Dialog
           className={classes.root}
           fullScreen="true"
@@ -711,13 +890,21 @@ const ContentLogic = (props) => {
     tblHeader,
     setTblHeader,
     setPageName,
+    setButtonText,
     canMasterTblHerader,
     candUploadBatch,
     canVerification,
     agentMaster,
     agentPricingTemplate,
     adminCanUploadBatch,
-
+    categoryMaster,
+    companyMaster,
+    customerMaster,
+    industryMaster,
+    roleMaster,
+    skillSetMaster,
+    subscriptionMaster,
+    userMaster,
   };
 
   return StateContainer;

@@ -50,18 +50,27 @@ export default function ContentDesign(props) {
     tblHeader,
     setTblHeader,
     setPageName,
+    setButtonText,
     canMasterTblHerader,
     candUploadBatch,
     canVerification,
     agentMaster,
     agentPricingTemplate,
     adminCanUploadBatch,
+    categoryMaster,
+    companyMaster,
+    customerMaster,
+    industryMaster,
+    roleMaster,
+    skillSetMaster,
+    subscriptionMaster,
+    userMaster
   } = ContentLogic();
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     setPageTitle(data.pageTitle);
-
+    setButtonText(data.buttonText)
     if (data.page === "candidate-master") {
       setTblHeader(canMasterTblHerader);
     }
@@ -79,6 +88,30 @@ export default function ContentDesign(props) {
     }
     if (data.page === "candidate-upload-batch-admin") {
       setTblHeader(adminCanUploadBatch);
+    }
+    if (data.page === "category") {
+      setTblHeader(categoryMaster);
+    }
+    if (data.page === "company") {
+      setTblHeader(companyMaster);
+    }
+    if (data.page === "customer") {
+      setTblHeader(customerMaster);
+    }
+    if (data.page === "industry") {
+      setTblHeader(industryMaster);
+    }
+    if (data.page === "role") {
+      setTblHeader(roleMaster);
+    }
+    if (data.page === "skillset") {
+      setTblHeader(skillSetMaster);
+    }
+    if (data.page === "subscription") {
+      setTblHeader(subscriptionMaster);
+    }
+    if (data.page === "user") {
+      setTblHeader(userMaster);
     }
   }, [data.page]);
 

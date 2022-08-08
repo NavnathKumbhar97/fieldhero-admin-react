@@ -246,6 +246,7 @@ function SidebarDesign() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Typography paragraph>
+          
           {/* <TheContent/> */}
           <Outlet/>
           </Typography>

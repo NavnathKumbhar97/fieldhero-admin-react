@@ -11,7 +11,7 @@ import { ExpandLess } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 export default function Admin() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(!open);

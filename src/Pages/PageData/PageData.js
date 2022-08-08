@@ -34,6 +34,16 @@ const pageData = () => {
       buttonText: "Upload",
       pageTitle:"Admin - Candidate Upload Batch"
     },
+    batchPriority: {
+      page: "batch-priority",
+      buttonText: "Change",
+      pageTitle:"Batch Priority"
+    },
+    otherIndustyCategory: {
+      page: "other-industry-category",
+      buttonText: "",
+      pageTitle:"Category - Master"
+    },
     categoryMaster: {
       page: "category",
       buttonText: "New",

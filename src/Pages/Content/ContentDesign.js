@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
 import ContentLogic from "./ContentLogic";
+import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -115,11 +116,14 @@ export default function ContentDesign(props) {
     }
   }, [data.page]);
 
-  return (
-    <Box sx={{ width: "100%", mt: 1 }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
+  const handleTable = () =>{
+    switch (data.pageTitle) {
+      case 'Batch Priority':
+        return null;
+    
+      default:
+        return (<>
+          <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
@@ -187,8 +191,8 @@ export default function ContentDesign(props) {
               )}
             </TableBody>
           </Table>
-        </TableContainer>
-        <TablePagination
+          </TableContainer>
+          <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
@@ -196,7 +200,16 @@ export default function ContentDesign(props) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /></>
+        )
+    }
+  }
+
+  return (
+    <Box sx={{ width: "100%", mt: 1 }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+          {handleTable()}
       </Paper>
       {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}

@@ -26,11 +26,11 @@ function CandidateMasterLogic() {
       <TextField select size='small' id="outlined-basic" label="Category" variant="outlined" />
       <Button
             style={{
-             marginLeft:'1000px',
+             marginLeft:'1100px',
               backgroundColor: "brown",
               color: "white",
               width:'90px',
-              marginTop:'-130px'
+              marginTop:'-70px',
             }}
             variant="outlined"
             href="#outlined-buttons"

@@ -34,6 +34,7 @@ import CandidateMasterLogic from "../../Container/Drawer/Candidate Master/Candid
 import CandidateUploadBatch from "../../Container/Drawer/Candidate Upload Batch/CandidateUploadBatch";
 import CandidateVerification from "../../Container/Drawer/Candidate Verification/CandidateVerification";
 import AdminCanUploadBatch from "../../Container/Drawer/Admin-Candidate Upload Batch/AdminCanUploadBatch";
+import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 
 const ContentLogic = (props) => {
   // const {data} = props
@@ -634,6 +635,10 @@ const ContentLogic = (props) => {
 
         case "Agent Master":
           return null;
+        // case "Agent Pricing Template":
+        //   return (<BatchPriority/>)
+        case "Batch Priority":
+          return <BatchPriority/>;
 
         case "Admin - Candidate Upload Batch":
           return <AdminCanUploadBatch />;
@@ -722,6 +727,8 @@ const ContentLogic = (props) => {
                 marginRight: "0px",
                 backgroundColor: "brown",
                 color: "white",
+                
+  
               }}
               variant="outlined"
               href="#outlined-buttons"

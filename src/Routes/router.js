@@ -21,7 +21,7 @@ export default function () {
     customerMaster,
     industyMaster,roleMaster,
     skillsetMaster,
-    subscriptionMaster,userMaster
+    subscriptionMaster,userMaster,batchPriority,otherIndustyCategory
   } = pageData()
   return (
     <Router>
@@ -42,7 +42,7 @@ export default function () {
           <Route path="agent-pricing-template" element={<ContentDesign data={agentPricingTemplate} />}></Route>
 
           <Route path="candidate-upload-batch-admin" element={<ContentDesign data={adminCanUploadBatch} />} />
-          <Route path="batch-priority" element={<TheContent />} />
+          <Route path="batch-priority" element={<ContentDesign data={batchPriority} />} />
           <Route path="other-industry-category" element={<TheContent />} />
           <Route path="category" element={<ContentDesign data={categoryMaster} />} />
           <Route path="company" element={<ContentDesign data={companyMaster} />} />

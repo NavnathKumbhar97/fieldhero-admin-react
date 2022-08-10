@@ -14,14 +14,26 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import FilledInput from "@mui/material/FilledInput";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Button,
   Dialog,
   Divider,
+  FormControlLabel,
+  FormLabel,
   Input,
+  InputAdornment,
+  InputLabel,
   List,
   ListItem,
   ListItemText,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -35,6 +47,7 @@ import CandidateUploadBatch from "../../Container/Drawer/Candidate Upload Batch/
 import CandidateVerification from "../../Container/Drawer/Candidate Verification/CandidateVerification";
 import AdminCanUploadBatch from "../../Container/Drawer/Admin-Candidate Upload Batch/AdminCanUploadBatch";
 import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
+import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 
 const ContentLogic = (props) => {
   // const {data} = props
@@ -616,6 +629,28 @@ const ContentLogic = (props) => {
     const classes = useStyles();
     const [openModal, setOpenModal] = useState(false);
     const [candidateMaster, setCandidateMaster] = useState();
+    const [values, setValues] = useState({
+      amount: "",
+      password: "",
+      weight: "",
+      weightRange: "",
+      showPassword: false,
+    });
+
+    const handleChange = (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+    const handleClickShowPassword = () => {
+      setValues({
+        ...values,
+        showPassword: !values.showPassword,
+      });
+    };
+
+    const handleMouseDownPassword = (event) => {
+      event.preventDefault();
+    };
 
     const handleClickOpen = () => {
       setOpenModal(true);
@@ -623,6 +658,213 @@ const ContentLogic = (props) => {
 
     const handleClose = () => {
       setOpenModal(false);
+    };
+
+    const handleButtons = () => {
+      switch (pageTitle) {
+        case "Candidate Master":
+          return (
+            <>
+              {numSelected === 1 ? (
+                <Button
+                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <EditIcon />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleClickOpen}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>
+              )}
+            </>
+          );
+        case "Candidate Upload Batch":
+          return (
+            <>
+              <Button
+                style={{
+                  marginTop: "80px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+                href="#outlined-buttons"
+              >
+                <FileUploadIcon />
+                {buttonText}
+              </Button>
+            </>
+          );
+
+        case "Candidate Verification":
+          return (
+            <>
+              <Button
+                style={{
+                  marginTop: "80px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+                href="#outlined-buttons"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            </>
+          );
+
+        case "Agent Master":
+          return (
+            <>
+              {numSelected === 1 ? (
+                <Button
+                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <EditIcon />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleClickOpen}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>
+              )}
+            </>
+          );
+        case "Agent Pricing Template":
+          return (
+            <>
+              {numSelected === 1 ? (
+                <Button
+                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <EditIcon />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleClickOpen}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>
+              )}
+            </>
+          );
+
+        case "Admin - Candidate Upload Batch":
+          return (
+            <>
+              <Button
+                style={{
+                  marginTop: "80px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+                href="#outlined-buttons"
+              >
+                <FileUploadIcon />
+                {buttonText}
+              </Button>
+            </>
+          );
+
+        case "Batch Priority":
+          return (
+            <>
+              <Button
+                style={{
+                  marginTop: "80px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+                href="#outlined-buttons"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            </>
+          );
+        case "Other Industry Category":
+          return null;
+
+        case "Customer - Master":
+          return null;
+
+        default:
+          return (
+            <>
+              {numSelected === 1 ? (
+                <Button
+                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <EditIcon />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleClickOpen}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                  href="#outlined-buttons"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>
+              )}
+            </>
+          );
+      }
     };
 
     const renderDesign = () => {
@@ -635,13 +877,16 @@ const ContentLogic = (props) => {
 
         case "Agent Master":
           return null;
-        // case "Agent Pricing Template":
-        //   return (<BatchPriority/>)
+
         case "Batch Priority":
-          return <BatchPriority/>;
+          return <BatchPriority />;
+
+        case "Other Industry Category":
+          return <OtherIndCategory />;
 
         case "Admin - Candidate Upload Batch":
           return <AdminCanUploadBatch />;
+
         case "Candidate Verification":
           return (
             <>
@@ -670,6 +915,210 @@ const ContentLogic = (props) => {
               }}
             />
           );
+      }
+    };
+
+    const handlerModuleInputs = () => {
+      switch (pageName) {
+        case "candidate-master":
+          return (
+            <>
+              <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                <div>
+                  <ListItem>
+                    <TextField
+                      id="filled-basic"
+                      label="Full Name"
+                      variant="filled"
+                      sx={{ width: "50ch" }}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <FormControl>
+                      <FormLabel id="demo-row-radio-buttons-group-label">
+                        Gender
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                      >
+                        <FormControlLabel
+                          value="male"
+                          control={<Radio />}
+                          label="Male"
+                        />
+                        <FormControlLabel
+                          value="female"
+                          control={<Radio />}
+                          label="Female"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </ListItem>
+
+                  <ListItem>
+                    <TextField
+                      fullWidth
+                      sx={{ width: "140ch" }}
+                      label="Permanent Address"
+                      id="filled-basic"
+                      multiline
+                      rows={5}
+                      variant="filled"
+                    />
+                  </ListItem>
+                </div>
+                <div>
+                  <TextField
+                    label="With normal TextField"
+                    id="filled-start-adornment"
+                    sx={{ m: 1, width: "25ch" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">kg</InputAdornment>
+                      ),
+                    }}
+                    variant="filled"
+                  />
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
+                    <FilledInput
+                      id="filled-adornment-weight"
+                      value={values.weight}
+                      onChange={handleChange("weight")}
+                      endAdornment={
+                        <InputAdornment position="end">kg</InputAdornment>
+                      }
+                      aria-describedby="filled-weight-helper-text"
+                      inputProps={{
+                        "aria-label": "weight",
+                      }}
+                    />
+                    <FormHelperText id="filled-weight-helper-text">
+                      Weight
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
+                    <InputLabel htmlFor="filled-adornment-password">
+                      Password
+                    </InputLabel>
+                    <FilledInput
+                      id="filled-adornment-password"
+                      type={values.showPassword ? "text" : "password"}
+                      value={values.password}
+                      onChange={handleChange("password")}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {values.showPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+                    <InputLabel htmlFor="filled-adornment-amount">
+                      Amount
+                    </InputLabel>
+                    <FilledInput
+                      id="filled-adornment-amount"
+                      value={values.amount}
+                      onChange={handleChange("amount")}
+                      startAdornment={
+                        <InputAdornment position="start">$</InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </div>
+                <div>
+                  <TextField
+                    label="With normal TextField"
+                    id="standard-start-adornment"
+                    sx={{ m: 1, width: "25ch" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">kg</InputAdornment>
+                      ),
+                    }}
+                    variant="standard"
+                  />
+                  <FormControl
+                    variant="standard"
+                    sx={{ m: 1, mt: 3, width: "25ch" }}
+                  >
+                    <Input
+                      id="standard-adornment-weight"
+                      value={values.weight}
+                      onChange={handleChange("weight")}
+                      endAdornment={
+                        <InputAdornment position="end">kg</InputAdornment>
+                      }
+                      aria-describedby="standard-weight-helper-text"
+                      inputProps={{
+                        "aria-label": "weight",
+                      }}
+                    />
+                    <FormHelperText id="standard-weight-helper-text">
+                      Weight
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+                    <InputLabel htmlFor="standard-adornment-password">
+                      Password
+                    </InputLabel>
+                    <Input
+                      id="standard-adornment-password"
+                      type={values.showPassword ? "text" : "password"}
+                      value={values.password}
+                      onChange={handleChange("password")}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {values.showPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                  <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                    <InputLabel htmlFor="standard-adornment-amount">
+                      Amount
+                    </InputLabel>
+                    <Input
+                      id="standard-adornment-amount"
+                      value={values.amount}
+                      onChange={handleChange("amount")}
+                      startAdornment={
+                        <InputAdornment position="start">$</InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </div>
+              </Box>
+            </>
+          );
+
+          break;
+
+        default:
+          break;
       }
     };
 
@@ -709,35 +1158,7 @@ const ContentLogic = (props) => {
           </Typography>
         )}
 
-        <Typography>
-          {numSelected === 1 ? (
-            <Button
-              style={{ marginTop: "80px", marginRight: "50px" }}
-              variant="outlined"
-              href="#outlined-buttons"
-            >
-              <EditIcon />
-              Edit
-            </Button>
-          ) : (
-            <Button
-              onClick={handleClickOpen}
-              style={{
-                marginTop: "80px",
-                marginRight: "0px",
-                backgroundColor: "brown",
-                color: "white",
-                
-  
-              }}
-              variant="outlined"
-              href="#outlined-buttons"
-            >
-              {buttonText === "Upload" ? <FileUploadIcon /> : <AddIcon />}
-              {buttonText}
-            </Button>
-          )}
-        </Typography>
+        <Typography>{handleButtons()}</Typography>
 
         {numSelected > 0 ? (
           <Tooltip title="Delete">
@@ -747,13 +1168,14 @@ const ContentLogic = (props) => {
           </Tooltip>
         ) : null}
         <Dialog
+          style={{ marginTop: "-70px" }}
           className={classes.root}
-          fullScreen="true"
+          fullScreen={true}
           open={openModal}
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <Box>
+          <Box sx={{ bgcolor: "brown", color: "white", height: "55px" }}>
             <IconButton
               edge="start"
               color="inherit"
@@ -763,25 +1185,10 @@ const ContentLogic = (props) => {
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
             Add New
+            <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
           <List style={{ marginLeft: "100px" }}>
-            <ListItem>
-              <TextField
-                style={{ width: "700px" }}
-                id="filled-basic"
-                label="Title"
-                variant="filled"
-              />
-            </ListItem>
-            {/* <Divider /> */}
-            <ListItem>
-              <TextField
-                style={{ width: "700px" }}
-                id="filled-basic"
-                label="Description"
-                variant="filled"
-              />
-            </ListItem>
+            {handlerModuleInputs()}
             <ListItem>
               <Button
                 style={{

@@ -12,10 +12,8 @@ function CandidateMasterLogic() {
     <Box
       component="form"
       sx={{
-        '& > :not(style)': { m: 1, width: '20ch',mb:2},
+        '& > :not(style)': { m: 1, width: '25ch',mb:2},
       }}
-      noValidate
-      autoComplete="off"
     >
       <TextField size='small' id="outlined-basic" label="Full Name" variant="outlined" />
       <TextField size='small' id="outlined-basic" label="Contact No" variant="outlined" />

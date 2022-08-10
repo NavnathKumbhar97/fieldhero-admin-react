@@ -72,6 +72,7 @@ export default function ContentDesign(props) {
     // console.log(data);
     setPageTitle(data.pageTitle);
     setButtonText(data.buttonText)
+    setPageName(data.page)
     if (data.page === "candidate-master") {
       setTblHeader(canMasterTblHerader);
     }
@@ -119,6 +120,8 @@ export default function ContentDesign(props) {
   const handleTable = () =>{
     switch (data.pageTitle) {
       case 'Batch Priority':
+        return null;
+      case 'Other Industry Category':
         return null;
     
       default:

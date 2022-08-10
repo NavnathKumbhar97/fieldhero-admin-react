@@ -140,7 +140,7 @@ function SidebarDesign() {
           style={{ backgroundColor: "brown", color: "white", fontSize: "20px" }}
         >
           Apexa Group
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton style={{color:'white'}} onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (

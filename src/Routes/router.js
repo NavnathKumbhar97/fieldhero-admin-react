@@ -43,7 +43,7 @@ export default function () {
 
           <Route path="candidate-upload-batch-admin" element={<ContentDesign data={adminCanUploadBatch} />} />
           <Route path="batch-priority" element={<ContentDesign data={batchPriority} />} />
-          <Route path="other-industry-category" element={<TheContent />} />
+          <Route path="other-industry-category" element={<ContentDesign data={otherIndustyCategory} />} />
           <Route path="category" element={<ContentDesign data={categoryMaster} />} />
           <Route path="company" element={<ContentDesign data={companyMaster} />} />
           <Route path="customer" element={<ContentDesign data={customerMaster} />} />

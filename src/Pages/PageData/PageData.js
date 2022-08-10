@@ -42,7 +42,7 @@ const pageData = () => {
     otherIndustyCategory: {
       page: "other-industry-category",
       buttonText: "",
-      pageTitle:"Category - Master"
+      pageTitle:"Other Industry Category"
     },
     categoryMaster: {
       page: "category",

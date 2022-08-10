@@ -22,6 +22,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Button,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControlLabel,
   FormLabel,
@@ -34,6 +37,7 @@ import {
   OutlinedInput,
   Radio,
   RadioGroup,
+  Stepper,
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -43,12 +47,12 @@ import { makeStyles } from "@mui/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import CandidateMasterLogic from "../../Container/Drawer/Candidate Master/CandidateMasterLogic";
-import CandidateUploadBatch from "../../Container/Drawer/Candidate Upload Batch/CandidateUploadBatch";
 import CandidateVerification from "../../Container/Drawer/Candidate Verification/CandidateVerification";
 import AdminCanUploadBatch from "../../Container/Drawer/Admin-Candidate Upload Batch/AdminCanUploadBatch";
 import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
-
+import styles from "./content.css";
+import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 const ContentLogic = (props) => {
   // const {data} = props
   // console.log(data);
@@ -623,33 +627,68 @@ const ContentLogic = (props) => {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
+  const steps = [
+    "Select campaign settings",
+    "Create an ad group",
+    "Create an ad",
+  ];
 
   const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
     const classes = useStyles();
     const [openModal, setOpenModal] = useState(false);
-    const [candidateMaster, setCandidateMaster] = useState();
-    const [values, setValues] = useState({
-      amount: "",
-      password: "",
-      weight: "",
-      weightRange: "",
-      showPassword: false,
-    });
+    const [activeStep, setActiveStep] = useState(0);
+    const [skipped, setSkipped] = useState(new Set());
+    const [openChildModal, setOpenChilModal] = useState(false);
 
-    const handleChange = (prop) => (event) => {
-      setValues({ ...values, [prop]: event.target.value });
+    const handleClickOpenChildModal = () => {
+      setOpenChilModal(true);
     };
 
-    const handleClickShowPassword = () => {
-      setValues({
-        ...values,
-        showPassword: !values.showPassword,
+    const handleCloseChildModal = () => {
+      setOpenChilModal(false);
+    };
+
+    const isStepOptional = (step) => {
+      return step === 1;
+    };
+
+    const isStepSkipped = (step) => {
+      return skipped.has(step);
+    };
+
+    const handleNext = () => {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
+
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    };
+
+    const handleBack = () => {
+      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleSkip = () => {
+      if (!isStepOptional(activeStep)) {
+        // You probably want to guard against something like this,
+        // it should never occur unless someone's actively trying to break something.
+        throw new Error("You can't skip a step that isn't optional.");
+      }
+
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped((prevSkipped) => {
+        const newSkipped = new Set(prevSkipped.values());
+        newSkipped.add(activeStep);
+        return newSkipped;
       });
     };
 
-    const handleMouseDownPassword = (event) => {
-      event.preventDefault();
+    const handleReset = () => {
+      setActiveStep(0);
     };
 
     const handleClickOpen = () => {
@@ -923,199 +962,375 @@ const ContentLogic = (props) => {
         case "candidate-master":
           return (
             <>
-              <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-                <div>
+              <Box sx={{ width: "100%" }}>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  {/* Step {activeStep + 1} */}
+                  {activeStep === 0 ? (
+                    <List style={{ marginLeft: "100px" }}>
+                      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                        <div
+                          style={{
+                            marginLeft: "200px",
+                            marginBottom: "200px",
+                            marginTop: "40px",
+                          }}
+                        >
+                          <Button
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                              fontSize: "15px bold",
+                            }}
+                          >
+                            UPLOAD IMAGE
+                          </Button>
+                          <p
+                            style={{ marginLeft: "130px", marginTop: "-30px" }}
+                          >
+                            (png,jpg)
+                          </p>
+                        </div>
+                        <div>
+                          <ListItem>
+                            <TextField
+                              id="filled-basic"
+                              label="Full Name"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <TextField
+                              id="filled-basic"
+                              label="Birthdate"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <FormControl>
+                              <FormLabel id="demo-row-radio-buttons-group-label">
+                                Gender
+                              </FormLabel>
+                              <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                              >
+                                <FormControlLabel
+                                  value="male"
+                                  control={<Radio />}
+                                  label="Male"
+                                />
+                                <FormControlLabel
+                                  value="female"
+                                  control={<Radio />}
+                                  label="Female"
+                                />
+                              </RadioGroup>
+                            </FormControl>
+                          </ListItem>
+
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              fullWidth
+                              sx={{ width: "140ch" }}
+                              label="Permanent Address"
+                              id="filled-basic"
+                              multiline
+                              rows={5}
+                              variant="filled"
+                            />
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="City"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="State"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="Country"
+                              value="India"
+                              disabled
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Zip Code"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <FormControlLabel
+                              control={<Checkbox />}
+                              label="Same as permanent address"
+                            />
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              fullWidth
+                              sx={{ width: "140ch" }}
+                              label="Current Address"
+                              id="filled-basic"
+                              multiline
+                              rows={5}
+                              variant="filled"
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="City"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="State"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="Country"
+                              value="India"
+                              disabled
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Zip Code"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="Primary email address"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Secondary email address"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="Primary contact no"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Secondary contact no"
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <TextField
+                              id="filled-basic"
+                              label="Aadhar no"
+                              variant="filled"
+                              sx={{ width: "69ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Status"
+                              select
+                              variant="filled"
+                              sx={{ ml: 3, width: "69ch" }}
+                            />
+                          </ListItem>
+                          <ListItem sx={{ mb: 5 }}>
+                            <FormControlLabel
+                              control={<Checkbox defaultChecked />}
+                              label="Is Active"
+                            />
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem>
+                            <Button
+                              style={{
+                                backgroundColor: "grey",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              disabled={activeStep === 0}
+                              onClick={handleBack}
+                            >
+                              PREV
+                            </Button>
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              onClick={handleNext}
+                            >
+                              SAVE AND NEXT
+                            </Button>
+                            <Button
+                              onClick={handleNext}
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                              }}
+                            >
+                              NEXT
+                            </Button>
+                            <Button
+                              style={{
+                                backgroundColor: "black",
+                                color: "white",
+                                marginLeft: "10px",
+                              }}
+                            >
+                              EXIT
+                            </Button>
+                          </ListItem>
+                        </div>
+                      </Box>
+                    </List>
+                  ) : (
+                    <List style={{ marginLeft: "100px", marginTop: "-50px" }}>
+                      <Box>
+                        <div>
+                          <ListItem>
+                            <h2>Total Work Experiance</h2>
+                          </ListItem>
+                          <ListItem>
+                            <TextField
+                              id="filled-basic"
+                              label="Months"
+                              variant="filled"
+                              sx={{ width: "20ch" }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="Years"
+                              variant="filled"
+                              sx={{ width: "20ch", margin: "20px 20px" }}
+                            />
+                            <Button
+                              style={{
+                                color: "white",
+                                backgroundColor: "brown",
+                              }}
+                            >
+                              SAVE
+                            </Button>
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem>
+                            <h2>Work Experiance</h2>
+                          </ListItem>
+                          <ListItem>
+                            <Button
+                              onClick={handleClickOpenChildModal}
+                              style={{
+                                color: "white",
+                                backgroundColor: "brown",
+                              }}
+                            >
+                              
+                              <AddIcon />
+                              Add
+                            </Button>
+                          </ListItem>
+                          <ListItem>
+                          <WorkExperiance/>
+                          </ListItem>
+                        </div>
+                      </Box>
+                    </List>
+                  )}
+                </Typography>
+              </Box>
+              <Dialog
+                maxWidth="xl"
+                open={openChildModal}
+                onClose={handleCloseChildModal}
+              >
+                <DialogTitle>Add Work Experiance</DialogTitle>
+                <DialogContent>
                   <ListItem>
                     <TextField
-                      id="filled-basic"
-                      label="Full Name"
+                      id="name"
+                      label="Company Name"
+                      sx={{ width: "30ch" }}
                       variant="filled"
-                      sx={{ width: "50ch" }}
+                    />
+                    <TextField
+                      id="name"
+                      label="Skills"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="date"
+                      label="Start Date"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="date"
+                      label="End Date"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
                     />
                   </ListItem>
-                  <ListItem>
-                    <FormControl>
-                      <FormLabel id="demo-row-radio-buttons-group-label">
-                        Gender
-                      </FormLabel>
-                      <RadioGroup
-                        row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="row-radio-buttons-group"
-                      >
-                        <FormControlLabel
-                          value="male"
-                          control={<Radio />}
-                          label="Male"
-                        />
-                        <FormControlLabel
-                          value="female"
-                          control={<Radio />}
-                          label="Female"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </ListItem>
-
                   <ListItem>
                     <TextField
                       fullWidth
                       sx={{ width: "140ch" }}
-                      label="Permanent Address"
+                      label="Descriptions About Experiance"
                       id="filled-basic"
                       multiline
                       rows={5}
                       variant="filled"
                     />
                   </ListItem>
-                </div>
-                <div>
-                  <TextField
-                    label="With normal TextField"
-                    id="filled-start-adornment"
-                    sx={{ m: 1, width: "25ch" }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">kg</InputAdornment>
-                      ),
-                    }}
-                    variant="filled"
-                  />
-                  <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-                    <FilledInput
-                      id="filled-adornment-weight"
-                      value={values.weight}
-                      onChange={handleChange("weight")}
-                      endAdornment={
-                        <InputAdornment position="end">kg</InputAdornment>
-                      }
-                      aria-describedby="filled-weight-helper-text"
-                      inputProps={{
-                        "aria-label": "weight",
-                      }}
-                    />
-                    <FormHelperText id="filled-weight-helper-text">
-                      Weight
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-                    <InputLabel htmlFor="filled-adornment-password">
-                      Password
-                    </InputLabel>
-                    <FilledInput
-                      id="filled-adornment-password"
-                      type={values.showPassword ? "text" : "password"}
-                      value={values.password}
-                      onChange={handleChange("password")}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {values.showPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ m: 1 }} variant="filled">
-                    <InputLabel htmlFor="filled-adornment-amount">
-                      Amount
-                    </InputLabel>
-                    <FilledInput
-                      id="filled-adornment-amount"
-                      value={values.amount}
-                      onChange={handleChange("amount")}
-                      startAdornment={
-                        <InputAdornment position="start">$</InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                </div>
-                <div>
-                  <TextField
-                    label="With normal TextField"
-                    id="standard-start-adornment"
-                    sx={{ m: 1, width: "25ch" }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">kg</InputAdornment>
-                      ),
-                    }}
-                    variant="standard"
-                  />
-                  <FormControl
-                    variant="standard"
-                    sx={{ m: 1, mt: 3, width: "25ch" }}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseChildModal}>Close</Button>
+                  <Button
+                    style={{ backgroundColor: "brown", color: "white" }}
+                    onClick={handleCloseChildModal}
                   >
-                    <Input
-                      id="standard-adornment-weight"
-                      value={values.weight}
-                      onChange={handleChange("weight")}
-                      endAdornment={
-                        <InputAdornment position="end">kg</InputAdornment>
-                      }
-                      aria-describedby="standard-weight-helper-text"
-                      inputProps={{
-                        "aria-label": "weight",
-                      }}
-                    />
-                    <FormHelperText id="standard-weight-helper-text">
-                      Weight
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
-                    <InputLabel htmlFor="standard-adornment-password">
-                      Password
-                    </InputLabel>
-                    <Input
-                      id="standard-adornment-password"
-                      type={values.showPassword ? "text" : "password"}
-                      value={values.password}
-                      onChange={handleChange("password")}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                          >
-                            {values.showPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                    <InputLabel htmlFor="standard-adornment-amount">
-                      Amount
-                    </InputLabel>
-                    <Input
-                      id="standard-adornment-amount"
-                      value={values.amount}
-                      onChange={handleChange("amount")}
-                      startAdornment={
-                        <InputAdornment position="start">$</InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                </div>
-              </Box>
+                    Add
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </>
           );
-
-          break;
 
         default:
           break;
@@ -1187,23 +1402,8 @@ const ContentLogic = (props) => {
             Add New
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-          <List style={{ marginLeft: "100px" }}>
-            {handlerModuleInputs()}
-            <ListItem>
-              <Button
-                style={{
-                  backgroundColor: "brown",
-                  color: "white",
-                  margin: "10px",
-                }}
-              >
-                Save
-              </Button>
-              <Button style={{ backgroundColor: "black", color: "white" }}>
-                Cancel
-              </Button>
-            </ListItem>
-          </List>
+
+          {handlerModuleInputs()}
         </Dialog>
       </Toolbar>
     );

@@ -6,28 +6,35 @@ const pageData = () => {
     candidateMaster: {
       page: "candidate-master",
       buttonText: "New",
-      pageTitle:"Candidate Master"
+      pageTitle:"Candidate Master",
+      modalTitle:"Add Candidate"
     },
     
     candUploadBatch: {
       page: "candidate-upload-batch",
       buttonText: "Upload",
-      pageTitle:"Candidate Upload Batch"
+      pageTitle:"Candidate Upload Batch",
+      modalTitle:'Bulk Upload Candidate'
+
     },
     canVerification: {
       page: "candidate-verification",
       buttonText: "Assign",
-      pageTitle:"Candidate Verification"
+      pageTitle:"Candidate Verification",
+      
     },
     agentMaster: {
       page: "agent-master",
       buttonText: "New",
-      pageTitle:"Agent Master"
+      pageTitle:"Agent Master",
+      modalTitle:'Add Agent'
+
     },
     agentPricingTemplate: {
       page: "agent-pricing-template",
       buttonText: "New",
-      pageTitle:"Agent Pricing Template"
+      pageTitle:"Agent Pricing Template",
+      modalTitle:'Add Agent Pricing Template'
     },
     adminCanUploadBatch: {
       page: "candidate-upload-batch-admin",

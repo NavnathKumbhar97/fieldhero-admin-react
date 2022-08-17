@@ -11,33 +11,23 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import FilledInput from "@mui/material/FilledInput";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   FormControlLabel,
+  FormGroup,
   FormLabel,
-  Input,
-  InputAdornment,
-  InputLabel,
   List,
   ListItem,
-  ListItemText,
-  OutlinedInput,
   Radio,
   RadioGroup,
-  Stepper,
+  Tab,
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -51,11 +41,14 @@ import CandidateVerification from "../../Container/Drawer/Candidate Verification
 import AdminCanUploadBatch from "../../Container/Drawer/Admin-Candidate Upload Batch/AdminCanUploadBatch";
 import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
-import styles from "./content.css";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
+import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
+import { Info, PriorityHigh } from "@mui/icons-material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
+import { Link } from "react-router-dom";
+
 const ContentLogic = (props) => {
-  // const {data} = props
-  // console.log(data);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
@@ -64,6 +57,7 @@ const ContentLogic = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageTitle, setPageTitle] = useState();
   const [buttonText, setButtonText] = useState();
+  const [modalTitle, setModalTitle] = useState();
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
     return {
@@ -594,7 +588,7 @@ const ContentLogic = (props) => {
           {tblHeader.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
+              // align={headCell.numeric ? "right" : "left"}
               padding={headCell.disablePadding ? "none" : "normal"}
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -633,6 +627,32 @@ const ContentLogic = (props) => {
     "Create an ad",
   ];
 
+  const tblStyl = {
+    border: "1px solid black",
+    borderCollapse: "collapse",
+  };
+  const tblStyl1 = {
+    border: "1px solid black",
+    borderCollapse: "collapse",
+    backgroundColor: "#FFFF00",
+    color: "red",
+  };
+  const tblStyl2 = {
+    border: "1px solid black",
+    borderCollapse: "collapse",
+    backgroundColor: "#FFC000",
+    color: "black",
+  };
+  const tblStyl3 = {
+    border: "1px solid black",
+    borderCollapse: "collapse",
+    backgroundColor: "rgb(255, 192, 0)",
+  };
+  const tblStyl4 = {
+    color: "green",
+    border: "1px solid black",
+  };
+
   const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
     const classes = useStyles();
@@ -640,13 +660,43 @@ const ContentLogic = (props) => {
     const [activeStep, setActiveStep] = useState(0);
     const [skipped, setSkipped] = useState(new Set());
     const [openChildModal, setOpenChilModal] = useState(false);
+    const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
+    const [tabValue, setTabValue] = useState("1");
+    const [cmpyvalue, setCmpyValue] = useState("");
+    const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
+    const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
+
+  const handleClickOpenAddBtchprty = () => {
+    setOpenAddBtchprty(true);
+  };
+
+  const handleCloseAddBtchprty = () => {
+    setOpenAddBtchprty(false);
+  };
+  const handleClickOpenAdminCanUplBtch = () => {
+    setOpenAdminCanUplBtch(true);
+  };
+
+  const handleCloseAdminCanUplBtch = () => {
+    setOpenAdminCanUplBtch(false);
+  };
+
+    const handleChangeTab = (event, newValue) => {
+      setTabValue(newValue);
+    };
 
     const handleClickOpenChildModal = () => {
       setOpenChilModal(true);
     };
+    const handleClickOpenChildModalCerti = () => {
+      setOpenChilModalCerti(true);
+    };
 
     const handleCloseChildModal = () => {
       setOpenChilModal(false);
+    };
+    const handleCloseChildModalCerti = () => {
+      setOpenChilModalCerti(false);
     };
 
     const isStepOptional = (step) => {
@@ -694,6 +744,12 @@ const ContentLogic = (props) => {
     const handleClickOpen = () => {
       setOpenModal(true);
     };
+    const onDownload = () => {
+      const link = document.createElement("a");
+      link.download = `download.txt`;
+      link.href = "./download.txt";
+      link.click();
+    };
 
     const handleClose = () => {
       setOpenModal(false);
@@ -735,6 +791,7 @@ const ContentLogic = (props) => {
           return (
             <>
               <Button
+                onClick={handleClickOpen}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -834,6 +891,7 @@ const ContentLogic = (props) => {
           return (
             <>
               <Button
+              onClick={handleClickOpenAdminCanUplBtch}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -853,6 +911,7 @@ const ContentLogic = (props) => {
           return (
             <>
               <Button
+              onClick={handleClickOpenAddBtchprty}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -996,13 +1055,15 @@ const ContentLogic = (props) => {
                               id="filled-basic"
                               label="Full Name"
                               variant="filled"
-                              sx={{ width: "69ch" }}
+                              sx={{ width: "69ch", mb: 4 }}
                             />
                           </ListItem>
                           <ListItem>
                             <TextField
                               id="filled-basic"
                               label="Birthdate"
+                              InputLabelProps={{ shrink: true }}
+                              type="date"
                               variant="filled"
                               sx={{ width: "69ch" }}
                             />
@@ -1218,7 +1279,7 @@ const ContentLogic = (props) => {
                         </div>
                       </Box>
                     </List>
-                  ) : (
+                  ) : activeStep === 1 ? (
                     <List style={{ marginLeft: "100px", marginTop: "-50px" }}>
                       <Box>
                         <div>
@@ -1260,77 +1321,965 @@ const ContentLogic = (props) => {
                                 backgroundColor: "brown",
                               }}
                             >
-                              
                               <AddIcon />
                               Add
                             </Button>
                           </ListItem>
                           <ListItem>
-                          <WorkExperiance/>
+                            <WorkExperiance />
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem>
+                            <h2>Training/Certificates</h2>
+                          </ListItem>
+                          <ListItem>
+                            <Button
+                              onClick={handleClickOpenChildModalCerti}
+                              style={{
+                                color: "white",
+                                backgroundColor: "brown",
+                              }}
+                            >
+                              <AddIcon />
+                              Add
+                            </Button>
+                          </ListItem>
+                          <ListItem>
+                            <AddCertificates />
+                          </ListItem>
+                        </div>
+                        <div>
+                          <ListItem>
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              disabled={activeStep === 0}
+                              onClick={handleBack}
+                            >
+                              PREV
+                            </Button>
+
+                            <Button
+                              onClick={handleNext}
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                              }}
+                            >
+                              NEXT
+                            </Button>
+                            <Button
+                              style={{
+                                backgroundColor: "black",
+                                color: "white",
+                                marginLeft: "10px",
+                              }}
+                            >
+                              EXIT
+                            </Button>
                           </ListItem>
                         </div>
                       </Box>
                     </List>
-                  )}
+                  ) : null}
                 </Typography>
               </Box>
-              <Dialog
-                maxWidth="xl"
-                open={openChildModal}
-                onClose={handleCloseChildModal}
-              >
-                <DialogTitle>Add Work Experiance</DialogTitle>
-                <DialogContent>
-                  <ListItem>
-                    <TextField
-                      id="name"
-                      label="Company Name"
-                      sx={{ width: "30ch" }}
-                      variant="filled"
-                    />
-                    <TextField
-                      id="name"
-                      label="Skills"
-                      sx={{ width: "30ch", ml: 4 }}
-                      variant="filled"
-                    />
-                    <TextField
-                      id="date"
-                      label="Start Date"
-                      sx={{ width: "30ch", ml: 4 }}
-                      variant="filled"
-                    />
-                    <TextField
-                      id="date"
-                      label="End Date"
-                      sx={{ width: "30ch", ml: 4 }}
-                      variant="filled"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <TextField
-                      fullWidth
-                      sx={{ width: "140ch" }}
-                      label="Descriptions About Experiance"
-                      id="filled-basic"
-                      multiline
-                      rows={5}
-                      variant="filled"
-                    />
-                  </ListItem>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseChildModal}>Close</Button>
-                  <Button
-                    style={{ backgroundColor: "brown", color: "white" }}
-                    onClick={handleCloseChildModal}
-                  >
-                    Add
-                  </Button>
-                </DialogActions>
-              </Dialog>
+              <div>
+                <Dialog
+                  maxWidth="xl"
+                  open={openChildModal}
+                  onClose={handleCloseChildModal}
+                >
+                  <DialogTitle>Add Work Experiance</DialogTitle>
+                  <DialogContent>
+                    <ListItem>
+                      <TextField
+                        id="name"
+                        label="Company Name"
+                        sx={{ width: "30ch" }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="name"
+                        label="Skills"
+                        sx={{ width: "30ch", ml: 4 }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="date"
+                        label="Start Date"
+                        InputLabelProps={{ shrink: true }}
+                        type="date"
+                        sx={{ width: "30ch", ml: 4 }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="date"
+                        label="End Date"
+                        InputLabelProps={{ shrink: true }}
+                        type="date"
+                        sx={{ width: "30ch", ml: 4 }}
+                        variant="filled"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <TextField
+                        fullWidth
+                        sx={{ width: "140ch" }}
+                        label="Descriptions About Experiance"
+                        id="filled-basic"
+                        multiline
+                        rows={5}
+                        variant="filled"
+                      />
+                    </ListItem>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseChildModal}>Close</Button>
+                    <Button
+                      style={{ backgroundColor: "brown", color: "white" }}
+                      onClick={handleCloseChildModal}
+                    >
+                      Add
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+              <div>
+                <Dialog
+                  maxWidth="xl"
+                  open={openChildModalCerti}
+                  onClose={handleCloseChildModalCerti}
+                >
+                  <DialogTitle>Add Certificate</DialogTitle>
+                  <DialogContent>
+                    <ListItem>
+                      <TextField
+                        id="name"
+                        label="Certificate Name"
+                        sx={{ width: "45ch" }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="name"
+                        label="Certificate Type"
+                        sx={{ width: "45ch", ml: 4 }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="name"
+                        label="Issued By"
+                        sx={{ width: "45ch", ml: 4 }}
+                        variant="filled"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <TextField
+                        id="name"
+                        select
+                        label="Skills"
+                        sx={{ width: "45ch" }}
+                        variant="filled"
+                      />
+                      <TextField
+                        id="date"
+                        label="Issued Date"
+                        InputLabelProps={{ shrink: true }}
+                        type="date"
+                        sx={{ width: "45ch", ml: 4 }}
+                        variant="filled"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <TextField
+                        fullWidth
+                        sx={{ width: "145ch" }}
+                        label="Descriptions About Certifiacte"
+                        id="filled-basic"
+                        multiline
+                        rows={5}
+                        variant="filled"
+                      />
+                    </ListItem>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseChildModalCerti}>Close</Button>
+                    <Button
+                      style={{ backgroundColor: "brown", color: "white" }}
+                      onClick={handleCloseChildModalCerti}
+                    >
+                      Add
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
             </>
           );
+
+        case "candidate-upload-batch":
+          return (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={onDownload}
+                  style={{
+                    backgroundColor: "#009688",
+                    color: "white",
+                    marginBottom: "20px",
+                    marginTop: "20px",
+                  }}
+                >
+                  <PriorityHigh />
+                  Download Bulk Upload Template
+                </Button>
+                <label htmlFor="upload-photo">
+                  <Button
+                    component="span"
+                    variant="contained"
+                    style={{
+                      color: "white",
+                      background: "brown",
+                      fontSize: "22px",
+                    }}
+                  >
+                    <FileUploadIcon />
+                    <input
+                      id="upload-photo"
+                      name="upload-photo"
+                      type="file"
+                      style={{ display: "none" }}
+                    />
+                    Upload
+                  </Button>
+                </label>
+                <p>
+                  Total Records: <b>0</b>{" "}
+                </p>
+                <h2>Guidelines for uploading your data file</h2>
+                <ListItem>
+                  <ol>
+                    <li>
+                      Your data file should be in <b>MS Excel format(.xlsx).</b>{" "}
+                      It must have<b> 4 mandatory columns.</b> It can have 18
+                      columns and<b> column names</b> have to be{" "}
+                      <b> exactly same as per the template</b> given above.
+                      Column names are not case sensitive.
+                    </li>
+                    <li>
+                      <b>
+                        If you do not have value for the column, please leave it
+                        blank.
+                      </b>
+                    </li>
+                    <li>
+                      File name can be anything. Data must have to be in the{" "}
+                      <b>first sheet.</b>
+                    </li>
+                    <li>
+                      Following are<b> mandatory fields</b>, if<b> anyone </b>{" "}
+                      is missing, record will be rejected.
+                      <ul>
+                        <li>category</li>
+                        <li>full_name</li>
+                        <li>primary_mobile (has to be exact 10 digits)</li>
+                        <li>curr_city</li>
+                      </ul>
+                    </li>
+                    <li>
+                      Following are <b>unique fields</b>
+                      <ul>
+                        <li>primary_mobile</li>
+                        <li>primary_email</li>
+                      </ul>
+                    </li>
+                    <li>
+                      If there is any duplicate value found for <b>unique</b>{" "}
+                      fields in Excel sheet or in our system database, that
+                      value will be ignored(consider blank)
+                    </li>
+                    <li>
+                      Following are accepted date formats. Columns which require
+                      date values are:<b> birth_date.</b>
+                      <ul>
+                        <li>DD.MM.YY</li>
+                        <li>DD-MM-YY</li>
+                        <li>DD/MM/YY</li>
+                        <li>DD.MM.YYYY</li>
+                        <li>DD-MM-YYYY</li>
+                        <li>DD/MM/YYYY</li>
+                        <li>YYYY.MM.DD</li>
+                        <li>YYYY-MM-DD</li>
+                        <li>YYYY/MM/DD</li>
+                        <li>
+                          For ex.
+                          <table style={tblStyl}>
+                            <tr>
+                              <td style={tblStyl}>20-10-1999</td>
+                              <td style={tblStyl}>Accepted</td>
+                            </tr>
+                            <tr>
+                              <td style={tblStyl}>1999-12-11</td>
+                              <td style={tblStyl}>Accepted</td>
+                            </tr>
+                            <tr>
+                              <td style={tblStyl}>4-10-1999</td>
+                              <td style={tblStyl}>Ignored</td>
+                            </tr>
+                            <tr>
+                              <td style={tblStyl}>4-4-1999</td>
+                              <td style={tblStyl}>Ignored</td>
+                            </tr>
+                            <tr>
+                              <td style={tblStyl}>10-4-1999</td>
+                              <td style={tblStyl}>Ignored</td>
+                            </tr>
+                            <tr>
+                              <td style={tblStyl}>1-4-99</td>
+                              <td style={tblStyl}>Ignored</td>
+                            </tr>
+                          </table>
+                        </li>
+                      </ul>
+                      <li>
+                        Colors description in bulk upload template
+                        <table style={tblStyl}>
+                          <tr>
+                            <th style={tblStyl3}>column_name</th>
+                            <td style={tblStyl}>Non mandatory column</td>
+                          </tr>
+                          <tr>
+                            <th style={tblStyl2}>column_name</th>
+                            <td style={tblStyl}>Non mandatory unique column</td>
+                          </tr>
+                          <tr>
+                            <th style={tblStyl1}>column_name</th>
+                            <td style={tblStyl}>Mandatory column</td>
+                          </tr>
+                          <tr>
+                            <th style={tblStyl2}>column_name</th>
+                            <td style={tblStyl}>Mandatory unique column</td>
+                          </tr>
+                        </table>
+                      </li>
+                    </li>
+                    <li>
+                      Fields
+                      <table style={tblStyl}>
+                        <tr>
+                          <th style={tblStyl}>Field name </th>
+                          <th style={tblStyl}>Maximum length </th>
+                          <th style={tblStyl}>Mandatory</th>
+                          <th style={tblStyl}>Unique</th>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>industry</th>
+                          <td style={tblStyl}>80</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl1}>category</th>
+                          <td style={tblStyl}>80</td>
+                          <th style={tblStyl4}>Yes</th>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl1}>full_name</th>
+                          <td style={tblStyl}>100</td>
+                          <th style={tblStyl4}>Yes</th>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>birth_date</th>
+                          <td style={tblStyl}>Date</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl1}>primary_mobile</th>
+                          <td style={tblStyl}>10</td>
+                          <th style={tblStyl4}>Yes</th>
+                          <th style={tblStyl4}>Yes</th>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl1}>curr_city</th>
+                          <td style={tblStyl}>45</td>
+                          <th style={tblStyl4}>Yes</th>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>curr_pincode</th>
+                          <td style={tblStyl}>6</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>primary_email</th>
+                          <td style={tblStyl}>80</td>
+                          <td style={tblStyl}>No</td>
+                          <th style={tblStyl4}>Yes</th>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>primary_lang</th>
+                          <td style={tblStyl}>15</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>secondary_lang</th>
+                          <td style={tblStyl}>15</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>skill_1</th>
+                          <td style={tblStyl}>45</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>skill_2</th>
+                          <td style={tblStyl}>45</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>pref_location_1</th>
+                          <td style={tblStyl}>80</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>pref_location_2</th>
+                          <td style={tblStyl}>80</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>education</th>
+                          <td style={tblStyl}>50</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>exp_years</th>
+                          <td style={tblStyl}>2</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>last_company</th>
+                          <td style={tblStyl}>100</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>designation</th>
+                          <td style={tblStyl}>80</td>
+                          <td style={tblStyl}>No</td>
+                          <td style={tblStyl}>No</td>
+                        </tr>
+                      </table>
+                    </li>
+                  </ol>
+                </ListItem>
+              </Box>
+            </>
+          );
+
+        case "agent-master":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 18 }}>
+                <TabContext value={tabValue}>
+                  <Box>
+                    <TabList
+                      onChange={handleChangeTab}
+                      aria-label="lab API tabs example"
+                    >
+                      <Tab label="BASIC" value="1" style={{ color: "brown" }} />
+                      <Tab label="PROFESSIONAL" value="2" />
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1">
+                    <FormControl>
+                      <FormLabel id="demo-row-radio-buttons-group-label">
+                        Select
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                      >
+                        <FormControlLabel
+                          value="individual"
+                          control={<Radio />}
+                          onClick={() => {
+                            setCmpyValue("individual");
+                          }}
+                          label="Individual"
+                        />
+                        <FormControlLabel
+                          value="company"
+                          control={<Radio />}
+                          onClick={() => {
+                            setCmpyValue("company");
+                          }}
+                          label="Company"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <Box>
+                      <div>
+                        <List sx={{ mb: 5 }}>
+                          <TextField
+                            required
+                            id="filled-basic"
+                            label="Aadhar No"
+                            type="number"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+
+                          {cmpyvalue === "company" ? (
+                            <>
+                              <TextField
+                                id="filled-basic"
+                                label="Company Name"
+                                type="name"
+                                variant="filled"
+                                sx={{ width: "30ch", ml: 4 }}
+                              />
+                              <TextField
+                                id="filled-basic"
+                                label="GSTIN"
+                                type="name"
+                                variant="filled"
+                                sx={{ width: "30ch", ml: 4 }}
+                              />
+                            </>
+                          ) : null}
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Full Name"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Birthdate"
+                            InputLabelProps={{ shrink: true }}
+                            type="date"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4, mr: 4 }}
+                          />
+                        </List>
+                        <List sx={{ mb: 5, mt: 5 }}>
+                          <FormLabel id="demo-row-radio-buttons-group-label">
+                            Select
+                          </FormLabel>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel
+                              value="female"
+                              control={<Radio />}
+                              label="Female"
+                            />
+                            <FormControlLabel
+                              value="male"
+                              control={<Radio />}
+                              label="Male"
+                            />
+                            <FormControlLabel
+                              value="other"
+                              control={<Radio />}
+                              label="Other"
+                            />
+                          </RadioGroup>
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Email"
+                            required
+                            type="email"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Contact no"
+                            required
+                            type="number"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Current Address"
+                            required
+                            rows={3}
+                            multiline
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "64ch", mt: 5, mb: 5 }}
+                          />
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Current pincode"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Current city"
+                            required
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Current state"
+                            required
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                        </List>
+                        <List sx={{ mb: 5, mt: 5 }}>
+                          <FormControlLabel
+                            control={<Checkbox />}
+                            label="Same as current address"
+                          />
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Permanent Address"
+                            required
+                            rows={3}
+                            multiline
+                            helperText="Must match address in one of the KYC document"
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "64ch", mb: 5 }}
+                          />
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Permanent pincode"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Permanent city"
+                            required
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Permanent state"
+                            required
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                        </List>
+                        <List sx={{ mt: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="Pan Card"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Aadhar card"
+                            required
+                            type="number"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                        </List>
+                        <List sx={{ mt: 5, mb: 5 }}>
+                          <List>
+                            <b>Languages</b>
+                          </List>
+                          <TextField
+                            id="filled-basic"
+                            label="Primary language"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Secondary language"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Third language"
+                            required
+                            type="name"
+                            variant="filled"
+                            sx={{ width: "30ch", ml: 4 }}
+                          />
+                        </List>
+                        <List>
+                          <TextField
+                            id="filled-basic"
+                            label="Note"
+                            rows={3}
+                            multiline
+                            type="address"
+                            variant="filled"
+                            sx={{ width: "64ch", mb: 5 }}
+                          />
+                        </List>
+                        <List sx={{ mb: 3 }}>
+                          <FormControlLabel
+                            defaultChecked
+                            control={<Checkbox />}
+                            label="Is Active"
+                          />
+                        </List>
+                        <List>
+                          <Button sx={{ color: "white", background: "brown" }}>
+                            Save
+                          </Button>
+                        </List>
+                      </div>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <FormControl>
+                      <List sx={{ mb: 5 }}>
+                        <List>
+                          <b>Bank details</b>
+                        </List>
+                        <TextField
+                          id="filled-basic"
+                          label="Bank name"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="A/C no"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="IFSC Code"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="A/C Type"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                      </List>
+                      <List sx={{ mb: 5 }}>
+                        <List>
+                          <b>Professional details</b>
+                        </List>
+                        <TextField
+                          id="filled-basic"
+                          label="Professional Status"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Sub work location 1 "
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Sub work location 2"
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                      </List>
+                      <List>
+                        <ProfessionalTab />
+                      </List>
+                      <List>
+                        <Button
+                          sx={{ color: "white", bgcolor: "brown", mt: 3 }}
+                        >
+                          Save
+                        </Button>
+                      </List>
+                    </FormControl>
+                  </TabPanel>
+                </TabContext>
+              </Box>
+            </>
+          );
+
+        case "agent-pricing-template":
+          return (
+            <>
+              <List
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mr: 20,
+                  alignItems: "flex-start",
+                }}
+              >
+                <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
+                  Save
+                </Button>
+                <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button>
+
+                <ul style={{ fontSize: "12px",marginTop:'-10px' }}>
+                  <h2>Total:0</h2>
+                  <li>Last modified by:</li>
+                  <li>Last modified on:</li>
+                  <li>Created by:</li>
+                  <li>Created on:</li>
+                </ul>
+              </List>
+              <Box
+                sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
+              >
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                  required
+                    id="filled-basic"
+                    label="Template Name"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "30ch" }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 4 }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Approval Remarks"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 4 }}
+                  />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Industry" variant="outlined" />
+                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Category" variant="outlined" />
+                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Education" variant="outlined" />
+                </List>
+                <List >
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Full Name" variant="outlined" />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Birthdate" variant="outlined" />
+                </List>
+                <List>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary language" variant="outlined" />
+                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Secondary language" variant="outlined" />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary Mobile" variant="outlined" />
+                </List>
+                <List>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Current city" variant="outlined" />
+                <TextField sx={{ml:2}}  id="outlined-basic" size="small" value={0} type='number' label="Current pincode" variant="outlined" />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary Email" variant="outlined" />
+                </List>
+                <List>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Preffered location 1" variant="outlined" />
+                <TextField sx={{ml:2}}  id="outlined-basic" size="small" value={0} type='number' label="Preffered location 2" variant="outlined" />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Work Exp yrs" variant="outlined" />
+                </List>
+                <List>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Last company name" variant="outlined" />
+                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Designation" variant="outlined" />
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary skills" variant="outlined" />
+                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Secondary skills" variant="outlined" />
+                </List>
+                <List>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="Is Active" />
+                </FormGroup>
+                </List>
+                <List sx={{mt:4,mb:4}}>
+                  <Button sx={{color:'white',bgcolor:'brown'}}>Save</Button>
+                  <Button sx={{bgcolor:'#f5f0e4',color:'black',ml:2}}>Exit</Button>
+                </List>
+              </Box>
+            </>
+          );
+        case "category":
+          return (
+            <>
+              <Box>
+                <div>
+                
+                </div>
+              </Box>
+            </>
+          )
 
         default:
           break;
@@ -1399,12 +2348,104 @@ const ContentLogic = (props) => {
             >
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
-            Add New
+            {modalTitle}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-
           {handlerModuleInputs()}
         </Dialog>
+        {/* admin candidate upload batch modal */}
+        <Dialog fullWidth open={openAdminCanUplBtch} onClose={handleCloseAdminCanUplBtch}>
+        <DialogTitle>Admin - Candidate Upload Batch</DialogTitle>
+
+        <DialogContent>
+        <Button
+                  variant="contained"
+                  onClick={onDownload}
+                  style={{
+                    backgroundColor: "#009688",
+                    color: "white",
+                    fontSize:'12px',marginRight:'5px'
+                  }}
+                >
+                  Download Template
+                </Button>
+                <Tooltip title="Template for Candidate Upload Batch.All columns persent in the excel">
+                <Info/>
+                </Tooltip>
+                <List>
+                  <p>Guideline is available <a href="http://localhost:3000/candidate-upload-batch#outlined-buttons">link</a></p>
+                </List>
+                <List>
+                <label htmlFor="upload-photo">
+                  <Button
+                    component="span"
+                    variant="contained"
+                    style={{
+                      color: "white",
+                      background: "brown",
+                      fontSize: "15px",
+                    }}
+                  >
+                    <input
+                      id="upload-photo"
+                      name="upload-photo"
+                      type="file"
+                      style={{ display: "none" }}
+                    />
+                    Select File
+                  </Button>
+                </label>
+                </List>
+                <List>
+                  <p>Total Records:<b>0</b></p>
+                </List>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="filled-basic" label="Owner" variant="filled"
+            type="email"
+            fullWidth
+            select
+          />
+        </DialogContent>
+        <DialogActions>
+          
+          <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
+        </DialogActions>
+      </Dialog>
+      {/* batch priority modal */}
+      <Dialog fullWidth open={openAddBtchprty} onClose={handleCloseAddBtchprty}>
+        <DialogTitle>Add Batch Priority</DialogTitle>
+
+        <DialogContent>
+        <List sx={{mb:3}}>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="filled-basic" label="Batch no" variant="filled"
+            type="email"
+            fullWidth
+            select
+          />
+          </List>
+        <List>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="filled-basic" label="Assigned To" variant="filled"
+            type="email"
+            fullWidth
+            select
+          />
+          </List>
+          
+        </DialogContent>
+        <DialogActions>
+          
+          <Button onClick={handleCloseAddBtchprty}>Close</Button>
+          <Button onClick={handleCloseAddBtchprty}>Save</Button>
+        </DialogActions>
+      </Dialog>
       </Toolbar>
     );
   };
@@ -1505,6 +2546,7 @@ const ContentLogic = (props) => {
     setTblHeader,
     setPageName,
     setButtonText,
+    setModalTitle,
     canMasterTblHerader,
     candUploadBatch,
     canVerification,

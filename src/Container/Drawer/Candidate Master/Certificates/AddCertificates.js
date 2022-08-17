@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -83,26 +84,21 @@ const headCells = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Campany Name',
+    label: 'Certificate Name',
   },
   {
-    id: 'startDate',
+    id: 'certificateType',
     numeric: true,
     disablePadding: false,
-    label: 'Start Date',
+    label: 'Certificate Type',
   },
   {
-    id: 'endDate',
+    id: 'issuedDate',
     numeric: true,
     disablePadding: false,
-    label: 'End Date',
+    label: 'Issued Date',
   },
-  {
-    id: 'yearOfExperiance',
-    numeric: true,
-    disablePadding: false,
-    label: 'Year of Experiance',
-  },
+ 
   
 ];
 
@@ -185,7 +181,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function WorkExperiance() {
+export default function AddCertificates() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);

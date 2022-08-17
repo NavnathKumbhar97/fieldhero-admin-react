@@ -41,6 +41,7 @@ export default function ContentDesign(props) {
     handleClick,
     handleChangeDense,
     isSelected,
+    setModalTitle,
     pageTitle,
     setPageTitle,
     EnhancedTableToolbar,
@@ -73,6 +74,7 @@ export default function ContentDesign(props) {
     setPageTitle(data.pageTitle);
     setButtonText(data.buttonText)
     setPageName(data.page)
+    setModalTitle(data.modalTitle)
     if (data.page === "candidate-master") {
       setTblHeader(canMasterTblHerader);
     }

@@ -25,6 +25,7 @@ import {
   FormLabel,
   List,
   ListItem,
+  MenuItem,
   Radio,
   RadioGroup,
   Tab,
@@ -652,6 +653,20 @@ const ContentLogic = (props) => {
     color: "green",
     border: "1px solid black",
   };
+  const gender = [
+    {
+      value: "Male",
+      label: "Male",
+    },
+    {
+      value: "Female",
+      label: "Female",
+    },
+    {
+      value: "Other",
+      label: "Other",
+    },
+  ];
 
   const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
@@ -665,21 +680,26 @@ const ContentLogic = (props) => {
     const [cmpyvalue, setCmpyValue] = useState("");
     const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
     const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
+    const [genders, setGenders] = useState();
 
-  const handleClickOpenAddBtchprty = () => {
-    setOpenAddBtchprty(true);
-  };
+    const handleGenders = (event) => {
+      setGenders(event.target.value);
+    };
 
-  const handleCloseAddBtchprty = () => {
-    setOpenAddBtchprty(false);
-  };
-  const handleClickOpenAdminCanUplBtch = () => {
-    setOpenAdminCanUplBtch(true);
-  };
+    const handleClickOpenAddBtchprty = () => {
+      setOpenAddBtchprty(true);
+    };
 
-  const handleCloseAdminCanUplBtch = () => {
-    setOpenAdminCanUplBtch(false);
-  };
+    const handleCloseAddBtchprty = () => {
+      setOpenAddBtchprty(false);
+    };
+    const handleClickOpenAdminCanUplBtch = () => {
+      setOpenAdminCanUplBtch(true);
+    };
+
+    const handleCloseAdminCanUplBtch = () => {
+      setOpenAdminCanUplBtch(false);
+    };
 
     const handleChangeTab = (event, newValue) => {
       setTabValue(newValue);
@@ -891,7 +911,7 @@ const ContentLogic = (props) => {
           return (
             <>
               <Button
-              onClick={handleClickOpenAdminCanUplBtch}
+                onClick={handleClickOpenAdminCanUplBtch}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -911,7 +931,7 @@ const ContentLogic = (props) => {
           return (
             <>
               <Button
-              onClick={handleClickOpenAddBtchprty}
+                onClick={handleClickOpenAddBtchprty}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -2181,9 +2201,11 @@ const ContentLogic = (props) => {
                 <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
                   Save
                 </Button>
-                <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button>
+                <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>
+                  Exit
+                </Button>
 
-                <ul style={{ fontSize: "12px",marginTop:'-10px' }}>
+                <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
                   <h2>Total:0</h2>
                   <li>Last modified by:</li>
                   <li>Last modified on:</li>
@@ -2196,7 +2218,7 @@ const ContentLogic = (props) => {
               >
                 <List sx={{ mb: 5 }}>
                   <TextField
-                  required
+                    required
                     id="filled-basic"
                     label="Template Name"
                     type="name"
@@ -2218,69 +2240,890 @@ const ContentLogic = (props) => {
                     sx={{ width: "40ch", ml: 4 }}
                   />
                 </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Industry" variant="outlined" />
-                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Category" variant="outlined" />
-                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Education" variant="outlined" />
-                </List>
-                <List >
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Full Name" variant="outlined" />
-                </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Birthdate" variant="outlined" />
-                </List>
-                <List>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary language" variant="outlined" />
-                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Secondary language" variant="outlined" />
-                </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary Mobile" variant="outlined" />
-                </List>
-                <List>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Current city" variant="outlined" />
-                <TextField sx={{ml:2}}  id="outlined-basic" size="small" value={0} type='number' label="Current pincode" variant="outlined" />
-                </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary Email" variant="outlined" />
-                </List>
-                <List>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Preffered location 1" variant="outlined" />
-                <TextField sx={{ml:2}}  id="outlined-basic" size="small" value={0} type='number' label="Preffered location 2" variant="outlined" />
-                </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Work Exp yrs" variant="outlined" />
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Industry"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Category"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Education"
+                    variant="outlined"
+                  />
                 </List>
                 <List>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Last company name" variant="outlined" />
-                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Designation" variant="outlined" />
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Full Name"
+                    variant="outlined"
+                  />
                 </List>
-                <List sx={{mt:4,mb:4}}>
-                <TextField id="outlined-basic" size="small" value={0} type='number' label="Primary skills" variant="outlined" />
-                <TextField sx={{ml:2}} id="outlined-basic" size="small" value={0} type='number' label="Secondary skills" variant="outlined" />
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Birthdate"
+                    variant="outlined"
+                  />
                 </List>
                 <List>
-                <FormGroup>
-                  <FormControlLabel control={<Checkbox defaultChecked />} label="Is Active" />
-                </FormGroup>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Primary language"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Secondary language"
+                    variant="outlined"
+                  />
                 </List>
-                <List sx={{mt:4,mb:4}}>
-                  <Button sx={{color:'white',bgcolor:'brown'}}>Save</Button>
-                  <Button sx={{bgcolor:'#f5f0e4',color:'black',ml:2}}>Exit</Button>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Primary Mobile"
+                    variant="outlined"
+                  />
+                </List>
+                <List>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Current city"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Current pincode"
+                    variant="outlined"
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Primary Email"
+                    variant="outlined"
+                  />
+                </List>
+                <List>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Preffered location 1"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Preffered location 2"
+                    variant="outlined"
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Work Exp yrs"
+                    variant="outlined"
+                  />
+                </List>
+                <List>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Last company name"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Designation"
+                    variant="outlined"
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Primary skills"
+                    variant="outlined"
+                  />
+                  <TextField
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={0}
+                    type="number"
+                    label="Secondary skills"
+                    variant="outlined"
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <Button sx={{ color: "white", bgcolor: "brown" }}>
+                    Save
+                  </Button>
+                  <Button sx={{ bgcolor: "#f5f0e4", color: "black", ml: 2 }}>
+                    Exit
+                  </Button>
                 </List>
               </Box>
             </>
           );
+        
         case "category":
           return (
             <>
-              <Box>
-                <div>
-                
-                </div>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Title"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                    Save
+                  </Button>
+                </List>
+                <List sx={{ fontSize: "13px" }}>
+                  <ul>
+                    <li>Last modified by:</li>
+                    <li>Last modified on:</li>
+                    <li>Created by:</li>
+                    <li>Created On:</li>
+                  </ul>
+                </List>
               </Box>
             </>
-          )
+          );
 
+        case "company":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Company Name"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Industry Name"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <Button sx={{ bgcolor: "brown", color: "white", mt: 5 }}>
+                    Save
+                  </Button>
+                </List>
+              </Box>
+            </>
+          );
+
+        case "industry":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Title"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                    Save
+                  </Button>
+                </List>
+              </Box>
+            </>
+          );
+
+        case "role":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Title"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <List>
+                    <b>Permissions Section</b>
+                    <p style={{ color: "brown" }}>Admin-Agent</p>
+                  </List>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Change Pricing Template"
+                    />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Approval" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Admin-Candidate Verification</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>
+                    Admin-Other Industry Category
+                  </p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Admin-User</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Reset Password"
+                    />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Agent</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Change Password"
+                    />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Agent Pricing Template</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Set Active"
+                    />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Batch Priority</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate - Basic</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Bulk Create"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Upload profile image"
+                    />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate - Certification</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate - Work History</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate Upload Batch</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Candidate Verification</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Category</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Company</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Customer</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Reset password"
+                    />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Customer - Subscription</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Industry</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Permission</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Public</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      disabled
+                      label="User - Login"
+                    />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Role</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Skill</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>Subscription</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read All" />
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Create" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                  </FormGroup>
+                  <p style={{ color: "brown" }}>User</p>
+                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Read" />
+                    <FormControlLabel control={<Checkbox />} label="Update" />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Change password"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <Button style={{ backgroundColor: "brown", color: "white" }}>
+                    Save
+                  </Button>
+                  <Button
+                    style={{
+                      marginLeft: 2,
+                      backgroundColor: "black",
+                      color: "white",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </List>
+              </Box>
+            </>
+          );
+
+        case "skillset":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Title"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    variant="filled"
+                    sx={{ width: "130ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                    Save
+                  </Button>
+                </List>
+              </Box>
+            </>
+          );
+
+        case "subscription":
+          return (
+            <>
+              <Box sx={{ display: "flex" }}>
+                <Box sx={{ justifyContent: "start", ml: 17, mt: 2 }}>
+                  <List>
+                    <TextField
+                      id="filled-basic"
+                      label="Plan Name"
+                      variant="filled"
+                      sx={{ width: "80ch" }}
+                    />
+                  </List>
+                  <List sx={{ mt: 4, mb: 4 }}>
+                    <TextField
+                      value={0}
+                      id="filled-basic"
+                      label="Data Count"
+                      variant="filled"
+                      sx={{ width: "40ch" }}
+                    />
+                    <TextField
+                      value={0}
+                      id="filled-basic"
+                      label="Duration in months"
+                      variant="filled"
+                      sx={{ width: "40ch", ml: 3 }}
+                    />
+                    <TextField
+                      value={0}
+                      id="filled-basic"
+                      label="Price"
+                      variant="filled"
+                      sx={{ width: "40ch", ml: 3 }}
+                    />
+                  </List>
+                  <List>
+                    <TextField
+                      id="filled-basic"
+                      label="Note"
+                      variant="filled"
+                      sx={{ width: "126ch", mb: 4 }}
+                    />
+                  </List>
+                  <List>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        label="Is Active"
+                      />
+                    </FormGroup>
+                  </List>
+                  <List>
+                    <Button
+                      style={{ color: "white", backgroundColor: "brown" }}
+                    >
+                      Save
+                    </Button>
+                  </List>
+                </Box>
+              </Box>
+            </>
+          );
+
+        case "user":
+          return (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "nowrap",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <List>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Full Name"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    type="date"
+                    id="filled-basic"
+                    label="Birthdate"
+                    variant="filled"
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                  <TextField
+                    select
+                    id="filled-basic"
+                    label="Gender"
+                    value={genders}
+                    onChange={handleGenders}
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  >
+                    {gender.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <TextField
+                    id="filled-basic"
+                    label="Email"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Contact no"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                  <TextField
+                    required
+                    select
+                    id="filled-basic"
+                    label="Role"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                </List>
+              </Box>
+              <Box sx={{ ml: 20 }}>
+                <List>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Current Address"
+                    variant="filled"
+                    multiline
+                    rows={4}
+                    sx={{ width: "100ch" }}
+                  />
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <TextField
+                    id="filled-basic"
+                    label="Current pincode"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Current city"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                  <TextField
+                    select
+                    id="filled-basic"
+                    label="Current State"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Same as current address"
+                    />
+                  </FormGroup>
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Permanent Address"
+                    variant="filled"
+                    multiline
+                    rows={4}
+                    sx={{ width: "100ch" }}
+                  />
+                </List>
+                <List>
+                  <TextField
+                    id="filled-basic"
+                    label="Permanent pincode"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Permanent city"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                  <TextField
+                    required
+                    select
+                    id="filled-basic"
+                    label="Permanent State"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <TextField
+                    id="filled-basic"
+                    label="Pan card"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Aadhar card"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                </List>
+                <List>
+                  <List>
+                    <p>Languages</p>
+                  </List>
+                  <TextField
+                    id="filled-basic"
+                    label="Primary Language"
+                    variant="filled"
+                    sx={{ width: "40ch" }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Secondary Language"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                  <TextField
+                    id="filled-basic"
+                    label="Third Language"
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 3 }}
+                  />
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Note"
+                    variant="filled"
+                    multiline
+                    rows={4}
+                    sx={{ width: "100ch" }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                    />
+                  </FormGroup>
+                </List>
+                <List sx={{mb:4,mt:4}}>
+                  <Button style={{ backgroundColor: "brown", color: "white" }}>
+                    Save
+                  </Button>
+                </List>
+              </Box>
+            </>
+          );
         default:
           break;
       }
@@ -2354,98 +3197,117 @@ const ContentLogic = (props) => {
           {handlerModuleInputs()}
         </Dialog>
         {/* admin candidate upload batch modal */}
-        <Dialog fullWidth open={openAdminCanUplBtch} onClose={handleCloseAdminCanUplBtch}>
-        <DialogTitle>Admin - Candidate Upload Batch</DialogTitle>
+        <Dialog
+          fullWidth
+          open={openAdminCanUplBtch}
+          onClose={handleCloseAdminCanUplBtch}
+        >
+          <DialogTitle>Admin - Candidate Upload Batch</DialogTitle>
 
-        <DialogContent>
-        <Button
+          <DialogContent>
+            <Button
+              variant="contained"
+              onClick={onDownload}
+              style={{
+                backgroundColor: "#009688",
+                color: "white",
+                fontSize: "12px",
+                marginRight: "5px",
+              }}
+            >
+              Download Template
+            </Button>
+            <Tooltip title="Template for Candidate Upload Batch.All columns persent in the excel">
+              <Info />
+            </Tooltip>
+            <List>
+              <p>
+                Guideline is available{" "}
+                <a href="http://localhost:3000/candidate-upload-batch#outlined-buttons">
+                  link
+                </a>
+              </p>
+            </List>
+            <List>
+              <label htmlFor="upload-photo">
+                <Button
+                  component="span"
                   variant="contained"
-                  onClick={onDownload}
                   style={{
-                    backgroundColor: "#009688",
                     color: "white",
-                    fontSize:'12px',marginRight:'5px'
+                    background: "brown",
+                    fontSize: "15px",
                   }}
                 >
-                  Download Template
+                  <input
+                    id="upload-photo"
+                    name="upload-photo"
+                    type="file"
+                    style={{ display: "none" }}
+                  />
+                  Select File
                 </Button>
-                <Tooltip title="Template for Candidate Upload Batch.All columns persent in the excel">
-                <Info/>
-                </Tooltip>
-                <List>
-                  <p>Guideline is available <a href="http://localhost:3000/candidate-upload-batch#outlined-buttons">link</a></p>
-                </List>
-                <List>
-                <label htmlFor="upload-photo">
-                  <Button
-                    component="span"
-                    variant="contained"
-                    style={{
-                      color: "white",
-                      background: "brown",
-                      fontSize: "15px",
-                    }}
-                  >
-                    <input
-                      id="upload-photo"
-                      name="upload-photo"
-                      type="file"
-                      style={{ display: "none" }}
-                    />
-                    Select File
-                  </Button>
-                </label>
-                </List>
-                <List>
-                  <p>Total Records:<b>0</b></p>
-                </List>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="filled-basic" label="Owner" variant="filled"
-            type="email"
-            fullWidth
-            select
-          />
-        </DialogContent>
-        <DialogActions>
-          
-          <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
-        </DialogActions>
-      </Dialog>
-      {/* batch priority modal */}
-      <Dialog fullWidth open={openAddBtchprty} onClose={handleCloseAddBtchprty}>
-        <DialogTitle>Add Batch Priority</DialogTitle>
+              </label>
+            </List>
+            <List>
+              <p>
+                Total Records:<b>0</b>
+              </p>
+            </List>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="filled-basic"
+              label="Owner"
+              variant="filled"
+              type="email"
+              fullWidth
+              select
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
+          </DialogActions>
+        </Dialog>
+        {/* batch priority modal */}
+        <Dialog
+          fullWidth
+          open={openAddBtchprty}
+          onClose={handleCloseAddBtchprty}
+        >
+          <DialogTitle>Add Batch Priority</DialogTitle>
 
-        <DialogContent>
-        <List sx={{mb:3}}>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="filled-basic" label="Batch no" variant="filled"
-            type="email"
-            fullWidth
-            select
-          />
-          </List>
-        <List>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="filled-basic" label="Assigned To" variant="filled"
-            type="email"
-            fullWidth
-            select
-          />
-          </List>
-          
-        </DialogContent>
-        <DialogActions>
-          
-          <Button onClick={handleCloseAddBtchprty}>Close</Button>
-          <Button onClick={handleCloseAddBtchprty}>Save</Button>
-        </DialogActions>
-      </Dialog>
+          <DialogContent>
+            <List sx={{ mb: 3 }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="filled-basic"
+                label="Batch no"
+                variant="filled"
+                type="email"
+                fullWidth
+                select
+              />
+            </List>
+            <List>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="filled-basic"
+                label="Assigned To"
+                variant="filled"
+                type="email"
+                fullWidth
+                select
+              />
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAddBtchprty}>Close</Button>
+            <Button onClick={handleCloseAddBtchprty}>Save</Button>
+          </DialogActions>
+        </Dialog>
       </Toolbar>
     );
   };

@@ -54,12 +54,14 @@ const pageData = () => {
     categoryMaster: {
       page: "category",
       buttonText: "New",
-      pageTitle:"Category - Master"
+      pageTitle:"Category - Master",
+      modalTitle:'Add Category'
     },
     companyMaster: {
       page: "company",
       buttonText: "New",
-      pageTitle:"Company - Master"
+      pageTitle:"Company - Master",
+      modalTitle:'Add Company'
     },
     customerMaster: {
       page: "customer",
@@ -69,27 +71,32 @@ const pageData = () => {
     industyMaster: {
       page: "industry",
       buttonText: "New",
-      pageTitle:"Industry - Master"
+      pageTitle:"Industry - Master",
+      modalTitle:'Add Industry'
     },
     roleMaster: {
       page: "role",
       buttonText: "New",
-      pageTitle:"Role - Master"
+      pageTitle:"Role - Master",
+      modalTitle:'Add Role'
     },
     skillsetMaster: {
       page: "skillset",
       buttonText: "New",
-      pageTitle:"Skill Set - Master"
+      pageTitle:"Skill Set - Master",
+      modalTitle:'Add Skill Set'
     },
     subscriptionMaster: {
       page: "subscription",
       buttonText: "New",
-      pageTitle:"Subscription"
+      pageTitle:"Subscription",
+      modalTitle:'Add Subscription'
     },
     userMaster: {
       page: "user",
       buttonText: "New",
-      pageTitle:"User - Master"
+      pageTitle:"User - Master",
+      modalTitle:'Add User'
     },
     
   };

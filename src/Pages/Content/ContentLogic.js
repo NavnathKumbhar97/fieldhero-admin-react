@@ -48,6 +48,7 @@ import { Info, PriorityHigh } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
+import Help from "../../Container/Drawer/Help/Help";
 
 const ContentLogic = (props) => {
   const [order, setOrder] = useState("asc");
@@ -793,8 +794,8 @@ const ContentLogic = (props) => {
                 <Button
                   onClick={handleClickOpen}
                   style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
+                    marginTop: "0px",
+                    // marginRight: "5px",
                     backgroundColor: "brown",
                     color: "white",
                   }}
@@ -3154,7 +3155,7 @@ const ContentLogic = (props) => {
           </Typography>
         ) : (
           <Typography
-            sx={{ flex: "1 1 100%" }}
+            sx={{ flex: "1 1 100%",display:"flex",flexDirection:'column' }}
             variant="h6"
             id="tableTitle"
             component="div"
@@ -3166,7 +3167,7 @@ const ContentLogic = (props) => {
         )}
 
         <Typography>{handleButtons()}</Typography>
-
+          
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton>

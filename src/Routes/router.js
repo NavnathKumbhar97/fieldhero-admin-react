@@ -6,6 +6,7 @@ import ForgotPass from "../Pages/ForgotPassword/ForgotPassDesign";
 import LoginDesign from "../Pages/Login/LoginDesign";
 import TheContent from "../Pages/TheContent/TheContent";
 import { pageData } from '../Pages/PageData/PageData'
+import Help from "../Container/Drawer/Help/Help";
 
 export default function () {
 
@@ -52,7 +53,7 @@ export default function () {
           <Route path="skillset" element={<ContentDesign data={skillsetMaster} />} />
           <Route path="subscription" element={<ContentDesign data={subscriptionMaster} />} />
           <Route path="user" element={<ContentDesign data={userMaster} />} />
-          <Route path="help" element={<TheContent />} />
+          <Route path="help" element={<Help/>} />
           <Route path="about" element={<TheContent />} />
 
         </Route>

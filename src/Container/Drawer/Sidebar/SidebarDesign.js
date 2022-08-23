@@ -106,7 +106,7 @@ function SidebarDesign() {
     setOpen,
     handleDrawerClose,
     handleDrawerOpen
-  } = SidebarLogic()
+  } = SidebarLogic();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -223,7 +223,7 @@ function SidebarDesign() {
           <ListItem disablePadding sx={{ pt: 0,pb:0.3 }}>
             <OtherMaster />
           </ListItem>
-          <ListItem disablePadding style={{ paddingBottom: "10px" }}>
+          <ListItem component={Link} to={"/help"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <HelpIcon />

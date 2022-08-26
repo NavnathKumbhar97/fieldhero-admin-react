@@ -119,7 +119,8 @@ const ContentLogic = (props) => {
     });
     return stabilizedThis.map((el) => el[0]);
   }
-
+  
+// table headings array
   const headCells = [
     {
       id: "name",
@@ -571,7 +572,7 @@ const ContentLogic = (props) => {
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.Candidates);
           console.log("tbldataCandidate",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -582,6 +583,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //fetch the agent master data 
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -598,9 +600,10 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateMasterAPIcall", error);
+        console.error("There was an error!- getAgentMasterAPIcall", error);
       });
   };
+  //fetch the candidate verification data 
   const getCandidateVerificationAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -612,25 +615,259 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setTblData(response.data.data);
           console.log("candidate verification",tblData);
+         
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateMasterAPIcall", error);
+        console.error("There was an error!- getCandidateVerificationAPIcall", error);
+      });
+  };
+  //fetch the agent pricing template data 
+  const getAgentTemplatePricingAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/agent-pricing-templates", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("agent template data",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getAgentTemplatePricingAPIcall", error);
+      });
+  };
+  //fetch the candidate upload batch admin data 
+  const getCandidateUploadBatchAdminAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/admin/candidate-upload-batches", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data.items);
+          console.log("upload batch ",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCandidateUploadBatchAdminAPIcall", error);
+      });
+  };
+  //fetch the category data 
+  const getCategoryAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/categories", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("category",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCategoryAPIcall", error);
+      });
+  };
+  //fetch the company data 
+  const getCompanyAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/companies", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("company",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCompanyAPIcall", error);
+      });
+  };
+  //fetch the customer data 
+  const getCustomerAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/customers", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("customer",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCustomerAPIcall", error);
+      });
+  };
+  //fetch the industry data 
+  const getIndustryAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/industries", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("customer",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getIndustryAPIcall", error);
+      });
+  };
+  //fetch the roles data 
+  const getRoleAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/roles", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("roles",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getRoleAPIcall", error);
+      });
+  };
+  //fetch the skillset data 
+  const getSkillSetAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/skills", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("skill set",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSkillSetAPIcall", error);
+      });
+  };
+  //fetch the subscriptions data 
+  const getSubscriptionAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/subscriptions", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("subscriptions",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSubscriptionAPIcall", error);
+      });
+  };
+  //fetch the users data 
+  const getUserAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/users", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("users",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getUserAPIcall", error);
       });
   };
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
     switch (pageName) {
+
       case "candidate-master":
         getCandidateMasterAPIcall();
         break;
       case "agent-master":
         getAgentMasterAPIcall()
+        break;
       case "candidate-verification":
         getCandidateVerificationAPIcall()
+        break;
+      case "agent-pricing-template":
+        getAgentTemplatePricingAPIcall()
+        break;
+      case "candidate-upload-batch-admin":
+        getCandidateUploadBatchAdminAPIcall()
+        break;
+      case "category":
+        getCategoryAPIcall()
+        break;
+      case "company":
+        getCompanyAPIcall()
+        break;
+      case "customer":
+        getCustomerAPIcall()
+        break;
+      case "industry":
+        getIndustryAPIcall()
+        break;
+      case "role":
+        getRoleAPIcall()
+        break;
+      case "skillset":
+        getSkillSetAPIcall()
+        break;
+      case "subscription":
+        getSubscriptionAPIcall()
+        break;
+      case "user":
+        getUserAPIcall()
+        break;
       default:
         break;
     }

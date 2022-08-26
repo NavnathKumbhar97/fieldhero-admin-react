@@ -119,7 +119,7 @@ const ContentLogic = (props) => {
     });
     return stabilizedThis.map((el) => el[0]);
   }
-  
+
 // table headings array
   const headCells = [
     {
@@ -583,6 +583,26 @@ const ContentLogic = (props) => {
       });
   };
 
+  const getCandidateUploadBatchAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/candidate-upload-batches", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data.Candidates);
+          console.log("candidate-upload-batches",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCandidateUploadBatchAPIcall", error);
+      });
+  };
+
   //fetch the agent master data 
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -832,11 +852,14 @@ const ContentLogic = (props) => {
       case "candidate-master":
         getCandidateMasterAPIcall();
         break;
-      case "agent-master":
-        getAgentMasterAPIcall()
+      case "candidate-upload-batch":
+        getCandidateUploadBatchAPIcall();
         break;
       case "candidate-verification":
         getCandidateVerificationAPIcall()
+        break;
+      case "agent-master":
+        getAgentMasterAPIcall()
         break;
       case "agent-pricing-template":
         getAgentTemplatePricingAPIcall()

@@ -163,6 +163,42 @@ export default function ContentDesign(props) {
             ))}
         </>;
       
+      case "candidate-master":
+        return <>
+        {Object.keys(tblData).map((item, i) => (
+              <>
+                <TableRow hover role="checkbox" tabIndex={-1}>
+                  <TableCell padding="checkbox">
+                    <Checkbox color="primary" />
+                  </TableCell>
+
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {tblData[item].id}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].fullName}</TableCell>
+                  <TableCell align="center">
+                    {tblData[item].contactNo}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                </TableRow>
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </>
+            ))}
+        </>;
+      
       case "candidate-verification":
         return <>
         {Object.keys(tblData).map((item, i) => (

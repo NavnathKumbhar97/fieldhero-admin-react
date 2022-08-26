@@ -7,6 +7,7 @@ import LoginDesign from "../Pages/Login/LoginDesign";
 import TheContent from "../Pages/TheContent/TheContent";
 import { pageData } from '../Pages/PageData/PageData'
 import Help from "../Container/Drawer/Help/Help";
+import ForgotPassDesign from "../Pages/ForgotPassword/ForgotPassDesign";
 
 export default function () {
 
@@ -28,7 +29,7 @@ export default function () {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginDesign />}></Route>
-        <Route path="/forgotPassword" element={<ForgotPass />}></Route>
+        <Route path="/forgot-Password" element={<ForgotPassDesign/>}></Route>
 
         {/* the layout */}
         <Route path="" element={<SidebarDesign />}>

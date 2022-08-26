@@ -38,13 +38,13 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function LoginDesign() {
+function LoginDesign() {
   let {
     errorTextEmail,
     errorTextPass,
     setErrorTextPass,
-    showPass,
-    setShowPass,handleReset,setErrorTextEmail,validateEmail
+    showPass,email,password,setPassword,setEmail,
+    setShowPass,handleReset,setErrorTextEmail,loginAPIcall
   } = LoginLogic();
 
   const handleSubmit = (event) => {
@@ -93,10 +93,11 @@ export default function LoginDesign() {
               type="email"
               required
               fullWidth
-              value={errorTextEmail}
+              value={email}
               helperText={errorTextEmail ===""?"Email is required":""}
               error={errorTextEmail===""}
               onChange={(event)=>{setErrorTextEmail(event.target.value)
+                setEmail(event.target.value)
                 }}
               variant="standard"
               id="email"
@@ -121,10 +122,11 @@ export default function LoginDesign() {
               margin="normal"
               required
               fullWidth
-              value={errorTextPass}
+              value={password}
               helperText={errorTextPass===""?"Password is required":""}
               error={errorTextPass===""}
-              onChange={(event)=>{setErrorTextPass(event.target.value)}}
+              onChange={(event)=>{setErrorTextPass(event.target.value)
+              setPassword(event.target.value)}}
               id="password"
               variant="standard"
               name="password"
@@ -163,8 +165,8 @@ export default function LoginDesign() {
                 className="sign-btn"
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
-                onSubmit={handleSubmit}
-                noValidate
+                
+                onClick={loginAPIcall}
               >
                 Login
               </Button>
@@ -173,7 +175,6 @@ export default function LoginDesign() {
                   color: "black",
                 }}
                 id="clrbtn"
-                onClick={handleReset}
               >
                 Clear
               </Button>
@@ -202,3 +203,5 @@ export default function LoginDesign() {
     </ThemeProvider>
   );
 }
+
+export default LoginDesign;

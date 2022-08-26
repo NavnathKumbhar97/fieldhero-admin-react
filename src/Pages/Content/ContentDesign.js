@@ -20,6 +20,7 @@ export default function ContentDesign(props) {
     selected,
     page,
     rowsPerPage,
+    tblData,
     useStyles,
     dense,
     setOrder,
@@ -66,15 +67,17 @@ export default function ContentDesign(props) {
     roleMaster,
     skillSetMaster,
     subscriptionMaster,
-    userMaster
+    userMaster,
+    getAllData,
   } = ContentLogic();
 
   useEffect(() => {
+    getAllData(data.page);
     // console.log(data);
     setPageTitle(data.pageTitle);
-    setButtonText(data.buttonText)
-    setPageName(data.page)
-    setModalTitle(data.modalTitle)
+    setButtonText(data.buttonText);
+    setPageName(data.page);
+    setModalTitle(data.modalTitle);
     if (data.page === "candidate-master") {
       setTblHeader(canMasterTblHerader);
     }
@@ -119,102 +122,181 @@ export default function ContentDesign(props) {
     }
   }, [data.page]);
 
-  const handleTable = () =>{
-    switch (data.pageTitle) {
-      case 'Batch Priority':
-        return null;
-      case 'Other Industry Category':
-        return null;
-    
-      default:
-        return (<>
-          <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  // let tableData = tblData.map((d,i)=>{
+  //   return (<p>{d.id}</p>)
+  // })
+  // console.log("tableData",tableData);
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
+  const handleTblData = () => {
+    switch (data.page) {
+      case "candidate-master":
+        return <>
+        {Object.keys(tblData).map((item, i) => (
+              <>
+                <TableRow hover role="checkbox" tabIndex={-1}>
+                  <TableCell padding="checkbox">
+                    <Checkbox color="primary" />
+                  </TableCell>
+
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {tblData[item].id}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].fullName}</TableCell>
+                  <TableCell align="center">
+                    {tblData[item].contactNo}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          </TableContainer>
-          <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        /></>
-        )
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </>
+            ))}
+        </>;
+      case "agent-master":
+        return (
+          <>
+            {Object.keys(tblData).map((item, i) => (
+              <>
+                <TableRow hover role="checkbox" tabIndex={-1}>
+                  <TableCell padding="checkbox">
+                    <Checkbox color="primary" />
+                  </TableCell>
+
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {tblData[item].id}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].agentNo}</TableCell>
+                  <TableCell align="center">{tblData[item].fullName}</TableCell>
+                  <TableCell align="center">
+                    {tblData[item].contactNo}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].email}</TableCell>
+                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                </TableRow>
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </>
+            ))}
+          </>
+        );
+      case "candidate-verification":
+        return <>
+        {Object.keys(tblData).map((item, i) => (
+              <>
+                <TableRow hover role="checkbox" tabIndex={-1}>
+                  <TableCell padding="checkbox">
+                    <Checkbox color="primary" />
+                  </TableCell>
+
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {tblData[item].id}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].fullName}</TableCell>
+                  <TableCell align="center">
+                    {tblData[item].contactNo1}
+                  </TableCell>
+                  <TableCell align="center">{tblData[item].batchNo}</TableCell>
+                  <TableCell align="center">{tblData[item].createdOn}</TableCell>
+                  <TableCell align="center">{tblData[item].modifiedOn}</TableCell>
+                  <TableCell align="center">{tblData[item].candidateConsent}</TableCell>
+                  <TableCell align="center">{tblData[item].callStatus}</TableCell>
+                </TableRow>
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </>
+            ))}
+        </>;
+
+      default:
+        break;
     }
-  }
+  };
+
+  const handleTable = () => {
+    switch (data.pageTitle) {
+      case "Batch Priority":
+        return null;
+      case "Other Industry Category":
+        return null;
+
+      default:
+        return (
+          <>
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={dense ? "small" : "medium"}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                />
+                <TableBody>
+                  {handleTblData()}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        );
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-          {handleTable()}
+        {handleTable()}
       </Paper>
       {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}

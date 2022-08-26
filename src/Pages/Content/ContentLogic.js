@@ -49,6 +49,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
 import Help from "../../Container/Drawer/Help/Help";
+import handler from "../../handlers/generalHandlers";
 
 const ContentLogic = (props) => {
   const [order, setOrder] = useState("asc");
@@ -60,6 +61,7 @@ const ContentLogic = (props) => {
   const [pageTitle, setPageTitle] = useState();
   const [buttonText, setButtonText] = useState();
   const [modalTitle, setModalTitle] = useState();
+  const [tblData, setTblData] = useState([]);
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
     return {
@@ -84,7 +86,7 @@ const ContentLogic = (props) => {
   }
 
   const rows = [
-    // createData("Test Name", "Test industry", "Test Status"),
+    createData("Test Name", "Test industry", "Test Status"),
     // createData("Test 2 Name", "Test 2 Industry", "Test Status"),
   ];
 
@@ -559,6 +561,81 @@ const ContentLogic = (props) => {
     },
   ];
 
+  //candidate master
+  const getCandidateMasterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/candidates", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("tbldataCandidate",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+
+  const getAgentMasterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/agents", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("tblData",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+  const getCandidateVerificationAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet("/v1/candidate-verifications", {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data);
+          console.log("candidate verification",tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+
+  //get all the based on routes with permissions
+  const getAllData = (pageName) => {
+    switch (pageName) {
+      case "candidate-master":
+        getCandidateMasterAPIcall();
+        break;
+      case "agent-master":
+        getAgentMasterAPIcall()
+      case "candidate-verification":
+        getCandidateVerificationAPIcall()
+      default:
+        break;
+    }
+  };
+
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -590,7 +667,7 @@ const ContentLogic = (props) => {
           {tblHeader.map((headCell) => (
             <TableCell
               key={headCell.id}
-              // align={headCell.numeric ? "right" : "left"}
+              align="center"
               padding={headCell.disablePadding ? "none" : "normal"}
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -765,6 +842,8 @@ const ContentLogic = (props) => {
     const handleClickOpen = () => {
       setOpenModal(true);
     };
+
+    // download excel template on candidate upload batch module
     const onDownload = () => {
       const link = document.createElement("a");
       link.download = `download.txt`;
@@ -776,6 +855,7 @@ const ContentLogic = (props) => {
       setOpenModal(false);
     };
 
+    //it handle the buttons of content page
     const handleButtons = () => {
       switch (pageTitle) {
         case "Candidate Master":
@@ -986,6 +1066,7 @@ const ContentLogic = (props) => {
       }
     };
 
+    // shows the content page design
     const renderDesign = () => {
       switch (pageTitle) {
         case "Candidate Master":
@@ -1037,6 +1118,7 @@ const ContentLogic = (props) => {
       }
     };
 
+    // its handle the module modal inputs
     const handlerModuleInputs = () => {
       switch (pageName) {
         case "candidate-master":
@@ -2433,7 +2515,7 @@ const ContentLogic = (props) => {
               </Box>
             </>
           );
-        
+
         case "category":
           return (
             <>
@@ -2963,7 +3045,7 @@ const ContentLogic = (props) => {
                     ))}
                   </TextField>
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <TextField
                     id="filled-basic"
                     label="Email"
@@ -2999,7 +3081,7 @@ const ContentLogic = (props) => {
                     sx={{ width: "100ch" }}
                   />
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <TextField
                     id="filled-basic"
                     label="Current pincode"
@@ -3028,7 +3110,7 @@ const ContentLogic = (props) => {
                     />
                   </FormGroup>
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <TextField
                     required
                     id="filled-basic"
@@ -3061,7 +3143,7 @@ const ContentLogic = (props) => {
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <TextField
                     id="filled-basic"
                     label="Pan card"
@@ -3098,7 +3180,7 @@ const ContentLogic = (props) => {
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <TextField
                     required
                     id="filled-basic"
@@ -3117,7 +3199,7 @@ const ContentLogic = (props) => {
                     />
                   </FormGroup>
                 </List>
-                <List sx={{mb:4,mt:4}}>
+                <List sx={{ mb: 4, mt: 4 }}>
                   <Button style={{ backgroundColor: "brown", color: "white" }}>
                     Save
                   </Button>
@@ -3155,7 +3237,7 @@ const ContentLogic = (props) => {
           </Typography>
         ) : (
           <Typography
-            sx={{ flex: "1 1 100%",display:"flex",flexDirection:'column' }}
+            sx={{ flex: "1 1 100%", display: "flex", flexDirection: "column" }}
             variant="h6"
             id="tableTitle"
             component="div"
@@ -3167,7 +3249,7 @@ const ContentLogic = (props) => {
         )}
 
         <Typography>{handleButtons()}</Typography>
-          
+
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton>
@@ -3376,6 +3458,8 @@ const ContentLogic = (props) => {
     orderBy,
     selected,
     page,
+    tblData,
+    setTblData,
     rowsPerPage,
     useStyles,
     dense,
@@ -3424,6 +3508,7 @@ const ContentLogic = (props) => {
     skillSetMaster,
     subscriptionMaster,
     userMaster,
+    getAllData,
   };
 
   return StateContainer;

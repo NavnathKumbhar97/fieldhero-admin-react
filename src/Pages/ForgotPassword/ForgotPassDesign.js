@@ -34,7 +34,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function ForgotPass() {
+export default function ForgotPassDesign() {
   const [errorTextEmail, setErrorTextEmail] = useState();
   const [email, setEmail] = useState();
 

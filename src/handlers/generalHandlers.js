@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getInitizlizedApi = () => {
   return axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3636/api",
     responseType: "json",
     withCredentials: false,
     timeout: 100000,
@@ -24,7 +24,7 @@ const handleResponse = (response) => {
 
 const dataGet = (url, headers) => {
   return getInitizlizedApi()
-    .get(url, { headers })
+    .get(url,headers)
     .then(
       (response) => handleResponse(response),
       (error) => {

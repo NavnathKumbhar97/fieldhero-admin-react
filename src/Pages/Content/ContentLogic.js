@@ -688,9 +688,10 @@ const ContentLogic = (props) => {
   const getCategoryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    let take = 1
     handler
       .dataGet("/v1/categories", {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}`,take },
       })
       .then((response) => {
         if (response.status == 200) {
@@ -3711,7 +3712,7 @@ const ContentLogic = (props) => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
 
   const StateContainer = {
     order,
@@ -3769,6 +3770,7 @@ const ContentLogic = (props) => {
     subscriptionMaster,
     userMaster,
     getAllData,
+    
   };
 
   return StateContainer;

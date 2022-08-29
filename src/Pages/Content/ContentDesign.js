@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { Box } from "@mui/material";
 import ContentLogic from "./ContentLogic";
-import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -69,6 +68,7 @@ export default function ContentDesign(props) {
     subscriptionMaster,
     userMaster,
     getAllData,
+   
   } = ContentLogic();
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function ContentDesign(props) {
             ))}
         </>;
       
-      case "candidate-master":
+      case "candidate-upload-batch":
         return <>
         {Object.keys(tblData).map((item, i) => (
               <>
@@ -200,7 +200,7 @@ export default function ContentDesign(props) {
         </>;
       
       case "candidate-verification":
-        return <>
+        return (<>
         {Object.keys(tblData).map((item, i) => (
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
@@ -237,7 +237,7 @@ export default function ContentDesign(props) {
                 )}
               </>
             ))}
-        </>;
+        </>);
       case "agent-master":
         return (
           <>
@@ -665,6 +665,7 @@ export default function ContentDesign(props) {
                 sx={{ minWidth: 750 }}
                 aria-labelledby="tableTitle"
                 size={dense ? "small" : "medium"}
+                
               >
                 <EnhancedTableHead
                   numSelected={selected.length}
@@ -682,8 +683,9 @@ export default function ContentDesign(props) {
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
+              // defaultPageSize={10}
               component="div"
-              count={rows.length}
+              count={tblData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

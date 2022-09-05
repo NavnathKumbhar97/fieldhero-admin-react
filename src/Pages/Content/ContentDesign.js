@@ -20,27 +20,12 @@ export default function ContentDesign(props) {
     page,
     rowsPerPage,
     tblData,
-    useStyles,
     dense,
-    setOrder,
-    setOrderBy,
-    setSelected,
-    setPage,
-    setRowsPerPage,
-    setDense,
     rows,
-    createData,
-    Transition,
-    headCells,
-    getComparator,
-    descendingComparator,
     handleChangeRowsPerPage,
     handleChangePage,
     handleSelectAllClick,
     handleRequestSort,
-    handleClick,
-    handleChangeDense,
-    isSelected,
     setModalTitle,
     pageTitle,
     setPageTitle,
@@ -48,8 +33,6 @@ export default function ContentDesign(props) {
     stableSort,
     EnhancedTableHead,
     emptyRows,
-    pageName,
-    tblHeader,
     setTblHeader,
     setPageName,
     setButtonText,
@@ -68,7 +51,6 @@ export default function ContentDesign(props) {
     subscriptionMaster,
     userMaster,
     getAllData,
-   
   } = ContentLogic();
 
   useEffect(() => {
@@ -690,6 +672,7 @@ export default function ContentDesign(props) {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+
             />
           </>
         );

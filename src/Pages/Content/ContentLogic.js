@@ -55,7 +55,7 @@ const ContentLogic = (props) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(2);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageTitle, setPageTitle] = useState();
@@ -86,7 +86,7 @@ const ContentLogic = (props) => {
   }
 
   const rows = [
-    createData("Test Name", "Test industry", "Test Status"),
+    // createData("Test Name", "Test industry", "Test Status"),
     // createData("Test 2 Name", "Test 2 Industry", "Test Status"),
   ];
 
@@ -668,8 +668,9 @@ const ContentLogic = (props) => {
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    let limit = rowsPerPage
     handler
-      .dataGet("/v1/admin/candidate-upload-batches", {
+      .dataGet(`/v1/admin/candidate-upload-batches?limit=${limit}&page=${1}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -688,10 +689,11 @@ const ContentLogic = (props) => {
   const getCategoryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    let take = 1
+    console.log("rowsperpage :",rowsPerPage);
+    let take = rowsPerPage
     handler
-      .dataGet("/v1/categories", {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}`,take },
+      .dataGet(`/v1/categories?take=${take}&skip=${2}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}`}
       })
       .then((response) => {
         if (response.status == 200) {
@@ -848,6 +850,7 @@ const ContentLogic = (props) => {
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
+    console.log("getallData pagename :",pageName);
     switch (pageName) {
 
       case "candidate-master":
@@ -1006,6 +1009,18 @@ const ContentLogic = (props) => {
       label: "Other",
     },
   ];
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    console.log(page);
+  };
+
+  // onchange of number of rows data will refreshed and shows intable
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+    getAllData(pageName)
+  };
 
   const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
@@ -3695,14 +3710,7 @@ const ContentLogic = (props) => {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const handleChangeDense = (event) => {
     setDense(event.target.checked);

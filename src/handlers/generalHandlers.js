@@ -22,9 +22,9 @@ const handleResponse = (response) => {
   }
 };
 
-const dataGet = (url, headers,take) => {
+const dataGet = (url, headers,data) => {
   return getInitizlizedApi()
-    .get(url,headers,take)
+    .get(url,headers,data)
     .then(
       (response) => handleResponse(response),
       (error) => {

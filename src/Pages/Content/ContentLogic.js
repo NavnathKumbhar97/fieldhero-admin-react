@@ -55,13 +55,14 @@ const ContentLogic = (props) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageTitle, setPageTitle] = useState();
   const [buttonText, setButtonText] = useState();
   const [modalTitle, setModalTitle] = useState();
   const [tblData, setTblData] = useState([]);
+  const [tblDataCount,setTblDataCount] = useState([])
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
     return {
@@ -567,7 +568,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/candidates", {
+      .dataGet(`/v1/candidates?limit=${rowsPerPage}&page=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -668,14 +669,16 @@ const ContentLogic = (props) => {
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    let limit = rowsPerPage
+    // let limit = rowsPerPage
+
     handler
-      .dataGet(`/v1/admin/candidate-upload-batches?limit=${limit}&page=${1}`, {
+      .dataGet(`/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.items);
+          setTblDataCount(response.data.data.totalItems)
           console.log("upload batch ",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -692,7 +695,7 @@ const ContentLogic = (props) => {
     console.log("rowsperpage :",rowsPerPage);
     let take = rowsPerPage
     handler
-      .dataGet(`/v1/categories?take=${take}&skip=${2}`, {
+      .dataGet(`/v1/categories?take=${take}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}`}
       })
       .then((response) => {
@@ -1012,14 +1015,12 @@ const ContentLogic = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    console.log(page);
+    getAllData(pageName)
   };
 
   // onchange of number of rows data will refreshed and shows intable
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-    getAllData(pageName)
+  const handleChangeRowsPerPage = (event,row) => { 
+    setRowsPerPage(row.props.value);
   };
 
   const EnhancedTableToolbar = (props) => {
@@ -3710,8 +3711,6 @@ const ContentLogic = (props) => {
     setSelected(newSelected);
   };
 
-
-
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
@@ -3778,6 +3777,7 @@ const ContentLogic = (props) => {
     subscriptionMaster,
     userMaster,
     getAllData,
+    tblDataCount
     
   };
 

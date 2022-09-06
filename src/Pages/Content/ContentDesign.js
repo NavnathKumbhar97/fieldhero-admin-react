@@ -51,6 +51,7 @@ export default function ContentDesign(props) {
     subscriptionMaster,
     userMaster,
     getAllData,
+    tblDataCount
   } = ContentLogic();
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function ContentDesign(props) {
     if (data.page === "user") {
       setTblHeader(userMaster);
     }
-  }, [data.page]);
+  }, [data.page,rowsPerPage]);
 
   //handle the table data 
   const handleTblData = () => {
@@ -329,7 +330,7 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].createdBy}</TableCell>
                   <TableCell align="center">{tblData[item].role}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
+                {/* {emptyRows > 0 && (
                   <TableRow
                     style={{
                       height: (dense ? 33 : 53) * emptyRows,
@@ -337,7 +338,7 @@ export default function ContentDesign(props) {
                   >
                     <TableCell colSpan={6} />
                   </TableRow>
-                )}
+                )} */}
               </>
             ))}
           </>
@@ -665,14 +666,13 @@ export default function ContentDesign(props) {
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
-              // defaultPageSize={10}
+              defaultPageSize={5}
               component="div"
-              count={tblData.length}
+              count={tblDataCount}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
-
             />
           </>
         );

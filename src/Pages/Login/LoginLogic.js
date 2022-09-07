@@ -55,7 +55,6 @@ return result.test(String(email).toLowerCase());
      * This method responsible for login authentication.
      */
 const loginAPIcall = async (e) => {
-  console.log("api called");
   try {
       // e.preventDefault()
       // this.setState({ isButtonActive: true, isLoaderVisible: false })
@@ -90,8 +89,6 @@ const loginAPIcall = async (e) => {
                   setTimeout(() => {
                       navigate("/")
                   }, 500)
-              }else {
-                console.log("else part and getting somthing error");
               }
           } 
       } 

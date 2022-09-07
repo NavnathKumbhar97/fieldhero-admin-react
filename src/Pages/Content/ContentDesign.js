@@ -169,15 +169,6 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
         </>;
@@ -209,15 +200,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].candidateConsent}</TableCell>
                   <TableCell align="center">{tblData[item].callStatus}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
         </>);
@@ -247,15 +229,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].email}</TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -286,15 +259,6 @@ export default function ContentDesign(props) {
                 </TableCell>
                 <TableCell align="center">{tblData[item].isActive}</TableCell>
               </TableRow>
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </>
           ))}
         </>
@@ -330,15 +294,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].createdBy}</TableCell>
                   <TableCell align="center">{tblData[item].role}</TableCell>
                 </TableRow>
-                {/* {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )} */}
               </>
             ))}
           </>
@@ -356,21 +311,7 @@ export default function ContentDesign(props) {
 
                 <TableCell align="center">{tblData[item].title}</TableCell>
                 <TableCell align="center">{tblData[item].isActive}</TableCell>
-                {/* <TableCell align="center">
-                  {tblData[item].contactNo}
-                </TableCell>
-                <TableCell align="center">{tblData[item].email}</TableCell>
-                <TableCell align="center">{tblData[item].isActive}</TableCell> */}
               </TableRow>
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </>
           ))}
         </>
@@ -399,15 +340,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                   
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -439,15 +371,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].email}</TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -474,15 +397,6 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -508,15 +422,6 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -542,15 +447,6 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -577,15 +473,6 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].dataCount}</TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
@@ -613,20 +500,10 @@ export default function ContentDesign(props) {
                   <TableCell align="center">{tblData[item].role}</TableCell>
                   <TableCell align="center">{tblData[item].isActive}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </>
             ))}
           </>
         )
-     
       default:
         break;
     }

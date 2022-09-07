@@ -609,12 +609,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/agents", {
+      .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
           console.log("tblData",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -629,12 +630,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/candidate-verifications", {
+      .dataGet(`/v1/candidate-verifications?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
           console.log("candidate verification",tblData);
          
         } else if (response.status == 400) {
@@ -650,12 +652,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/agent-pricing-templates", {
+      .dataGet(`/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.agentPricingTemplates);
+          setTblDataCount(response.data.data.count);
           console.log("agent template data",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -669,8 +672,6 @@ const ContentLogic = (props) => {
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    // let limit = rowsPerPage
-
     handler
       .dataGet(`/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -692,16 +693,15 @@ const ContentLogic = (props) => {
   const getCategoryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    console.log("rowsperpage :",rowsPerPage);
-    let take = rowsPerPage
     handler
-      .dataGet(`/v1/categories?take=${take}&skip=${page}`, {
+      .dataGet(`/v1/categories?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}`}
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.categories);
           console.log("category",tblData);
+          setTblDataCount(response.data.data.count)
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -715,13 +715,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/companies", {
+      .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
-          console.log("company",tblData);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count)
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -735,12 +735,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/customers", {
+      .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
           console.log("customer",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -755,13 +756,14 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/industries", {
+      .dataGet(`/v1/industries?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
-          console.log("customer",tblData);
+          setTblData(response.data.data.industries);
+          console.log("industry",tblData);
+          setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -775,12 +777,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/roles", {
+      .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.roles);
+          setTblDataCount(response.data.data.count);
           console.log("roles",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -795,12 +798,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/skills", {
+      .dataGet(`/v1/skills?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.skills);
+          setTblDataCount(response.data.data.count);
           console.log("skill set",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -815,12 +819,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/subscriptions", {
+      .dataGet(`/v1/subscriptions?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.subscriptions);
+          setTblDataCount(response.data.data.count);
           console.log("subscriptions",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -835,12 +840,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet("/v1/users", {
+      .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
           console.log("users",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);

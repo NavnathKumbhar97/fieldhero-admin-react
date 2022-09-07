@@ -85,7 +85,6 @@ function LoginDesign() {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
             sx={{ mt: 2 }}
           >
             <TextField

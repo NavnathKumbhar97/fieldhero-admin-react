@@ -14,6 +14,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
+import Modal from '@mui/material/Modal';
+
 import {
   Button,
   Dialog,
@@ -71,6 +73,8 @@ const ContentLogic = (props) => {
   });
   const [pageName, setPageName] = useState();
   const [tblHeader, setTblHeader] = useState([]);
+
+
 
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -583,7 +587,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
-
+  //candidate upload batch api call
   const getCandidateUploadBatchAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -603,8 +607,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCandidateUploadBatchAPIcall", error);
       });
   };
-
-  //fetch the agent master data 
+ //fetch the agent master data 
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -909,6 +912,8 @@ const ContentLogic = (props) => {
     }
   };
 
+    
+
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -1020,12 +1025,13 @@ const ContentLogic = (props) => {
   ];
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+   setPage(newPage)
     getAllData(pageName)
   };
 
   // onchange of number of rows data will refreshed and shows intable
   const handleChangeRowsPerPage = (event,row) => { 
+    setPage(0)
     setRowsPerPage(row.props.value);
   };
 
@@ -1042,6 +1048,101 @@ const ContentLogic = (props) => {
     const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
     const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
     const [genders, setGenders] = useState();
+    const [categoryData, setCategoryData] = useState(
+      {
+        title:"",
+        description:'',
+        isActive:true
+      }
+    );
+    const [companyData,setCompanyData] = useState({
+      companyName:' ',
+      description:'',
+      isActive:true,
+      industryId:''
+  
+    })
+  
+    const [industryData,setIndustryData] = useState({
+      title:'',
+      description:'',
+      isActive:true,
+  
+    })
+
+    // add API calls
+  const addAPICalls = (pageName) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    switch (pageName) {
+      case "category":
+          handler
+            .dataPost(`/v1/categories`, categoryData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getCategoryAPIcall();
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- getCategoryAPIcall", error);
+            });
+            break;
+      case "company":
+          handler
+            .dataPost(`/v1/companies`, companyData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getCompanyAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;
+      case "industry":
+          handler
+            .dataPost(`/v1/industries`, industryData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getIndustryAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;
+      
+      default:
+        break;
+    }
+  }
 
     const handleGenders = (event) => {
       setGenders(event.target.value);
@@ -1148,7 +1249,6 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-                  href="#outlined-buttons"
                 >
                   <EditIcon />
                   Edit
@@ -1163,8 +1263,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  href="#outlined-buttons"
-                >
+                  >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1183,7 +1282,6 @@ const ContentLogic = (props) => {
                   color: "white",
                 }}
                 variant="outlined"
-                href="#outlined-buttons"
               >
                 <FileUploadIcon />
                 {buttonText}
@@ -1202,7 +1300,6 @@ const ContentLogic = (props) => {
                   color: "white",
                 }}
                 variant="outlined"
-                href="#outlined-buttons"
               >
                 <AddIcon />
                 {buttonText}
@@ -1217,8 +1314,7 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-                  href="#outlined-buttons"
-                >
+                  >
                   <EditIcon />
                   Edit
                 </Button>
@@ -1232,8 +1328,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  href="#outlined-buttons"
-                >
+                  >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1247,8 +1342,7 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-                  href="#outlined-buttons"
-                >
+                  >
                   <EditIcon />
                   Edit
                 </Button>
@@ -1262,8 +1356,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  href="#outlined-buttons"
-                >
+                  >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1283,7 +1376,6 @@ const ContentLogic = (props) => {
                   color: "white",
                 }}
                 variant="outlined"
-                href="#outlined-buttons"
               >
                 <FileUploadIcon />
                 {buttonText}
@@ -1303,7 +1395,6 @@ const ContentLogic = (props) => {
                   color: "white",
                 }}
                 variant="outlined"
-                href="#outlined-buttons"
               >
                 <AddIcon />
                 {buttonText}
@@ -1323,7 +1414,7 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-                  href="#outlined-buttons"
+
                 >
                   <EditIcon />
                   Edit
@@ -1338,7 +1429,6 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  href="#outlined-buttons"
                 >
                   <AddIcon />
                   {buttonText}
@@ -2802,24 +2892,38 @@ const ContentLogic = (props) => {
         case "category":
           return (
             <>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                <List sx={{ mb: 5 }}>
+              <div style={{ width: "100%", typography: "body1", marginLeft: "70px" }}>
+                <List key={"test1"} style={{ marginBottom: '10px' }}>
                   <TextField
                     required
                     id="filled-basic"
+                    key={categoryData}
                     label="Title"
+                    name="title"
+                    value={categoryData.title}
                     type="name"
                     variant="filled"
-                    sx={{ width: "130ch" }}
+                    style={{ width: "130ch" }}
+                    onChange={(e)=>{
+                      setCategoryData({...categoryData,
+                        title:e.target.value})
+                        console.log(e.target.value);
+                    }}
                   />
                 </List>
                 <List sx={{ mb: 5 }}>
                   <TextField
                     id="filled-basic"
                     label="Description"
-                    type="name"
+                    type={"name"}
                     variant="filled"
-                    sx={{ width: "130ch" }}
+                    value={categoryData.description}
+                    onChange={(e)=>{setCategoryData
+                    ({
+                      ...categoryData,
+                      description:e.target.value
+                    })}}
+                    style={{ width: "130ch" }}
                   />
                 </List>
                 <List>
@@ -2827,11 +2931,14 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={categoryData.isActive}
+                      onChange={(e)=>{setCategoryData({isActive:e.target.value})}}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                  <Button onClick={()=>{addAPICalls("category")
+                  console.log("clicked on category");}} style={{ backgroundColor: "brown", color: "white" }}>
                     Save
                   </Button>
                 </List>
@@ -2843,7 +2950,7 @@ const ContentLogic = (props) => {
                     <li>Created On:</li>
                   </ul>
                 </List>
-              </Box>
+              </div>
             </>
           );
 
@@ -2857,7 +2964,12 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Company Name"
                     type="name"
+                    value={companyData.companyName}
                     variant="filled"
+                    onChange={(e)=>{
+                      setCompanyData({...companyData,
+                      companyName:e.target.value})
+                    }}
                     sx={{ width: "130ch" }}
                   />
                 </List>
@@ -2867,6 +2979,10 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Description"
                     type="name"
+                    value={companyData.description}
+                    onChange={(e)=>{setCompanyData({...companyData,
+                      description:e.target.value
+                    })}}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -2876,6 +2992,11 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Industry Name"
                     type="name"
+                    value={companyData.industryId}
+                    onChange={(e)=>{setCompanyData({
+                      ...companyData,
+                      industryId:e.target.value
+                    })}}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -2885,11 +3006,16 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={companyData.isActive}
+                      onChange={(e)=>{setCompanyData({
+                        ...companyData,
+                        isActive:e.target.value
+                      })}}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button sx={{ bgcolor: "brown", color: "white", mt: 5 }}>
+                  <Button onClick={()=>{addAPICalls("company")}} style={{ backgroundColor: "brown", color: "white", marginTop: "12px" }}>
                     Save
                   </Button>
                 </List>
@@ -2907,6 +3033,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Title"
                     type="name"
+                    value={industryData.title}
+                    onChange={(e)=>{setIndustryData({...industryData,title:e.target.value})}}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -2916,6 +3044,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Description"
                     type="name"
+                    value={industryData.description}
+                    onChange={(e)=>{setIndustryData({...industryData,description:e.target.value})}}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -2925,11 +3055,15 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={industryData.isActive}
+                      onChange={(e)=>{setIndustryData({
+                        ...industryData,
+                        isActive:e.target.value})}}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                  <Button onClick={()=>addAPICalls('industry')} style={{ backgroundColor: "brown", color: "white" }}>
                     Save
                   </Button>
                 </List>
@@ -3540,9 +3674,11 @@ const ContentLogic = (props) => {
             </IconButton>
           </Tooltip>
         ) : null}
+        {/* modal for modal inputs based on routes */}
         <Dialog
-          style={{ marginTop: "-70px" }}
-          className={classes.root}
+          // style={{ marginTop: "-70px" }}
+          // className={classes.root}
+          disableAutoFocus={true}
           fullScreen={true}
           open={openModal}
           onClose={handleClose}
@@ -3560,7 +3696,9 @@ const ContentLogic = (props) => {
             {modalTitle}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
+           <DialogContent>
           {handlerModuleInputs()}
+          </DialogContent> 
         </Dialog>
         {/* admin candidate upload batch modal */}
         <Dialog

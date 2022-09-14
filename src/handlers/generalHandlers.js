@@ -35,7 +35,7 @@ const dataGet = (url, headers,data) => {
 
 const dataPost = (url, data, headers) => {
   return getInitizlizedApi()
-    .post(url, data, { headers })
+    .post(url, data,  headers )
     .then(
       (response) => handleResponse(response),
       (error) => {

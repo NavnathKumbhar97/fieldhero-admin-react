@@ -562,10 +562,6 @@ export default function ContentDesign(props) {
         <EnhancedTableToolbar numSelected={selected.length} />
         {handleTable()}
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </Box>
   );
 }

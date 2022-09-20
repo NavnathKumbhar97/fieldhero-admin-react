@@ -59,12 +59,14 @@ const ContentLogic = (props) => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageTitle, setPageTitle] = useState();
   const [buttonText, setButtonText] = useState();
   const [modalTitle, setModalTitle] = useState();
   const [tblData, setTblData] = useState([]);
   const [tblDataCount,setTblDataCount] = useState([])
+  const [permissions,setPermissions] = useState([])
+
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
     return {
@@ -148,6 +150,12 @@ const ContentLogic = (props) => {
   ];
   const canMasterTblHerader = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "id",
       numeric: false,
       disablePadding: true,
@@ -173,6 +181,12 @@ const ContentLogic = (props) => {
     },
   ];
   const candUploadBatch = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "batchNo",
       numeric: false,
@@ -223,6 +237,12 @@ const ContentLogic = (props) => {
     },
   ];
   const canVerification = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "id",
       numeric: false,
@@ -280,6 +300,12 @@ const ContentLogic = (props) => {
   ];
   const agentMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "id",
       numeric: false,
       disablePadding: true,
@@ -317,6 +343,12 @@ const ContentLogic = (props) => {
     },
   ];
   const agentPricingTemplate = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "id",
       numeric: false,
@@ -356,6 +388,12 @@ const ContentLogic = (props) => {
     },
   ];
   const adminCanUploadBatch = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "batchNo",
       numeric: false,
@@ -426,19 +464,31 @@ const ContentLogic = (props) => {
   ];
   const categoryMaster = [
     {
-      id: "categoryName",
+      id: "SrNo",
       numeric: false,
       disablePadding: true,
+      label: "Sr.No",
+    },
+    {
+      id: "categoryName",
+      numeric: false,
+      disablePadding: false,
       label: "Category Name",
     },
     {
       id: "status",
-      numeric: true,
+      numeric: false,
       disablePadding: false,
       label: "Status",
     },
   ];
   const companyMaster = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "companyName",
       numeric: false,
@@ -460,6 +510,18 @@ const ContentLogic = (props) => {
   ];
   const customerMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "fullName",
       numeric: false,
       disablePadding: true,
@@ -480,6 +542,12 @@ const ContentLogic = (props) => {
   ];
   const industryMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "industryName",
       numeric: false,
       disablePadding: true,
@@ -493,6 +561,12 @@ const ContentLogic = (props) => {
     },
   ];
   const roleMaster = [
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "roleName",
       numeric: false,
@@ -508,6 +582,12 @@ const ContentLogic = (props) => {
   ];
   const skillSetMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "skillName",
       numeric: false,
       disablePadding: false,
@@ -522,9 +602,15 @@ const ContentLogic = (props) => {
   ];
   const subscriptionMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "subscriptionName",
       numeric: false,
-      disablePadding: false,
+      disablePadding: true,
       label: "Subscription Name",
     },
     {
@@ -542,9 +628,15 @@ const ContentLogic = (props) => {
   ];
   const userMaster = [
     {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
       id: "fullName",
       numeric: false,
-      disablePadding: false,
+      disablePadding: true,
       label: "Full Name",
     },
     {
@@ -572,7 +664,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/candidates?limit=${rowsPerPage}&page=${page}`, {
+      .dataGet(`/v1/candidates?limit=${rowsPerPage}&page=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -612,7 +704,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -633,7 +725,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/candidate-verifications?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/candidate-verifications?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -655,7 +747,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -676,7 +768,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${page}`, {
+      .dataGet(`/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -697,7 +789,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/categories?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/categories?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}`}
       })
       .then((response) => {
@@ -718,7 +810,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -738,7 +830,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -759,7 +851,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/industries?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/industries?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -780,7 +872,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -822,7 +914,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/subscriptions?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/subscriptions?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -843,7 +935,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page}`, {
+      .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -859,6 +951,28 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getUserAPIcall", error);
       });
   };
+
+ //fetch the all permissions onClick of new button for role module
+ const getPermissionsAPIcall = async(e) =>{
+  let authTok = localStorage.getItem("user"); // string
+  let convertTokenToObj = JSON.parse(authTok);
+  await handler
+    .dataGet(`/v1/permissions`, {
+      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+    })
+    .then((response) => {
+      if (response.status == 200) {
+        setPermissions(response.data);
+        console.log("permissions",permissions);
+      } else if (response.status == 400) {
+        window.alert(response.data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("There was an error!- getPermissionsAPIcall", error);
+    });
+} 
+
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
@@ -912,8 +1026,6 @@ const ContentLogic = (props) => {
     }
   };
 
-    
-
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -930,10 +1042,10 @@ const ContentLogic = (props) => {
 
     return (
       <TableHead>
-        <TableRow>
+        <TableRow style={{backgroundColor:'black'}}>
           <TableCell padding="checkbox">
-            <Checkbox
-              color="primary"
+            <Checkbox style={{color:'white',paddingRight:'30px' }}
+            label='My checkbox' 
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={onSelectAllClick}
@@ -944,8 +1056,9 @@ const ContentLogic = (props) => {
           </TableCell>
           {tblHeader.map((headCell) => (
             <TableCell
+            style={{color: 'white'}}
               key={headCell.id}
-              align="center"
+              align="left"
               padding={headCell.disablePadding ? "none" : "normal"}
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -1011,7 +1124,7 @@ const ContentLogic = (props) => {
   };
   const gender = [
     {
-      value: "Male",
+      value: "MALE",
       label: "Male",
     },
     {
@@ -1035,6 +1148,7 @@ const ContentLogic = (props) => {
     setRowsPerPage(row.props.value);
   };
 
+  //defined states and inputs for modules
   const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
     const classes = useStyles();
@@ -1047,7 +1161,7 @@ const ContentLogic = (props) => {
     const [cmpyvalue, setCmpyValue] = useState("");
     const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
     const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
-    const [genders, setGenders] = useState();
+    //state for store the input fields value of industry
     const [categoryData, setCategoryData] = useState(
       {
         title:"",
@@ -1055,6 +1169,8 @@ const ContentLogic = (props) => {
         isActive:true
       }
     );
+
+    //state for store the input fields value of industry
     const [companyData,setCompanyData] = useState({
       companyName:' ',
       description:'',
@@ -1062,10 +1178,58 @@ const ContentLogic = (props) => {
       industryId:''
   
     })
-  
+
+    //state for store the input fields value of industry 
     const [industryData,setIndustryData] = useState({
       title:'',
       description:'',
+      isActive:true,
+  
+    })
+    const [roleData,setRoleData] = useState({
+      name:'',
+      description:'',
+      isActive:true,
+  
+    })
+    const [skillSet,setSkillSet] = useState({
+      title:'',
+      description:'',
+      isActive:true,
+  
+    })
+    const [subscription,setSubscription] = useState({
+      planName:'',
+      dataCount:1,
+      durationMonths:12,
+      price:1999,
+      note:'',
+      isActive:true,
+  
+    })
+    const [userData,setUserData] = useState({
+      fullName:'',
+      dob:'',
+      gender:'MALE',
+      currAddress:'',
+      currCity:'',
+      currState:'GJ',
+      currCountry:'',
+      currZip:'',
+      permAddress:'',
+      permCity:'',
+      permState:'MH',
+      permCountry:'',
+      permZip:'',
+      primaryLang:'',
+      secondaryLang:'',
+      thirdLang:'',
+      aadharCard:'',
+      panCard:'',
+      note:'',
+      email:'',
+      contactNo:'',
+      roleId:5,
       isActive:true,
   
     })
@@ -1126,7 +1290,91 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getIndustryAPIcall()
+                getUserAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;
+      case "role":
+          handler
+            .dataPost(`/v1/roles`, roleData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getRoleAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;
+      case "skillset":
+          handler
+            .dataPost(`/v1/skills`, skillSet, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getSkillSetAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;
+      case "subscription":
+          handler
+            .dataPost(`/v1/subscriptions`, subscription, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getSubscriptionAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+        break;      
+      case "user":
+          handler
+            .dataPost(`/v1/users`, userData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getUserAPIcall()
               } else {
                 window.alert(response.data.message);
               }
@@ -1139,14 +1387,11 @@ const ContentLogic = (props) => {
             });
         break;
       
+      
       default:
         break;
     }
   }
-
-    const handleGenders = (event) => {
-      setGenders(event.target.value);
-    };
 
     const handleClickOpenAddBtchprty = () => {
       setOpenAddBtchprty(true);
@@ -1155,6 +1400,7 @@ const ContentLogic = (props) => {
     const handleCloseAddBtchprty = () => {
       setOpenAddBtchprty(false);
     };
+
     const handleClickOpenAdminCanUplBtch = () => {
       setOpenAdminCanUplBtch(true);
     };
@@ -1170,6 +1416,7 @@ const ContentLogic = (props) => {
     const handleClickOpenChildModal = () => {
       setOpenChilModal(true);
     };
+
     const handleClickOpenChildModalCerti = () => {
       setOpenChilModalCerti(true);
     };
@@ -1177,6 +1424,7 @@ const ContentLogic = (props) => {
     const handleCloseChildModal = () => {
       setOpenChilModal(false);
     };
+
     const handleCloseChildModalCerti = () => {
       setOpenChilModalCerti(false);
     };
@@ -1223,7 +1471,8 @@ const ContentLogic = (props) => {
       setActiveStep(0);
     };
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (e) => {
+     
       setOpenModal(true);
     };
 
@@ -1241,8 +1490,8 @@ const ContentLogic = (props) => {
 
     //it handle the buttons of content page
     const handleButtons = () => {
-      switch (pageTitle) {
-        case "Candidate Master":
+      switch (pageName) {
+        case "candidate-master":
           return (
             <>
               {numSelected === 1 ? (
@@ -1270,7 +1519,7 @@ const ContentLogic = (props) => {
               )}
             </>
           );
-        case "Candidate Upload Batch":
+        case "candidate-upload-batch":
           return (
             <>
               <Button
@@ -1289,7 +1538,7 @@ const ContentLogic = (props) => {
             </>
           );
 
-        case "Candidate Verification":
+        case "candidate-verification":
           return (
             <>
               <Button
@@ -1307,7 +1556,7 @@ const ContentLogic = (props) => {
             </>
           );
 
-        case "Agent Master":
+        case "agent-master":
           return (
             <>
               {numSelected === 1 ? (
@@ -1335,7 +1584,7 @@ const ContentLogic = (props) => {
               )}
             </>
           );
-        case "Agent Pricing Template":
+        case "agent-pricing-template":
           return (
             <>
               {numSelected === 1 ? (
@@ -1364,7 +1613,7 @@ const ContentLogic = (props) => {
             </>
           );
 
-        case "Admin - Candidate Upload Batch":
+        case "candidate-upload-batch-admin":
           return (
             <>
               <Button
@@ -1383,7 +1632,7 @@ const ContentLogic = (props) => {
             </>
           );
 
-        case "Batch Priority":
+        case "batch-priority":
           return (
             <>
               <Button
@@ -1401,11 +1650,42 @@ const ContentLogic = (props) => {
               </Button>
             </>
           );
-        case "Other Industry Category":
+        case "other-industry-category":
           return null;
 
-        case "Customer - Master":
+        case "customer":
           return null;
+        case "role":
+          return (
+          <>
+            {numSelected === 1 ? (
+              <Button
+                style={{ marginTop: "80px", marginRight: "50px" }}
+                variant="outlined"
+
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                onClick={()=>{handleClickOpen()
+                getPermissionsAPIcall()
+                }}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            )}
+          </>
+          )
 
         default:
           return (
@@ -3058,7 +3338,7 @@ const ContentLogic = (props) => {
                       value={industryData.isActive}
                       onChange={(e)=>{setIndustryData({
                         ...industryData,
-                        isActive:e.target.value})}}
+                        isActive:e.target.checked})}}
                     />
                   </FormGroup>
                 </List>
@@ -3073,7 +3353,9 @@ const ContentLogic = (props) => {
 
         case "role":
           return (
+            
             <>
+              {Object.keys(permissions).map((item, i) => (<>
               <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
                 <List sx={{ mb: 5 }}>
                   <TextField
@@ -3082,6 +3364,8 @@ const ContentLogic = (props) => {
                     label="Title"
                     type="name"
                     variant="filled"
+                    value={roleData.name}
+                    onChange={(e)=>{setRoleData({...roleData,name:e.target.value})}}
                     sx={{ width: "130ch" }}
                   />
                 </List>
@@ -3091,6 +3375,8 @@ const ContentLogic = (props) => {
                     label="Description"
                     type="name"
                     variant="filled"
+                    value={roleData.description}
+                    onChange={(e)=>{setRoleData({...roleData,description:e.target.value})}}
                     sx={{ width: "130ch" }}
                   />
                 </List>
@@ -3105,7 +3391,7 @@ const ContentLogic = (props) => {
                 <List>
                   <List>
                     <b>Permissions Section</b>
-                    <p style={{ color: "brown" }}>Admin-Agent</p>
+                    <p style={{ color: "brown" }}>{permissions[item].group}</p>
                   </List>
                   <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
                     <FormControlLabel control={<Checkbox />} label="Read All" />
@@ -3311,7 +3597,7 @@ const ContentLogic = (props) => {
                     Cancel
                   </Button>
                 </List>
-              </Box>
+              </Box></>))}
             </>
           );
 
@@ -3325,6 +3611,8 @@ const ContentLogic = (props) => {
                     label="Title"
                     type="name"
                     variant="filled"
+                    value={skillSet.title}
+                    onChange={(e)=>{setSkillSet({...skillSet,title:e.target.value})}}
                     sx={{ width: "130ch" }}
                   />
                 </List>
@@ -3333,6 +3621,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Description"
                     type="name"
+                    value={skillSet.description}
+                    onChange={(e)=>{setSkillSet({...skillSet,description:e.target.value})}}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3342,11 +3632,13 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={skillSet.isActive}
+                    onChange={(e)=>{setSkillSet({...skillSet,isActive:e.target.checked})}}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button sx={{ bgcolor: "brown", color: "white" }}>
+                  <Button onClick={()=>addAPICalls("skillset")} style={{ backgroundColor: "brown", color: "white" }}>
                     Save
                   </Button>
                 </List>
@@ -3364,28 +3656,45 @@ const ContentLogic = (props) => {
                       id="filled-basic"
                       label="Plan Name"
                       variant="filled"
+                      value={subscription.planName}
+                      onChange={(e)=>{setSubscription({
+                        ...subscription,
+                        planName:e.target.value
+                      })}}
                       sx={{ width: "80ch" }}
                     />
                   </List>
                   <List sx={{ mt: 4, mb: 4 }}>
                     <TextField
-                      value={0}
                       id="filled-basic"
                       label="Data Count"
                       variant="filled"
+                      value={subscription.dataCount}
+                      onChange={(e)=>{setSubscription({
+                        ...subscription,
+                        dataCount:e.target.value
+                      })}}
                       sx={{ width: "40ch" }}
                     />
                     <TextField
-                      value={0}
                       id="filled-basic"
                       label="Duration in months"
                       variant="filled"
+                      value={subscription.durationMonths}
+                      onChange={(e)=>{setSubscription({
+                        ...subscription,
+                        durationMonths:e.target.value
+                      })}}
                       sx={{ width: "40ch", ml: 3 }}
                     />
                     <TextField
-                      value={0}
                       id="filled-basic"
                       label="Price"
+                      value={subscription.price}
+                      onChange={(e)=>{setSubscription({
+                        ...subscription,
+                        price:e.target.value
+                      })}}
                       variant="filled"
                       sx={{ width: "40ch", ml: 3 }}
                     />
@@ -3394,6 +3703,11 @@ const ContentLogic = (props) => {
                     <TextField
                       id="filled-basic"
                       label="Note"
+                      value={subscription.note}
+                      onChange={(e)=>{setSubscription({
+                        ...subscription,
+                        note:e.target.value
+                      })}}
                       variant="filled"
                       sx={{ width: "126ch", mb: 4 }}
                     />
@@ -3403,11 +3717,16 @@ const ContentLogic = (props) => {
                       <FormControlLabel
                         control={<Checkbox defaultChecked />}
                         label="Is Active"
+                        value={subscription.isActive}
+                        onChange={(e)=>{setSubscription({
+                          ...subscription,
+                          isActive:e.target.checked
+                        })}}
                       />
                     </FormGroup>
                   </List>
                   <List>
-                    <Button
+                    <Button onClick={()=>addAPICalls('subscription')}
                       style={{ color: "white", backgroundColor: "brown" }}
                     >
                       Save
@@ -3436,12 +3755,16 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Full Name"
                     variant="filled"
+                    value={userData.fullName}
+                    onChange={(e)=>{setUserData({...userData,fullName:e.target.value})}}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
                     type="date"
                     id="filled-basic"
                     label="Birthdate"
+                    value={userData.dob}
+                    onChange={(e)=>{setUserData({...userData,dob:e.target.value})}}
                     variant="filled"
                     InputLabelProps={{ shrink: true }}
                     sx={{ width: "40ch", ml: 3 }}
@@ -3450,8 +3773,8 @@ const ContentLogic = (props) => {
                     select
                     id="filled-basic"
                     label="Gender"
-                    value={genders}
-                    onChange={handleGenders}
+                    value={userData.gender}
+                    onChange={(e)=>{setUserData({...userData,gender:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   >
@@ -3467,12 +3790,16 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Email"
                     variant="filled"
+                    value={userData.email}
+                    onChange={(e)=>{setUserData({...userData,email:e.target.value})}}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
                     required
                     id="filled-basic"
                     label="Contact no"
+                    value={userData.contactNo}
+                    onChange={(e)=>{setUserData({...userData,contactNo:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   />
@@ -3481,6 +3808,8 @@ const ContentLogic = (props) => {
                     select
                     id="filled-basic"
                     label="Role"
+                    value={userData.roleId}
+                    onChange={(e)=>{setUserData({...userData,roleId:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   />
@@ -3493,6 +3822,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Current Address"
                     variant="filled"
+                    value={userData.currAddress}
+                    onChange={(e)=>{setUserData({...userData,currAddress:e.target.value})}}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -3503,18 +3834,24 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Current pincode"
                     variant="filled"
+                    value={userData.currZip}
+                    onChange={(e)=>{setUserData({...userData,currZip:e.target.value})}}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
                     id="filled-basic"
                     label="Current city"
                     variant="filled"
+                    value={userData.currCity}
+                    onChange={(e)=>{setUserData({...userData,currCity:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
                     select
                     id="filled-basic"
                     label="Current State"
+                    value={userData.currState}
+                    onChange={(e)=>{setUserData({...userData,currState:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   />
@@ -3524,6 +3861,7 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox />}
                       label="Same as current address"
+
                     />
                   </FormGroup>
                 </List>
@@ -3533,6 +3871,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Permanent Address"
                     variant="filled"
+                    value={userData.permAddress}
+                    onChange={(e)=>{setUserData({...userData,permAddress:e.target.value})}}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -3542,6 +3882,8 @@ const ContentLogic = (props) => {
                   <TextField
                     id="filled-basic"
                     label="Permanent pincode"
+                    value={userData.permZip}
+                    onChange={(e)=>{setUserData({...userData,permZip:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch" }}
                   />
@@ -3549,6 +3891,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Permanent city"
                     variant="filled"
+                    value={userData.permCity}
+                    onChange={(e)=>{setUserData({...userData,permCity:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
@@ -3557,6 +3901,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Permanent State"
                     variant="filled"
+                    value={userData.permState}
+                    onChange={(e)=>{setUserData({...userData,permState:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
@@ -3564,6 +3910,8 @@ const ContentLogic = (props) => {
                   <TextField
                     id="filled-basic"
                     label="Pan card"
+                    value={userData.panCard}
+                    onChange={(e)=>{setUserData({...userData,panCard:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch" }}
                   />
@@ -3571,6 +3919,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Aadhar card"
                     variant="filled"
+                    value={userData.aadharCard}
+                    onChange={(e)=>{setUserData({...userData,aadharCard:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
@@ -3582,18 +3932,24 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Primary Language"
                     variant="filled"
+                    value={userData.primaryLang}
+                    onChange={(e)=>{setUserData({...userData,primaryLang:e.target.value})}}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
                     id="filled-basic"
                     label="Secondary Language"
                     variant="filled"
+                    value={userData.secondaryLang}
+                    onChange={(e)=>{setUserData({...userData,secondaryLang:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
                     id="filled-basic"
                     label="Third Language"
                     variant="filled"
+                    value={userData.thirdLang}
+                    onChange={(e)=>{setUserData({...userData,thirdLang:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
@@ -3603,6 +3959,8 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Note"
                     variant="filled"
+                    value={userData.note}
+                    onChange={(e)=>{setUserData({...userData,note:e.target.value})}}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -3613,11 +3971,13 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={userData.isActive}
+                    onChange={(e)=>{setUserData({...userData,isActive:e.target.value})}}
                     />
                   </FormGroup>
                 </List>
                 <List sx={{ mb: 4, mt: 4 }}>
-                  <Button style={{ backgroundColor: "brown", color: "white" }}>
+                  <Button onClick={()=>addAPICalls('user')} style={{ backgroundColor: "brown", color: "white" }}>
                     Save
                   </Button>
                 </List>

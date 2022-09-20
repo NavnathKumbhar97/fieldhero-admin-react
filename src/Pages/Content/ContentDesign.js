@@ -51,7 +51,7 @@ export default function ContentDesign(props) {
     subscriptionMaster,
     userMaster,
     getAllData,
-    tblDataCount
+    tblDataCount,
   } = ContentLogic();
 
   useEffect(() => {
@@ -118,6 +118,14 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
 
                   <TableCell
                     component="th"
@@ -127,11 +135,11 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
                 {emptyRows > 0 && (
                   <TableRow
@@ -154,6 +162,14 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
 
                   <TableCell
                     component="th"
@@ -163,11 +179,11 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -188,21 +204,31 @@ export default function ContentDesign(props) {
                     scope="row"
                     padding="none"
                   >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
-                  <TableCell align="center">
+                 
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].contactNo1}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].batchNo}</TableCell>
-                  <TableCell align="center">{tblData[item].createdOn}</TableCell>
-                  <TableCell align="center">{tblData[item].modifiedOn}</TableCell>
-                  <TableCell align="center">{tblData[item].candidateConsent}</TableCell>
-                  <TableCell align="center">{tblData[item].callStatus}</TableCell>
+                  <TableCell align="left">{tblData[item].batchNo}</TableCell>
+                  <TableCell align="left">{tblData[item].createdOn}</TableCell>
+                  <TableCell align="left">{tblData[item].modifiedOn}</TableCell>
+                  <TableCell align="left">{tblData[item].callStatus}</TableCell>
+                  <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
                 </TableRow>
               </>
             ))}
         </>);
+      
       case "agent-master":
         return (
           <>
@@ -212,7 +238,14 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
                   <TableCell
                     component="th"
                     // id={labelId}
@@ -221,13 +254,13 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].agentNo}</TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">{tblData[item].agentNo}</TableCell>
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].email}</TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -243,7 +276,14 @@ export default function ContentDesign(props) {
                 <TableCell padding="checkbox">
                   <Checkbox color="primary" />
                 </TableCell>
-
+                <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
                 <TableCell
                   component="th"
                   // id={labelId}
@@ -252,12 +292,12 @@ export default function ContentDesign(props) {
                 >
                   {tblData[item].id}
                 </TableCell>
-                <TableCell align="center">{tblData[item].templateName}</TableCell>
-                <TableCell align="center">{tblData[item].description}</TableCell>
-                <TableCell align="center">
+                <TableCell align="left">{tblData[item].templateName}</TableCell>
+                <TableCell align="left">{tblData[item].description}</TableCell>
+                <TableCell align="left">
                   {tblData[item].totalAmount}
                 </TableCell>
-                <TableCell align="center">{tblData[item].isActive}</TableCell>
+                <TableCell align="left">{tblData[item].isActive}</TableCell>
               </TableRow>
             </>
           ))}
@@ -273,7 +313,14 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
                   <TableCell
                     component="th"
                     // id={labelId}
@@ -282,17 +329,17 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].timestamp}</TableCell>
-                  <TableCell align="center">{tblData[item].count}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">{tblData[item].timestamp}</TableCell>
+                  <TableCell align="left">{tblData[item].count}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].status}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].email}</TableCell>
-                  <TableCell align="center">{tblData[item].approvedCount}</TableCell>
-                  <TableCell align="center">{tblData[item].rejectedCount}</TableCell>
-                  <TableCell align="center">{tblData[item].templateName}</TableCell>
-                  <TableCell align="center">{tblData[item].createdBy}</TableCell>
-                  <TableCell align="center">{tblData[item].role}</TableCell>
+                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  <TableCell align="left">{tblData[item].approvedCount}</TableCell>
+                  <TableCell align="left">{tblData[item].rejectedCount}</TableCell>
+                  <TableCell align="left">{tblData[item].templateName}</TableCell>
+                  <TableCell align="left">{tblData[item].createdBy}</TableCell>
+                  <TableCell align="left">{tblData[item].role}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -308,9 +355,17 @@ export default function ContentDesign(props) {
                 <TableCell padding="checkbox">
                   <Checkbox color="primary" />
                 </TableCell>
+                <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
 
-                <TableCell align="center">{tblData[item].title}</TableCell>
-                <TableCell align="center">{tblData[item].isActive}</TableCell>
+                <TableCell align="left">{tblData[item].title}</TableCell>
+                <TableCell align="left">{tblData[item].isActive}</TableCell>
               </TableRow>
             </>
           ))}
@@ -326,18 +381,25 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].companyName}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].industry}</TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].industry}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                   
                 </TableRow>
               </>
@@ -354,7 +416,14 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                  >
+                    {i+1}
+                  </TableCell>
                   <TableCell
                     component="th"
                     // id={labelId}
@@ -363,13 +432,13 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].agentNo}</TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">{tblData[item].agentNo}</TableCell>
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].email}</TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -385,17 +454,24 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -410,17 +486,24 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].name}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -435,17 +518,24 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -460,18 +550,25 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].planName}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].dataCount}</TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].dataCount}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -486,19 +583,26 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
-
                   <TableCell
                     component="th"
                     // id={labelId}
                     scope="row"
                     padding="none"
-                    align="center"
+                  >
+                    {i+1}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    // id={labelId}
+                    scope="row"
+                    padding="none"
+                    align="left"
                   >
                     {tblData[item].fullName}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].email}</TableCell>
-                  <TableCell align="center">{tblData[item].role}</TableCell>
-                  <TableCell align="center">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  <TableCell align="left">{tblData[item].role}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -543,7 +647,7 @@ export default function ContentDesign(props) {
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
-              defaultPageSize={5}
+              defaultPageSize={10}
               component="div"
               count={tblDataCount}
               rowsPerPage={rowsPerPage}

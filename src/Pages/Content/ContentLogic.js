@@ -570,7 +570,7 @@ const ContentLogic = (props) => {
     {
       id: "roleName",
       numeric: false,
-      disablePadding: false,
+      disablePadding: true,
       label: "Role Name",
     },
     {

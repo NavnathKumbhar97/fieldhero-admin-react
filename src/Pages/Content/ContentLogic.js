@@ -314,7 +314,7 @@ const ContentLogic = (props) => {
     {
       id: "agentNo",
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: "Agent No",
     },
     {
@@ -689,7 +689,7 @@ const ContentLogic = (props) => {
       })
       .then((response) => {
         if (response.status == 200) {
-          setTblData(response.data.data.Candidates);
+          setTblData(response.data.data.items);
           console.log("candidate-upload-batches",tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -1125,17 +1125,90 @@ const ContentLogic = (props) => {
   const gender = [
     {
       value: "MALE",
-      label: "Male",
+      label: "MALE",
     },
     {
-      value: "Female",
-      label: "Female",
+      value: "FEMALE",
+      label: "FEMALE",
     },
     {
-      value: "Other",
-      label: "Other",
+      value: "OTHER",
+      label: "OTHER",
     },
   ];
+  const states = [
+    {
+      value:'Maharashtra',
+      label:'Maharashtra'
+    },
+    {
+      value:'Gujarat',
+      label:'Gujarat'
+    },
+    {
+      value:'Andhra Pradesh',
+      label:'Andhra Pradesh'
+    },
+    {
+      value:'Karnataka',
+      label:'Karnataka'
+    },
+    {
+      value:'Rajasthan',
+      label:'Rajasthan'
+    },
+    {
+      value:'Bihar',
+      label:'Bihar'
+    },
+    {
+      value:'Aasam',
+      label:'Aasam'
+    },
+    {
+      value:'Chattisgarh',
+      label:'Chattisgarh'
+    },
+    {
+      value:'M Pradesh',
+      label:'M Pradesh'
+    },
+    {
+      value:'Goa',
+      label:'Goa'
+    },
+    {
+      value:'Haryana',
+      label:'Haryana'
+    },
+    {
+      value:'Jharkhand',
+      label:'Jharkhand'
+    },
+    {
+      value:'Uttar Pradesh',
+      label:'Uttar Pradesh'
+    }
+  ]
+  const role = [
+    {
+      value:'Admin',
+      label:'Admin'
+    },
+    {
+      value:'Call Center Staff',
+      label:'Call Center Staff'
+    },
+    {
+      value:'HO Agent',
+      label:'HO Agent'
+    },
+    {
+      value:'User',
+      label:'User'
+    },
+
+  ]
 
   const handleChangePage = (event, newPage) => {
    setPage(newPage)
@@ -1210,15 +1283,15 @@ const ContentLogic = (props) => {
     const [userData,setUserData] = useState({
       fullName:'',
       dob:'',
-      gender:'MALE',
+      gender:'',
       currAddress:'',
       currCity:'',
-      currState:'GJ',
+      currState:'',
       currCountry:'',
       currZip:'',
       permAddress:'',
       permCity:'',
-      permState:'MH',
+      permState:'',
       permCountry:'',
       permZip:'',
       primaryLang:'',
@@ -1229,7 +1302,7 @@ const ContentLogic = (props) => {
       note:'',
       email:'',
       contactNo:'',
-      roleId:5,
+      roleId:0,
       isActive:true,
   
     })
@@ -1561,7 +1634,7 @@ const ContentLogic = (props) => {
             <>
               {numSelected === 1 ? (
                 <Button
-                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  style={{ marginTop: "50px", marginRight: "50px" }}
                   variant="outlined"
                   >
                   <EditIcon />
@@ -1571,7 +1644,7 @@ const ContentLogic = (props) => {
                 <Button
                   onClick={handleClickOpen}
                   style={{
-                    marginTop: "80px",
+                    marginTop: "50px",
                     marginRight: "5px",
                     backgroundColor: "brown",
                     color: "white",
@@ -3812,10 +3885,16 @@ const ContentLogic = (props) => {
                     onChange={(e)=>{setUserData({...userData,roleId:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
-                  />
+                  >
+                    {role.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </List>
               </Box>
-              <Box sx={{ ml: 20 }}>
+              <Box sx={{ ml: 17 }}>
                 <List>
                   <TextField
                     required
@@ -3854,12 +3933,18 @@ const ContentLogic = (props) => {
                     onChange={(e)=>{setUserData({...userData,currState:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
-                  />
+                  >
+                    {states.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </List>
                 <List>
                   <FormGroup>
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox/>}
                       label="Same as current address"
 
                     />
@@ -3904,7 +3989,13 @@ const ContentLogic = (props) => {
                     value={userData.permState}
                     onChange={(e)=>{setUserData({...userData,permState:e.target.value})}}
                     sx={{ width: "40ch", ml: 3 }}
-                  />
+                  >
+                    {states.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </List>
                 <List sx={{ mb: 4, mt: 4 }}>
                   <TextField

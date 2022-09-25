@@ -14,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
-import Modal from '@mui/material/Modal';
+import Modal from "@mui/material/Modal";
 
 import {
   Button,
@@ -25,11 +25,15 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
+  InputLabel,
   List,
   ListItem,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Radio,
   RadioGroup,
+  Select,
   Tab,
   TextField,
 } from "@mui/material";
@@ -46,7 +50,7 @@ import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
-import { Info, PriorityHigh } from "@mui/icons-material";
+import { CheckBox, Info, PriorityHigh } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
@@ -64,8 +68,8 @@ const ContentLogic = (props) => {
   const [buttonText, setButtonText] = useState();
   const [modalTitle, setModalTitle] = useState();
   const [tblData, setTblData] = useState([]);
-  const [tblDataCount,setTblDataCount] = useState([])
-  const [permissions,setPermissions] = useState([])
+  const [tblDataCount, setTblDataCount] = useState([]);
+  const [permissions, setPermissions] = useState([]);
 
   const useStyles = makeStyles((theme) => {
     const appbarHeight = 64;
@@ -75,8 +79,6 @@ const ContentLogic = (props) => {
   });
   const [pageName, setPageName] = useState();
   const [tblHeader, setTblHeader] = useState([]);
-
-
 
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -127,7 +129,7 @@ const ContentLogic = (props) => {
     return stabilizedThis.map((el) => el[0]);
   }
 
-// table headings array
+  // table headings array
   const headCells = [
     {
       id: "name",
@@ -664,13 +666,16 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/candidates?limit=${rowsPerPage}&page=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/candidates?limit=${rowsPerPage}&page=${page * rowsPerPage}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.Candidates);
-          console.log("tbldataCandidate",tblData);
+          console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -690,28 +695,31 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.items);
-          console.log("candidate-upload-batches",tblData);
+          console.log("candidate-upload-batches", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateUploadBatchAPIcall", error);
+        console.error(
+          "There was an error!- getCandidateUploadBatchAPIcall",
+          error
+        );
       });
   };
- //fetch the agent master data 
+  //fetch the agent master data
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
+      .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
-          console.log("tblData",tblData);
+          console.log("tblData", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -720,83 +728,109 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getAgentMasterAPIcall", error);
       });
   };
-  //fetch the candidate verification data 
+  //fetch the candidate verification data
   const getCandidateVerificationAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/candidate-verifications?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/candidate-verifications?take=${rowsPerPage}&skip=${
+          page * rowsPerPage
+        }`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
-          console.log("candidate verification",tblData);
-         
+          console.log("candidate verification", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateVerificationAPIcall", error);
+        console.error(
+          "There was an error!- getCandidateVerificationAPIcall",
+          error
+        );
       });
   };
-  //fetch the agent pricing template data 
+  //fetch the agent pricing template data
   const getAgentTemplatePricingAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${
+          page * rowsPerPage
+        }`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.agentPricingTemplates);
           setTblDataCount(response.data.data.count);
-          console.log("agent template data",tblData);
+          console.log("agent template data", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getAgentTemplatePricingAPIcall", error);
+        console.error(
+          "There was an error!- getAgentTemplatePricingAPIcall",
+          error
+        );
       });
   };
-  //fetch the candidate upload batch admin data 
+  //fetch the candidate upload batch admin data
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${
+          page * rowsPerPage
+        }`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.items);
-          setTblDataCount(response.data.data.totalItems)
-          console.log("upload batch ",tblData);
+          setTblDataCount(response.data.data.totalItems);
+          console.log("upload batch ", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateUploadBatchAdminAPIcall", error);
+        console.error(
+          "There was an error!- getCandidateUploadBatchAdminAPIcall",
+          error
+        );
       });
   };
-  //fetch the category data 
+  //fetch the category data
   const getCategoryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/categories?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}`}
-      })
+      .dataGet(
+        `/v1/categories?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.categories);
-          console.log("category",tblData);
-          setTblDataCount(response.data.data.count)
+          console.log("category", tblData);
+          setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -805,18 +839,18 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCategoryAPIcall", error);
       });
   };
-  //fetch the company data 
+  //fetch the company data
   const getCompanyAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
+      .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.result);
-          setTblDataCount(response.data.data.count)
+          setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -825,19 +859,19 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCompanyAPIcall", error);
       });
   };
-  //fetch the customer data 
+  //fetch the customer data
   const getCustomerAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
+      .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
-          console.log("customer",tblData);
+          console.log("customer", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -846,18 +880,21 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCustomerAPIcall", error);
       });
   };
-  //fetch the industry data 
+  //fetch the industry data
   const getIndustryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/industries?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/industries?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.industries);
-          console.log("industry",tblData);
+          console.log("industry", tblData);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           window.alert(response.data.message);
@@ -867,19 +904,19 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
-  //fetch the roles data 
+  //fetch the roles data
   const getRoleAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
+      .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.roles);
           setTblDataCount(response.data.data.count);
-          console.log("roles",tblData);
+          console.log("roles", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -888,7 +925,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getRoleAPIcall", error);
       });
   };
-  //fetch the skillset data 
+  //fetch the skillset data
   const getSkillSetAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -900,7 +937,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setTblData(response.data.data.skills);
           setTblDataCount(response.data.data.count);
-          console.log("skill set",tblData);
+          console.log("skill set", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -909,19 +946,22 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSkillSetAPIcall", error);
       });
   };
-  //fetch the subscriptions data 
+  //fetch the subscriptions data
   const getSubscriptionAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/subscriptions?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/subscriptions?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.subscriptions);
           setTblDataCount(response.data.data.count);
-          console.log("subscriptions",tblData);
+          console.log("subscriptions", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -930,19 +970,19 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSubscriptionAPIcall", error);
       });
   };
-  //fetch the users data 
+  //fetch the users data
   const getUserAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page*rowsPerPage}`, {
+      .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
-          console.log("users",tblData);
+          console.log("users", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -952,33 +992,56 @@ const ContentLogic = (props) => {
       });
   };
 
- //fetch the all permissions onClick of new button for role module
- const getPermissionsAPIcall = async(e) =>{
-  let authTok = localStorage.getItem("user"); // string
-  let convertTokenToObj = JSON.parse(authTok);
-  await handler
-    .dataGet(`/v1/permissions`, {
-      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-    })
-    .then((response) => {
-      if (response.status == 200) {
-        setPermissions(response.data);
-        console.log("permissions",permissions);
-      } else if (response.status == 400) {
-        window.alert(response.data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("There was an error!- getPermissionsAPIcall", error);
-    });
-} 
+  const getBatchPriorityAPIcall=()=>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataGet(
+        `/v1/batch-priorities/passive-create`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setTblData(response.data.data.batches);
+          setTblDataCount(response.data.data.users);
+          console.log("batch priority", response.data.data.users);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
 
+
+  //fetch the all permissions onClick of new button for role module
+  const getPermissionsAPIcall = async (e) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    await handler
+      .dataGet(`/v1/permissions`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setPermissions(response.data);
+          console.log("permissions", permissions);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getPermissionsAPIcall", error);
+      });
+  };
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
-    console.log("getallData pagename :",pageName);
+    console.log("getallData pagename :", pageName);
     switch (pageName) {
-
       case "candidate-master":
         getCandidateMasterAPIcall();
         break;
@@ -986,40 +1049,43 @@ const ContentLogic = (props) => {
         getCandidateUploadBatchAPIcall();
         break;
       case "candidate-verification":
-        getCandidateVerificationAPIcall()
+        getCandidateVerificationAPIcall();
         break;
       case "agent-master":
-        getAgentMasterAPIcall()
+        getAgentMasterAPIcall();
         break;
       case "agent-pricing-template":
-        getAgentTemplatePricingAPIcall()
+        getAgentTemplatePricingAPIcall();
         break;
       case "candidate-upload-batch-admin":
-        getCandidateUploadBatchAdminAPIcall()
+        getCandidateUploadBatchAdminAPIcall();
+        break;
+      case "batch-priority":
+        getBatchPriorityAPIcall();
         break;
       case "category":
-        getCategoryAPIcall()
+        getCategoryAPIcall();
         break;
       case "company":
-        getCompanyAPIcall()
+        getCompanyAPIcall();
         break;
       case "customer":
-        getCustomerAPIcall()
+        getCustomerAPIcall();
         break;
       case "industry":
-        getIndustryAPIcall()
+        getIndustryAPIcall();
         break;
       case "role":
-        getRoleAPIcall()
+        getRoleAPIcall();
         break;
       case "skillset":
-        getSkillSetAPIcall()
+        getSkillSetAPIcall();
         break;
       case "subscription":
-        getSubscriptionAPIcall()
+        getSubscriptionAPIcall();
         break;
       case "user":
-        getUserAPIcall()
+        getUserAPIcall();
         break;
       default:
         break;
@@ -1042,10 +1108,11 @@ const ContentLogic = (props) => {
 
     return (
       <TableHead>
-        <TableRow style={{backgroundColor:'black'}}>
+        <TableRow style={{ backgroundColor: "black" }}>
           <TableCell padding="checkbox">
-            <Checkbox style={{color:'white',paddingRight:'30px' }}
-            label='My checkbox' 
+            <Checkbox
+              style={{ color: "white", paddingRight: "30px" }}
+              label="My checkbox"
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={onSelectAllClick}
@@ -1056,7 +1123,7 @@ const ContentLogic = (props) => {
           </TableCell>
           {tblHeader.map((headCell) => (
             <TableCell
-            style={{color: 'white'}}
+              style={{ color: "white" }}
               key={headCell.id}
               align="left"
               padding={headCell.disablePadding ? "none" : "normal"}
@@ -1138,86 +1205,85 @@ const ContentLogic = (props) => {
   ];
   const states = [
     {
-      value:'Maharashtra',
-      label:'Maharashtra'
+      value: "Maharashtra",
+      label: "Maharashtra",
     },
     {
-      value:'Gujarat',
-      label:'Gujarat'
+      value: "Gujarat",
+      label: "Gujarat",
     },
     {
-      value:'Andhra Pradesh',
-      label:'Andhra Pradesh'
+      value: "Andhra Pradesh",
+      label: "Andhra Pradesh",
     },
     {
-      value:'Karnataka',
-      label:'Karnataka'
+      value: "Karnataka",
+      label: "Karnataka",
     },
     {
-      value:'Rajasthan',
-      label:'Rajasthan'
+      value: "Rajasthan",
+      label: "Rajasthan",
     },
     {
-      value:'Bihar',
-      label:'Bihar'
+      value: "Bihar",
+      label: "Bihar",
     },
     {
-      value:'Aasam',
-      label:'Aasam'
+      value: "Aasam",
+      label: "Aasam",
     },
     {
-      value:'Chattisgarh',
-      label:'Chattisgarh'
+      value: "Chattisgarh",
+      label: "Chattisgarh",
     },
     {
-      value:'M Pradesh',
-      label:'M Pradesh'
+      value: "M Pradesh",
+      label: "M Pradesh",
     },
     {
-      value:'Goa',
-      label:'Goa'
+      value: "Goa",
+      label: "Goa",
     },
     {
-      value:'Haryana',
-      label:'Haryana'
+      value: "Haryana",
+      label: "Haryana",
     },
     {
-      value:'Jharkhand',
-      label:'Jharkhand'
+      value: "Jharkhand",
+      label: "Jharkhand",
     },
     {
-      value:'Uttar Pradesh',
-      label:'Uttar Pradesh'
-    }
-  ]
+      value: "Uttar Pradesh",
+      label: "Uttar Pradesh",
+    },
+  ];
   const role = [
     {
-      value:'Admin',
-      label:'Admin'
+      value: "Admin",
+      label: "Admin",
     },
     {
-      value:'Call Center Staff',
-      label:'Call Center Staff'
+      value: "Call Center Staff",
+      label: "Call Center Staff",
     },
     {
-      value:'HO Agent',
-      label:'HO Agent'
+      value: "HO Agent",
+      label: "HO Agent",
     },
     {
-      value:'User',
-      label:'User'
+      value: "User",
+      label: "User",
     },
-
-  ]
+  ];
 
   const handleChangePage = (event, newPage) => {
-   setPage(newPage)
-    getAllData(pageName)
+    setPage(newPage);
+    getAllData(pageName);
   };
 
   // onchange of number of rows data will refreshed and shows intable
-  const handleChangeRowsPerPage = (event,row) => { 
-    setPage(0)
+  const handleChangeRowsPerPage = (event, row) => {
+    setPage(0);
     setRowsPerPage(row.props.value);
   };
 
@@ -1235,84 +1301,209 @@ const ContentLogic = (props) => {
     const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
     const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
     //state for store the input fields value of industry
-    const [categoryData, setCategoryData] = useState(
-      {
-        title:"",
-        description:'',
-        isActive:true
-      }
-    );
+    const [categoryData, setCategoryData] = useState({
+      title: "",
+      description: "",
+      isActive: true,
+    });
 
     //state for store the input fields value of industry
-    const [companyData,setCompanyData] = useState({
-      companyName:' ',
-      description:'',
+    const [companyData, setCompanyData] = useState({
+      companyName: " ",
+      description: "",
+      isActive: true,
+      industryId: "",
+    });
+
+    //state for store the input fields value of industry
+    const [industryData, setIndustryData] = useState({
+      title: "",
+      description: "",
+      isActive: true,
+    });
+    const [roleData, setRoleData] = useState({
+      name: "",
+      description: "",
+      isActive: true,
+    });
+    const [skillSet, setSkillSet] = useState({
+      title: "",
+      description: "",
+      isActive: true,
+    });
+    const [subscription, setSubscription] = useState({
+      planName: "",
+      dataCount: 1,
+      durationMonths: 12,
+      price: 1999,
+      note: "",
+      isActive: true,
+    });
+    const [userData, setUserData] = useState({
+      fullName: "",
+      dob: "",
+      gender: "",
+      currAddress: "",
+      currCity: "",
+      currState: "",
+      currCountry: "",
+      currZip: "",
+      permAddress: "",
+      permCity: "",
+      permState: "",
+      permCountry: "",
+      permZip: "",
+      primaryLang: "",
+      secondaryLang: "",
+      thirdLang: "",
+      aadharCard: "",
+      panCard: "",
+      note: "",
+      email: "",
+      contactNo: "",
+      roleId: 0,
+      isActive: true,
+    });
+
+    const [agentMasterData, setAgentMasterData] = useState({
+      fullName: "",
+      dob: "",
+      gender: "",
+      permAddress: "",
+      permCity: "",
+      permState: "",
+      permCountry: "",
+      permZip: "",
+      currAddress: "",
+      currCity: "",
+      currState: "",
+      currCountry: "",
+      currZip: "",
+      panCard: "",
+      aadharCard: "",
+      primaryLang: "",
+      secondaryLang: "",
+      thirdLang: "",
+      note: "",
       isActive:true,
-      industryId:''
-  
+      email: "",
+      contactNo: "",
+      agentNo: "",
+      professionalStatus: "",
+      gstin: "",
+      companyName: "",
+      bankName: "",
+      bankAc: "",
+      bankIfsc: "",
+      bankAcType: "",
+      workLocation1: "",
+      workLocation2: "",
+      status: "",
+    });
+
+    const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
+                templateName: "",
+                description: "",
+                approvalRemarks: null,
+                isActive: true,
+                industry: 0,
+                category:0,
+                education: 0,
+                fullName: 0,
+                dob: 0,
+                primaryLanguage: 0,
+                secondaryLanguage: 0,
+                currCity: 0,
+                currZip: 0,
+                email1: 0,
+                contactNo1: 0,
+                expYears: 0,
+                preferLocation1: 0,
+                preferLocation2: 0,
+                skill1: 0,
+                skill2: 0,
+                lastCompany: 0,
+                designation: 0,
     })
 
-    //state for store the input fields value of industry 
-    const [industryData,setIndustryData] = useState({
-      title:'',
-      description:'',
-      isActive:true,
-  
+    const [candidateUploadBatchAdminData,setCandidateUploadBatchAdminData] = useState({
+
     })
-    const [roleData,setRoleData] = useState({
-      name:'',
-      description:'',
-      isActive:true,
-  
-    })
-    const [skillSet,setSkillSet] = useState({
-      title:'',
-      description:'',
-      isActive:true,
-  
-    })
-    const [subscription,setSubscription] = useState({
-      planName:'',
-      dataCount:1,
-      durationMonths:12,
-      price:1999,
-      note:'',
-      isActive:true,
-  
-    })
-    const [userData,setUserData] = useState({
-      fullName:'',
-      dob:'',
-      gender:'',
-      currAddress:'',
-      currCity:'',
-      currState:'',
-      currCountry:'',
-      currZip:'',
-      permAddress:'',
-      permCity:'',
-      permState:'',
-      permCountry:'',
-      permZip:'',
-      primaryLang:'',
-      secondaryLang:'',
-      thirdLang:'',
-      aadharCard:'',
-      panCard:'',
-      note:'',
-      email:'',
-      contactNo:'',
-      roleId:0,
-      isActive:true,
-  
-    })
+
+    const [batchPriorityData,setBatchPriorityData] = useState([])
 
     // add API calls
-  const addAPICalls = (pageName) => {
-    let authTok = localStorage.getItem("user"); // string
-    let convertTokenToObj = JSON.parse(authTok);
-    switch (pageName) {
-      case "category":
+    const addAPICalls = (pageName) => {
+      let authTok = localStorage.getItem("user"); // string
+      let convertTokenToObj = JSON.parse(authTok);
+      switch (pageName) {
+        case "agent-master":
+          handler
+            .dataPost(`/v1/agents`, agentMasterData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getAgentMasterAPIcall();
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+          break;
+        case "agent-pricing-template":
+          handler
+            .dataPost(`/v1/agent-pricing-templates`, agentPricingTemplateData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                getAgentTemplatePricingAPIcall();
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+          break;
+        case "candidate-upload-batch-admin":
+          break;
+        case "batch-priority":
+
+          handler
+            .dataPost(`/v1/batch-priorities`, batchPriorityData, {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status == 201) {
+                console.log(response.data.message);
+                //getBatchPriorityAPIcall()
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- createCompany", error);
+            });
+          break;
+        case "category":
           handler
             .dataPost(`/v1/categories`, categoryData, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1332,8 +1523,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- getCategoryAPIcall", error);
             });
-            break;
-      case "company":
+          break;
+        case "company":
           handler
             .dataPost(`/v1/companies`, companyData, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1342,7 +1533,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getCompanyAPIcall()
+                getCompanyAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1353,8 +1544,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;
-      case "industry":
+          break;
+        case "industry":
           handler
             .dataPost(`/v1/industries`, industryData, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1363,7 +1554,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getUserAPIcall()
+                getUserAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1374,8 +1565,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;
-      case "role":
+          break;
+        case "role":
           handler
             .dataPost(`/v1/roles`, roleData, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1384,7 +1575,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getRoleAPIcall()
+                getRoleAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1395,8 +1586,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;
-      case "skillset":
+          break;
+        case "skillset":
           handler
             .dataPost(`/v1/skills`, skillSet, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1405,7 +1596,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getSkillSetAPIcall()
+                getSkillSetAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1416,8 +1607,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;
-      case "subscription":
+          break;
+        case "subscription":
           handler
             .dataPost(`/v1/subscriptions`, subscription, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1426,7 +1617,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getSubscriptionAPIcall()
+                getSubscriptionAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1437,8 +1628,8 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;      
-      case "user":
+          break;
+        case "user":
           handler
             .dataPost(`/v1/users`, userData, {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1447,7 +1638,7 @@ const ContentLogic = (props) => {
               console.log(response);
               if (response.status == 201) {
                 console.log(response.data.message);
-                getUserAPIcall()
+                getUserAPIcall();
               } else {
                 window.alert(response.data.message);
               }
@@ -1458,13 +1649,12 @@ const ContentLogic = (props) => {
               }
               console.error("There was an error!- createCompany", error);
             });
-        break;
-      
-      
-      default:
-        break;
-    }
-  }
+          break;
+
+        default:
+          break;
+      }
+    };
 
     const handleClickOpenAddBtchprty = () => {
       setOpenAddBtchprty(true);
@@ -1545,7 +1735,6 @@ const ContentLogic = (props) => {
     };
 
     const handleClickOpen = (e) => {
-     
       setOpenModal(true);
     };
 
@@ -1585,7 +1774,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  >
+                >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1636,7 +1825,7 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "50px", marginRight: "50px" }}
                   variant="outlined"
-                  >
+                >
                   <EditIcon />
                   Edit
                 </Button>
@@ -1650,7 +1839,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  >
+                >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1664,7 +1853,7 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-                  >
+                >
                   <EditIcon />
                   Edit
                 </Button>
@@ -1678,7 +1867,7 @@ const ContentLogic = (props) => {
                     color: "white",
                   }}
                   variant="outlined"
-                  >
+                >
                   <AddIcon />
                   {buttonText}
                 </Button>
@@ -1730,35 +1919,35 @@ const ContentLogic = (props) => {
           return null;
         case "role":
           return (
-          <>
-            {numSelected === 1 ? (
-              <Button
-                style={{ marginTop: "80px", marginRight: "50px" }}
-                variant="outlined"
-
-              >
-                <EditIcon />
-                Edit
-              </Button>
-            ) : (
-              <Button
-                onClick={()=>{handleClickOpen()
-                getPermissionsAPIcall()
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>
-            )}
-          </>
-          )
+            <>
+              {numSelected === 1 ? (
+                <Button
+                  style={{ marginTop: "80px", marginRight: "50px" }}
+                  variant="outlined"
+                >
+                  <EditIcon />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    handleClickOpen();
+                    getPermissionsAPIcall();
+                  }}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>
+              )}
+            </>
+          );
 
         default:
           return (
@@ -1767,7 +1956,6 @@ const ContentLogic = (props) => {
                 <Button
                   style={{ marginTop: "80px", marginRight: "50px" }}
                   variant="outlined"
-
                 >
                   <EditIcon />
                   Edit
@@ -2630,6 +2818,7 @@ const ContentLogic = (props) => {
         case "agent-master":
           return (
             <>
+            
               <Box sx={{ width: "100%", typography: "body1", ml: 18 }}>
                 <TabContext value={tabValue}>
                   <Box>
@@ -2638,7 +2827,10 @@ const ContentLogic = (props) => {
                       aria-label="lab API tabs example"
                     >
                       <Tab label="BASIC" value="1" style={{ color: "brown" }} />
-                      <Tab label="PROFESSIONAL" value="2" />
+                      <Tab
+                        label="PROFESSIONAL"
+                        value="2"
+                      />
                     </TabList>
                   </Box>
                   <TabPanel value="1">
@@ -2675,10 +2867,15 @@ const ContentLogic = (props) => {
                           <TextField
                             required
                             id="filled-basic"
-                            label="Aadhar No"
-                            type="number"
+                            label="Agent No"
                             variant="filled"
                             sx={{ width: "30ch" }}
+                            value={agentMasterData.agentNo}
+                            onChange={(e)=>{
+                              setAgentMasterData(
+                                {...agentMasterData,
+                            agentNo:e.target.value}
+                            )}}
                           />
 
                           {cmpyvalue === "company" ? (
@@ -2687,6 +2884,12 @@ const ContentLogic = (props) => {
                                 id="filled-basic"
                                 label="Company Name"
                                 type="name"
+                                value={agentMasterData.companyName}
+                            onChange={(e)=>{
+                              setAgentMasterData(
+                                {...agentMasterData,
+                            companyName:e.target.value}
+                            )}}
                                 variant="filled"
                                 sx={{ width: "30ch", ml: 4 }}
                               />
@@ -2694,6 +2897,12 @@ const ContentLogic = (props) => {
                                 id="filled-basic"
                                 label="GSTIN"
                                 type="name"
+                                value={agentMasterData.gstin}
+                                onChange={(e)=>{
+                                  setAgentMasterData(
+                                    {...agentMasterData,
+                                gstin:e.target.value}
+                                )}}
                                 variant="filled"
                                 sx={{ width: "30ch", ml: 4 }}
                               />
@@ -2705,6 +2914,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Full Name"
                             required
+                            value={agentMasterData.fullName}
+                            onChange={(e)=>{
+                              setAgentMasterData(
+                                {...agentMasterData,
+                            fullName:e.target.value}
+                            )}}
                             type="name"
                             variant="filled"
                             sx={{ width: "30ch" }}
@@ -2714,6 +2929,12 @@ const ContentLogic = (props) => {
                             label="Birthdate"
                             InputLabelProps={{ shrink: true }}
                             type="date"
+                            value={agentMasterData.dob}
+                            onChange={(e)=>{
+                              setAgentMasterData(
+                                {...agentMasterData,
+                            dob:e.target.value}
+                            )}}
                             variant="filled"
                             sx={{ width: "30ch", ml: 4, mr: 4 }}
                           />
@@ -2728,19 +2949,35 @@ const ContentLogic = (props) => {
                             name="row-radio-buttons-group"
                           >
                             <FormControlLabel
-                              value="female"
                               control={<Radio />}
                               label="Female"
+                              value={agentMasterData.gender}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              gender:e.target.value}
+                            )}}
                             />
                             <FormControlLabel
-                              value="male"
                               control={<Radio />}
                               label="Male"
+                              checked
+                              value={agentMasterData.gender}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              gender:e.target.value}
+                            )}}
                             />
                             <FormControlLabel
-                              value="other"
                               control={<Radio />}
                               label="Other"
+                              value={agentMasterData.gender}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              gender:e.target.value}
+                            )}}
                             />
                           </RadioGroup>
                         </List>
@@ -2752,6 +2989,12 @@ const ContentLogic = (props) => {
                             type="email"
                             variant="filled"
                             sx={{ width: "30ch" }}
+                            value={agentMasterData.email}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              email:e.target.value}
+                            )}}
                           />
                           <TextField
                             id="filled-basic"
@@ -2759,6 +3002,12 @@ const ContentLogic = (props) => {
                             required
                             type="number"
                             variant="filled"
+                            value={agentMasterData.contactNo}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              contactNo:e.target.value}
+                            )}}
                             sx={{ width: "30ch", ml: 4 }}
                           />
                         </List>
@@ -2769,6 +3018,12 @@ const ContentLogic = (props) => {
                             required
                             rows={3}
                             multiline
+                            value={agentMasterData.currAddress}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              currAddress:e.target.value}
+                            )}}
                             type="address"
                             variant="filled"
                             sx={{ width: "64ch", mt: 5, mb: 5 }}
@@ -2780,6 +3035,12 @@ const ContentLogic = (props) => {
                             label="Current pincode"
                             required
                             type="name"
+                            value={agentMasterData.currZip}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              currZip:e.target.value}
+                            )}}
                             variant="filled"
                             sx={{ width: "30ch" }}
                           />
@@ -2787,6 +3048,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Current city"
                             required
+                            value={agentMasterData.currCity}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              currCity:e.target.value}
+                            )}}
                             type="address"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2795,6 +3062,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Current state"
                             required
+                            value={agentMasterData.currState}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              currState:e.target.value}
+                            )}}
                             type="address"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2811,6 +3084,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Permanent Address"
                             required
+                            value={agentMasterData.permAddress}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              permAddress:e.target.value}
+                            )}}
                             rows={3}
                             multiline
                             helperText="Must match address in one of the KYC document"
@@ -2825,6 +3104,12 @@ const ContentLogic = (props) => {
                             label="Permanent pincode"
                             required
                             type="name"
+                            value={agentMasterData.permZip}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              permZip:e.target.value}
+                            )}}
                             variant="filled"
                             sx={{ width: "30ch" }}
                           />
@@ -2832,6 +3117,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Permanent city"
                             required
+                            value={agentMasterData.permCity}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              permCity:e.target.value}
+                            )}}
                             type="address"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2840,6 +3131,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Permanent state"
                             required
+                            value={agentMasterData.permState}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              permState:e.target.value}
+                            )}}
                             type="address"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2850,6 +3147,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Pan Card"
                             required
+                            value={agentMasterData.panCard}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              panCard:e.target.value}
+                            )}}
                             type="name"
                             variant="filled"
                             sx={{ width: "30ch" }}
@@ -2858,6 +3161,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Aadhar card"
                             required
+                            value={agentMasterData.aadharCard}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              aadharCard:e.target.value}
+                            )}}
                             type="number"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2871,6 +3180,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Primary language"
                             required
+                            value={agentMasterData.primaryLang}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              primaryLang:e.target.value}
+                            )}}
                             type="name"
                             variant="filled"
                             sx={{ width: "30ch" }}
@@ -2879,6 +3194,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Secondary language"
                             required
+                            value={agentMasterData.secondaryLang}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              secondaryLang:e.target.value}
+                            )}}
                             type="name"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2887,6 +3208,12 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Third language"
                             required
+                            value={agentMasterData.thirdLang}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              thirdLang:e.target.value}
+                            )}}
                             type="name"
                             variant="filled"
                             sx={{ width: "30ch", ml: 4 }}
@@ -2898,6 +3225,13 @@ const ContentLogic = (props) => {
                             label="Note"
                             rows={3}
                             multiline
+                            value={agentMasterData.note}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              note:e.target.value}
+                            )
+                          console.log(agentMasterData.note);}}
                             type="address"
                             variant="filled"
                             sx={{ width: "64ch", mb: 5 }}
@@ -2908,10 +3242,16 @@ const ContentLogic = (props) => {
                             defaultChecked
                             control={<Checkbox />}
                             label="Is Active"
+                            value={agentMasterData.isActive}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              isActive:e.target.checked}
+                            )}}
                           />
                         </List>
                         <List>
-                          <Button sx={{ color: "white", background: "brown" }}>
+                          <Button onClick={()=>addAPICalls('agent-master')} style={{ color: "white", backgroundColor: "brown" }}>
                             Save
                           </Button>
                         </List>
@@ -2928,6 +3268,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Bank name"
                           type="name"
+                          value={agentMasterData.bankName}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              bankName:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch" }}
                         />
@@ -2935,6 +3281,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="A/C no"
                           type="name"
+                          value={agentMasterData.bankAc}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              bankAc:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
@@ -2942,6 +3294,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="IFSC Code"
                           type="name"
+                          value={agentMasterData.bankIfsc}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              bankIfsc:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
@@ -2949,6 +3307,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="A/C Type"
                           type="name"
+                          value={agentMasterData.bankAcType}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              bankAcType:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
@@ -2961,6 +3325,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Professional Status"
                           type="name"
+                          value={agentMasterData.professionalStatus}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              professionalStatus:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch" }}
                         />
@@ -2968,6 +3338,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Sub work location 1 "
                           type="name"
+                          value={agentMasterData.workLocation1}
+                              onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              workLocation1:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
@@ -2975,6 +3351,12 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Sub work location 2"
                           type="name"
+                          value={agentMasterData.workLocation2}
+                          onChange={(e)=>{
+                                setAgentMasterData(
+                                  {...agentMasterData,
+                              workLocation2:e.target.value}
+                            )}}
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
@@ -2983,8 +3365,8 @@ const ContentLogic = (props) => {
                         <ProfessionalTab />
                       </List>
                       <List>
-                        <Button
-                          sx={{ color: "white", bgcolor: "brown", mt: 3 }}
+                        <Button onClick={()=>addAPICalls('agent-master')}
+                          style={{ color: "white", backgroundColor: "brown", marginTop: 3 }}
                         >
                           Save
                         </Button>
@@ -2994,6 +3376,7 @@ const ContentLogic = (props) => {
                 </TabContext>
               </Box>
             </>
+          
           );
 
         case "agent-pricing-template":
@@ -3032,12 +3415,22 @@ const ContentLogic = (props) => {
                     label="Template Name"
                     type="name"
                     variant="filled"
+                    value={agentPricingTemplateData.templateName}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    templateName:e.target.value})}}
                     sx={{ width: "30ch" }}
                   />
                   <TextField
                     id="filled-basic"
                     label="Description"
                     type="name"
+                    value={agentPricingTemplateData.description}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    description:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 4 }}
                   />
@@ -3045,6 +3438,11 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Approval Remarks"
                     type="name"
+                    value={agentPricingTemplateData.approvalRemarks}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    approvalRemarks:e.target.value})}}
                     variant="filled"
                     sx={{ width: "40ch", ml: 4 }}
                   />
@@ -3053,8 +3451,12 @@ const ContentLogic = (props) => {
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
+                    value={agentPricingTemplateData.industry}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    industry:e.target.value})}}
                     label="Industry"
                     variant="outlined"
                   />
@@ -3062,7 +3464,11 @@ const ContentLogic = (props) => {
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
+                    value={agentPricingTemplateData.category}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    category:e.target.value})}}
                     type="number"
                     label="Category"
                     variant="outlined"
@@ -3071,155 +3477,219 @@ const ContentLogic = (props) => {
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Education"
                     variant="outlined"
+                    value={agentPricingTemplateData.education}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    education:e.target.value})}}
                   />
                 </List>
                 <List>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Full Name"
                     variant="outlined"
+                    value={agentPricingTemplateData.fullName}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    fullName:e.target.value})}}
                   />
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Birthdate"
                     variant="outlined"
+                    value={agentPricingTemplateData.dob}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    dob:e.target.value})}}
                   />
                 </List>
                 <List>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Primary language"
                     variant="outlined"
+                    value={agentPricingTemplateData.primaryLanguage}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    primaryLanguage:e.target.value})}}
                   />
                   <TextField
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Secondary language"
                     variant="outlined"
+                    value={agentPricingTemplateData.secondaryLanguage}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    secondaryLanguage:e.target.value})}}
                   />
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Primary Mobile"
                     variant="outlined"
+                    value={agentPricingTemplateData.contactNo1}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    contactNo1:e.target.value})}}
                   />
                 </List>
                 <List>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Current city"
                     variant="outlined"
+                    value={agentPricingTemplateData.currCity}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    currCity:e.target.value})}}
                   />
                   <TextField
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Current pincode"
                     variant="outlined"
+                    value={agentPricingTemplateData.currZip}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    currZip:e.target.value})}}
                   />
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Primary Email"
                     variant="outlined"
+                    value={agentPricingTemplateData.email1}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    email1:e.target.value})}}
                   />
                 </List>
                 <List>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Preffered location 1"
                     variant="outlined"
+                    value={agentPricingTemplateData.preferLocation1}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    preferLocation1:e.target.value})}}
                   />
                   <TextField
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Preffered location 2"
                     variant="outlined"
+                    value={agentPricingTemplateData.preferLocation2}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    preferLocation2:e.target.value})}}
                   />
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Work Exp yrs"
                     variant="outlined"
+                    value={agentPricingTemplateData.expYears}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    expYears:e.target.value})}}
                   />
                 </List>
                 <List>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Last company name"
                     variant="outlined"
+                    value={agentPricingTemplateData.lastCompany}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    lastCompany:e.target.value})}}
                   />
                   <TextField
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Designation"
                     variant="outlined"
+                    value={agentPricingTemplateData.designation}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    designation:e.target.value})}}
                   />
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Primary skills"
                     variant="outlined"
+                    value={agentPricingTemplateData.skill1}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    skill1:e.target.value})}}
                   />
                   <TextField
                     sx={{ ml: 2 }}
                     id="outlined-basic"
                     size="small"
-                    value={0}
                     type="number"
                     label="Secondary skills"
                     variant="outlined"
+                    value={agentPricingTemplateData.skill2}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    skill2:e.target.value})}}
                   />
                 </List>
                 <List>
@@ -3227,14 +3697,19 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
+                      value={agentPricingTemplateData.isActive}
+                    onChange={(e)=>{
+                      setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                    isActive:e.target.checked})}}
                     />
                   </FormGroup>
                 </List>
                 <List sx={{ mt: 4, mb: 4 }}>
-                  <Button sx={{ color: "white", bgcolor: "brown" }}>
+                  <Button onClick={()=>addAPICalls('agent-pricing-template')} style={{ color: "white", backgroundColor: "brown" }}>
                     Save
                   </Button>
-                  <Button sx={{ bgcolor: "#f5f0e4", color: "black", ml: 2 }}>
+                  <Button style={{ backgroundColor: "#f5f0e4", color: "black", marginTop: "9px" }}>
                     Exit
                   </Button>
                 </List>
@@ -3245,8 +3720,14 @@ const ContentLogic = (props) => {
         case "category":
           return (
             <>
-              <div style={{ width: "100%", typography: "body1", marginLeft: "70px" }}>
-                <List key={"test1"} style={{ marginBottom: '10px' }}>
+              <div
+                style={{
+                  width: "100%",
+                  typography: "body1",
+                  marginLeft: "70px",
+                }}
+              >
+                <List key={"test1"} style={{ marginBottom: "10px" }}>
                   <TextField
                     required
                     id="filled-basic"
@@ -3257,10 +3738,12 @@ const ContentLogic = (props) => {
                     type="name"
                     variant="filled"
                     style={{ width: "130ch" }}
-                    onChange={(e)=>{
-                      setCategoryData({...categoryData,
-                        title:e.target.value})
-                        console.log(e.target.value);
+                    onChange={(e) => {
+                      setCategoryData({
+                        ...categoryData,
+                        title: e.target.value,
+                      });
+                      console.log(e.target.value);
                     }}
                   />
                 </List>
@@ -3271,11 +3754,12 @@ const ContentLogic = (props) => {
                     type={"name"}
                     variant="filled"
                     value={categoryData.description}
-                    onChange={(e)=>{setCategoryData
-                    ({
-                      ...categoryData,
-                      description:e.target.value
-                    })}}
+                    onChange={(e) => {
+                      setCategoryData({
+                        ...categoryData,
+                        description: e.target.value,
+                      });
+                    }}
                     style={{ width: "130ch" }}
                   />
                 </List>
@@ -3285,13 +3769,20 @@ const ContentLogic = (props) => {
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
                       value={categoryData.isActive}
-                      onChange={(e)=>{setCategoryData({isActive:e.target.value})}}
+                      onChange={(e) => {
+                        setCategoryData({ isActive: e.target.value });
+                      }}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button onClick={()=>{addAPICalls("category")
-                  console.log("clicked on category");}} style={{ backgroundColor: "brown", color: "white" }}>
+                  <Button
+                    onClick={() => {
+                      addAPICalls("category");
+                      console.log("clicked on category");
+                    }}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
                     Save
                   </Button>
                 </List>
@@ -3319,9 +3810,11 @@ const ContentLogic = (props) => {
                     type="name"
                     value={companyData.companyName}
                     variant="filled"
-                    onChange={(e)=>{
-                      setCompanyData({...companyData,
-                      companyName:e.target.value})
+                    onChange={(e) => {
+                      setCompanyData({
+                        ...companyData,
+                        companyName: e.target.value,
+                      });
                     }}
                     sx={{ width: "130ch" }}
                   />
@@ -3333,9 +3826,12 @@ const ContentLogic = (props) => {
                     label="Description"
                     type="name"
                     value={companyData.description}
-                    onChange={(e)=>{setCompanyData({...companyData,
-                      description:e.target.value
-                    })}}
+                    onChange={(e) => {
+                      setCompanyData({
+                        ...companyData,
+                        description: e.target.value,
+                      });
+                    }}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3346,10 +3842,12 @@ const ContentLogic = (props) => {
                     label="Industry Name"
                     type="name"
                     value={companyData.industryId}
-                    onChange={(e)=>{setCompanyData({
-                      ...companyData,
-                      industryId:e.target.value
-                    })}}
+                    onChange={(e) => {
+                      setCompanyData({
+                        ...companyData,
+                        industryId: e.target.value,
+                      });
+                    }}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3360,15 +3858,26 @@ const ContentLogic = (props) => {
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
                       value={companyData.isActive}
-                      onChange={(e)=>{setCompanyData({
-                        ...companyData,
-                        isActive:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setCompanyData({
+                          ...companyData,
+                          isActive: e.target.value,
+                        });
+                      }}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button onClick={()=>{addAPICalls("company")}} style={{ backgroundColor: "brown", color: "white", marginTop: "12px" }}>
+                  <Button
+                    onClick={() => {
+                      addAPICalls("company");
+                    }}
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginTop: "12px",
+                    }}
+                  >
                     Save
                   </Button>
                 </List>
@@ -3387,7 +3896,12 @@ const ContentLogic = (props) => {
                     label="Title"
                     type="name"
                     value={industryData.title}
-                    onChange={(e)=>{setIndustryData({...industryData,title:e.target.value})}}
+                    onChange={(e) => {
+                      setIndustryData({
+                        ...industryData,
+                        title: e.target.value,
+                      });
+                    }}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3398,7 +3912,12 @@ const ContentLogic = (props) => {
                     label="Description"
                     type="name"
                     value={industryData.description}
-                    onChange={(e)=>{setIndustryData({...industryData,description:e.target.value})}}
+                    onChange={(e) => {
+                      setIndustryData({
+                        ...industryData,
+                        description: e.target.value,
+                      });
+                    }}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3409,14 +3928,20 @@ const ContentLogic = (props) => {
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
                       value={industryData.isActive}
-                      onChange={(e)=>{setIndustryData({
-                        ...industryData,
-                        isActive:e.target.checked})}}
+                      onChange={(e) => {
+                        setIndustryData({
+                          ...industryData,
+                          isActive: e.target.checked,
+                        });
+                      }}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button onClick={()=>addAPICalls('industry')} style={{ backgroundColor: "brown", color: "white" }}>
+                  <Button
+                    onClick={() => addAPICalls("industry")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
                     Save
                   </Button>
                 </List>
@@ -3426,251 +3951,438 @@ const ContentLogic = (props) => {
 
         case "role":
           return (
-            
             <>
-              {Object.keys(permissions).map((item, i) => (<>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Title"
-                    type="name"
-                    variant="filled"
-                    value={roleData.name}
-                    onChange={(e)=>{setRoleData({...roleData,name:e.target.value})}}
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Description"
-                    type="name"
-                    variant="filled"
-                    value={roleData.description}
-                    onChange={(e)=>{setRoleData({...roleData,description:e.target.value})}}
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  <List>
-                    <b>Permissions Section</b>
-                    <p style={{ color: "brown" }}>{permissions[item].group}</p>
-                  </List>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Change Pricing Template"
-                    />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Approval" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Admin-Candidate Verification</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>
-                    Admin-Other Industry Category
-                  </p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Admin-User</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Reset Password"
-                    />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Agent</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Change Password"
-                    />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Agent Pricing Template</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Set Active"
-                    />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Batch Priority</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate - Basic</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Bulk Create"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Upload profile image"
-                    />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate - Certification</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate - Work History</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate Upload Batch</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Candidate Verification</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Category</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Company</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Customer</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Reset password"
-                    />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Customer - Subscription</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Industry</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Permission</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Public</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      disabled
-                      label="User - Login"
-                    />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Role</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Skill</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>Subscription</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read All" />
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Create" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                  </FormGroup>
-                  <p style={{ color: "brown" }}>User</p>
-                  <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Read" />
-                    <FormControlLabel control={<Checkbox />} label="Update" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Change password"
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  <Button style={{ backgroundColor: "brown", color: "white" }}>
-                    Save
-                  </Button>
-                  <Button
-                    style={{
-                      marginLeft: 2,
-                      backgroundColor: "black",
-                      color: "white",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </List>
-              </Box></>))}
+              {Object.keys(permissions).map((item, i) => (
+                <>
+                  <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                    <List sx={{ mb: 5 }}>
+                      <TextField
+                        required
+                        id="filled-basic"
+                        label="Title"
+                        type="name"
+                        variant="filled"
+                        value={roleData.name}
+                        onChange={(e) => {
+                          setRoleData({ ...roleData, name: e.target.value });
+                        }}
+                        sx={{ width: "130ch" }}
+                      />
+                    </List>
+                    <List sx={{ mb: 5 }}>
+                      <TextField
+                        id="filled-basic"
+                        label="Description"
+                        type="name"
+                        variant="filled"
+                        value={roleData.description}
+                        onChange={(e) => {
+                          setRoleData({
+                            ...roleData,
+                            description: e.target.value,
+                          });
+                        }}
+                        sx={{ width: "130ch" }}
+                      />
+                    </List>
+                    <List>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={<Checkbox defaultChecked />}
+                          label="Is Active"
+                        />
+                      </FormGroup>
+                    </List>
+                    <List>
+                      <List>
+                        <b>Permissions Section</b>
+                        <p style={{ color: "brown" }}>
+                          {permissions[item].group}
+                        </p>
+                      </List>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>
+                        Admin-Candidate Upload Batch
+                      </p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Change Pricing Template"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Approval"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>
+                        Admin-Candidate Verification
+                      </p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>
+                        Admin-Other Industry Category
+                      </p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Admin-User</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Reset Password"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Agent</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Change Password"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Agent Pricing Template</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Set Active"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Batch Priority</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Candidate</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Candidate - Basic</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Bulk Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Upload profile image"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>
+                        Candidate - Certification
+                      </p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Candidate - Work History</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Candidate Upload Batch</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Candidate Verification</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Category</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Company</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Customer</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Reset password"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Customer - Subscription</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Industry</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Permission</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Public</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox defaultChecked />}
+                          disabled
+                          label="User - Login"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Role</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Skill</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>Subscription</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Read All"
+                        />
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Create"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                      </FormGroup>
+                      <p style={{ color: "brown" }}>User</p>
+                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                        <FormControlLabel control={<Checkbox />} label="Read" />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Update"
+                        />
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Change password"
+                        />
+                      </FormGroup>
+                    </List>
+                    <List>
+                      <Button
+                        style={{ backgroundColor: "brown", color: "white" }}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        style={{
+                          marginLeft: 2,
+                          backgroundColor: "black",
+                          color: "white",
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </List>
+                  </Box>
+                </>
+              ))}
             </>
           );
 
@@ -3685,7 +4397,9 @@ const ContentLogic = (props) => {
                     type="name"
                     variant="filled"
                     value={skillSet.title}
-                    onChange={(e)=>{setSkillSet({...skillSet,title:e.target.value})}}
+                    onChange={(e) => {
+                      setSkillSet({ ...skillSet, title: e.target.value });
+                    }}
                     sx={{ width: "130ch" }}
                   />
                 </List>
@@ -3695,7 +4409,9 @@ const ContentLogic = (props) => {
                     label="Description"
                     type="name"
                     value={skillSet.description}
-                    onChange={(e)=>{setSkillSet({...skillSet,description:e.target.value})}}
+                    onChange={(e) => {
+                      setSkillSet({ ...skillSet, description: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "130ch" }}
                   />
@@ -3706,12 +4422,20 @@ const ContentLogic = (props) => {
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
                       value={skillSet.isActive}
-                    onChange={(e)=>{setSkillSet({...skillSet,isActive:e.target.checked})}}
+                      onChange={(e) => {
+                        setSkillSet({
+                          ...skillSet,
+                          isActive: e.target.checked,
+                        });
+                      }}
                     />
                   </FormGroup>
                 </List>
                 <List>
-                  <Button onClick={()=>addAPICalls("skillset")} style={{ backgroundColor: "brown", color: "white" }}>
+                  <Button
+                    onClick={() => addAPICalls("skillset")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
                     Save
                   </Button>
                 </List>
@@ -3730,10 +4454,12 @@ const ContentLogic = (props) => {
                       label="Plan Name"
                       variant="filled"
                       value={subscription.planName}
-                      onChange={(e)=>{setSubscription({
-                        ...subscription,
-                        planName:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setSubscription({
+                          ...subscription,
+                          planName: e.target.value,
+                        });
+                      }}
                       sx={{ width: "80ch" }}
                     />
                   </List>
@@ -3743,10 +4469,12 @@ const ContentLogic = (props) => {
                       label="Data Count"
                       variant="filled"
                       value={subscription.dataCount}
-                      onChange={(e)=>{setSubscription({
-                        ...subscription,
-                        dataCount:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setSubscription({
+                          ...subscription,
+                          dataCount: e.target.value,
+                        });
+                      }}
                       sx={{ width: "40ch" }}
                     />
                     <TextField
@@ -3754,20 +4482,24 @@ const ContentLogic = (props) => {
                       label="Duration in months"
                       variant="filled"
                       value={subscription.durationMonths}
-                      onChange={(e)=>{setSubscription({
-                        ...subscription,
-                        durationMonths:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setSubscription({
+                          ...subscription,
+                          durationMonths: e.target.value,
+                        });
+                      }}
                       sx={{ width: "40ch", ml: 3 }}
                     />
                     <TextField
                       id="filled-basic"
                       label="Price"
                       value={subscription.price}
-                      onChange={(e)=>{setSubscription({
-                        ...subscription,
-                        price:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setSubscription({
+                          ...subscription,
+                          price: e.target.value,
+                        });
+                      }}
                       variant="filled"
                       sx={{ width: "40ch", ml: 3 }}
                     />
@@ -3777,10 +4509,12 @@ const ContentLogic = (props) => {
                       id="filled-basic"
                       label="Note"
                       value={subscription.note}
-                      onChange={(e)=>{setSubscription({
-                        ...subscription,
-                        note:e.target.value
-                      })}}
+                      onChange={(e) => {
+                        setSubscription({
+                          ...subscription,
+                          note: e.target.value,
+                        });
+                      }}
                       variant="filled"
                       sx={{ width: "126ch", mb: 4 }}
                     />
@@ -3791,15 +4525,18 @@ const ContentLogic = (props) => {
                         control={<Checkbox defaultChecked />}
                         label="Is Active"
                         value={subscription.isActive}
-                        onChange={(e)=>{setSubscription({
-                          ...subscription,
-                          isActive:e.target.checked
-                        })}}
+                        onChange={(e) => {
+                          setSubscription({
+                            ...subscription,
+                            isActive: e.target.checked,
+                          });
+                        }}
                       />
                     </FormGroup>
                   </List>
                   <List>
-                    <Button onClick={()=>addAPICalls('subscription')}
+                    <Button
+                      onClick={() => addAPICalls("subscription")}
                       style={{ color: "white", backgroundColor: "brown" }}
                     >
                       Save
@@ -3829,7 +4566,9 @@ const ContentLogic = (props) => {
                     label="Full Name"
                     variant="filled"
                     value={userData.fullName}
-                    onChange={(e)=>{setUserData({...userData,fullName:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, fullName: e.target.value });
+                    }}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
@@ -3837,7 +4576,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Birthdate"
                     value={userData.dob}
-                    onChange={(e)=>{setUserData({...userData,dob:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, dob: e.target.value });
+                    }}
                     variant="filled"
                     InputLabelProps={{ shrink: true }}
                     sx={{ width: "40ch", ml: 3 }}
@@ -3847,7 +4588,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Gender"
                     value={userData.gender}
-                    onChange={(e)=>{setUserData({...userData,gender:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, gender: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   >
@@ -3864,7 +4607,9 @@ const ContentLogic = (props) => {
                     label="Email"
                     variant="filled"
                     value={userData.email}
-                    onChange={(e)=>{setUserData({...userData,email:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, email: e.target.value });
+                    }}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
@@ -3872,7 +4617,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Contact no"
                     value={userData.contactNo}
-                    onChange={(e)=>{setUserData({...userData,contactNo:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, contactNo: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   />
@@ -3882,7 +4629,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Role"
                     value={userData.roleId}
-                    onChange={(e)=>{setUserData({...userData,roleId:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, roleId: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   >
@@ -3902,7 +4651,9 @@ const ContentLogic = (props) => {
                     label="Current Address"
                     variant="filled"
                     value={userData.currAddress}
-                    onChange={(e)=>{setUserData({...userData,currAddress:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, currAddress: e.target.value });
+                    }}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -3914,7 +4665,9 @@ const ContentLogic = (props) => {
                     label="Current pincode"
                     variant="filled"
                     value={userData.currZip}
-                    onChange={(e)=>{setUserData({...userData,currZip:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, currZip: e.target.value });
+                    }}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
@@ -3922,7 +4675,9 @@ const ContentLogic = (props) => {
                     label="Current city"
                     variant="filled"
                     value={userData.currCity}
-                    onChange={(e)=>{setUserData({...userData,currCity:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, currCity: e.target.value });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
@@ -3930,7 +4685,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Current State"
                     value={userData.currState}
-                    onChange={(e)=>{setUserData({...userData,currState:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, currState: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   >
@@ -3944,9 +4701,8 @@ const ContentLogic = (props) => {
                 <List>
                   <FormGroup>
                     <FormControlLabel
-                      control={<Checkbox/>}
+                      control={<Checkbox />}
                       label="Same as current address"
-
                     />
                   </FormGroup>
                 </List>
@@ -3957,7 +4713,9 @@ const ContentLogic = (props) => {
                     label="Permanent Address"
                     variant="filled"
                     value={userData.permAddress}
-                    onChange={(e)=>{setUserData({...userData,permAddress:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, permAddress: e.target.value });
+                    }}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -3968,7 +4726,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Permanent pincode"
                     value={userData.permZip}
-                    onChange={(e)=>{setUserData({...userData,permZip:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, permZip: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch" }}
                   />
@@ -3977,7 +4737,9 @@ const ContentLogic = (props) => {
                     label="Permanent city"
                     variant="filled"
                     value={userData.permCity}
-                    onChange={(e)=>{setUserData({...userData,permCity:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, permCity: e.target.value });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
@@ -3987,7 +4749,9 @@ const ContentLogic = (props) => {
                     label="Permanent State"
                     variant="filled"
                     value={userData.permState}
-                    onChange={(e)=>{setUserData({...userData,permState:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, permState: e.target.value });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   >
                     {states.map((option) => (
@@ -4002,7 +4766,9 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Pan card"
                     value={userData.panCard}
-                    onChange={(e)=>{setUserData({...userData,panCard:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, panCard: e.target.value });
+                    }}
                     variant="filled"
                     sx={{ width: "40ch" }}
                   />
@@ -4011,7 +4777,9 @@ const ContentLogic = (props) => {
                     label="Aadhar card"
                     variant="filled"
                     value={userData.aadharCard}
-                    onChange={(e)=>{setUserData({...userData,aadharCard:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, aadharCard: e.target.value });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
@@ -4024,7 +4792,9 @@ const ContentLogic = (props) => {
                     label="Primary Language"
                     variant="filled"
                     value={userData.primaryLang}
-                    onChange={(e)=>{setUserData({...userData,primaryLang:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, primaryLang: e.target.value });
+                    }}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
@@ -4032,7 +4802,12 @@ const ContentLogic = (props) => {
                     label="Secondary Language"
                     variant="filled"
                     value={userData.secondaryLang}
-                    onChange={(e)=>{setUserData({...userData,secondaryLang:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        secondaryLang: e.target.value,
+                      });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
@@ -4040,7 +4815,9 @@ const ContentLogic = (props) => {
                     label="Third Language"
                     variant="filled"
                     value={userData.thirdLang}
-                    onChange={(e)=>{setUserData({...userData,thirdLang:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, thirdLang: e.target.value });
+                    }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
@@ -4051,7 +4828,9 @@ const ContentLogic = (props) => {
                     label="Note"
                     variant="filled"
                     value={userData.note}
-                    onChange={(e)=>{setUserData({...userData,note:e.target.value})}}
+                    onChange={(e) => {
+                      setUserData({ ...userData, note: e.target.value });
+                    }}
                     multiline
                     rows={4}
                     sx={{ width: "100ch" }}
@@ -4063,12 +4842,17 @@ const ContentLogic = (props) => {
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
                       value={userData.isActive}
-                    onChange={(e)=>{setUserData({...userData,isActive:e.target.value})}}
+                      onChange={(e) => {
+                        setUserData({ ...userData, isActive: e.target.value });
+                      }}
                     />
                   </FormGroup>
                 </List>
                 <List sx={{ mb: 4, mt: 4 }}>
-                  <Button onClick={()=>addAPICalls('user')} style={{ backgroundColor: "brown", color: "white" }}>
+                  <Button
+                    onClick={() => addAPICalls("user")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
                     Save
                   </Button>
                 </List>
@@ -4078,6 +4862,28 @@ const ContentLogic = (props) => {
         default:
           break;
       }
+    };
+    //testing multi select
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+        },
+      },
+    };
+   
+    const [personName, setPersonName] = useState([])
+    const handleChangeValueOfBatch = (event) => {
+      const {
+        target: { value },
+      } = event;
+      setPersonName(
+        // On autofill we get a stringified value.
+        typeof value === value.split(','),
+      );
     };
 
     return (
@@ -4147,9 +4953,7 @@ const ContentLogic = (props) => {
             {modalTitle}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-           <DialogContent>
-          {handlerModuleInputs()}
-          </DialogContent> 
+          <DialogContent>{handlerModuleInputs()}</DialogContent>
         </Dialog>
         {/* admin candidate upload batch modal */}
         <Dialog
@@ -4234,28 +5038,51 @@ const ContentLogic = (props) => {
 
           <DialogContent>
             <List sx={{ mb: 3 }}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="filled-basic"
-                label="Batch no"
-                variant="filled"
-                type="email"
+              <InputLabel id="demo-multiple-checkbox-label">Batch no</InputLabel>
+              <Select
+                Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
                 fullWidth
-                select
-              />
+                value={personName}
+                variant="filled"
+                onChange={handleChangeValueOfBatch}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(selected) => selected.join(', ')}
+                MenuProps={MenuProps}
+              >
+                 {tblData.map((item) => (
+            <MenuItem key={item} value={item}>
+              <ListItemText primary={item} />
+            </MenuItem>
+          ))}
+              </Select>
+
             </List>
             <List>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="filled-basic"
-                label="Assigned To"
-                variant="filled"
-                type="email"
+              <InputLabel id="demo-multiple-checkbox-label">Assigned To</InputLabel>
+              <Select
+                Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
                 fullWidth
-                select
-              />
+                value={personName}
+                variant="filled"
+                onChange={handleChangeValueOfBatch}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(selected) => selected.join(', ')}
+                MenuProps={MenuProps}
+                
+              >
+                 {Object.keys(tblDataCount).map((item, i) => (
+            <MenuItem key={tblDataCount[item].fullName+" - "+tblDataCount[item].role} value={tblDataCount[item].fullName+" - "+tblDataCount[item].role}>
+              <CheckBox checked={tblDataCount.indexOf(item) > -1} />
+              <ListItemText primary={tblDataCount[item].fullName+" - "+tblDataCount[item].role} />
+            </MenuItem>
+          ))}
+              </Select>
+
             </List>
           </DialogContent>
           <DialogActions>
@@ -4372,8 +5199,7 @@ const ContentLogic = (props) => {
     subscriptionMaster,
     userMaster,
     getAllData,
-    tblDataCount
-    
+    tblDataCount,
   };
 
   return StateContainer;

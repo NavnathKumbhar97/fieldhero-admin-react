@@ -21,6 +21,7 @@ const LoginLogic = () => {
   const [showPass, setShowPass] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [message, setMessage] = useState('');
+  const [loader, setLoader] = useState(false)
   const navigate = useNavigate();
 
   // The regular exprssion to validate the email pattern
@@ -55,6 +56,7 @@ return result.test(String(email).toLowerCase());
      * This method responsible for login authentication.
      */
 const loginAPIcall = async (e) => {
+  setLoader(true)
   try {
       // e.preventDefault()
       // this.setState({ isButtonActive: true, isLoaderVisible: false })
@@ -73,14 +75,14 @@ const loginAPIcall = async (e) => {
                   // Redux Method call for store all the user data into redux state.
                   loginSuccessful(response)
                   // setPermission(permissions)
-                  console.log(response);
+                  // console.log(response);
                   //storing user permission in local and session storage
 
                   //store userPermission on local storage and session storage
 
                   localStorage.setItem('userPermission',JSON.stringify(permissions))
                   sessionStorage.setItem('userPermission',JSON.stringify(permissions))
-                  
+                  setLoader(false)
                   // set authorization Header in axios instance
                   axios.defaults.headers = {
                       Authorization: "Bearer " + token,
@@ -140,7 +142,8 @@ const loginAPIcall = async (e) => {
     setPass,
     setShowPass,
     handleChange,validateEmail,setErrorTextEmail,
-    loginAPIcall
+    loginAPIcall,
+    loader,setLoader
   };
 };
 

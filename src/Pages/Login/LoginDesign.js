@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Login.css";
-import { IconButton, InputAdornment, Stack } from "@mui/material";
+import { Backdrop, CircularProgress, IconButton, InputAdornment, Stack } from "@mui/material";
 import LoginLogic from "./LoginLogic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -43,8 +43,17 @@ function LoginDesign() {
     errorTextEmail,
     errorTextPass,
     setErrorTextPass,
-    showPass,email,password,setPassword,setEmail,
-    setShowPass,handleReset,setErrorTextEmail,loginAPIcall
+    showPass,
+    email,
+    password,
+    setPassword,
+    setEmail,
+    setShowPass,
+    handleReset,
+    setErrorTextEmail,
+    loginAPIcall,
+    loader,
+    setLoader,
   } = LoginLogic();
 
   const handleSubmit = (event) => {
@@ -60,6 +69,13 @@ function LoginDesign() {
     <ThemeProvider theme={theme} sx={{ bgcolor: "rgb(188 195 219)" }}>
       <Container component="main" maxWidth="md">
         <CssBaseline />
+        <Backdrop
+        sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
         <Box
           sx={{
             marginTop: 8,
@@ -82,22 +98,19 @@ function LoginDesign() {
           >
             Admin - Login
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 2 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             <TextField
               margin="normal"
               type="email"
               required
               fullWidth
               value={email}
-              helperText={errorTextEmail ===""?"Email is required":""}
-              error={errorTextEmail===""}
-              onChange={(event)=>{setErrorTextEmail(event.target.value)
-                setEmail(event.target.value)
-                }}
+              helperText={errorTextEmail === "" ? "Email is required" : ""}
+              error={errorTextEmail === ""}
+              onChange={(event) => {
+                setErrorTextEmail(event.target.value);
+                setEmail(event.target.value);
+              }}
               variant="standard"
               id="email"
               label="Email"
@@ -122,10 +135,12 @@ function LoginDesign() {
               required
               fullWidth
               value={password}
-              helperText={errorTextPass===""?"Password is required":""}
-              error={errorTextPass===""}
-              onChange={(event)=>{setErrorTextPass(event.target.value)
-              setPassword(event.target.value)}}
+              helperText={errorTextPass === "" ? "Password is required" : ""}
+              error={errorTextPass === ""}
+              onChange={(event) => {
+                setErrorTextPass(event.target.value);
+                setPassword(event.target.value);
+              }}
               id="password"
               variant="standard"
               name="password"
@@ -164,7 +179,6 @@ function LoginDesign() {
                 className="sign-btn"
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
-                
                 onClick={loginAPIcall}
               >
                 Login

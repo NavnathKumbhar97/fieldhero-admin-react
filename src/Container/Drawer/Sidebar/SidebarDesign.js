@@ -31,6 +31,7 @@ import OtherMaster from "../Other Master/OtherMaster";
 import Admin from "../Admin/Admin";
 import { Link, Outlet } from "react-router-dom";
 import SidebarLogic from "./SidebarLogic";
+import { LogoDev } from "@mui/icons-material";
 
 const drawerWidth = 300;
 
@@ -139,6 +140,7 @@ function SidebarDesign() {
         <DrawerHeader
           style={{ backgroundColor: "brown", color: "white", fontSize: "20px" }}
         >
+         <img src="../../../../public/apexa-group-logo.png"></img>
           Apexa Group
           <IconButton style={{color:'white'}} onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (

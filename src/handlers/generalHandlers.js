@@ -46,7 +46,7 @@ const dataPost = (url, data, headers) => {
 
 const dataPut = (url, data, headers) => {
   return getInitizlizedApi()
-    .put(url, data, { headers })
+    .put(url, data,  headers )
     .then(
       (response) => handleResponse(response),
       (error) => {

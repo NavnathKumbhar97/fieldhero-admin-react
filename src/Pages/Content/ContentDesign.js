@@ -7,8 +7,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import { Box } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Dialog, Stack } from "@mui/material";
 import ContentLogic from "./ContentLogic";
+import { Download, Edit, ViewAgenda, Visibility } from "@mui/icons-material";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -52,6 +53,13 @@ export default function ContentDesign(props) {
     userMaster,
     getAllData,
     tblDataCount,
+    loader,
+    handleCloseLoader,
+    setEditId,
+    setEditStatus,
+    editId,
+    setCategoryData,
+    Test1
   } = ContentLogic();
 
   useEffect(() => {
@@ -116,7 +124,7 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary"  />
                   </TableCell>
                   <TableCell
                     component="th"
@@ -224,6 +232,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].modifiedOn}</TableCell>
                   <TableCell align="left">{tblData[item].callStatus}</TableCell>
                   <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
+                  <TableCell align="left"><Button><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -298,6 +307,7 @@ export default function ContentDesign(props) {
                   {tblData[item].totalAmount}
                 </TableCell>
                 <TableCell align="left">{tblData[item].isActive}</TableCell>
+                <TableCell align="left"><Button><Visibility/>View</Button></TableCell>
               </TableRow>
             </>
           ))}
@@ -340,6 +350,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].templateName}</TableCell>
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
+                  <TableCell align="center"><Button><Download/></Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -353,7 +364,11 @@ export default function ContentDesign(props) {
             <>
               <TableRow hover role="checkbox" tabIndex={-1}>
                 <TableCell padding="checkbox">
-                  <Checkbox color="primary" />
+                  <Checkbox color="primary" onClick={()=>{
+                  setEditId(tblData[item].id);
+                  setEditStatus(true)
+                  setCategoryData(tblData[item])
+                  console.log(editId);}}/>
                 </TableCell>
                 <TableCell
                     component="th"
@@ -632,7 +647,7 @@ export default function ContentDesign(props) {
                 
               >
                 <EnhancedTableHead
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
@@ -663,7 +678,21 @@ export default function ContentDesign(props) {
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Test1
+        //  numSelected={selected.length} 
+         />
+        <Backdrop
+        sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+        {/* <Dialog open={loader} onClose={handleCloseLoader}>
+        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+          <CircularProgress color="secondary" />
+        </Stack>
+        </Dialog> */}
         {handleTable()}
       </Paper>
     </Box>

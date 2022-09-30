@@ -73,7 +73,182 @@ const ContentLogic = (props) => {
   const [tblData, setTblData] = useState([]);
   const [tblDataCount, setTblDataCount] = useState([]);
   const [permissions, setPermissions] = useState([]);
+  const [numSelected] = useState([]);
+  const [id, setId] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [openChildModal, setOpenChilModal] = useState(false);
+  const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
+  const [tabValue, setTabValue] = useState("1");
+  const [cmpyvalue, setCmpyValue] = useState("");
+  const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
+  const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
+  const [openAlertMsg, setOpenAlertMsg] = useState(false);
 
+  // state for store the input fields value of candidate master
+  const [candidateMasterData, setCandidateMasterData] = useState({
+    aadharNo: "",
+    dob: 12 / 12 / 12,
+    contactNo1: "",
+    contactNo2: "",
+    curr_address: "",
+    curr_city: "",
+    curr_country: "India",
+    curr_state: "",
+    curr_zip: "",
+    email1: "",
+    email2: "",
+    fullName: "",
+    gender: "MALE",
+    perm_address: "",
+    perm_city: "",
+    perm_country: "India",
+    perm_state: "",
+    perm_zip: "",
+    registrationStatus: "",
+    totalExpMonths: "",
+    totalExpYears: "",
+
+    isActive: true,
+    industry: ``,
+    category: ``,
+    expYears: ``,
+    prefLocation1: ``,
+    prefLocation2: ``,
+    skill1: ``,
+    skill2: ``,
+    primaryLang: ``,
+    secondaryLang: ``,
+    lastCompany: ``,
+    designation: ``,
+    education: ``,
+  });
+  //state for store the input fields value of industry
+  const [categoryData, setCategoryData] = useState({
+    title: "",
+    description: "",
+    isActive: false,
+  });
+
+  //state for store the input fields value of industry
+  const [companyData, setCompanyData] = useState({
+    companyName: " ",
+    description: "",
+    isActive: true,
+    industryId: "",
+  });
+
+  //state for store the input fields value of industry
+  const [industryData, setIndustryData] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+  });
+  const [roleData, setRoleData] = useState({
+    name: "",
+    description: "",
+    isActive: true,
+  });
+  const [skillSet, setSkillSet] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+  });
+  const [subscription, setSubscription] = useState({
+    planName: "",
+    dataCount: 1,
+    durationMonths: 12,
+    price: 1999,
+    note: "",
+    isActive: true,
+  });
+  const [userData, setUserData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    aadharCard: "",
+    panCard: "",
+    note: "",
+    email: "",
+    contactNo: "",
+    roleId: 0,
+    isActive: true,
+  });
+  const [agentMasterData, setAgentMasterData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    panCard: "",
+    aadharCard: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    note: "",
+    isActive: true,
+    email: "",
+    contactNo: "",
+    agentNo: "",
+    professionalStatus: "",
+    gstin: "",
+    companyName: "",
+    bankName: "",
+    bankAc: "",
+    bankIfsc: "",
+    bankAcType: "",
+    workLocation1: "",
+    workLocation2: "",
+    status: "",
+  });
+  const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
+    templateName: "",
+    description: "",
+    approvalRemarks: null,
+    isActive: true,
+    industry: 0,
+    category: 0,
+    education: 0,
+    fullName: 0,
+    dob: 0,
+    primaryLanguage: 0,
+    secondaryLanguage: 0,
+    currCity: 0,
+    currZip: 0,
+    email1: 0,
+    contactNo1: 0,
+    expYears: 0,
+    preferLocation1: 0,
+    preferLocation2: 0,
+    skill1: 0,
+    skill2: 0,
+    lastCompany: 0,
+    designation: 0,
+  });
+  const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] = useState({});
+  const [batchPriorityData, setBatchPriorityData] = useState([]);
   // const useStyles = makeStyles((theme) => {
   //   const appbarHeight = 64;
   //   return {
@@ -82,18 +257,19 @@ const ContentLogic = (props) => {
   // });
   const [pageName, setPageName] = useState();
   const [tblHeader, setTblHeader] = useState([]);
-  const [loader, setLoader] = useState(false)
-  const [editId, setEditId] = useState('')
-  const [editStatus, setEditStatus] = useState(false)
-  // const [categoryTestData,setCategoryTestData] = useState({
-  //   title:'',
-  // }) 
-  var categoryTestData ={
-    title:'',
-  }
-  const setCategoryTestData = (value)=>{
-    categoryTestData.title = value
-  }
+  const [loader, setLoader] = useState(false);
+  const [editId, setEditId] = useState("");
+  const [editStatus, setEditStatus] = useState(false);
+  // used to select multiple value from select field for batch priority module
+  const [batchNo, setBatchNo] = useState([]);
+
+  var categoryTestData = {
+    title: "",
+  };
+  const setCategoryTestData = (value) => {
+    categoryTestData.title = value;
+  };
+
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
@@ -143,31 +319,11 @@ const ContentLogic = (props) => {
     return stabilizedThis.map((el) => el[0]);
   }
 
-  const handleCloseLoader = () =>{
-    setLoader(false)
-  }
+  const handleCloseLoader = () => {
+    setLoader(false);
+  };
 
-  // table headings array
-  const headCells = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Company Name",
-    },
-    {
-      id: "calories",
-      numeric: true,
-      disablePadding: false,
-      label: "Industry",
-    },
-    {
-      id: "fat",
-      numeric: true,
-      disablePadding: false,
-      label: "Status",
-    },
-  ];
+  // table headings array for each module
   const canMasterTblHerader = [
     {
       id: "SrNo",
@@ -677,7 +833,7 @@ const ContentLogic = (props) => {
   const getCandidateMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/candidates?limit=${rowsPerPage}&page=${page * rowsPerPage}`,
@@ -687,7 +843,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.Candidates);
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
@@ -702,14 +858,14 @@ const ContentLogic = (props) => {
   const getCandidateUploadBatchAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet("/v1/candidate-upload-batches", {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.items);
           console.log("candidate-upload-batches", tblData);
         } else if (response.status == 400) {
@@ -727,14 +883,14 @@ const ContentLogic = (props) => {
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(`/v1/agents?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
           console.log("tblData", tblData);
@@ -750,7 +906,7 @@ const ContentLogic = (props) => {
   const getCandidateVerificationAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/candidate-verifications?take=${rowsPerPage}&skip=${
@@ -762,7 +918,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
           console.log("candidate verification", tblData);
@@ -781,7 +937,7 @@ const ContentLogic = (props) => {
   const getAgentTemplatePricingAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${
@@ -793,7 +949,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.agentPricingTemplates);
           setTblDataCount(response.data.data.count);
           console.log("agent template data", tblData);
@@ -812,7 +968,7 @@ const ContentLogic = (props) => {
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${
@@ -824,7 +980,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.items);
           setTblDataCount(response.data.data.totalItems);
           console.log("upload batch ", tblData);
@@ -843,7 +999,7 @@ const ContentLogic = (props) => {
   const getCategoryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/categories?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
@@ -853,7 +1009,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.categories);
           console.log("category", tblData);
           setTblDataCount(response.data.data.count);
@@ -869,14 +1025,14 @@ const ContentLogic = (props) => {
   const getCompanyAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(`/v1/companies?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
@@ -891,7 +1047,7 @@ const ContentLogic = (props) => {
   const getCustomerAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
 
     handler
       .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
@@ -899,7 +1055,7 @@ const ContentLogic = (props) => {
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
           console.log("customer", tblData);
@@ -915,7 +1071,7 @@ const ContentLogic = (props) => {
   const getIndustryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/industries?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
@@ -925,7 +1081,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.industries);
           console.log("industry", tblData);
           setTblDataCount(response.data.data.count);
@@ -941,14 +1097,14 @@ const ContentLogic = (props) => {
   const getRoleAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(`/v1/roles?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.roles);
           setTblDataCount(response.data.data.count);
           console.log("roles", tblData);
@@ -964,14 +1120,14 @@ const ContentLogic = (props) => {
   const getSkillSetAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(`/v1/skills?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.skills);
           setTblDataCount(response.data.data.count);
           console.log("skill set", tblData);
@@ -987,7 +1143,7 @@ const ContentLogic = (props) => {
   const getSubscriptionAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(
         `/v1/subscriptions?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
@@ -997,7 +1153,7 @@ const ContentLogic = (props) => {
       )
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.subscriptions);
           setTblDataCount(response.data.data.count);
           console.log("subscriptions", tblData);
@@ -1013,14 +1169,14 @@ const ContentLogic = (props) => {
   const getUserAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
       .dataGet(`/v1/users?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
           console.log("users", tblData);
@@ -1033,20 +1189,17 @@ const ContentLogic = (props) => {
       });
   };
 
-  const getBatchPriorityAPIcall=()=>{
+  const getBatchPriorityAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
-      .dataGet(
-        `/v1/batch-priorities/passive-create`,
-        {
-          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-        }
-      )
+      .dataGet(`/v1/batch-priorities/passive-create`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
       .then((response) => {
         if (response.status == 200) {
-          setLoader(false)
+          setLoader(false);
           setTblData(response.data.data.batches);
           setTblDataCount(response.data.data.users);
           console.log("batch priority", response.data.data.users);
@@ -1058,7 +1211,6 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-
 
   //fetch the all permissions onClick of new button for role module
   const getPermissionsAPIcall = async (e) => {
@@ -1331,200 +1483,18 @@ const ContentLogic = (props) => {
     setRowsPerPage(row.props.value);
   };
 
-  // {editStatus?Object.keys(tblData).map((item)=>{setCategoryData(tblData[item])}):"teste 3"} 
+  // {editStatus?Object.keys(tblData).map((item)=>{setCategoryData(tblData[item])}):"teste 3"}
 
   //defined states and inputs for modules
   // const EnhancedTableToolbar = (props) => {
-    const [ numSelected ]=useState([]) ;
-    // const classes = useStyles();
-    const [id,setId] = useState('')
-    const [openModal, setOpenModal] = useState(false);
-    const [activeStep, setActiveStep] = useState(0);
-    const [skipped, setSkipped] = useState(new Set());
-    const [openChildModal, setOpenChilModal] = useState(false);
-    const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
-    const [tabValue, setTabValue] = useState("1");
-    const [cmpyvalue, setCmpyValue] = useState("");
-    const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
-    const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
-    const [openAlertMsg, setOpenAlertMsg] = useState(false)
-    // state for store the input fields value of candidate master
-    const [candidateMasterData,setCandidateMasterData] = useState({
-                aadharNo:'',
-                dob:12/12/12,
-                contactNo1:'',
-                contactNo2:'',
-                curr_address:'',
-                curr_city:'',
-                curr_country:'India',
-                curr_state:'',
-                curr_zip:'',
-                email1:'',
-                email2:'',
-                fullName:'',
-                gender:'MALE',
-                perm_address:'',
-                perm_city:'',
-                perm_country:'India',
-                perm_state:'',
-                perm_zip:'',
-                registrationStatus:'',
-                totalExpMonths:'',
-                totalExpYears:'',
 
-                isActive:true,
-                industry: ``,
-                category: ``,
-                expYears: ``,
-                prefLocation1: ``,
-                prefLocation2: ``,
-                skill1: ``,
-                skill2: ``,
-                primaryLang: ``,
-                secondaryLang: ``,
-                lastCompany: ``,
-                designation: ``,
-                education: ``,
-    })
-    //state for store the input fields value of industry
-    const [categoryData, setCategoryData] = useState({
-      title: "",
-      description: "",
-      isActive: false,
-    });
-
-    //state for store the input fields value of industry
-    const [companyData, setCompanyData] = useState({
-      companyName: " ",
-      description: "",
-      isActive: true,
-      industryId: "",
-    });
-
-    //state for store the input fields value of industry
-    const [industryData, setIndustryData] = useState({
-      title: "",
-      description: "",
-      isActive: true,
-    });
-    const [roleData, setRoleData] = useState({
-      name: "",
-      description: "",
-      isActive: true,
-    });
-    const [skillSet, setSkillSet] = useState({
-      title: "",
-      description: "",
-      isActive: true,
-    });
-    const [subscription, setSubscription] = useState({
-      planName: "",
-      dataCount: 1,
-      durationMonths: 12,
-      price: 1999,
-      note: "",
-      isActive: true,
-    });
-    const [userData, setUserData] = useState({
-      fullName: "",
-      dob: "",
-      gender: "",
-      currAddress: "",
-      currCity: "",
-      currState: "",
-      currCountry: "",
-      currZip: "",
-      permAddress: "",
-      permCity: "",
-      permState: "",
-      permCountry: "",
-      permZip: "",
-      primaryLang: "",
-      secondaryLang: "",
-      thirdLang: "",
-      aadharCard: "",
-      panCard: "",
-      note: "",
-      email: "",
-      contactNo: "",
-      roleId: 0,
-      isActive: true,
-    });
-
-    const [agentMasterData, setAgentMasterData] = useState({
-      fullName: "",
-      dob: "",
-      gender: "",
-      permAddress: "",
-      permCity: "",
-      permState: "",
-      permCountry: "",
-      permZip: "",
-      currAddress: "",
-      currCity: "",
-      currState: "",
-      currCountry: "",
-      currZip: "",
-      panCard: "",
-      aadharCard: "",
-      primaryLang: "",
-      secondaryLang: "",
-      thirdLang: "",
-      note: "",
-      isActive:true,
-      email: "",
-      contactNo: "",
-      agentNo: "",
-      professionalStatus: "",
-      gstin: "",
-      companyName: "",
-      bankName: "",
-      bankAc: "",
-      bankIfsc: "",
-      bankAcType: "",
-      workLocation1: "",
-      workLocation2: "",
-      status: "",
-    });
-
-    const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
-                templateName: "",
-                description: "",
-                approvalRemarks: null,
-                isActive: true,
-                industry: 0,
-                category:0,
-                education: 0,
-                fullName: 0,
-                dob: 0,
-                primaryLanguage: 0,
-                secondaryLanguage: 0,
-                currCity: 0,
-                currZip: 0,
-                email1: 0,
-                contactNo1: 0,
-                expYears: 0,
-                preferLocation1: 0,
-                preferLocation2: 0,
-                skill1: 0,
-                skill2: 0,
-                lastCompany: 0,
-                designation: 0,
-    })
-
-    const [candidateUploadBatchAdminData,setCandidateUploadBatchAdminData] = useState({
-
-    })
-
-    const [batchPriorityData,setBatchPriorityData] = useState([])
-
-    // add API calls
-    const addAPICalls = (pageName) => {
-      let authTok = localStorage.getItem("user"); // string
-      let convertTokenToObj = JSON.parse(authTok);
-      switch (pageName) {
-        case "candidate-master":
-          handler
+  // add API calls
+  const addAPICalls = (pageName) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    switch (pageName) {
+      case "candidate-master":
+        handler
           .dataPost(`/v1/candidates`, candidateMasterData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
@@ -1533,7 +1503,7 @@ const ContentLogic = (props) => {
             if (response.status == 201) {
               console.log(response.data.message);
               getAgentMasterAPIcall();
-              setOpenAlertMsg(true)
+              setOpenAlertMsg(true);
             } else {
               window.alert(response.data.message);
             }
@@ -1545,247 +1515,77 @@ const ContentLogic = (props) => {
             console.error("There was an error!- createCompany", error);
           });
         break;
-        case "agent-master":
-          handler
-            .dataPost(`/v1/agents`, agentMasterData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getAgentMasterAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "agent-pricing-template":
-          handler
-            .dataPost(`/v1/agent-pricing-templates`, agentPricingTemplateData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getAgentTemplatePricingAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "candidate-upload-batch-admin":
-          break;
-        case "batch-priority":
-
-          handler
-            .dataPost(`/v1/batch-priorities`, batchPriorityData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                //getBatchPriorityAPIcall()
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "category":
-          handler
-            .dataPost(`/v1/categories`, categoryData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getCategoryAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- getCategoryAPIcall", error);
-            });
-          break;
-        case "company":
-          handler
-            .dataPost(`/v1/companies`, companyData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getCompanyAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "industry":
-          handler
-            .dataPost(`/v1/industries`, industryData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getUserAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "role":
-          handler
-            .dataPost(`/v1/roles`, roleData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getRoleAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "skillset":
-          handler
-            .dataPost(`/v1/skills`, skillSet, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getSkillSetAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "subscription":
-          handler
-            .dataPost(`/v1/subscriptions`, subscription, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getSubscriptionAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-        case "user":
-          handler
-            .dataPost(`/v1/users`, userData, {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            })
-            .then((response) => {
-              console.log(response);
-              if (response.status == 201) {
-                console.log(response.data.message);
-                getUserAPIcall();
-                setOpenAlertMsg(true)
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- createCompany", error);
-            });
-          break;
-
-        default:
-          break;
-      }
-    };
-
-    const updateAPICalls = (pageName) => {
-      let authTok = localStorage.getItem("user"); // string
-      let convertTokenToObj = JSON.parse(authTok);
-      console.log(editId);
-      switch (pageName) {
-        case "category":
-         let updateCategoryData = {
-            ...categoryData,
-            id:editId
-          };
-          handler
-          .dataPut(`/v1/categories/:${updateCategoryData.id}`, updateCategoryData, {
+      case "agent-master":
+        handler
+          .dataPost(`/v1/agents`, agentMasterData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getAgentMasterAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "agent-pricing-template":
+        handler
+          .dataPost(`/v1/agent-pricing-templates`, agentPricingTemplateData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getAgentTemplatePricingAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "candidate-upload-batch-admin":
+        break;
+      case "batch-priority":
+        handler
+          .dataPost(`/v1/batch-priorities`, batchPriorityData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              //getBatchPriorityAPIcall()
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "category":
+        handler
+          .dataPost(`/v1/categories`, categoryData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
@@ -1793,7 +1593,7 @@ const ContentLogic = (props) => {
             if (response.status == 201) {
               console.log(response.data.message);
               getCategoryAPIcall();
-              setOpenAlertMsg(true)
+              setOpenAlertMsg(true);
             } else {
               window.alert(response.data.message);
             }
@@ -1805,160 +1605,326 @@ const ContentLogic = (props) => {
             console.error("There was an error!- getCategoryAPIcall", error);
           });
         break;
-      }
+      case "company":
+        handler
+          .dataPost(`/v1/companies`, companyData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getCompanyAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "industry":
+        handler
+          .dataPost(`/v1/industries`, industryData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getUserAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "role":
+        handler
+          .dataPost(`/v1/roles`, roleData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getRoleAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "skillset":
+        handler
+          .dataPost(`/v1/skills`, skillSet, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getSkillSetAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "subscription":
+        handler
+          .dataPost(`/v1/subscriptions`, subscription, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getSubscriptionAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case "user":
+        handler
+          .dataPost(`/v1/users`, userData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getUserAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const updateAPICalls = (pageName) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    console.log(editId);
+    switch (pageName) {
+      case "category":
+        let updateCategoryData = {
+          ...categoryData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/categories/:${updateCategoryData.id}`,
+            updateCategoryData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getCategoryAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCategoryAPICall", error);
+          });
+        break;
+      case "company":
+        let updateCompanyData = {
+          ...companyData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/companies/${updateCompanyData.id}`,
+            updateCompanyData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getCategoryAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCompanyAPICall", error);
+          });
+        break;
+    }
+  };
+
+  const handleClickOpenAddBtchprty = () => {
+    setOpenAddBtchprty(true);
+  };
+
+  const handleCloseAddBtchprty = () => {
+    setOpenAddBtchprty(false);
+  };
+
+  const handleClickOpenAdminCanUplBtch = () => {
+    setOpenAdminCanUplBtch(true);
+  };
+
+  const handleCloseAdminCanUplBtch = () => {
+    setOpenAdminCanUplBtch(false);
+  };
+
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  const handleClickOpenChildModal = () => {
+    setOpenChilModal(true);
+  };
+
+  const handleClickOpenChildModalCerti = () => {
+    setOpenChilModalCerti(true);
+  };
+
+  const handleCloseChildModal = () => {
+    setOpenChilModal(false);
+  };
+
+  const handleCloseChildModalCerti = () => {
+    setOpenChilModalCerti(false);
+  };
+
+  const isStepOptional = (step) => {
+    return step === 1;
+  };
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
     }
 
-    const handleClickOpenAddBtchprty = () => {
-      setOpenAddBtchprty(true);
-    };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
 
-    const handleCloseAddBtchprty = () => {
-      setOpenAddBtchprty(false);
-    };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
-    const handleClickOpenAdminCanUplBtch = () => {
-      setOpenAdminCanUplBtch(true);
-    };
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
 
-    const handleCloseAdminCanUplBtch = () => {
-      setOpenAdminCanUplBtch(false);
-    };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
 
-    const handleChangeTab = (event, newValue) => {
-      setTabValue(newValue);
-    };
+  const handleReset = () => {
+    setActiveStep(0);
+  };
 
-    const handleClickOpenChildModal = () => {
-      setOpenChilModal(true);
-    };
+  const handleClickOpen = (e) => {
+    setOpenModal(true);
+  };
 
-    const handleClickOpenChildModalCerti = () => {
-      setOpenChilModalCerti(true);
-    };
+  // download excel template on candidate upload batch module
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.download = `download.txt`;
+    link.href = "./download.txt";
+    link.click();
+  };
 
-    const handleCloseChildModal = () => {
-      setOpenChilModal(false);
-    };
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
-    const handleCloseChildModalCerti = () => {
-      setOpenChilModalCerti(false);
-    };
-
-    const isStepOptional = (step) => {
-      return step === 1;
-    };
-
-    const isStepSkipped = (step) => {
-      return skipped.has(step);
-    };
-
-    const handleNext = () => {
-      let newSkipped = skipped;
-      if (isStepSkipped(activeStep)) {
-        newSkipped = new Set(newSkipped.values());
-        newSkipped.delete(activeStep);
-      }
-
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped(newSkipped);
-    };
-
-    const handleBack = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleSkip = () => {
-      if (!isStepOptional(activeStep)) {
-        // You probably want to guard against something like this,
-        // it should never occur unless someone's actively trying to break something.
-        throw new Error("You can't skip a step that isn't optional.");
-      }
-
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped((prevSkipped) => {
-        const newSkipped = new Set(prevSkipped.values());
-        newSkipped.add(activeStep);
-        return newSkipped;
-      });
-    };
-
-    const handleReset = () => {
-      setActiveStep(0);
-    };
-
-    const handleClickOpen = (e) => {
-      setOpenModal(true);
-    };
-
-    // download excel template on candidate upload batch module
-    const onDownload = () => {
-      const link = document.createElement("a");
-      link.download = `download.txt`;
-      link.href = "./download.txt";
-      link.click();
-    };
-
-    const handleClose = () => {
-      setOpenModal(false);
-    };
-
-    //it handle the buttons of content page
-    const handleButtons = () => {
-      switch (pageName) {
-        case "candidate-master":
-          return (
-            <>
-              {numSelected === 1 ? (
-                <Button
-                  style={{ marginTop: "80px", marginRight: "50px" }}
-                  variant="outlined"
-                >
-                  <EditIcon />
-                  Edit
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleClickOpen}
-                  style={{
-                    marginTop: "0px",
-                    // marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>
-              )}
-            </>
-          );
-        case "candidate-upload-batch":
-          return (
-            <>
+  //it handle the buttons of content page
+  const handleButtons = () => {
+    switch (pageName) {
+      case "candidate-master":
+        return (
+          <>
+            {numSelected === 1 ? (
+              <Button
+                style={{ marginTop: "80px", marginRight: "50px" }}
+                variant="outlined"
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
               <Button
                 onClick={handleClickOpen}
                 style={{
-                  marginTop: "80px",
-                  marginRight: "0px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <FileUploadIcon />
-                {buttonText}
-              </Button>
-            </>
-          );
-
-        case "candidate-verification":
-          return (
-            <>
-              <Button
-                style={{
-                  marginTop: "80px",
-                  marginRight: "0px",
+                  marginTop: "0px",
+                  // marginRight: "5px",
                   backgroundColor: "brown",
                   color: "white",
                 }}
@@ -1967,93 +1933,63 @@ const ContentLogic = (props) => {
                 <AddIcon />
                 {buttonText}
               </Button>
-            </>
-          );
+            )}
+          </>
+        );
+      case "candidate-upload-batch":
+        return (
+          <>
+            <Button
+              onClick={handleClickOpen}
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <FileUploadIcon />
+              {buttonText}
+            </Button>
+          </>
+        );
 
-        case "agent-master":
-          return (
-            <>
-              {numSelected === 1 ? (
-                <Button
-                  style={{ marginTop: "50px", marginRight: "50px" }}
-                  variant="outlined"
-                >
-                  <EditIcon />
-                  Edit
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleClickOpen}
-                  style={{
-                    marginTop: "50px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>
-              )}
-            </>
-          );
-        case "agent-pricing-template":
-          return (
-            <>
-              {numSelected === 1 ? (
-                <Button
-                  style={{ marginTop: "80px", marginRight: "50px" }}
-                  variant="outlined"
-                >
-                  <EditIcon />
-                  Edit
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleClickOpen}
-                  style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>
-              )}
-            </>
-          );
+      case "candidate-verification":
+        return (
+          <>
+            <Button
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
+          </>
+        );
 
-        case "candidate-upload-batch-admin":
-          return (
-            <>
+      case "agent-master":
+        return (
+          <>
+            {numSelected === 1 ? (
               <Button
-                onClick={handleClickOpenAdminCanUplBtch}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "0px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
+                style={{ marginTop: "50px", marginRight: "50px" }}
                 variant="outlined"
               >
-                <FileUploadIcon />
-                {buttonText}
+                <EditIcon />
+                Edit
               </Button>
-            </>
-          );
-
-        case "batch-priority":
-          return (
-            <>
+            ) : (
               <Button
-                onClick={handleClickOpenAddBtchprty}
+                onClick={handleClickOpen}
                 style={{
-                  marginTop: "80px",
-                  marginRight: "0px",
+                  marginTop: "50px",
+                  marginRight: "5px",
                   backgroundColor: "brown",
                   color: "white",
                 }}
@@ -2062,55 +1998,22 @@ const ContentLogic = (props) => {
                 <AddIcon />
                 {buttonText}
               </Button>
-            </>
-          );
-        case "other-industry-category":
-          return null;
-
-        case "customer":
-          return null;
-        case "role":
-          return (
-            <>
-              {!editStatus? (
-                <Button
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}                  
+            )}
+          </>
+        );
+      case "agent-pricing-template":
+        return (
+          <>
+            {numSelected === 1 ? (
+              <Button
+                style={{ marginTop: "80px", marginRight: "50px" }}
                 variant="outlined"
-                >
-                  <EditIcon />
-                  Edit
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    handleClickOpen();
-                    // getPermissionsAPIcall();
-                  }}
-                  style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>
-              )}
-            </>
-          );
-
-        default:
-          return (
-            <>
-              {editStatus ? (
-                <Button
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
+              <Button
                 onClick={handleClickOpen}
                 style={{
                   marginTop: "80px",
@@ -2118,70 +2021,156 @@ const ContentLogic = (props) => {
                   backgroundColor: "brown",
                   color: "white",
                 }}
-                  variant="outlined"
-                >
-                  <EditIcon />
-                  Edit
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleClickOpen}
-                  style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>
-              )}
-            </>
-          );
-      }
-    };
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            )}
+          </>
+        );
 
-    // shows the content page design
-    const renderDesign = () => {
-      switch (pageTitle) {
-        case "Candidate Master":
-          return <CandidateMasterLogic />;
+      case "candidate-upload-batch-admin":
+        return (
+          <>
+            <Button
+              onClick={handleClickOpenAdminCanUplBtch}
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <FileUploadIcon />
+              {buttonText}
+            </Button>
+          </>
+        );
 
-        case "Candidate Upload Batch":
-          return null;
+      case "batch-priority":
+        return (
+          <>
+            <Button
+              onClick={handleClickOpenAddBtchprty}
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
+          </>
+        );
+      case "other-industry-category":
+        return null;
 
-        case "Agent Master":
-          return null;
-
-        case "Batch Priority":
-          return <BatchPriority />;
-
-        case "Other Industry Category":
-          return <OtherIndCategory />;
-
-        case "Admin - Candidate Upload Batch":
-          return <AdminCanUploadBatch />;
-
-        case "Candidate Verification":
-          return (
-            <>
-              <CandidateVerification />
-              <TextField
-                id="filled-basic"
-                label="Search"
-                variant="filled"
+      case "customer":
+        return null;
+      case "role":
+        return (
+          <>
+            {!editStatus ? (
+              <Button
                 style={{
-                  width: "700px",
-                  marginBottom: "20px",
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
                 }}
-              />
-            </>
-          );
+                variant="outlined"
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  handleClickOpen();
+                  // getPermissionsAPIcall();
+                }}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            )}
+          </>
+        );
 
-        default:
-          return (
+      default:
+        return (
+          <>
+            {editStatus ? (
+              <Button
+                onClick={handleClickOpen}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                onClick={handleClickOpen}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            )}
+          </>
+        );
+    }
+  };
+
+  // shows the content page design
+  const renderDesign = () => {
+    switch (pageTitle) {
+      case "Candidate Master":
+        return <CandidateMasterLogic />;
+
+      case "Candidate Upload Batch":
+        return null;
+
+      case "Agent Master":
+        return null;
+
+      case "Batch Priority":
+        return <BatchPriority />;
+
+      case "Other Industry Category":
+        return <OtherIndCategory />;
+
+      case "Admin - Candidate Upload Batch":
+        return <AdminCanUploadBatch />;
+
+      case "Candidate Verification":
+        return (
+          <>
+            <CandidateVerification />
             <TextField
               id="filled-basic"
               label="Search"
@@ -2191,2595 +2180,2214 @@ const ContentLogic = (props) => {
                 marginBottom: "20px",
               }}
             />
-          );
-      }
-    };
+          </>
+        );
 
-    // its handle the module modal inputs
-    function handlerModuleInputs () {
-      switch (pageName) {
-        case "candidate-master":
-          return (
-            <>
-              <Box sx={{ width: "100%" }}>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  {/* Step {activeStep + 1} */}
-                  {activeStep === 0 ? (
-                    <List style={{ marginLeft: "100px" }}>
-                      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-                        <div
+      default:
+        return (
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+          />
+        );
+    }
+  };
+
+  // its handle the module modal inputs
+  function handlerModuleInputs() {
+    switch (pageName) {
+      case "candidate-master":
+        return (
+          <>
+            <Box sx={{ width: "100%" }}>
+              <Typography sx={{ mt: 2, mb: 1 }}>
+                {/* Step {activeStep + 1} */}
+                {activeStep === 0 ? (
+                  <List style={{ marginLeft: "100px" }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                      <div
+                        style={{
+                          marginLeft: "200px",
+                          marginBottom: "200px",
+                          marginTop: "40px",
+                        }}
+                      >
+                        <Button
                           style={{
-                            marginLeft: "200px",
-                            marginBottom: "200px",
-                            marginTop: "40px",
+                            backgroundColor: "brown",
+                            color: "white",
+                            fontSize: "15px bold",
                           }}
                         >
-                          <Button
-                            style={{
-                              backgroundColor: "brown",
-                              color: "white",
-                              fontSize: "15px bold",
-                            }}
-                          >
-                            UPLOAD IMAGE
-                          </Button>
-                          <p
-                            style={{ marginLeft: "130px", marginTop: "-30px" }}
-                          >
-                            (png,jpg)
-                          </p>
-                        </div>
-                        <div>
-                          <ListItem>
-                            <TextField
-                              id="filled-basic"
-                              label="Full Name"
-                              variant="filled"
-                              value={candidateMasterData.fullName}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                fullName:e.target.value})
-                              }}
-                              sx={{ width: "69ch", mb: 4 }}
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <TextField
-                              id="filled-basic"
-                              label="Birthdate"
-                              InputLabelProps={{ shrink: true }}
-                              type="date"
-                              value={candidateMasterData.birthDate}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                birthDate:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <FormControl>
-                              <FormLabel id="demo-row-radio-buttons-group-label">
-                                Gender
-                              </FormLabel>
-                              <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                              >
-                                <FormControlLabel
-                                  value="male"
-                                  control={<Radio />}
-                                  label="Male"
-                                />
-                                <FormControlLabel
-                                  value="female"
-                                  control={<Radio />}
-                                  label="Female"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </ListItem>
-
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              fullWidth
-                              sx={{ width: "140ch" }}
-                              label="Permanent Address"
-                              id="filled-basic"
-                              multiline
-                              rows={5}
-                              value={candidateMasterData.perm_address}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                perm_address:e.target.value})
-                              }}
-                              variant="filled"
-                            />
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="City"
-                              variant="filled"
-                              value={candidateMasterData.perm_city}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                perm_city:e.target.value})
-                              }}
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="State"
-                              variant="filled"
-                              value={candidateMasterData.perm_state}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                perm_state:e.target.value})
-                              }}
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="Country"
-                              disabled
-                              value={candidateMasterData.perm_country}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                perm_country:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Zip Code"
-                              value={candidateMasterData.perm_zip}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                perm_zip:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <FormControlLabel
-                              control={<Checkbox />}
-                              label="Same as permanent address"
-                            />
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              fullWidth
-                              sx={{ width: "140ch" }}
-                              label="Current Address"
-                              id="filled-basic"
-                              multiline
-                              value={candidateMasterData.curr_address}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                curr_address:e.target.value})
-                              }}
-                              rows={5}
-                              variant="filled"
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="City"
-                              variant="filled"
-                              value={candidateMasterData.curr_city}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                curr_city:e.target.value})
-                              }}
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="State"
-                              value={candidateMasterData.curr_state}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                curr_state:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="Country"
-                              disabled
-                              value={candidateMasterData.curr_country}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                curr_country:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Zip Code"
-                              value={candidateMasterData.curr_zip}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                curr_zip:e.target.value})
-                              }}
-                              variant="filled"
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="Primary email address"
-                              variant="filled"
-                              value={candidateMasterData.email1}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                email1:e.target.value})
-                              }}
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Secondary email address"
-                              variant="filled"
-                              value={candidateMasterData.email2}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                email2:e.target.value})
-                              }}
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="Primary contact no"
-                              variant="filled"
-                              value={candidateMasterData.contactNo1}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                contactNo1:e.target.value})
-                              }}
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Secondary contact no"
-                              variant="filled"
-                              value={candidateMasterData.contactNo2}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                contactNo2:e.target.value})
-                              }}
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <TextField
-                              id="filled-basic"
-                              label="Aadhar no"
-                              variant="filled"
-                              value={candidateMasterData.aadharNo}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                aadharNo:e.target.value})
-                              }}
-                              sx={{ width: "69ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Status"
-                              select
-                              variant="filled"
-                              sx={{ ml: 3, width: "69ch" }}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ mb: 5 }}>
-                            <FormControlLabel
-                              control={<Checkbox defaultChecked />}
-                              label="Is Active"
-                              value={candidateMasterData.isActive}
-                              onChange={(e)=>{
-                                setCandidateMasterData({...candidateMasterData,
-                                isActive:e.target.checked})
-                              }}
-                            />
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem>
-                            <Button
-                              style={{
-                                backgroundColor: "grey",
-                                color: "white",
-                                margin: "10px",
-                              }}
-                              disabled={activeStep === 0}
-                              onClick={handleBack}
-                            >
-                              PREV
-                            </Button>
-                            <Button
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                                margin: "10px",
-                              }}
-                              onClick={()=>{
-                              addAPICalls('candidate-master')}}
-                            >
-                              SAVE AND NEXT
-                            </Button>
-                            <Button
-                              onClick={()=>{handleNext()}}
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                              }}
-                            >
-                              NEXT
-                            </Button>
-                            <Button
-                              style={{
-                                backgroundColor: "black",
-                                color: "white",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              EXIT
-                            </Button>
-                          </ListItem>
-                        </div>
-                      </Box>
-                    </List>
-                  ) : activeStep === 1 ? (
-                    <List style={{ marginLeft: "100px", marginTop: "-50px" }}>
-                      <Box>
-                        <div>
-                          <ListItem>
-                            <h2>Total Work Experiance</h2>
-                          </ListItem>
-                          <ListItem>
-                            <TextField
-                              id="filled-basic"
-                              label="Months"
-                              variant="filled"
-                              sx={{ width: "20ch" }}
-                            />
-                            <TextField
-                              id="filled-basic"
-                              label="Years"
-                              variant="filled"
-                              sx={{ width: "20ch", margin: "20px 20px" }}
-                            />
-                            <Button
-                              style={{
-                                color: "white",
-                                backgroundColor: "brown",
-                              }}
-                            >
-                              SAVE
-                            </Button>
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem>
-                            <h2>Work Experiance</h2>
-                          </ListItem>
-                          <ListItem>
-                            <Button
-                              onClick={handleClickOpenChildModal}
-                              style={{
-                                color: "white",
-                                backgroundColor: "brown",
-                              }}
-                            >
-                              <AddIcon />
-                              Add
-                            </Button>
-                          </ListItem>
-                          <ListItem>
-                            <WorkExperiance />
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem>
-                            <h2>Training/Certificates</h2>
-                          </ListItem>
-                          <ListItem>
-                            <Button
-                              onClick={handleClickOpenChildModalCerti}
-                              style={{
-                                color: "white",
-                                backgroundColor: "brown",
-                              }}
-                            >
-                              <AddIcon />
-                              Add
-                            </Button>
-                          </ListItem>
-                          <ListItem>
-                            <AddCertificates />
-                          </ListItem>
-                        </div>
-                        <div>
-                          <ListItem>
-                            <Button
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                                margin: "10px",
-                              }}
-                              disabled={activeStep === 0}
-                              onClick={handleBack}
-                            >
-                              PREV
-                            </Button>
-
-                            <Button
-                              onClick={handleNext}
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                              }}
-                            >
-                              NEXT
-                            </Button>
-                            <Button
-                              style={{
-                                backgroundColor: "black",
-                                color: "white",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              EXIT
-                            </Button>
-                          </ListItem>
-                        </div>
-                      </Box>
-                    </List>
-                  ) : null}
-                </Typography>
-              </Box>
-              <div>
-                <Dialog
-                  maxWidth="xl"
-                  open={openChildModal}
-                  onClose={handleCloseChildModal}
-                >
-                  <DialogTitle>Add Work Experiance</DialogTitle>
-                  <DialogContent>
-                    <ListItem>
-                      <TextField
-                        id="name"
-                        label="Company Name"
-                        sx={{ width: "30ch" }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="name"
-                        label="Skills"
-                        sx={{ width: "30ch", ml: 4 }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="date"
-                        label="Start Date"
-                        InputLabelProps={{ shrink: true }}
-                        type="date"
-                        sx={{ width: "30ch", ml: 4 }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="date"
-                        label="End Date"
-                        InputLabelProps={{ shrink: true }}
-                        type="date"
-                        sx={{ width: "30ch", ml: 4 }}
-                        variant="filled"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <TextField
-                        fullWidth
-                        sx={{ width: "140ch" }}
-                        label="Descriptions About Experiance"
-                        id="filled-basic"
-                        multiline
-                        rows={5}
-                        variant="filled"
-                      />
-                    </ListItem>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseChildModal}>Close</Button>
-                    <Button
-                      style={{ backgroundColor: "brown", color: "white" }}
-                      onClick={handleCloseChildModal}
-                    >
-                      Add
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-              <div>
-                <Dialog
-                  maxWidth="xl"
-                  open={openChildModalCerti}
-                  onClose={handleCloseChildModalCerti}
-                >
-                  <DialogTitle>Add Certificate</DialogTitle>
-                  <DialogContent>
-                    <ListItem>
-                      <TextField
-                        id="name"
-                        label="Certificate Name"
-                        sx={{ width: "45ch" }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="name"
-                        label="Certificate Type"
-                        sx={{ width: "45ch", ml: 4 }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="name"
-                        label="Issued By"
-                        sx={{ width: "45ch", ml: 4 }}
-                        variant="filled"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <TextField
-                        id="name"
-                        select
-                        label="Skills"
-                        sx={{ width: "45ch" }}
-                        variant="filled"
-                      />
-                      <TextField
-                        id="date"
-                        label="Issued Date"
-                        InputLabelProps={{ shrink: true }}
-                        type="date"
-                        sx={{ width: "45ch", ml: 4 }}
-                        variant="filled"
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <TextField
-                        fullWidth
-                        sx={{ width: "145ch" }}
-                        label="Descriptions About Certifiacte"
-                        id="filled-basic"
-                        multiline
-                        rows={5}
-                        variant="filled"
-                      />
-                    </ListItem>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseChildModalCerti}>Close</Button>
-                    <Button
-                      style={{ backgroundColor: "brown", color: "white" }}
-                      onClick={handleCloseChildModalCerti}
-                    >
-                      Add
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-            </>
-          );
-
-        case "candidate-upload-batch":
-          return (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={onDownload}
-                  style={{
-                    backgroundColor: "#009688",
-                    color: "white",
-                    marginBottom: "20px",
-                    marginTop: "20px",
-                  }}
-                >
-                  <PriorityHigh />
-                  Download Bulk Upload Template
-                </Button>
-                <label htmlFor="upload-photo">
-                  <Button
-                    component="span"
-                    variant="contained"
-                    style={{
-                      color: "white",
-                      background: "brown",
-                      fontSize: "22px",
-                    }}
-                  >
-                    <FileUploadIcon />
-                    <input
-                      id="upload-photo"
-                      name="upload-photo"
-                      type="file"
-                      style={{ display: "none" }}
-                    />
-                    Upload
-                  </Button>
-                </label>
-                <p>
-                  Total Records: <b>0</b>{" "}
-                </p>
-                <h2>Guidelines for uploading your data file</h2>
-                <ListItem>
-                  <ol>
-                    <li>
-                      Your data file should be in <b>MS Excel format(.xlsx).</b>{" "}
-                      It must have<b> 4 mandatory columns.</b> It can have 18
-                      columns and<b> column names</b> have to be{" "}
-                      <b> exactly same as per the template</b> given above.
-                      Column names are not case sensitive.
-                    </li>
-                    <li>
-                      <b>
-                        If you do not have value for the column, please leave it
-                        blank.
-                      </b>
-                    </li>
-                    <li>
-                      File name can be anything. Data must have to be in the{" "}
-                      <b>first sheet.</b>
-                    </li>
-                    <li>
-                      Following are<b> mandatory fields</b>, if<b> anyone </b>{" "}
-                      is missing, record will be rejected.
-                      <ul>
-                        <li>category</li>
-                        <li>full_name</li>
-                        <li>primary_mobile (has to be exact 10 digits)</li>
-                        <li>curr_city</li>
-                      </ul>
-                    </li>
-                    <li>
-                      Following are <b>unique fields</b>
-                      <ul>
-                        <li>primary_mobile</li>
-                        <li>primary_email</li>
-                      </ul>
-                    </li>
-                    <li>
-                      If there is any duplicate value found for <b>unique</b>{" "}
-                      fields in Excel sheet or in our system database, that
-                      value will be ignored(consider blank)
-                    </li>
-                    <li>
-                      Following are accepted date formats. Columns which require
-                      date values are:<b> birth_date.</b>
-                      <ul>
-                        <li>DD.MM.YY</li>
-                        <li>DD-MM-YY</li>
-                        <li>DD/MM/YY</li>
-                        <li>DD.MM.YYYY</li>
-                        <li>DD-MM-YYYY</li>
-                        <li>DD/MM/YYYY</li>
-                        <li>YYYY.MM.DD</li>
-                        <li>YYYY-MM-DD</li>
-                        <li>YYYY/MM/DD</li>
-                        <li>
-                          For ex.
-                          <table style={tblStyl}>
-                            <tr>
-                              <td style={tblStyl}>20-10-1999</td>
-                              <td style={tblStyl}>Accepted</td>
-                            </tr>
-                            <tr>
-                              <td style={tblStyl}>1999-12-11</td>
-                              <td style={tblStyl}>Accepted</td>
-                            </tr>
-                            <tr>
-                              <td style={tblStyl}>4-10-1999</td>
-                              <td style={tblStyl}>Ignored</td>
-                            </tr>
-                            <tr>
-                              <td style={tblStyl}>4-4-1999</td>
-                              <td style={tblStyl}>Ignored</td>
-                            </tr>
-                            <tr>
-                              <td style={tblStyl}>10-4-1999</td>
-                              <td style={tblStyl}>Ignored</td>
-                            </tr>
-                            <tr>
-                              <td style={tblStyl}>1-4-99</td>
-                              <td style={tblStyl}>Ignored</td>
-                            </tr>
-                          </table>
-                        </li>
-                      </ul>
-                      <li>
-                        Colors description in bulk upload template
-                        <table style={tblStyl}>
-                          <tr>
-                            <th style={tblStyl3}>column_name</th>
-                            <td style={tblStyl}>Non mandatory column</td>
-                          </tr>
-                          <tr>
-                            <th style={tblStyl2}>column_name</th>
-                            <td style={tblStyl}>Non mandatory unique column</td>
-                          </tr>
-                          <tr>
-                            <th style={tblStyl1}>column_name</th>
-                            <td style={tblStyl}>Mandatory column</td>
-                          </tr>
-                          <tr>
-                            <th style={tblStyl2}>column_name</th>
-                            <td style={tblStyl}>Mandatory unique column</td>
-                          </tr>
-                        </table>
-                      </li>
-                    </li>
-                    <li>
-                      Fields
-                      <table style={tblStyl}>
-                        <tr>
-                          <th style={tblStyl}>Field name </th>
-                          <th style={tblStyl}>Maximum length </th>
-                          <th style={tblStyl}>Mandatory</th>
-                          <th style={tblStyl}>Unique</th>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>industry</th>
-                          <td style={tblStyl}>80</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl1}>category</th>
-                          <td style={tblStyl}>80</td>
-                          <th style={tblStyl4}>Yes</th>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl1}>full_name</th>
-                          <td style={tblStyl}>100</td>
-                          <th style={tblStyl4}>Yes</th>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>birth_date</th>
-                          <td style={tblStyl}>Date</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl1}>primary_mobile</th>
-                          <td style={tblStyl}>10</td>
-                          <th style={tblStyl4}>Yes</th>
-                          <th style={tblStyl4}>Yes</th>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl1}>curr_city</th>
-                          <td style={tblStyl}>45</td>
-                          <th style={tblStyl4}>Yes</th>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>curr_pincode</th>
-                          <td style={tblStyl}>6</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>primary_email</th>
-                          <td style={tblStyl}>80</td>
-                          <td style={tblStyl}>No</td>
-                          <th style={tblStyl4}>Yes</th>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>primary_lang</th>
-                          <td style={tblStyl}>15</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>secondary_lang</th>
-                          <td style={tblStyl}>15</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>skill_1</th>
-                          <td style={tblStyl}>45</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>skill_2</th>
-                          <td style={tblStyl}>45</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>pref_location_1</th>
-                          <td style={tblStyl}>80</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>pref_location_2</th>
-                          <td style={tblStyl}>80</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>education</th>
-                          <td style={tblStyl}>50</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>exp_years</th>
-                          <td style={tblStyl}>2</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>last_company</th>
-                          <td style={tblStyl}>100</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                        <tr>
-                          <th style={tblStyl2}>designation</th>
-                          <td style={tblStyl}>80</td>
-                          <td style={tblStyl}>No</td>
-                          <td style={tblStyl}>No</td>
-                        </tr>
-                      </table>
-                    </li>
-                  </ol>
-                </ListItem>
-              </Box>
-            </>
-          );
-
-        case "agent-master":
-          return (
-            <>
-            
-              <Box sx={{ width: "100%", typography: "body1", ml: 18 }}>
-                <TabContext value={tabValue}>
-                  <Box>
-                    <TabList
-                      onChange={handleChangeTab}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab label="BASIC" value="1" style={{ color: "brown" }} />
-                      <Tab
-                        label="PROFESSIONAL"
-                        value="2"
-                      />
-                    </TabList>
-                  </Box>
-                  <TabPanel value="1">
-                    <FormControl>
-                      <FormLabel id="demo-row-radio-buttons-group-label">
-                        Select
-                      </FormLabel>
-                      <RadioGroup
-                        row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="row-radio-buttons-group"
-                      >
-                        <FormControlLabel
-                          value="individual"
-                          control={<Radio />}
-                          onClick={() => {
-                            setCmpyValue("individual");
-                          }}
-                          label="Individual"
-                        />
-                        <FormControlLabel
-                          value="company"
-                          control={<Radio />}
-                          onClick={() => {
-                            setCmpyValue("company");
-                          }}
-                          label="Company"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                    <Box>
+                          UPLOAD IMAGE
+                        </Button>
+                        <p style={{ marginLeft: "130px", marginTop: "-30px" }}>
+                          (png,jpg)
+                        </p>
+                      </div>
                       <div>
-                        <List sx={{ mb: 5 }}>
-                          <TextField
-                            required
-                            id="filled-basic"
-                            label="Agent No"
-                            variant="filled"
-                            sx={{ width: "30ch" }}
-                            value={agentMasterData.agentNo}
-                            onChange={(e)=>{
-                              setAgentMasterData(
-                                {...agentMasterData,
-                            agentNo:e.target.value}
-                            )}}
-                          />
-
-                          {cmpyvalue === "company" ? (
-                            <>
-                              <TextField
-                                id="filled-basic"
-                                label="Company Name"
-                                type="name"
-                                value={agentMasterData.companyName}
-                            onChange={(e)=>{
-                              setAgentMasterData(
-                                {...agentMasterData,
-                            companyName:e.target.value}
-                            )}}
-                                variant="filled"
-                                sx={{ width: "30ch", ml: 4 }}
-                              />
-                              <TextField
-                                id="filled-basic"
-                                label="GSTIN"
-                                type="name"
-                                value={agentMasterData.gstin}
-                                onChange={(e)=>{
-                                  setAgentMasterData(
-                                    {...agentMasterData,
-                                gstin:e.target.value}
-                                )}}
-                                variant="filled"
-                                sx={{ width: "30ch", ml: 4 }}
-                              />
-                            </>
-                          ) : null}
-                        </List>
-                        <List>
+                        <ListItem>
                           <TextField
                             id="filled-basic"
                             label="Full Name"
-                            required
-                            value={agentMasterData.fullName}
-                            onChange={(e)=>{
-                              setAgentMasterData(
-                                {...agentMasterData,
-                            fullName:e.target.value}
-                            )}}
-                            type="name"
                             variant="filled"
-                            sx={{ width: "30ch" }}
+                            value={candidateMasterData.fullName}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                fullName: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch", mb: 4 }}
                           />
+                        </ListItem>
+                        <ListItem>
                           <TextField
                             id="filled-basic"
                             label="Birthdate"
                             InputLabelProps={{ shrink: true }}
                             type="date"
-                            value={agentMasterData.dob}
-                            onChange={(e)=>{
-                              setAgentMasterData(
-                                {...agentMasterData,
-                            dob:e.target.value}
-                            )}}
+                            value={candidateMasterData.birthDate}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                birthDate: e.target.value,
+                              });
+                            }}
                             variant="filled"
-                            sx={{ width: "30ch", ml: 4, mr: 4 }}
+                            sx={{ width: "69ch" }}
                           />
-                        </List>
-                        <List sx={{ mb: 5, mt: 5 }}>
-                          <FormLabel id="demo-row-radio-buttons-group-label">
-                            Select
-                          </FormLabel>
-                          <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                          >
-                            <FormControlLabel
-                              control={<Radio />}
-                              label="Female"
-                              value={agentMasterData.gender}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              gender:e.target.value}
-                            )}}
-                            />
-                            <FormControlLabel
-                              control={<Radio />}
-                              label="Male"
-                              checked
-                              value={agentMasterData.gender}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              gender:e.target.value}
-                            )}}
-                            />
-                            <FormControlLabel
-                              control={<Radio />}
-                              label="Other"
-                              value={agentMasterData.gender}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              gender:e.target.value}
-                            )}}
-                            />
-                          </RadioGroup>
-                        </List>
-                        <List>
+                        </ListItem>
+                        <ListItem>
+                          <FormControl>
+                            <FormLabel id="demo-row-radio-buttons-group-label">
+                              Gender
+                            </FormLabel>
+                            <RadioGroup
+                              row
+                              aria-labelledby="demo-row-radio-buttons-group-label"
+                              name="row-radio-buttons-group"
+                            >
+                              <FormControlLabel
+                                value="male"
+                                control={<Radio />}
+                                label="Male"
+                              />
+                              <FormControlLabel
+                                value="female"
+                                control={<Radio />}
+                                label="Female"
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </ListItem>
+
+                        <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
-                            label="Email"
-                            required
-                            type="email"
-                            variant="filled"
-                            sx={{ width: "30ch" }}
-                            value={agentMasterData.email}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              email:e.target.value}
-                            )}}
-                          />
-                          <TextField
-                            id="filled-basic"
-                            label="Contact no"
-                            required
-                            type="number"
-                            variant="filled"
-                            value={agentMasterData.contactNo}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              contactNo:e.target.value}
-                            )}}
-                            sx={{ width: "30ch", ml: 4 }}
-                          />
-                        </List>
-                        <List>
-                          <TextField
-                            id="filled-basic"
-                            label="Current Address"
-                            required
-                            rows={3}
-                            multiline
-                            value={agentMasterData.currAddress}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              currAddress:e.target.value}
-                            )}}
-                            type="address"
-                            variant="filled"
-                            sx={{ width: "64ch", mt: 5, mb: 5 }}
-                          />
-                        </List>
-                        <List>
-                          <TextField
-                            id="filled-basic"
-                            label="Current pincode"
-                            required
-                            type="name"
-                            value={agentMasterData.currZip}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              currZip:e.target.value}
-                            )}}
-                            variant="filled"
-                            sx={{ width: "30ch" }}
-                          />
-                          <TextField
-                            id="filled-basic"
-                            label="Current city"
-                            required
-                            value={agentMasterData.currCity}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              currCity:e.target.value}
-                            )}}
-                            type="address"
-                            variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
-                          />
-                          <TextField
-                            id="filled-basic"
-                            label="Current state"
-                            required
-                            value={agentMasterData.currState}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              currState:e.target.value}
-                            )}}
-                            type="address"
-                            variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
-                          />
-                        </List>
-                        <List sx={{ mb: 5, mt: 5 }}>
-                          <FormControlLabel
-                            control={<Checkbox />}
-                            label="Same as current address"
-                          />
-                        </List>
-                        <List>
-                          <TextField
-                            id="filled-basic"
+                            fullWidth
+                            sx={{ width: "140ch" }}
                             label="Permanent Address"
-                            required
-                            value={agentMasterData.permAddress}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              permAddress:e.target.value}
-                            )}}
-                            rows={3}
+                            id="filled-basic"
                             multiline
-                            helperText="Must match address in one of the KYC document"
-                            type="address"
+                            rows={5}
+                            value={candidateMasterData.perm_address}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                perm_address: e.target.value,
+                              });
+                            }}
                             variant="filled"
-                            sx={{ width: "64ch", mb: 5 }}
                           />
-                        </List>
-                        <List>
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
-                            label="Permanent pincode"
-                            required
-                            type="name"
-                            value={agentMasterData.permZip}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              permZip:e.target.value}
-                            )}}
+                            label="City"
                             variant="filled"
-                            sx={{ width: "30ch" }}
-                          />
-                          <TextField
-                            id="filled-basic"
-                            label="Permanent city"
-                            required
-                            value={agentMasterData.permCity}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              permCity:e.target.value}
-                            )}}
-                            type="address"
-                            variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
+                            value={candidateMasterData.perm_city}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                perm_city: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch" }}
                           />
                           <TextField
                             id="filled-basic"
-                            label="Permanent state"
-                            required
-                            value={agentMasterData.permState}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              permState:e.target.value}
-                            )}}
-                            type="address"
+                            label="State"
                             variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
+                            value={candidateMasterData.perm_state}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                perm_state: e.target.value,
+                              });
+                            }}
+                            sx={{ ml: 3, width: "69ch" }}
                           />
-                        </List>
-                        <List sx={{ mt: 5 }}>
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
-                            label="Pan Card"
-                            required
-                            value={agentMasterData.panCard}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              panCard:e.target.value}
-                            )}}
-                            type="name"
+                            label="Country"
+                            disabled
+                            value={candidateMasterData.perm_country}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                perm_country: e.target.value,
+                              });
+                            }}
                             variant="filled"
-                            sx={{ width: "30ch" }}
-                          />
-                          <TextField
-                            id="filled-basic"
-                            label="Aadhar card"
-                            required
-                            value={agentMasterData.aadharCard}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              aadharCard:e.target.value}
-                            )}}
-                            type="number"
-                            variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
-                          />
-                        </List>
-                        <List sx={{ mt: 5, mb: 5 }}>
-                          <List>
-                            <b>Languages</b>
-                          </List>
-                          <TextField
-                            id="filled-basic"
-                            label="Primary language"
-                            required
-                            value={agentMasterData.primaryLang}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              primaryLang:e.target.value}
-                            )}}
-                            type="name"
-                            variant="filled"
-                            sx={{ width: "30ch" }}
+                            sx={{ width: "69ch" }}
                           />
                           <TextField
                             id="filled-basic"
-                            label="Secondary language"
-                            required
-                            value={agentMasterData.secondaryLang}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              secondaryLang:e.target.value}
-                            )}}
-                            type="name"
+                            label="Zip Code"
+                            value={candidateMasterData.perm_zip}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                perm_zip: e.target.value,
+                              });
+                            }}
                             variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
+                            sx={{ ml: 3, width: "69ch" }}
                           />
-                          <TextField
-                            id="filled-basic"
-                            label="Third language"
-                            required
-                            value={agentMasterData.thirdLang}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              thirdLang:e.target.value}
-                            )}}
-                            type="name"
-                            variant="filled"
-                            sx={{ width: "30ch", ml: 4 }}
-                          />
-                        </List>
-                        <List>
-                          <TextField
-                            id="filled-basic"
-                            label="Note"
-                            rows={3}
-                            multiline
-                            value={agentMasterData.note}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              note:e.target.value}
-                            )
-                          console.log(agentMasterData.note);}}
-                            type="address"
-                            variant="filled"
-                            sx={{ width: "64ch", mb: 5 }}
-                          />
-                        </List>
-                        <List sx={{ mb: 3 }}>
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
                           <FormControlLabel
-                            defaultChecked
                             control={<Checkbox />}
-                            label="Is Active"
-                            value={agentMasterData.isActive}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              isActive:e.target.checked}
-                            )}}
+                            label="Same as permanent address"
                           />
-                        </List>
-                        <List>
-                          <Button onClick={()=>addAPICalls('agent-master')} style={{ color: "white", backgroundColor: "brown" }}>
-                            Save
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            fullWidth
+                            sx={{ width: "140ch" }}
+                            label="Current Address"
+                            id="filled-basic"
+                            multiline
+                            value={candidateMasterData.curr_address}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                curr_address: e.target.value,
+                              });
+                            }}
+                            rows={5}
+                            variant="filled"
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="City"
+                            variant="filled"
+                            value={candidateMasterData.curr_city}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                curr_city: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="State"
+                            value={candidateMasterData.curr_state}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                curr_state: e.target.value,
+                              });
+                            }}
+                            variant="filled"
+                            sx={{ ml: 3, width: "69ch" }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="Country"
+                            disabled
+                            value={candidateMasterData.curr_country}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                curr_country: e.target.value,
+                              });
+                            }}
+                            variant="filled"
+                            sx={{ width: "69ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Zip Code"
+                            value={candidateMasterData.curr_zip}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                curr_zip: e.target.value,
+                              });
+                            }}
+                            variant="filled"
+                            sx={{ ml: 3, width: "69ch" }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="Primary email address"
+                            variant="filled"
+                            value={candidateMasterData.email1}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                email1: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Secondary email address"
+                            variant="filled"
+                            value={candidateMasterData.email2}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                email2: e.target.value,
+                              });
+                            }}
+                            sx={{ ml: 3, width: "69ch" }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="Primary contact no"
+                            variant="filled"
+                            value={candidateMasterData.contactNo1}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                contactNo1: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Secondary contact no"
+                            variant="filled"
+                            value={candidateMasterData.contactNo2}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                contactNo2: e.target.value,
+                              });
+                            }}
+                            sx={{ ml: 3, width: "69ch" }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <TextField
+                            id="filled-basic"
+                            label="Aadhar no"
+                            variant="filled"
+                            value={candidateMasterData.aadharNo}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                aadharNo: e.target.value,
+                              });
+                            }}
+                            sx={{ width: "69ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Status"
+                            select
+                            variant="filled"
+                            sx={{ ml: 3, width: "69ch" }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ mb: 5 }}>
+                          <FormControlLabel
+                            control={<Checkbox defaultChecked />}
+                            label="Is Active"
+                            value={candidateMasterData.isActive}
+                            onChange={(e) => {
+                              setCandidateMasterData({
+                                ...candidateMasterData,
+                                isActive: e.target.checked,
+                              });
+                            }}
+                          />
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem>
+                          <Button
+                            style={{
+                              backgroundColor: "grey",
+                              color: "white",
+                              margin: "10px",
+                            }}
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                          >
+                            PREV
                           </Button>
-                        </List>
+                          <Button
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                              margin: "10px",
+                            }}
+                            onClick={() => {
+                              addAPICalls("candidate-master");
+                            }}
+                          >
+                            SAVE AND NEXT
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              handleNext();
+                            }}
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                            }}
+                          >
+                            NEXT
+                          </Button>
+                          <Button
+                            style={{
+                              backgroundColor: "black",
+                              color: "white",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            EXIT
+                          </Button>
+                        </ListItem>
                       </div>
                     </Box>
-                  </TabPanel>
-                  <TabPanel value="2">
-                    <FormControl>
+                  </List>
+                ) : activeStep === 1 ? (
+                  <List style={{ marginLeft: "100px", marginTop: "-50px" }}>
+                    <Box>
+                      <div>
+                        <ListItem>
+                          <h2>Total Work Experiance</h2>
+                        </ListItem>
+                        <ListItem>
+                          <TextField
+                            id="filled-basic"
+                            label="Months"
+                            variant="filled"
+                            sx={{ width: "20ch" }}
+                          />
+                          <TextField
+                            id="filled-basic"
+                            label="Years"
+                            variant="filled"
+                            sx={{ width: "20ch", margin: "20px 20px" }}
+                          />
+                          <Button
+                            style={{
+                              color: "white",
+                              backgroundColor: "brown",
+                            }}
+                          >
+                            SAVE
+                          </Button>
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem>
+                          <h2>Work Experiance</h2>
+                        </ListItem>
+                        <ListItem>
+                          <Button
+                            onClick={handleClickOpenChildModal}
+                            style={{
+                              color: "white",
+                              backgroundColor: "brown",
+                            }}
+                          >
+                            <AddIcon />
+                            Add
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <WorkExperiance />
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem>
+                          <h2>Training/Certificates</h2>
+                        </ListItem>
+                        <ListItem>
+                          <Button
+                            onClick={handleClickOpenChildModalCerti}
+                            style={{
+                              color: "white",
+                              backgroundColor: "brown",
+                            }}
+                          >
+                            <AddIcon />
+                            Add
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <AddCertificates />
+                        </ListItem>
+                      </div>
+                      <div>
+                        <ListItem>
+                          <Button
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                              margin: "10px",
+                            }}
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                          >
+                            PREV
+                          </Button>
+
+                          <Button
+                            onClick={handleNext}
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                            }}
+                          >
+                            NEXT
+                          </Button>
+                          <Button
+                            style={{
+                              backgroundColor: "black",
+                              color: "white",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            EXIT
+                          </Button>
+                        </ListItem>
+                      </div>
+                    </Box>
+                  </List>
+                ) : null}
+              </Typography>
+            </Box>
+            <div>
+              <Dialog
+                maxWidth="xl"
+                open={openChildModal}
+                onClose={handleCloseChildModal}
+              >
+                <DialogTitle>Add Work Experiance</DialogTitle>
+                <DialogContent>
+                  <ListItem>
+                    <TextField
+                      id="name"
+                      label="Company Name"
+                      sx={{ width: "30ch" }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="name"
+                      label="Skills"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="date"
+                      label="Start Date"
+                      InputLabelProps={{ shrink: true }}
+                      type="date"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="date"
+                      label="End Date"
+                      InputLabelProps={{ shrink: true }}
+                      type="date"
+                      sx={{ width: "30ch", ml: 4 }}
+                      variant="filled"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      fullWidth
+                      sx={{ width: "140ch" }}
+                      label="Descriptions About Experiance"
+                      id="filled-basic"
+                      multiline
+                      rows={5}
+                      variant="filled"
+                    />
+                  </ListItem>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseChildModal}>Close</Button>
+                  <Button
+                    style={{ backgroundColor: "brown", color: "white" }}
+                    onClick={handleCloseChildModal}
+                  >
+                    Add
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+            <div>
+              <Dialog
+                maxWidth="xl"
+                open={openChildModalCerti}
+                onClose={handleCloseChildModalCerti}
+              >
+                <DialogTitle>Add Certificate</DialogTitle>
+                <DialogContent>
+                  <ListItem>
+                    <TextField
+                      id="name"
+                      label="Certificate Name"
+                      sx={{ width: "45ch" }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="name"
+                      label="Certificate Type"
+                      sx={{ width: "45ch", ml: 4 }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="name"
+                      label="Issued By"
+                      sx={{ width: "45ch", ml: 4 }}
+                      variant="filled"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      id="name"
+                      select
+                      label="Skills"
+                      sx={{ width: "45ch" }}
+                      variant="filled"
+                    />
+                    <TextField
+                      id="date"
+                      label="Issued Date"
+                      InputLabelProps={{ shrink: true }}
+                      type="date"
+                      sx={{ width: "45ch", ml: 4 }}
+                      variant="filled"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      fullWidth
+                      sx={{ width: "145ch" }}
+                      label="Descriptions About Certifiacte"
+                      id="filled-basic"
+                      multiline
+                      rows={5}
+                      variant="filled"
+                    />
+                  </ListItem>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseChildModalCerti}>Close</Button>
+                  <Button
+                    style={{ backgroundColor: "brown", color: "white" }}
+                    onClick={handleCloseChildModalCerti}
+                  >
+                    Add
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+          </>
+        );
+
+      case "candidate-upload-batch":
+        return (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={onDownload}
+                style={{
+                  backgroundColor: "#009688",
+                  color: "white",
+                  marginBottom: "20px",
+                  marginTop: "20px",
+                }}
+              >
+                <PriorityHigh />
+                Download Bulk Upload Template
+              </Button>
+              <label htmlFor="upload-photo">
+                <Button
+                  component="span"
+                  variant="contained"
+                  style={{
+                    color: "white",
+                    background: "brown",
+                    fontSize: "22px",
+                  }}
+                >
+                  <FileUploadIcon />
+                  <input
+                    id="upload-photo"
+                    name="upload-photo"
+                    type="file"
+                    style={{ display: "none" }}
+                  />
+                  Upload
+                </Button>
+              </label>
+              <p>
+                Total Records: <b>0</b>{" "}
+              </p>
+              <h2>Guidelines for uploading your data file</h2>
+              <ListItem>
+                <ol>
+                  <li>
+                    Your data file should be in <b>MS Excel format(.xlsx).</b>{" "}
+                    It must have<b> 4 mandatory columns.</b> It can have 18
+                    columns and<b> column names</b> have to be{" "}
+                    <b> exactly same as per the template</b> given above. Column
+                    names are not case sensitive.
+                  </li>
+                  <li>
+                    <b>
+                      If you do not have value for the column, please leave it
+                      blank.
+                    </b>
+                  </li>
+                  <li>
+                    File name can be anything. Data must have to be in the{" "}
+                    <b>first sheet.</b>
+                  </li>
+                  <li>
+                    Following are<b> mandatory fields</b>, if<b> anyone </b> is
+                    missing, record will be rejected.
+                    <ul>
+                      <li>category</li>
+                      <li>full_name</li>
+                      <li>primary_mobile (has to be exact 10 digits)</li>
+                      <li>curr_city</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Following are <b>unique fields</b>
+                    <ul>
+                      <li>primary_mobile</li>
+                      <li>primary_email</li>
+                    </ul>
+                  </li>
+                  <li>
+                    If there is any duplicate value found for <b>unique</b>{" "}
+                    fields in Excel sheet or in our system database, that value
+                    will be ignored(consider blank)
+                  </li>
+                  <li>
+                    Following are accepted date formats. Columns which require
+                    date values are:<b> birth_date.</b>
+                    <ul>
+                      <li>DD.MM.YY</li>
+                      <li>DD-MM-YY</li>
+                      <li>DD/MM/YY</li>
+                      <li>DD.MM.YYYY</li>
+                      <li>DD-MM-YYYY</li>
+                      <li>DD/MM/YYYY</li>
+                      <li>YYYY.MM.DD</li>
+                      <li>YYYY-MM-DD</li>
+                      <li>YYYY/MM/DD</li>
+                      <li>
+                        For ex.
+                        <table style={tblStyl}>
+                          <tr>
+                            <td style={tblStyl}>20-10-1999</td>
+                            <td style={tblStyl}>Accepted</td>
+                          </tr>
+                          <tr>
+                            <td style={tblStyl}>1999-12-11</td>
+                            <td style={tblStyl}>Accepted</td>
+                          </tr>
+                          <tr>
+                            <td style={tblStyl}>4-10-1999</td>
+                            <td style={tblStyl}>Ignored</td>
+                          </tr>
+                          <tr>
+                            <td style={tblStyl}>4-4-1999</td>
+                            <td style={tblStyl}>Ignored</td>
+                          </tr>
+                          <tr>
+                            <td style={tblStyl}>10-4-1999</td>
+                            <td style={tblStyl}>Ignored</td>
+                          </tr>
+                          <tr>
+                            <td style={tblStyl}>1-4-99</td>
+                            <td style={tblStyl}>Ignored</td>
+                          </tr>
+                        </table>
+                      </li>
+                    </ul>
+                    <li>
+                      Colors description in bulk upload template
+                      <table style={tblStyl}>
+                        <tr>
+                          <th style={tblStyl3}>column_name</th>
+                          <td style={tblStyl}>Non mandatory column</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>column_name</th>
+                          <td style={tblStyl}>Non mandatory unique column</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl1}>column_name</th>
+                          <td style={tblStyl}>Mandatory column</td>
+                        </tr>
+                        <tr>
+                          <th style={tblStyl2}>column_name</th>
+                          <td style={tblStyl}>Mandatory unique column</td>
+                        </tr>
+                      </table>
+                    </li>
+                  </li>
+                  <li>
+                    Fields
+                    <table style={tblStyl}>
+                      <tr>
+                        <th style={tblStyl}>Field name </th>
+                        <th style={tblStyl}>Maximum length </th>
+                        <th style={tblStyl}>Mandatory</th>
+                        <th style={tblStyl}>Unique</th>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>industry</th>
+                        <td style={tblStyl}>80</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl1}>category</th>
+                        <td style={tblStyl}>80</td>
+                        <th style={tblStyl4}>Yes</th>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl1}>full_name</th>
+                        <td style={tblStyl}>100</td>
+                        <th style={tblStyl4}>Yes</th>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>birth_date</th>
+                        <td style={tblStyl}>Date</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl1}>primary_mobile</th>
+                        <td style={tblStyl}>10</td>
+                        <th style={tblStyl4}>Yes</th>
+                        <th style={tblStyl4}>Yes</th>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl1}>curr_city</th>
+                        <td style={tblStyl}>45</td>
+                        <th style={tblStyl4}>Yes</th>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>curr_pincode</th>
+                        <td style={tblStyl}>6</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>primary_email</th>
+                        <td style={tblStyl}>80</td>
+                        <td style={tblStyl}>No</td>
+                        <th style={tblStyl4}>Yes</th>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>primary_lang</th>
+                        <td style={tblStyl}>15</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>secondary_lang</th>
+                        <td style={tblStyl}>15</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>skill_1</th>
+                        <td style={tblStyl}>45</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>skill_2</th>
+                        <td style={tblStyl}>45</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>pref_location_1</th>
+                        <td style={tblStyl}>80</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>pref_location_2</th>
+                        <td style={tblStyl}>80</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>education</th>
+                        <td style={tblStyl}>50</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>exp_years</th>
+                        <td style={tblStyl}>2</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>last_company</th>
+                        <td style={tblStyl}>100</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                      <tr>
+                        <th style={tblStyl2}>designation</th>
+                        <td style={tblStyl}>80</td>
+                        <td style={tblStyl}>No</td>
+                        <td style={tblStyl}>No</td>
+                      </tr>
+                    </table>
+                  </li>
+                </ol>
+              </ListItem>
+            </Box>
+          </>
+        );
+
+      case "agent-master":
+        return (
+          <>
+            <Box sx={{ width: "100%", typography: "body1", ml: 18 }}>
+              <TabContext value={tabValue}>
+                <Box>
+                  <TabList
+                    onChange={handleChangeTab}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab label="BASIC" value="1" style={{ color: "brown" }} />
+                    <Tab label="PROFESSIONAL" value="2" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Select
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                    >
+                      <FormControlLabel
+                        value="individual"
+                        control={<Radio />}
+                        onClick={() => {
+                          setCmpyValue("individual");
+                        }}
+                        label="Individual"
+                      />
+                      <FormControlLabel
+                        value="company"
+                        control={<Radio />}
+                        onClick={() => {
+                          setCmpyValue("company");
+                        }}
+                        label="Company"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  <Box>
+                    <div>
                       <List sx={{ mb: 5 }}>
-                        <List>
-                          <b>Bank details</b>
-                        </List>
+                        <TextField
+                          required
+                          id="filled-basic"
+                          label="Agent No"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                          value={agentMasterData.agentNo}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              agentNo: e.target.value,
+                            });
+                          }}
+                        />
+
+                        {cmpyvalue === "company" ? (
+                          <>
+                            <TextField
+                              id="filled-basic"
+                              label="Company Name"
+                              type="name"
+                              value={agentMasterData.companyName}
+                              onChange={(e) => {
+                                setAgentMasterData({
+                                  ...agentMasterData,
+                                  companyName: e.target.value,
+                                });
+                              }}
+                              variant="filled"
+                              sx={{ width: "30ch", ml: 4 }}
+                            />
+                            <TextField
+                              id="filled-basic"
+                              label="GSTIN"
+                              type="name"
+                              value={agentMasterData.gstin}
+                              onChange={(e) => {
+                                setAgentMasterData({
+                                  ...agentMasterData,
+                                  gstin: e.target.value,
+                                });
+                              }}
+                              variant="filled"
+                              sx={{ width: "30ch", ml: 4 }}
+                            />
+                          </>
+                        ) : null}
+                      </List>
+                      <List>
                         <TextField
                           id="filled-basic"
-                          label="Bank name"
+                          label="Full Name"
+                          required
+                          value={agentMasterData.fullName}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              fullName: e.target.value,
+                            });
+                          }}
                           type="name"
-                          value={agentMasterData.bankName}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              bankName:e.target.value}
-                            )}}
                           variant="filled"
                           sx={{ width: "30ch" }}
                         />
                         <TextField
                           id="filled-basic"
-                          label="A/C no"
-                          type="name"
-                          value={agentMasterData.bankAc}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              bankAc:e.target.value}
-                            )}}
+                          label="Birthdate"
+                          InputLabelProps={{ shrink: true }}
+                          type="date"
+                          value={agentMasterData.dob}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              dob: e.target.value,
+                            });
+                          }}
                           variant="filled"
-                          sx={{ width: "30ch", ml: 4 }}
+                          sx={{ width: "30ch", ml: 4, mr: 4 }}
+                        />
+                      </List>
+                      <List sx={{ mb: 5, mt: 5 }}>
+                        <FormLabel id="demo-row-radio-buttons-group-label">
+                          Select
+                        </FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                        >
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Female"
+                            value={agentMasterData.gender}
+                            onChange={(e) => {
+                              setAgentMasterData({
+                                ...agentMasterData,
+                                gender: e.target.value,
+                              });
+                            }}
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Male"
+                            checked
+                            value={agentMasterData.gender}
+                            onChange={(e) => {
+                              setAgentMasterData({
+                                ...agentMasterData,
+                                gender: e.target.value,
+                              });
+                            }}
+                          />
+                          <FormControlLabel
+                            control={<Radio />}
+                            label="Other"
+                            value={agentMasterData.gender}
+                            onChange={(e) => {
+                              setAgentMasterData({
+                                ...agentMasterData,
+                                gender: e.target.value,
+                              });
+                            }}
+                          />
+                        </RadioGroup>
+                      </List>
+                      <List>
+                        <TextField
+                          id="filled-basic"
+                          label="Email"
+                          required
+                          type="email"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                          value={agentMasterData.email}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              email: e.target.value,
+                            });
+                          }}
                         />
                         <TextField
                           id="filled-basic"
-                          label="IFSC Code"
-                          type="name"
-                          value={agentMasterData.bankIfsc}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              bankIfsc:e.target.value}
-                            )}}
+                          label="Contact no"
+                          required
+                          type="number"
                           variant="filled"
-                          sx={{ width: "30ch", ml: 4 }}
-                        />
-                        <TextField
-                          id="filled-basic"
-                          label="A/C Type"
-                          type="name"
-                          value={agentMasterData.bankAcType}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              bankAcType:e.target.value}
-                            )}}
-                          variant="filled"
+                          value={agentMasterData.contactNo}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              contactNo: e.target.value,
+                            });
+                          }}
                           sx={{ width: "30ch", ml: 4 }}
                         />
                       </List>
-                      <List sx={{ mb: 5 }}>
-                        <List>
-                          <b>Professional details</b>
-                        </List>
+                      <List>
                         <TextField
                           id="filled-basic"
-                          label="Professional Status"
+                          label="Current Address"
+                          required
+                          rows={3}
+                          multiline
+                          value={agentMasterData.currAddress}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              currAddress: e.target.value,
+                            });
+                          }}
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "64ch", mt: 5, mb: 5 }}
+                        />
+                      </List>
+                      <List>
+                        <TextField
+                          id="filled-basic"
+                          label="Current pincode"
+                          required
                           type="name"
-                          value={agentMasterData.professionalStatus}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              professionalStatus:e.target.value}
-                            )}}
+                          value={agentMasterData.currZip}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              currZip: e.target.value,
+                            });
+                          }}
                           variant="filled"
                           sx={{ width: "30ch" }}
                         />
                         <TextField
                           id="filled-basic"
-                          label="Sub work location 1 "
-                          type="name"
-                          value={agentMasterData.workLocation1}
-                              onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              workLocation1:e.target.value}
-                            )}}
+                          label="Current city"
+                          required
+                          value={agentMasterData.currCity}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              currCity: e.target.value,
+                            });
+                          }}
+                          type="address"
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
                         <TextField
                           id="filled-basic"
-                          label="Sub work location 2"
+                          label="Current state"
+                          required
+                          value={agentMasterData.currState}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              currState: e.target.value,
+                            });
+                          }}
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                      </List>
+                      <List sx={{ mb: 5, mt: 5 }}>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Same as current address"
+                        />
+                      </List>
+                      <List>
+                        <TextField
+                          id="filled-basic"
+                          label="Permanent Address"
+                          required
+                          value={agentMasterData.permAddress}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              permAddress: e.target.value,
+                            });
+                          }}
+                          rows={3}
+                          multiline
+                          helperText="Must match address in one of the KYC document"
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "64ch", mb: 5 }}
+                        />
+                      </List>
+                      <List>
+                        <TextField
+                          id="filled-basic"
+                          label="Permanent pincode"
+                          required
                           type="name"
-                          value={agentMasterData.workLocation2}
-                          onChange={(e)=>{
-                                setAgentMasterData(
-                                  {...agentMasterData,
-                              workLocation2:e.target.value}
-                            )}}
+                          value={agentMasterData.permZip}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              permZip: e.target.value,
+                            });
+                          }}
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Permanent city"
+                          required
+                          value={agentMasterData.permCity}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              permCity: e.target.value,
+                            });
+                          }}
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Permanent state"
+                          required
+                          value={agentMasterData.permState}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              permState: e.target.value,
+                            });
+                          }}
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                      </List>
+                      <List sx={{ mt: 5 }}>
+                        <TextField
+                          id="filled-basic"
+                          label="Pan Card"
+                          required
+                          value={agentMasterData.panCard}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              panCard: e.target.value,
+                            });
+                          }}
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Aadhar card"
+                          required
+                          value={agentMasterData.aadharCard}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              aadharCard: e.target.value,
+                            });
+                          }}
+                          type="number"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                      </List>
+                      <List sx={{ mt: 5, mb: 5 }}>
+                        <List>
+                          <b>Languages</b>
+                        </List>
+                        <TextField
+                          id="filled-basic"
+                          label="Primary language"
+                          required
+                          value={agentMasterData.primaryLang}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              primaryLang: e.target.value,
+                            });
+                          }}
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch" }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Secondary language"
+                          required
+                          value={agentMasterData.secondaryLang}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              secondaryLang: e.target.value,
+                            });
+                          }}
+                          type="name"
+                          variant="filled"
+                          sx={{ width: "30ch", ml: 4 }}
+                        />
+                        <TextField
+                          id="filled-basic"
+                          label="Third language"
+                          required
+                          value={agentMasterData.thirdLang}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              thirdLang: e.target.value,
+                            });
+                          }}
+                          type="name"
                           variant="filled"
                           sx={{ width: "30ch", ml: 4 }}
                         />
                       </List>
                       <List>
-                        <ProfessionalTab />
+                        <TextField
+                          id="filled-basic"
+                          label="Note"
+                          rows={3}
+                          multiline
+                          value={agentMasterData.note}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              note: e.target.value,
+                            });
+                            console.log(agentMasterData.note);
+                          }}
+                          type="address"
+                          variant="filled"
+                          sx={{ width: "64ch", mb: 5 }}
+                        />
+                      </List>
+                      <List sx={{ mb: 3 }}>
+                        <FormControlLabel
+                          defaultChecked
+                          control={<Checkbox />}
+                          label="Is Active"
+                          value={agentMasterData.isActive}
+                          onChange={(e) => {
+                            setAgentMasterData({
+                              ...agentMasterData,
+                              isActive: e.target.checked,
+                            });
+                          }}
+                        />
                       </List>
                       <List>
-                        <Button onClick={()=>addAPICalls('agent-master')}
-                          style={{ color: "white", backgroundColor: "brown", marginTop: 3 }}
+                        <Button
+                          onClick={() => addAPICalls("agent-master")}
+                          style={{ color: "white", backgroundColor: "brown" }}
                         >
                           Save
                         </Button>
                       </List>
-                    </FormControl>
-                  </TabPanel>
-                </TabContext>
-              </Box>
-            </>
-          
-          );
+                    </div>
+                  </Box>
+                </TabPanel>
+                <TabPanel value="2">
+                  <FormControl>
+                    <List sx={{ mb: 5 }}>
+                      <List>
+                        <b>Bank details</b>
+                      </List>
+                      <TextField
+                        id="filled-basic"
+                        label="Bank name"
+                        type="name"
+                        value={agentMasterData.bankName}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            bankName: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch" }}
+                      />
+                      <TextField
+                        id="filled-basic"
+                        label="A/C no"
+                        type="name"
+                        value={agentMasterData.bankAc}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            bankAc: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch", ml: 4 }}
+                      />
+                      <TextField
+                        id="filled-basic"
+                        label="IFSC Code"
+                        type="name"
+                        value={agentMasterData.bankIfsc}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            bankIfsc: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch", ml: 4 }}
+                      />
+                      <TextField
+                        id="filled-basic"
+                        label="A/C Type"
+                        type="name"
+                        value={agentMasterData.bankAcType}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            bankAcType: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch", ml: 4 }}
+                      />
+                    </List>
+                    <List sx={{ mb: 5 }}>
+                      <List>
+                        <b>Professional details</b>
+                      </List>
+                      <TextField
+                        id="filled-basic"
+                        label="Professional Status"
+                        type="name"
+                        value={agentMasterData.professionalStatus}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            professionalStatus: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch" }}
+                      />
+                      <TextField
+                        id="filled-basic"
+                        label="Sub work location 1 "
+                        type="name"
+                        value={agentMasterData.workLocation1}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            workLocation1: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch", ml: 4 }}
+                      />
+                      <TextField
+                        id="filled-basic"
+                        label="Sub work location 2"
+                        type="name"
+                        value={agentMasterData.workLocation2}
+                        onChange={(e) => {
+                          setAgentMasterData({
+                            ...agentMasterData,
+                            workLocation2: e.target.value,
+                          });
+                        }}
+                        variant="filled"
+                        sx={{ width: "30ch", ml: 4 }}
+                      />
+                    </List>
+                    <List>
+                      <ProfessionalTab />
+                    </List>
+                    <List>
+                      <Button
+                        onClick={() => addAPICalls("agent-master")}
+                        style={{
+                          color: "white",
+                          backgroundColor: "brown",
+                          marginTop: 3,
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </List>
+                  </FormControl>
+                </TabPanel>
+              </TabContext>
+            </Box>
+          </>
+        );
 
-        case "agent-pricing-template":
-          return (
-            <>
-              <List
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  mr: 20,
-                  alignItems: "flex-start",
-                }}
-              >
-                <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
-                  Save
-                </Button>
-                <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>
-                  Exit
-                </Button>
+      case "agent-pricing-template":
+        return (
+          <>
+            <List
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                mr: 20,
+                alignItems: "flex-start",
+              }}
+            >
+              <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
+                Save
+              </Button>
+              <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button>
 
-                <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
-                  <h2>Total:0</h2>
-                  <li>Last modified by:</li>
-                  <li>Last modified on:</li>
-                  <li>Created by:</li>
-                  <li>Created on:</li>
-                </ul>
+              <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
+                <h2>Total:0</h2>
+                <li>Last modified by:</li>
+                <li>Last modified on:</li>
+                <li>Created by:</li>
+                <li>Created on:</li>
+              </ul>
+            </List>
+            <Box
+              sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
+            >
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Template Name"
+                  type="name"
+                  variant="filled"
+                  value={agentPricingTemplateData.templateName}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                      templateName: e.target.value,
+                    });
+                  }}
+                  sx={{ width: "30ch" }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Description"
+                  type="name"
+                  value={agentPricingTemplateData.description}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                      description: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 4 }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Approval Remarks"
+                  type="name"
+                  value={agentPricingTemplateData.approvalRemarks}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
+                      ...agentPricingTemplateData,
+                      approvalRemarks: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 4 }}
+                />
               </List>
-              <Box
-                sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
-              >
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Template Name"
-                    type="name"
-                    variant="filled"
-                    value={agentPricingTemplateData.templateName}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  value={agentPricingTemplateData.industry}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    templateName:e.target.value})}}
-                    sx={{ width: "30ch" }}
-                  />
-                  <TextField
-                    id="filled-basic"
-                    label="Description"
-                    type="name"
-                    value={agentPricingTemplateData.description}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      industry: e.target.value,
+                    });
+                  }}
+                  label="Industry"
+                  variant="outlined"
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  value={agentPricingTemplateData.category}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    description:e.target.value})}}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 4 }}
-                  />
-                  <TextField
-                    id="filled-basic"
-                    label="Approval Remarks"
-                    type="name"
-                    value={agentPricingTemplateData.approvalRemarks}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      category: e.target.value,
+                    });
+                  }}
+                  type="number"
+                  label="Category"
+                  variant="outlined"
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Education"
+                  variant="outlined"
+                  value={agentPricingTemplateData.education}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    approvalRemarks:e.target.value})}}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 4 }}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    value={agentPricingTemplateData.industry}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      education: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Full Name"
+                  variant="outlined"
+                  value={agentPricingTemplateData.fullName}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    industry:e.target.value})}}
-                    label="Industry"
-                    variant="outlined"
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    value={agentPricingTemplateData.category}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      fullName: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Birthdate"
+                  variant="outlined"
+                  value={agentPricingTemplateData.dob}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    category:e.target.value})}}
-                    type="number"
-                    label="Category"
-                    variant="outlined"
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Education"
-                    variant="outlined"
-                    value={agentPricingTemplateData.education}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      dob: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Primary language"
+                  variant="outlined"
+                  value={agentPricingTemplateData.primaryLanguage}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    education:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Full Name"
-                    variant="outlined"
-                    value={agentPricingTemplateData.fullName}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      primaryLanguage: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Secondary language"
+                  variant="outlined"
+                  value={agentPricingTemplateData.secondaryLanguage}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    fullName:e.target.value})}}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Birthdate"
-                    variant="outlined"
-                    value={agentPricingTemplateData.dob}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      secondaryLanguage: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Primary Mobile"
+                  variant="outlined"
+                  value={agentPricingTemplateData.contactNo1}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    dob:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Primary language"
-                    variant="outlined"
-                    value={agentPricingTemplateData.primaryLanguage}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      contactNo1: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Current city"
+                  variant="outlined"
+                  value={agentPricingTemplateData.currCity}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    primaryLanguage:e.target.value})}}
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Secondary language"
-                    variant="outlined"
-                    value={agentPricingTemplateData.secondaryLanguage}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      currCity: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Current pincode"
+                  variant="outlined"
+                  value={agentPricingTemplateData.currZip}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    secondaryLanguage:e.target.value})}}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Primary Mobile"
-                    variant="outlined"
-                    value={agentPricingTemplateData.contactNo1}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      currZip: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Primary Email"
+                  variant="outlined"
+                  value={agentPricingTemplateData.email1}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    contactNo1:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Current city"
-                    variant="outlined"
-                    value={agentPricingTemplateData.currCity}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      email1: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Preffered location 1"
+                  variant="outlined"
+                  value={agentPricingTemplateData.preferLocation1}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    currCity:e.target.value})}}
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Current pincode"
-                    variant="outlined"
-                    value={agentPricingTemplateData.currZip}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      preferLocation1: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Preffered location 2"
+                  variant="outlined"
+                  value={agentPricingTemplateData.preferLocation2}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    currZip:e.target.value})}}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Primary Email"
-                    variant="outlined"
-                    value={agentPricingTemplateData.email1}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      preferLocation2: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Work Exp yrs"
+                  variant="outlined"
+                  value={agentPricingTemplateData.expYears}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    email1:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Preffered location 1"
-                    variant="outlined"
-                    value={agentPricingTemplateData.preferLocation1}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      expYears: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Last company name"
+                  variant="outlined"
+                  value={agentPricingTemplateData.lastCompany}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    preferLocation1:e.target.value})}}
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Preffered location 2"
-                    variant="outlined"
-                    value={agentPricingTemplateData.preferLocation2}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      lastCompany: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Designation"
+                  variant="outlined"
+                  value={agentPricingTemplateData.designation}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    preferLocation2:e.target.value})}}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Work Exp yrs"
-                    variant="outlined"
-                    value={agentPricingTemplateData.expYears}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      designation: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <TextField
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Primary skills"
+                  variant="outlined"
+                  value={agentPricingTemplateData.skill1}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    expYears:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Last company name"
-                    variant="outlined"
-                    value={agentPricingTemplateData.lastCompany}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
+                      skill1: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  sx={{ ml: 2 }}
+                  id="outlined-basic"
+                  size="small"
+                  type="number"
+                  label="Secondary skills"
+                  variant="outlined"
+                  value={agentPricingTemplateData.skill2}
+                  onChange={(e) => {
+                    setAgentPricingTemplateData({
                       ...agentPricingTemplateData,
-                    lastCompany:e.target.value})}}
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Designation"
-                    variant="outlined"
-                    value={agentPricingTemplateData.designation}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                    designation:e.target.value})}}
-                  />
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <TextField
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Primary skills"
-                    variant="outlined"
-                    value={agentPricingTemplateData.skill1}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                    skill1:e.target.value})}}
-                  />
-                  <TextField
-                    sx={{ ml: 2 }}
-                    id="outlined-basic"
-                    size="small"
-                    type="number"
-                    label="Secondary skills"
-                    variant="outlined"
-                    value={agentPricingTemplateData.skill2}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                    skill2:e.target.value})}}
-                  />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                      value={agentPricingTemplateData.isActive}
-                    onChange={(e)=>{
-                      setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                    isActive:e.target.checked})}}
-                    />
-                  </FormGroup>
-                </List>
-                <List sx={{ mt: 4, mb: 4 }}>
-                  <Button onClick={()=>addAPICalls('agent-pricing-template')} style={{ color: "white", backgroundColor: "brown" }}>
-                    Save
-                  </Button>
-                  <Button style={{ backgroundColor: "#f5f0e4", color: "black", marginTop: "9px" }}>
-                    Exit
-                  </Button>
-                </List>
-              </Box>
-            </>
-          );
-
-        case "category":
-          return (
-            <>
-              <div
-                style={{
-                  width: "100%",
-                  typography: "body1",
-                  marginLeft: "70px",
-                }}
-              >
-                <List key={"test1"} style={{ marginBottom: "10px" }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    // key={categoryData}
-                    label="Title"
-                    name="title"
-                    value={categoryTestData.title ? categoryTestData.title : " " }
-                    type="name"
-                    variant="filled"
-                    style={{ width: "130ch" }}
+                      skill2: e.target.value,
+                    });
+                  }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={agentPricingTemplateData.isActive}
                     onChange={(e) => {
-                      setCategoryTestData({...categoryTestData,
-                        title:e.target.value});
-                      console.log(categoryTestData);
-                    }}
-                    // onChange={(e)=>{console.log(e.target.value)}}
-                  />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Description"
-                    type={"name"}
-                    variant="filled"
-                    value={categoryData.description ? categoryData.description : " "}
-                    onChange={(e) => {
-                      setCategoryData({
-                        ...categoryData,
-                        description: e.target.value,
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        isActive: e.target.checked,
                       });
                     }}
-                    style={{ width: "130ch" }}
                   />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox value={categoryData.isActive}
-                      onChange={() => {
-                        setCategoryData((prev)=>({
-                          ...prev,
-                          isActive:!categoryData.isActive
-                        }));
-                      }}/>}
-                      label="Is Active"
-                      
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  {editStatus===false?(<Button
+                </FormGroup>
+              </List>
+              <List sx={{ mt: 4, mb: 4 }}>
+                <Button
+                  onClick={() => addAPICalls("agent-pricing-template")}
+                  style={{ color: "white", backgroundColor: "brown" }}
+                >
+                  Save
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#f5f0e4",
+                    color: "black",
+                    marginTop: "9px",
+                  }}
+                >
+                  Exit
+                </Button>
+              </List>
+            </Box>
+          </>
+        );
+
+      case "category":
+        return (
+          <>
+            <div
+              style={{
+                width: "100%",
+                typography: "body1",
+                marginLeft: "70px",
+              }}
+            >
+              <List style={{ marginBottom: "10px" }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  // key={categoryData}
+                  label="Title"
+                  name="title"
+                  value={categoryTestData.title ? categoryTestData.title : " "}
+                  type="name"
+                  variant="filled"
+                  style={{ width: "130ch" }}
+                  onChange={(e) => {
+                    setCategoryTestData(e.target.value);
+                    console.log(categoryTestData);
+                  }}
+                />
+              </List>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Description"
+                  type={"name"}
+                  variant="filled"
+                  value={
+                    categoryData.description ? categoryData.description : " "
+                  }
+                  onChange={(e) => {
+                    setCategoryData({
+                      ...categoryData,
+                      description: e.target.value,
+                    });
+                  }}
+                  style={{ width: "130ch" }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={categoryData.isActive}
+                        onChange={() => {
+                          setCategoryData((prev) => ({
+                            ...prev,
+                            isActive: !categoryData.isActive,
+                          }));
+                        }}
+                      />
+                    }
+                    label="Is Active"
+                  />
+                </FormGroup>
+              </List>
+              <List>
+                {editStatus === false ? (
+                  <Button
                     onClick={() => {
                       addAPICalls("category");
-                      console.log("clicked on category");
                     }}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
-                  </Button>):(
+                  </Button>
+                ) : (
                   <Button
                     onClick={() => {
                       updateAPICalls("category");
-                      console.log("clicked on category");
                     }}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     update
-                  </Button>)}
-                </List>
-                <List sx={{ fontSize: "13px" }}>
-                  <ul>
-                    <li>Last modified by:</li>
-                    <li>Last modified on:</li>
-                    <li>Created by:</li>
-                    <li>Created On:</li>
-                  </ul>
-                </List>
-              </div>
-            </>
-          );
-
-        case "company":
-          return (
-            <>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Company Name"
-                    type="name"
-                    value={companyData.companyName}
-                    variant="filled"
-                    onChange={(e) => {
-                      setCompanyData({
-                        ...companyData,
-                        companyName: e.target.value,
-                      });
-                    }}
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Description"
-                    type="name"
-                    value={companyData.description}
-                    onChange={(e) => {
-                      setCompanyData({
-                        ...companyData,
-                        description: e.target.value,
-                      });
-                    }}
-                    variant="filled"
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Industry Name"
-                    type="name"
-                    value={companyData.industryId}
-                    onChange={(e) => {
-                      setCompanyData({
-                        ...companyData,
-                        industryId: e.target.value,
-                      });
-                    }}
-                    variant="filled"
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                      value={companyData.isActive}
-                      onChange={(e) => {
-                        setCompanyData({
-                          ...companyData,
-                          isActive: e.target.value,
-                        });
-                      }}
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  <Button
-                    onClick={() => {
-                      addAPICalls("company");
-                    }}
-                    style={{
-                      backgroundColor: "brown",
-                      color: "white",
-                      marginTop: "12px",
-                    }}
-                  >
-                    Save
                   </Button>
-                </List>
-              </Box>
-            </>
-          );
+                )}
+              </List>
+              <List sx={{ fontSize: "13px" }}>
+                <ul>
+                  <li>Last modified by:</li>
+                  <li>Last modified on:</li>
+                  <li>Created by:</li>
+                  <li>Created On:</li>
+                </ul>
+              </List>
+            </div>
+          </>
+        );
 
-        case "industry":
-          return (
-            <>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Title"
-                    type="name"
-                    value={industryData.title}
+      case "company":
+        return (
+          <>
+            <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Company Name"
+                  type="name"
+                  value={companyData.companyName }
+                  variant="filled"
+                  onChange={(e) => {
+                    setCompanyData({
+                      ...companyData,
+                      companyName: e.target.value,
+                    });
+                  }}
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Description"
+                  type="name"
+                  value={companyData.description}
+                  onChange={(e) => {
+                    setCompanyData({
+                      ...companyData,
+                      description: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Industry Name"
+                  type="name"
+                  value={companyData.industryId}
+                  onChange={(e) => {
+                    setCompanyData({
+                      ...companyData,
+                      industryId: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={companyData.isActive}
+                    onChange={(e) => {
+                      setCompanyData({
+                        ...companyData,
+                        isActive: e.target.value,
+                      });
+                    }}
+                  />
+                </FormGroup>
+              </List>
+              <List>
+                {editStatus === false?(<Button
+                  onClick={() => {
+                    addAPICalls("company");
+                  }}
+                  style={{
+                    backgroundColor: "brown",
+                    color: "white",
+                    marginTop: "12px",
+                  }}
+                >
+                  Save
+                </Button>):(
+                <Button
+                  onClick={() => {
+                    updateAPICalls("company");
+                  }}
+                  style={{
+                    backgroundColor: "brown",
+                    color: "white",
+                    marginTop: "12px",
+                  }}
+                >
+                  Update
+                </Button>)}
+              </List>
+            </Box>
+          </>
+        );
+
+      case "industry":
+        return (
+          <>
+            <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Title"
+                  type="name"
+                  value={industryData.title}
+                  onChange={(e) => {
+                    setIndustryData({
+                      ...industryData,
+                      title: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Description"
+                  type="name"
+                  value={industryData.description}
+                  onChange={(e) => {
+                    setIndustryData({
+                      ...industryData,
+                      description: e.target.value,
+                    });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={industryData.isActive}
                     onChange={(e) => {
                       setIndustryData({
                         ...industryData,
-                        title: e.target.value,
+                        isActive: e.target.checked,
                       });
                     }}
-                    variant="filled"
-                    sx={{ width: "130ch" }}
                   />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Description"
-                    type="name"
-                    value={industryData.description}
-                    onChange={(e) => {
-                      setIndustryData({
-                        ...industryData,
-                        description: e.target.value,
-                      });
-                    }}
-                    variant="filled"
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                      value={industryData.isActive}
-                      onChange={(e) => {
-                        setIndustryData({
-                          ...industryData,
-                          isActive: e.target.checked,
-                        });
-                      }}
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  <Button
-                    onClick={() => addAPICalls("industry")}
-                    style={{ backgroundColor: "brown", color: "white" }}
-                  >
-                    Save
-                  </Button>
-                </List>
-              </Box>
-            </>
-          );
+                </FormGroup>
+              </List>
+              <List>
+                <Button
+                  onClick={() => addAPICalls("industry")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  Save
+                </Button>
+              </List>
+            </Box>
+          </>
+        );
 
-        case "role":
-          return (
-            <>
-              {Object.keys(permissions).map((item, i) => (
-                <>
-                  <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                    <List sx={{ mb: 5 }}>
-                      <TextField
-                        required
-                        id="filled-basic"
-                        label="Title"
-                        type="name"
-                        variant="filled"
-                        value={roleData.name}
-                        onChange={(e) => {
-                          setRoleData({ ...roleData, name: e.target.value });
-                        }}
-                        sx={{ width: "130ch" }}
-                      />
-                    </List>
-                    <List sx={{ mb: 5 }}>
-                      <TextField
-                        id="filled-basic"
-                        label="Description"
-                        type="name"
-                        variant="filled"
-                        value={roleData.description}
-                        onChange={(e) => {
-                          setRoleData({
-                            ...roleData,
-                            description: e.target.value,
-                          });
-                        }}
-                        sx={{ width: "130ch" }}
-                      />
-                    </List>
-                    <List>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={<Checkbox defaultChecked />}
-                          label="Is Active"
-                        />
-                      </FormGroup>
-                    </List>
-                    <List>
-                      <List>
-                        <b>Permissions Section</b>
-                        <p style={{ color: "brown" }}>
-                          {permissions[item].group}
-                        </p>
-                      </List>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>
-                        Admin-Candidate Upload Batch
-                      </p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Change Pricing Template"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Approval"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>
-                        Admin-Candidate Verification
-                      </p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>
-                        Admin-Other Industry Category
-                      </p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Admin-User</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Reset Password"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Agent</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Change Password"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Agent Pricing Template</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Set Active"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Batch Priority</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Candidate</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Candidate - Basic</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Bulk Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Upload profile image"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>
-                        Candidate - Certification
-                      </p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Candidate - Work History</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Candidate Upload Batch</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Candidate Verification</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Category</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Company</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Customer</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Reset password"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Customer - Subscription</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Industry</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Permission</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Public</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox defaultChecked />}
-                          disabled
-                          label="User - Login"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Role</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Skill</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>Subscription</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Read All"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Create"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                      </FormGroup>
-                      <p style={{ color: "brown" }}>User</p>
-                      <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-                        <FormControlLabel control={<Checkbox />} label="Read" />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Update"
-                        />
-                        <FormControlLabel
-                          control={<Checkbox />}
-                          label="Change password"
-                        />
-                      </FormGroup>
-                    </List>
-                    <List>
-                      <Button
-                        style={{ backgroundColor: "brown", color: "white" }}
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        style={{
-                          marginLeft: 2,
-                          backgroundColor: "black",
-                          color: "white",
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </List>
-                  </Box>
-                </>
-              ))}
-            </>
-          );
-
-        case "skillset":
-          return (
-            <>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Title"
-                    type="name"
-                    variant="filled"
-                    value={skillSet.title}
-                    onChange={(e) => {
-                      setSkillSet({ ...skillSet, title: e.target.value });
-                    }}
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List sx={{ mb: 5 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Description"
-                    type="name"
-                    value={skillSet.description}
-                    onChange={(e) => {
-                      setSkillSet({ ...skillSet, description: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "130ch" }}
-                  />
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                      value={skillSet.isActive}
-                      onChange={(e) => {
-                        setSkillSet({
-                          ...skillSet,
-                          isActive: e.target.checked,
-                        });
-                      }}
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  <Button
-                    onClick={() => addAPICalls("skillset")}
-                    style={{ backgroundColor: "brown", color: "white" }}
-                  >
-                    Save
-                  </Button>
-                </List>
-              </Box>
-            </>
-          );
-
-        case "subscription":
-          return (
-            <>
-              <Box sx={{ display: "flex" }}>
-                <Box sx={{ justifyContent: "start", ml: 17, mt: 2 }}>
-                  <List>
+      case "role":
+        return (
+          <>
+            {Object.keys(permissions).map((item, i) => (
+              <>
+                <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                  <List sx={{ mb: 5 }}>
                     <TextField
+                      required
                       id="filled-basic"
-                      label="Plan Name"
+                      label="Title"
+                      type="name"
                       variant="filled"
-                      value={subscription.planName}
+                      value={roleData.name}
                       onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
-                          planName: e.target.value,
-                        });
+                        setRoleData({ ...roleData, name: e.target.value });
                       }}
-                      sx={{ width: "80ch" }}
+                      sx={{ width: "130ch" }}
                     />
                   </List>
-                  <List sx={{ mt: 4, mb: 4 }}>
+                  <List sx={{ mb: 5 }}>
                     <TextField
                       id="filled-basic"
-                      label="Data Count"
+                      label="Description"
+                      type="name"
                       variant="filled"
-                      value={subscription.dataCount}
+                      value={roleData.description}
                       onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
-                          dataCount: e.target.value,
+                        setRoleData({
+                          ...roleData,
+                          description: e.target.value,
                         });
                       }}
-                      sx={{ width: "40ch" }}
-                    />
-                    <TextField
-                      id="filled-basic"
-                      label="Duration in months"
-                      variant="filled"
-                      value={subscription.durationMonths}
-                      onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
-                          durationMonths: e.target.value,
-                        });
-                      }}
-                      sx={{ width: "40ch", ml: 3 }}
-                    />
-                    <TextField
-                      id="filled-basic"
-                      label="Price"
-                      value={subscription.price}
-                      onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
-                          price: e.target.value,
-                        });
-                      }}
-                      variant="filled"
-                      sx={{ width: "40ch", ml: 3 }}
-                    />
-                  </List>
-                  <List>
-                    <TextField
-                      id="filled-basic"
-                      label="Note"
-                      value={subscription.note}
-                      onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
-                          note: e.target.value,
-                        });
-                      }}
-                      variant="filled"
-                      sx={{ width: "126ch", mb: 4 }}
+                      sx={{ width: "130ch" }}
                     />
                   </List>
                   <List>
@@ -4787,316 +4395,432 @@ const ContentLogic = (props) => {
                       <FormControlLabel
                         control={<Checkbox defaultChecked />}
                         label="Is Active"
-                        value={subscription.isActive}
-                        onChange={(e) => {
-                          setSubscription({
-                            ...subscription,
-                            isActive: e.target.checked,
-                          });
-                        }}
+                      />
+                    </FormGroup>
+                  </List>
+                  <List>
+                    <List>
+                      <b>Permissions Section</b>
+                      <p style={{ color: "brown" }}>
+                        {permissions[item].group}
+                      </p>
+                    </List>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>
+                      Admin-Candidate Upload Batch
+                    </p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Change Pricing Template"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Approval"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>
+                      Admin-Candidate Verification
+                    </p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>
+                      Admin-Other Industry Category
+                    </p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Admin-User</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Reset Password"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Agent</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Change Password"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Agent Pricing Template</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Set Active"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Batch Priority</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate - Basic</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Bulk Create"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Upload profile image"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate - Certification</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate - Work History</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate Upload Batch</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Candidate Verification</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Category</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Company</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Customer</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Reset password"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Customer - Subscription</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Industry</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Permission</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Public</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        disabled
+                        label="User - Login"
+                      />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Role</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Skill</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>Subscription</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Read All"
+                      />
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Create" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                    </FormGroup>
+                    <p style={{ color: "brown" }}>User</p>
+                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                      <FormControlLabel control={<Checkbox />} label="Read" />
+                      <FormControlLabel control={<Checkbox />} label="Update" />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Change password"
                       />
                     </FormGroup>
                   </List>
                   <List>
                     <Button
-                      onClick={() => addAPICalls("subscription")}
-                      style={{ color: "white", backgroundColor: "brown" }}
+                      style={{ backgroundColor: "brown", color: "white" }}
                     >
                       Save
                     </Button>
+                    <Button
+                      style={{
+                        marginLeft: 2,
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                    >
+                      Cancel
+                    </Button>
                   </List>
                 </Box>
-              </Box>
-            </>
-          );
+              </>
+            ))}
+          </>
+        );
 
-        case "user":
-          return (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flexWrap: "nowrap",
-                  alignContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <List>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Full Name"
-                    variant="filled"
-                    value={userData.fullName}
+      case "skillset":
+        return (
+          <>
+            <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Title"
+                  type="name"
+                  variant="filled"
+                  value={skillSet.title}
+                  onChange={(e) => {
+                    setSkillSet({ ...skillSet, title: e.target.value });
+                  }}
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List sx={{ mb: 5 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Description"
+                  type="name"
+                  value={skillSet.description}
+                  onChange={(e) => {
+                    setSkillSet({ ...skillSet, description: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch" }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={skillSet.isActive}
                     onChange={(e) => {
-                      setUserData({ ...userData, fullName: e.target.value });
+                      setSkillSet({
+                        ...skillSet,
+                        isActive: e.target.checked,
+                      });
                     }}
-                    sx={{ width: "40ch" }}
                   />
-                  <TextField
-                    type="date"
-                    id="filled-basic"
-                    label="Birthdate"
-                    value={userData.dob}
-                    onChange={(e) => {
-                      setUserData({ ...userData, dob: e.target.value });
-                    }}
-                    variant="filled"
-                    InputLabelProps={{ shrink: true }}
-                    sx={{ width: "40ch", ml: 3 }}
-                  />
-                  <TextField
-                    select
-                    id="filled-basic"
-                    label="Gender"
-                    value={userData.gender}
-                    onChange={(e) => {
-                      setUserData({ ...userData, gender: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 3 }}
-                  >
-                    {gender.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </List>
-                <List sx={{ mb: 4, mt: 4 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Email"
-                    variant="filled"
-                    value={userData.email}
-                    onChange={(e) => {
-                      setUserData({ ...userData, email: e.target.value });
-                    }}
-                    sx={{ width: "40ch" }}
-                  />
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Contact no"
-                    value={userData.contactNo}
-                    onChange={(e) => {
-                      setUserData({ ...userData, contactNo: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 3 }}
-                  />
-                  <TextField
-                    required
-                    select
-                    id="filled-basic"
-                    label="Role"
-                    value={userData.roleId}
-                    onChange={(e) => {
-                      setUserData({ ...userData, roleId: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 3 }}
-                  >
-                    {role.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </List>
-              </Box>
-              <Box sx={{ ml: 17 }}>
-                <List>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Current Address"
-                    variant="filled"
-                    value={userData.currAddress}
-                    onChange={(e) => {
-                      setUserData({ ...userData, currAddress: e.target.value });
-                    }}
-                    multiline
-                    rows={4}
-                    sx={{ width: "100ch" }}
-                  />
-                </List>
-                <List sx={{ mb: 4, mt: 4 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Current pincode"
-                    variant="filled"
-                    value={userData.currZip}
-                    onChange={(e) => {
-                      setUserData({ ...userData, currZip: e.target.value });
-                    }}
-                    sx={{ width: "40ch" }}
-                  />
-                  <TextField
-                    id="filled-basic"
-                    label="Current city"
-                    variant="filled"
-                    value={userData.currCity}
-                    onChange={(e) => {
-                      setUserData({ ...userData, currCity: e.target.value });
-                    }}
-                    sx={{ width: "40ch", ml: 3 }}
-                  />
-                  <TextField
-                    select
-                    id="filled-basic"
-                    label="Current State"
-                    value={userData.currState}
-                    onChange={(e) => {
-                      setUserData({ ...userData, currState: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "40ch", ml: 3 }}
-                  >
-                    {states.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </List>
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Same as current address"
-                    />
-                  </FormGroup>
-                </List>
-                <List sx={{ mb: 4, mt: 4 }}>
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Permanent Address"
-                    variant="filled"
-                    value={userData.permAddress}
-                    onChange={(e) => {
-                      setUserData({ ...userData, permAddress: e.target.value });
-                    }}
-                    multiline
-                    rows={4}
-                    sx={{ width: "100ch" }}
-                  />
-                </List>
+                </FormGroup>
+              </List>
+              <List>
+                <Button
+                  onClick={() => addAPICalls("skillset")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  Save
+                </Button>
+              </List>
+            </Box>
+          </>
+        );
+
+      case "subscription":
+        return (
+          <>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ justifyContent: "start", ml: 17, mt: 2 }}>
                 <List>
                   <TextField
                     id="filled-basic"
-                    label="Permanent pincode"
-                    value={userData.permZip}
-                    onChange={(e) => {
-                      setUserData({ ...userData, permZip: e.target.value });
-                    }}
+                    label="Plan Name"
                     variant="filled"
-                    sx={{ width: "40ch" }}
-                  />
-                  <TextField
-                    id="filled-basic"
-                    label="Permanent city"
-                    variant="filled"
-                    value={userData.permCity}
+                    value={subscription.planName}
                     onChange={(e) => {
-                      setUserData({ ...userData, permCity: e.target.value });
+                      setSubscription({
+                        ...subscription,
+                        planName: e.target.value,
+                      });
                     }}
-                    sx={{ width: "40ch", ml: 3 }}
-                  />
-                  <TextField
-                    required
-                    select
-                    id="filled-basic"
-                    label="Permanent State"
-                    variant="filled"
-                    value={userData.permState}
-                    onChange={(e) => {
-                      setUserData({ ...userData, permState: e.target.value });
-                    }}
-                    sx={{ width: "40ch", ml: 3 }}
-                  >
-                    {states.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </List>
-                <List sx={{ mb: 4, mt: 4 }}>
-                  <TextField
-                    id="filled-basic"
-                    label="Pan card"
-                    value={userData.panCard}
-                    onChange={(e) => {
-                      setUserData({ ...userData, panCard: e.target.value });
-                    }}
-                    variant="filled"
-                    sx={{ width: "40ch" }}
-                  />
-                  <TextField
-                    id="filled-basic"
-                    label="Aadhar card"
-                    variant="filled"
-                    value={userData.aadharCard}
-                    onChange={(e) => {
-                      setUserData({ ...userData, aadharCard: e.target.value });
-                    }}
-                    sx={{ width: "40ch", ml: 3 }}
+                    sx={{ width: "80ch" }}
                   />
                 </List>
-                <List>
-                  <List>
-                    <p>Languages</p>
-                  </List>
+                <List sx={{ mt: 4, mb: 4 }}>
                   <TextField
                     id="filled-basic"
-                    label="Primary Language"
+                    label="Data Count"
                     variant="filled"
-                    value={userData.primaryLang}
+                    value={subscription.dataCount}
                     onChange={(e) => {
-                      setUserData({ ...userData, primaryLang: e.target.value });
+                      setSubscription({
+                        ...subscription,
+                        dataCount: e.target.value,
+                      });
                     }}
                     sx={{ width: "40ch" }}
                   />
                   <TextField
                     id="filled-basic"
-                    label="Secondary Language"
+                    label="Duration in months"
                     variant="filled"
-                    value={userData.secondaryLang}
+                    value={subscription.durationMonths}
                     onChange={(e) => {
-                      setUserData({
-                        ...userData,
-                        secondaryLang: e.target.value,
+                      setSubscription({
+                        ...subscription,
+                        durationMonths: e.target.value,
                       });
                     }}
                     sx={{ width: "40ch", ml: 3 }}
                   />
                   <TextField
                     id="filled-basic"
-                    label="Third Language"
-                    variant="filled"
-                    value={userData.thirdLang}
+                    label="Price"
+                    value={subscription.price}
                     onChange={(e) => {
-                      setUserData({ ...userData, thirdLang: e.target.value });
+                      setSubscription({
+                        ...subscription,
+                        price: e.target.value,
+                      });
                     }}
+                    variant="filled"
                     sx={{ width: "40ch", ml: 3 }}
                   />
                 </List>
-                <List sx={{ mb: 4, mt: 4 }}>
+                <List>
                   <TextField
-                    required
                     id="filled-basic"
                     label="Note"
-                    variant="filled"
-                    value={userData.note}
+                    value={subscription.note}
                     onChange={(e) => {
-                      setUserData({ ...userData, note: e.target.value });
+                      setSubscription({
+                        ...subscription,
+                        note: e.target.value,
+                      });
                     }}
-                    multiline
-                    rows={4}
-                    sx={{ width: "100ch" }}
+                    variant="filled"
+                    sx={{ width: "126ch", mb: 4 }}
                   />
                 </List>
                 <List>
@@ -5104,53 +4828,367 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
-                      value={userData.isActive}
+                      value={subscription.isActive}
                       onChange={(e) => {
-                        setUserData({ ...userData, isActive: e.target.value });
+                        setSubscription({
+                          ...subscription,
+                          isActive: e.target.checked,
+                        });
                       }}
                     />
                   </FormGroup>
                 </List>
-                <List sx={{ mb: 4, mt: 4 }}>
+                <List>
                   <Button
-                    onClick={() => addAPICalls("user")}
-                    style={{ backgroundColor: "brown", color: "white" }}
+                    onClick={() => addAPICalls("subscription")}
+                    style={{ color: "white", backgroundColor: "brown" }}
                   >
                     Save
                   </Button>
                 </List>
               </Box>
-            </>
-          );
-        default:
-          break;
-      }
-    };
-    //multi select value for the select field of batch priority
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-        },
-      },
-    };
-   
-    // used to select multiple value from select field for batch priority module
-    const [personName, setPersonName] = useState([])
-    const handleChangeValueOfBatch = (event) => {
-      const {
-        target: { value },
-      } = event;
-      setPersonName(
-        // On autofill we get a stringified value.
-        typeof value === value.split(','),
-      );
-    };
+            </Box>
+          </>
+        );
 
-  const Test1=()=>{
+      case "user":
+        return (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "nowrap",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <List>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Full Name"
+                  variant="filled"
+                  value={userData.fullName}
+                  onChange={(e) => {
+                    setUserData({ ...userData, fullName: e.target.value });
+                  }}
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  type="date"
+                  id="filled-basic"
+                  label="Birthdate"
+                  value={userData.dob}
+                  onChange={(e) => {
+                    setUserData({ ...userData, dob: e.target.value });
+                  }}
+                  variant="filled"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+                <TextField
+                  select
+                  id="filled-basic"
+                  label="Gender"
+                  value={userData.gender}
+                  onChange={(e) => {
+                    setUserData({ ...userData, gender: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 3 }}
+                >
+                  {gender.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Email"
+                  variant="filled"
+                  value={userData.email}
+                  onChange={(e) => {
+                    setUserData({ ...userData, email: e.target.value });
+                  }}
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Contact no"
+                  value={userData.contactNo}
+                  onChange={(e) => {
+                    setUserData({ ...userData, contactNo: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+                <TextField
+                  required
+                  select
+                  id="filled-basic"
+                  label="Role"
+                  value={userData.roleId}
+                  onChange={(e) => {
+                    setUserData({ ...userData, roleId: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 3 }}
+                >
+                  {role.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </List>
+            </Box>
+            <Box sx={{ ml: 17 }}>
+              <List>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Current Address"
+                  variant="filled"
+                  value={userData.currAddress}
+                  onChange={(e) => {
+                    setUserData({ ...userData, currAddress: e.target.value });
+                  }}
+                  multiline
+                  rows={4}
+                  sx={{ width: "100ch" }}
+                />
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Current pincode"
+                  variant="filled"
+                  value={userData.currZip}
+                  onChange={(e) => {
+                    setUserData({ ...userData, currZip: e.target.value });
+                  }}
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Current city"
+                  variant="filled"
+                  value={userData.currCity}
+                  onChange={(e) => {
+                    setUserData({ ...userData, currCity: e.target.value });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+                <TextField
+                  select
+                  id="filled-basic"
+                  label="Current State"
+                  value={userData.currState}
+                  onChange={(e) => {
+                    setUserData({ ...userData, currState: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch", ml: 3 }}
+                >
+                  {states.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label="Same as current address"
+                  />
+                </FormGroup>
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Permanent Address"
+                  variant="filled"
+                  value={userData.permAddress}
+                  onChange={(e) => {
+                    setUserData({ ...userData, permAddress: e.target.value });
+                  }}
+                  multiline
+                  rows={4}
+                  sx={{ width: "100ch" }}
+                />
+              </List>
+              <List>
+                <TextField
+                  id="filled-basic"
+                  label="Permanent pincode"
+                  value={userData.permZip}
+                  onChange={(e) => {
+                    setUserData({ ...userData, permZip: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Permanent city"
+                  variant="filled"
+                  value={userData.permCity}
+                  onChange={(e) => {
+                    setUserData({ ...userData, permCity: e.target.value });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+                <TextField
+                  required
+                  select
+                  id="filled-basic"
+                  label="Permanent State"
+                  variant="filled"
+                  value={userData.permState}
+                  onChange={(e) => {
+                    setUserData({ ...userData, permState: e.target.value });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                >
+                  {states.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <TextField
+                  id="filled-basic"
+                  label="Pan card"
+                  value={userData.panCard}
+                  onChange={(e) => {
+                    setUserData({ ...userData, panCard: e.target.value });
+                  }}
+                  variant="filled"
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Aadhar card"
+                  variant="filled"
+                  value={userData.aadharCard}
+                  onChange={(e) => {
+                    setUserData({ ...userData, aadharCard: e.target.value });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+              </List>
+              <List>
+                <List>
+                  <p>Languages</p>
+                </List>
+                <TextField
+                  id="filled-basic"
+                  label="Primary Language"
+                  variant="filled"
+                  value={userData.primaryLang}
+                  onChange={(e) => {
+                    setUserData({ ...userData, primaryLang: e.target.value });
+                  }}
+                  sx={{ width: "40ch" }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Secondary Language"
+                  variant="filled"
+                  value={userData.secondaryLang}
+                  onChange={(e) => {
+                    setUserData({
+                      ...userData,
+                      secondaryLang: e.target.value,
+                    });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+                <TextField
+                  id="filled-basic"
+                  label="Third Language"
+                  variant="filled"
+                  value={userData.thirdLang}
+                  onChange={(e) => {
+                    setUserData({ ...userData, thirdLang: e.target.value });
+                  }}
+                  sx={{ width: "40ch", ml: 3 }}
+                />
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <TextField
+                  required
+                  id="filled-basic"
+                  label="Note"
+                  variant="filled"
+                  value={userData.note}
+                  onChange={(e) => {
+                    setUserData({ ...userData, note: e.target.value });
+                  }}
+                  multiline
+                  rows={4}
+                  sx={{ width: "100ch" }}
+                />
+              </List>
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={userData.isActive}
+                    onChange={(e) => {
+                      setUserData({ ...userData, isActive: e.target.value });
+                    }}
+                  />
+                </FormGroup>
+              </List>
+              <List sx={{ mb: 4, mt: 4 }}>
+                <Button
+                  onClick={() => addAPICalls("user")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  Save
+                </Button>
+              </List>
+            </Box>
+          </>
+        );
+      default:
+        break;
+    }
+  }
+  //multi select value for the select field of batch priority
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+  const handleChangeValueOfBatch = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setBatchNo(
+      // On autofill we get a stringified value.
+      typeof value === value.split(",")
+    );
+  };
+
+  const EnhancedTableToolbar = () => {
     return (
       <Toolbar
         sx={{
@@ -5180,16 +5218,23 @@ const ContentLogic = (props) => {
             variant="h6"
             id="tableTitle"
             component="div"
-          >     
-          
+          >
             <h2>{pageTitle}</h2>
-            <Stack spacing={2} sx={{ width: '100%' }}>
-          <Snackbar open={openAlertMsg} autoHideDuration={6000} onClose={()=>setOpenAlertMsg(false)}>
-            <Alert onClose={()=>setOpenAlertMsg(false)} severity="success" sx={{ width: '100%' }}>
-              Data successfully inserted!
-            </Alert>
-          </Snackbar>
-        </Stack>
+            <Stack spacing={2} sx={{ width: "100%" }}>
+              <Snackbar
+                open={openAlertMsg}
+                autoHideDuration={6000}
+                onClose={() => setOpenAlertMsg(false)}
+              >
+                <Alert
+                  onClose={() => setOpenAlertMsg(false)}
+                  severity="success"
+                  sx={{ width: "100%" }}
+                >
+                  Data successfully inserted!
+                </Alert>
+              </Snackbar>
+            </Stack>
             {renderDesign()}
           </Typography>
         )}
@@ -5221,7 +5266,7 @@ const ContentLogic = (props) => {
             >
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
-            {!editStatus?modalTitle:`Edit Record`}
+            {!editStatus ? modalTitle : `Edit Record`}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
           <DialogContent>{handlerModuleInputs()}</DialogContent>
@@ -5309,51 +5354,69 @@ const ContentLogic = (props) => {
 
           <DialogContent>
             <List sx={{ mb: 3 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Batch no</InputLabel>
+              <InputLabel id="demo-multiple-checkbox-label">
+                Batch no
+              </InputLabel>
               <Select
                 Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 fullWidth
-                value={personName}
+                value={batchNo}
                 variant="filled"
                 onChange={handleChangeValueOfBatch}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(', ')}
+                renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
-                 {tblData.map((item) => (
-            <MenuItem key={item} value={item}>
-              <ListItemText primary={item} />
-            </MenuItem>
-          ))}
+                {tblData.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
-
             </List>
             <List>
-              <InputLabel id="demo-multiple-checkbox-label">Assigned To</InputLabel>
+              <InputLabel id="demo-multiple-checkbox-label">
+                Assigned To
+              </InputLabel>
               <Select
                 Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 multiple
                 fullWidth
-                value={personName}
+                value={batchNo}
                 variant="filled"
                 onChange={handleChangeValueOfBatch}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(', ')}
+                renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
-                
               >
-                 {Object.keys(tblDataCount).map((item, i) => (
-            <MenuItem key={tblDataCount[item].fullName+" - "+tblDataCount[item].role} value={tblDataCount[item].fullName+" - "+tblDataCount[item].role}>
-              <CheckBox checked={tblDataCount.indexOf(item) > -1} />
-              <ListItemText primary={tblDataCount[item].fullName+" - "+tblDataCount[item].role} />
-            </MenuItem>
-          ))}
+                {Object.keys(tblDataCount).map((item, i) => (
+                  <MenuItem
+                    key={
+                      tblDataCount[item].fullName +
+                      " - " +
+                      tblDataCount[item].role
+                    }
+                    value={
+                      tblDataCount[item].fullName +
+                      " - " +
+                      tblDataCount[item].role
+                    }
+                  >
+                    <CheckBox checked={tblDataCount.indexOf(item) > -1} />
+                    <ListItemText
+                      primary={
+                        tblDataCount[item].fullName +
+                        " - " +
+                        tblDataCount[item].role
+                      }
+                    />
+                  </MenuItem>
+                ))}
               </Select>
-
             </List>
           </DialogContent>
           <DialogActions>
@@ -5363,11 +5426,11 @@ const ContentLogic = (props) => {
         </Dialog>
       </Toolbar>
     );
-   }
+  };
 
   // EnhancedTableToolbar.propTypes = {
   //   numSelected: PropTypes.number.isRequired,
-    
+
   // };
 
   const handleRequestSort = (event, property) => {
@@ -5436,7 +5499,6 @@ const ContentLogic = (props) => {
     rows,
     createData,
     Transition,
-    headCells,
     getComparator,
     descendingComparator,
     handleChangeRowsPerPage,
@@ -5446,7 +5508,7 @@ const ContentLogic = (props) => {
     handleClick,
     handleChangeDense,
     isSelected,
-    // EnhancedTableToolbar,
+    EnhancedTableToolbar,
     stableSort,
     EnhancedTableHead,
     emptyRows,
@@ -5477,9 +5539,7 @@ const ContentLogic = (props) => {
     setEditId,
     editId,
     setEditStatus,
-    // EnhancedTableToolbar,
-    Test1,
-    setCategoryData
+    setCategoryData,
   };
 
   return StateContainer;

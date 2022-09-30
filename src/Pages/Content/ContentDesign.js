@@ -59,7 +59,6 @@ export default function ContentDesign(props) {
     setEditStatus,
     editId,
     setCategoryData,
-    Test1
   } = ContentLogic();
 
   useEffect(() => {
@@ -678,13 +677,11 @@ export default function ContentDesign(props) {
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <Test1
-        //  numSelected={selected.length} 
+        <EnhancedTableToolbar
          />
         <Backdrop
         sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}
-        // onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>

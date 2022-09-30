@@ -5251,8 +5251,7 @@ const ContentLogic = (props) => {
         <Dialog
           // style={{ marginTop: "-70px" }}
           // className={classes.root}
-          disableAutoFocus={true}
-          fullScreen={true}
+          fullScreen
           open={openModal}
           onClose={handleClose}
           TransitionComponent={Transition}
@@ -5269,7 +5268,9 @@ const ContentLogic = (props) => {
             {!editStatus ? modalTitle : `Edit Record`}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-          <DialogContent>{handlerModuleInputs()}</DialogContent>
+          <DialogContent>
+            {handlerModuleInputs()}
+            </DialogContent>
         </Dialog>
         {/* admin candidate upload batch modal */}
         <Dialog
@@ -5540,6 +5541,7 @@ const ContentLogic = (props) => {
     editId,
     setEditStatus,
     setCategoryData,
+    setCompanyData
   };
 
   return StateContainer;

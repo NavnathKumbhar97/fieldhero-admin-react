@@ -59,6 +59,7 @@ export default function ContentDesign(props) {
     setEditStatus,
     editId,
     setCategoryData,
+    setCompanyData
   } = ContentLogic();
 
   useEffect(() => {
@@ -393,7 +394,11 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onClick={()=>{
+                  setEditId(tblData[item].id);
+                  setEditStatus(true)
+                  setCompanyData(tblData[item])
+                  console.log(editId);}}/>
                   </TableCell>
                   <TableCell
                     component="th"

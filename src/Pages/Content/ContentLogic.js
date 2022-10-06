@@ -1,4 +1,4 @@
-import { forwardRef, React, useState } from "react";
+import { forwardRef, React, useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -74,6 +74,8 @@ const ContentLogic = (props) => {
   const [tblDataCount, setTblDataCount] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [numSelected] = useState([]);
+
+
   const [id, setId] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -136,7 +138,8 @@ const ContentLogic = (props) => {
     companyName: " ",
     description: "",
     isActive: true,
-    industryId: "",
+    industry: "",
+    title:''
   });
 
   //state for store the input fields value of industry
@@ -150,12 +153,12 @@ const ContentLogic = (props) => {
     description: "",
     isActive: true,
   });
-  const [skillSet, setSkillSet] = useState({
+  const [skillSetData, setSkillSetData] = useState({
     title: "",
     description: "",
     isActive: true,
   });
-  const [subscription, setSubscription] = useState({
+  const [subscriptionData, setSubscriptionData] = useState({
     planName: "",
     dataCount: 1,
     durationMonths: 12,
@@ -1288,6 +1291,29 @@ const ContentLogic = (props) => {
     }
   };
 
+  const getCompanyAPIcallById =()=>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/companies/${editId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCompanyData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log("batch priority",companyData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -1673,7 +1699,7 @@ const ContentLogic = (props) => {
         break;
       case "skillset":
         handler
-          .dataPost(`/v1/skills`, skillSet, {
+          .dataPost(`/v1/skills`, skillSetData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
@@ -1695,7 +1721,7 @@ const ContentLogic = (props) => {
         break;
       case "subscription":
         handler
-          .dataPost(`/v1/subscriptions`, subscription, {
+          .dataPost(`/v1/subscriptions`, subscriptionData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
@@ -1743,6 +1769,7 @@ const ContentLogic = (props) => {
     }
   };
 
+  // update the record 
   const updateAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -1763,10 +1790,11 @@ const ContentLogic = (props) => {
           )
           .then((response) => {
             console.log(response);
-            if (response.status == 201) {
+            if (response.status == 204) {
               console.log(response.data.message);
-              getCategoryAPIcall();
               setOpenAlertMsg(true);
+              setOpenModal(false)
+              getCategoryAPIcall();
             } else {
               window.alert(response.data.message);
             }
@@ -1785,7 +1813,7 @@ const ContentLogic = (props) => {
         };
         handler
           .dataPut(
-            `/v1/companies/${updateCompanyData.id}`,
+            `/v1/companies/:${updateCompanyData.id}`,
             updateCompanyData,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -1793,10 +1821,11 @@ const ContentLogic = (props) => {
           )
           .then((response) => {
             console.log(response);
-            if (response.status == 201) {
+            if (response.status == 204) {
               console.log(response.data.message);
-              getCategoryAPIcall();
+              setOpenModal(false)
               setOpenAlertMsg(true);
+              getCategoryAPIcall();
             } else {
               window.alert(response.data.message);
             }
@@ -1808,8 +1837,74 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateCompanyAPICall", error);
           });
         break;
+      case "industry":
+          let updateIndustryData = {
+            ...industryData,
+            id: editId,
+          };
+          handler
+            .dataPut(
+              `/v1/industries/:${updateIndustryData.id}`,
+              updateIndustryData,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              if (response.status == 204) {
+                console.log(response.data.message);
+                setOpenModal(false)
+                setOpenAlertMsg(true);
+                getCategoryAPIcall();
+              } else {
+                window.alert(response.data.message);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                window.alert(error.data.message);
+              }
+              console.error("There was an error!- updateCompanyAPICall", error);
+            });
+          break;
+      case "skillset":
+        let updateSkillsetData = {
+          ...skillSetData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/skills/:${updateSkillsetData.id}`,
+            updateSkillsetData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenModal(false)
+              setOpenAlertMsg(true);
+              getSkillSetAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateSkillsetAPICall", error);
+          });
+        break;
     }
+
   };
+  // const onChangeVal = useCallback((value) => {
+  //   setCategoryData(value)
+  // }, [categoryData]) 
 
   const handleClickOpenAddBtchprty = () => {
     setOpenAddBtchprty(true);
@@ -1831,6 +1926,7 @@ const ContentLogic = (props) => {
     setTabValue(newValue);
   };
 
+  // used to handle child modal of candidate master module modal to insert certificate
   const handleClickOpenChildModal = () => {
     setOpenChilModal(true);
   };
@@ -1854,7 +1950,7 @@ const ContentLogic = (props) => {
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-
+// used to go next page for candidate master module
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -1866,6 +1962,7 @@ const ContentLogic = (props) => {
     setSkipped(newSkipped);
   };
 
+  // used to go back page for candidate master module
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -1904,6 +2001,27 @@ const ContentLogic = (props) => {
   const handleClose = () => {
     setOpenModal(false);
   };
+
+   //multi select value for the select field of batch priority
+   const ITEM_HEIGHT = 48;
+   const ITEM_PADDING_TOP = 8;
+   const MenuProps = {
+     PaperProps: {
+       style: {
+         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+         width: 250,
+       },
+     },
+   };
+   const handleChangeValueOfBatch = (event) => {
+     const {
+       target: { value },
+     } = event;
+     setBatchNo(
+       // On autofill we get a stringified value.
+       typeof value === value.split(",")
+     );
+   };
 
   //it handle the buttons of content page
   const handleButtons = () => {
@@ -2112,7 +2230,7 @@ const ContentLogic = (props) => {
       default:
         return (
           <>
-            {editStatus ? (
+            {editStatus? (
               <Button
                 onClick={handleClickOpen}
                 style={{
@@ -2199,7 +2317,7 @@ const ContentLogic = (props) => {
   };
 
   // its handle the module modal inputs
-  function handlerModuleInputs() {
+  function handleModalInputs() {
     switch (pageName) {
       case "candidate-master":
         return (
@@ -4112,14 +4230,15 @@ const ContentLogic = (props) => {
                   // key={categoryData}
                   label="Title"
                   name="title"
-                  value={categoryTestData.title ? categoryTestData.title : " "}
+                  value={categoryData.title}
                   type="name"
                   variant="filled"
                   style={{ width: "130ch" }}
-                  onChange={(e) => {
-                    setCategoryTestData(e.target.value);
-                    console.log(categoryTestData);
-                  }}
+                  onChange={(e)=>{
+                    setCategoryData(
+                      {...categoryData,
+                    title:e.target.value})
+                    console.log(categoryData);}}
                 />
               </List>
               <List sx={{ mb: 5 }}>
@@ -4144,7 +4263,7 @@ const ContentLogic = (props) => {
                 <FormGroup>
                   <FormControlLabel
                     control={
-                      <Checkbox
+                      <Checkbox defaultChecked
                         value={categoryData.isActive}
                         onChange={() => {
                           setCategoryData((prev) => ({
@@ -4201,7 +4320,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Company Name"
                   type="name"
-                  value={companyData.companyName }
+                  value={companyData.companyName}
                   variant="filled"
                   onChange={(e) => {
                     setCompanyData({
@@ -4234,11 +4353,11 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Industry Name"
                   type="name"
-                  value={companyData.industryId}
+                  value={companyData.industry}
                   onChange={(e) => {
                     setCompanyData({
                       ...companyData,
-                      industryId: e.target.value,
+                      industry: e.target.value,
                     });
                   }}
                   variant="filled"
@@ -4343,12 +4462,18 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-                <Button
+                {!editStatus?(<Button
                   onClick={() => addAPICalls("industry")}
                   style={{ backgroundColor: "brown", color: "white" }}
                 >
                   Save
-                </Button>
+                </Button>):
+                (<Button
+                  onClick={() => updateAPICalls("industry")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  update
+                </Button>)}
               </List>
             </Box>
           </>
@@ -4700,9 +4825,9 @@ const ContentLogic = (props) => {
                   label="Title"
                   type="name"
                   variant="filled"
-                  value={skillSet.title}
+                  value={skillSetData.title}
                   onChange={(e) => {
-                    setSkillSet({ ...skillSet, title: e.target.value });
+                    setSkillSetData({ ...skillSetData, title: e.target.value });
                   }}
                   sx={{ width: "130ch" }}
                 />
@@ -4712,9 +4837,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Description"
                   type="name"
-                  value={skillSet.description}
+                  value={skillSetData.description}
                   onChange={(e) => {
-                    setSkillSet({ ...skillSet, description: e.target.value });
+                    setSkillSetData({ ...skillSetData, description: e.target.value });
                   }}
                   variant="filled"
                   sx={{ width: "130ch" }}
@@ -4725,10 +4850,10 @@ const ContentLogic = (props) => {
                   <FormControlLabel
                     control={<Checkbox defaultChecked />}
                     label="Is Active"
-                    value={skillSet.isActive}
+                    value={skillSetData.isActive}
                     onChange={(e) => {
-                      setSkillSet({
-                        ...skillSet,
+                      setSkillSetData({
+                        ...skillSetData,
                         isActive: e.target.checked,
                       });
                     }}
@@ -4736,12 +4861,18 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-                <Button
+                {!editStatus?(<Button
                   onClick={() => addAPICalls("skillset")}
                   style={{ backgroundColor: "brown", color: "white" }}
                 >
                   Save
-                </Button>
+                </Button>):
+                (<Button
+                  onClick={() => updateAPICalls("skillset")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  update
+                </Button>)}
               </List>
             </Box>
           </>
@@ -4757,10 +4888,10 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Plan Name"
                     variant="filled"
-                    value={subscription.planName}
+                    value={subscriptionData.planName}
                     onChange={(e) => {
-                      setSubscription({
-                        ...subscription,
+                      setSubscriptionData({
+                        ...subscriptionData,
                         planName: e.target.value,
                       });
                     }}
@@ -4772,10 +4903,10 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Data Count"
                     variant="filled"
-                    value={subscription.dataCount}
+                    value={subscriptionData.dataCount}
                     onChange={(e) => {
-                      setSubscription({
-                        ...subscription,
+                      setSubscriptionData({
+                        ...subscriptionData,
                         dataCount: e.target.value,
                       });
                     }}
@@ -4785,10 +4916,10 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Duration in months"
                     variant="filled"
-                    value={subscription.durationMonths}
+                    value={subscriptionData.durationMonths}
                     onChange={(e) => {
-                      setSubscription({
-                        ...subscription,
+                      setSubscriptionData({
+                        ...subscriptionData,
                         durationMonths: e.target.value,
                       });
                     }}
@@ -4797,10 +4928,10 @@ const ContentLogic = (props) => {
                   <TextField
                     id="filled-basic"
                     label="Price"
-                    value={subscription.price}
+                    value={subscriptionData.price}
                     onChange={(e) => {
-                      setSubscription({
-                        ...subscription,
+                      setSubscriptionData({
+                        ...subscriptionData,
                         price: e.target.value,
                       });
                     }}
@@ -4812,10 +4943,10 @@ const ContentLogic = (props) => {
                   <TextField
                     id="filled-basic"
                     label="Note"
-                    value={subscription.note}
+                    value={subscriptionData.note}
                     onChange={(e) => {
-                      setSubscription({
-                        ...subscription,
+                      setSubscriptionData({
+                        ...subscriptionData,
                         note: e.target.value,
                       });
                     }}
@@ -4828,10 +4959,10 @@ const ContentLogic = (props) => {
                     <FormControlLabel
                       control={<Checkbox defaultChecked />}
                       label="Is Active"
-                      value={subscription.isActive}
+                      value={subscriptionData.isActive}
                       onChange={(e) => {
-                        setSubscription({
-                          ...subscription,
+                        setSubscriptionData({
+                          ...subscriptionData,
                           isActive: e.target.checked,
                         });
                       }}
@@ -5167,27 +5298,7 @@ const ContentLogic = (props) => {
         break;
     }
   }
-  //multi select value for the select field of batch priority
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
-  const handleChangeValueOfBatch = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setBatchNo(
-      // On autofill we get a stringified value.
-      typeof value === value.split(",")
-    );
-  };
-
+ 
   const EnhancedTableToolbar = () => {
     return (
       <Toolbar
@@ -5221,7 +5332,19 @@ const ContentLogic = (props) => {
           >
             <h2>{pageTitle}</h2>
             <Stack spacing={2} sx={{ width: "100%" }}>
-              <Snackbar
+              {editStatus===true?(<Snackbar
+                open={openAlertMsg}
+                autoHideDuration={6000}
+                onClose={() => setOpenAlertMsg(false)}
+              >
+                <Alert
+                  onClose={() => setOpenAlertMsg(false)}
+                  severity="success"
+                  sx={{ width: "100%" }}
+                >
+                  Data successfully Updated!
+                </Alert>
+              </Snackbar>):(<Snackbar
                 open={openAlertMsg}
                 autoHideDuration={6000}
                 onClose={() => setOpenAlertMsg(false)}
@@ -5233,7 +5356,7 @@ const ContentLogic = (props) => {
                 >
                   Data successfully inserted!
                 </Alert>
-              </Snackbar>
+              </Snackbar>)}
             </Stack>
             {renderDesign()}
           </Typography>
@@ -5265,11 +5388,11 @@ const ContentLogic = (props) => {
             >
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
-            {!editStatus ? modalTitle : `Edit Record`}
+            {!editStatus ? modalTitle : `Edit Record - ${editId}`}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
           <DialogContent>
-            {handlerModuleInputs()}
+            {handleModalInputs()}
             </DialogContent>
         </Dialog>
         {/* admin candidate upload batch modal */}
@@ -5476,8 +5599,7 @@ const ContentLogic = (props) => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
 
   const StateContainer = {
     order,
@@ -5541,7 +5663,9 @@ const ContentLogic = (props) => {
     editId,
     setEditStatus,
     setCategoryData,
-    setCompanyData
+    setCompanyData,
+    setIndustryData,
+    setSkillSetData
   };
 
   return StateContainer;

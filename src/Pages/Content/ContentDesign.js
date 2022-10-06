@@ -59,7 +59,9 @@ export default function ContentDesign(props) {
     setEditStatus,
     editId,
     setCategoryData,
-    setCompanyData
+    setCompanyData,
+    setIndustryData,
+    setSkillSetData
   } = ContentLogic();
 
   useEffect(() => {
@@ -147,7 +149,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
                 {emptyRows > 0 && (
                   <TableRow
@@ -191,7 +193,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">
                     {tblData[item].contactNo}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -269,7 +271,7 @@ export default function ContentDesign(props) {
                     {tblData[item].contactNo}
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -306,7 +308,7 @@ export default function ContentDesign(props) {
                 <TableCell align="left">
                   {tblData[item].totalAmount}
                 </TableCell>
-                <TableCell align="left">{tblData[item].isActive}</TableCell>
+                <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 <TableCell align="left"><Button><Visibility/>View</Button></TableCell>
               </TableRow>
             </>
@@ -364,11 +366,17 @@ export default function ContentDesign(props) {
             <>
               <TableRow hover role="checkbox" tabIndex={-1}>
                 <TableCell padding="checkbox">
-                  <Checkbox color="primary" onClick={()=>{
-                  setEditId(tblData[item].id);
-                  setEditStatus(true)
-                  setCategoryData(tblData[item])
-                  console.log(editId);}}/>
+                  <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setCategoryData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setCategoryData([])
+                  }}}/>
                 </TableCell>
                 <TableCell
                     component="th"
@@ -380,7 +388,7 @@ export default function ContentDesign(props) {
                   </TableCell>
 
                 <TableCell align="left">{tblData[item].title}</TableCell>
-                <TableCell align="left">{tblData[item].isActive}</TableCell>
+                <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
               </TableRow>
             </>
           ))}
@@ -394,11 +402,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" onClick={()=>{
-                  setEditId(tblData[item].id);
-                  setEditStatus(true)
-                  setCompanyData(tblData[item])
-                  console.log(editId);}}/>
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setCompanyData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setCompanyData([])
+                  }}}/>
                   </TableCell>
                   <TableCell
                     component="th"
@@ -418,7 +432,7 @@ export default function ContentDesign(props) {
                     {tblData[item].companyName}
                   </TableCell>
                   <TableCell align="left">{tblData[item].industry}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                   
                 </TableRow>
               </>
@@ -457,7 +471,7 @@ export default function ContentDesign(props) {
                     {tblData[item].contactNo}
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -471,7 +485,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setIndustryData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setIndustryData([])
+                  }}} />
                   </TableCell>
                   <TableCell
                     component="th"
@@ -490,7 +514,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -522,7 +546,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].name}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -535,7 +559,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setSkillSetData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setSkillSetData([])
+                  }}}  />
                   </TableCell>
                   <TableCell
                     component="th"
@@ -554,7 +588,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -587,7 +621,7 @@ export default function ContentDesign(props) {
                     {tblData[item].planName}
                   </TableCell>
                   <TableCell align="left">{tblData[item].dataCount}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -621,7 +655,7 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -682,19 +716,13 @@ export default function ContentDesign(props) {
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar
-         />
+        <EnhancedTableToolbar key={"test1"} />
+
         <Backdrop
         sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loader}
-      >
+        open={loader}>
         <CircularProgress color="inherit" />
       </Backdrop>
-        {/* <Dialog open={loader} onClose={handleCloseLoader}>
-        <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-          <CircularProgress color="secondary" />
-        </Stack>
-        </Dialog> */}
         {handleTable()}
       </Paper>
     </Box>

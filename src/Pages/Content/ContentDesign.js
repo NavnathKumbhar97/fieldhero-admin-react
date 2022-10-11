@@ -7,7 +7,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import { Backdrop, Box, Button, CircularProgress, Dialog, Stack } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
 import ContentLogic from "./ContentLogic";
 import { Download, Edit, ViewAgenda, Visibility } from "@mui/icons-material";
 
@@ -61,7 +61,11 @@ export default function ContentDesign(props) {
     setCategoryData,
     setCompanyData,
     setIndustryData,
-    setSkillSetData
+    setSkillSetData,
+    setSubscriptionData,
+    setUserData,
+    setCandidateMasterData,
+    handleClickOpen
   } = ContentLogic();
 
   useEffect(() => {
@@ -126,7 +130,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary"  />
+                    <Checkbox color="primary"  onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setCandidateMasterData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setCandidateMasterData([])
+                  }}}/>
                   </TableCell>
                   <TableCell
                     component="th"
@@ -147,19 +161,11 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].fullName}</TableCell>
                   <TableCell align="left">
-                    {tblData[item].contactNo}
+                    {tblData[item].contactNo1}
                   </TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
                 </TableRow>
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
+
               </>
             ))}
         </>;
@@ -189,11 +195,15 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">{tblData[item].timestamp}</TableCell>
                   <TableCell align="left">
-                    {tblData[item].contactNo}
+                    {tblData[item].count}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].status}</TableCell>
+                  <TableCell align="left">{tblData[item].status}</TableCell>
+                  <TableCell align="left">{tblData[item].approvedCount}</TableCell>
+                  <TableCell align="left">{tblData[item].rejectedCount}</TableCell>
+                  <TableCell align="left"><Download></Download></TableCell>
                 </TableRow>
               </>
             ))}
@@ -234,7 +244,14 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].modifiedOn}</TableCell>
                   <TableCell align="left">{tblData[item].callStatus}</TableCell>
                   <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
-                  <TableCell align="left"><Button><Edit/>Edit</Button></TableCell>
+                  <TableCell align="left">
+                    <Button 
+                  onClick={()=>{
+                    handleClickOpen()
+                    setEditId(tblData[item].id)
+                  }}>
+                    <Edit/>Edit</Button>
+                  </TableCell>
                 </TableRow>
               </>
             ))}
@@ -601,7 +618,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setSubscriptionData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setSubscriptionData([])
+                  }}} />
                   </TableCell>
                   <TableCell
                     component="th"
@@ -634,7 +661,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setUserData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setUserData([])
+                  }}}/>
                   </TableCell>
                   <TableCell
                     component="th"
@@ -715,14 +752,14 @@ export default function ContentDesign(props) {
 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar key={"test1"} />
-
+      
         <Backdrop
         sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar key={"test1"} />
         {handleTable()}
       </Paper>
     </Box>

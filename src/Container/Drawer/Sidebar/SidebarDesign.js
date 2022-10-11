@@ -117,7 +117,7 @@ function SidebarDesign() {
         position="fixed"
         open={open}
       >
-        <Toolbar>
+        <Toolbar style={{display:'flex'}}>
           <IconButton
             color="inherit"
             aria-label="open drawer"

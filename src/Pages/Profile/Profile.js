@@ -1,7 +1,7 @@
 import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Avatar, Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 
 const settings = ["Navnath Kumbhar", "CHANGE PASSWORD", "SIGN OUT"];
 
@@ -89,11 +89,17 @@ export default function Profile() {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{setting}</Typography>
+          
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">Navnath Kumbhar</Typography>
             </MenuItem>
-          ))}
+            <MenuItem onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">Chnage Password</Typography>
+            </MenuItem>
+            <Divider></Divider>
+            <MenuItem onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">SIGN OUT</Typography>
+            </MenuItem>
         </Menu>
       </Box>
     </div>

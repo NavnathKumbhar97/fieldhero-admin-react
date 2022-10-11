@@ -134,6 +134,7 @@ function LoginDesign() {
               margin="normal"
               required
               fullWidth
+              autoComplete="password"
               value={password}
               helperText={errorTextPass === "" ? "Password is required" : ""}
               error={errorTextPass === ""}

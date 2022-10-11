@@ -15,10 +15,12 @@ import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import Modal from "@mui/material/Modal";
-
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
+  Backdrop,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -61,6 +63,7 @@ import handler from "../../handlers/generalHandlers";
 import { Stack } from "@mui/system";
 
 const ContentLogic = (props) => {
+  const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
@@ -74,7 +77,6 @@ const ContentLogic = (props) => {
   const [tblDataCount, setTblDataCount] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [numSelected] = useState([]);
-
 
   const [id, setId] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -90,28 +92,69 @@ const ContentLogic = (props) => {
 
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
+    aadharNo: "123123123121",
+    gender: "MALE",
+    dob: "12-12-12",
+    permAddress: "",
+    contactNo1: "34534534343",
+    contactNo2: "1234554321",
+    curr_address: "test address",
+    curr_city: "test city",
+    curr_country: "India",
+    curr_state: "test state",
+    curr_zip: "123121",
+    email1: "testbynrk@gmai.com",
+    email2: "test@g.c",
+    fullName: "Test by Navnah",
+    gender: "MALE",
+    perm_address: "tes address",
+    perm_city: "tes city",
+    perm_country: "India",
+    perm_state: "test state",
+    perm_zip: "123123",
+    registrationStatus: "",
+    totalExpMonths: "1",
+    totalExpYears: "1",
+    // birthDate:new Date(),
+    isActive: true,
+    industry: `test`,
+    category: `test`,
+    expYears: `1`,
+    prefLocation1: `test`,
+    prefLocation2: `test`,
+    skill1: `test`,
+    skill2: `test`,
+    primaryLang: `test`,
+    secondaryLang: `test`,
+    lastCompany: `test`,
+    designation: `test`,
+    education: `test`,
+  });
+  const [updateCandidateMasterData, setUpdateCandidateMasterData] = useState({
     aadharNo: "",
-    dob: 12 / 12 / 12,
+    dob: "",
+    gender: "MALE",
+    permAddress: "",
     contactNo1: "",
     contactNo2: "",
-    curr_address: "",
-    curr_city: "",
-    curr_country: "India",
-    curr_state: "",
-    curr_zip: "",
+    currAddress: "",
+    currCity: "",
+    currCountry: "India",
+    currState: "",
+    currZip: "",
     email1: "",
     email2: "",
     fullName: "",
-    gender: "MALE",
-    perm_address: "",
-    perm_city: "",
-    perm_country: "India",
-    perm_state: "",
-    perm_zip: "",
+    gender: "",
+    permAddress: "",
+    permCity: "",
+    permCountry: "India",
+    permState: "",
+    permZip: "",
     registrationStatus: "",
     totalExpMonths: "",
     totalExpYears: "",
-
+    birthDate: "",
     isActive: true,
     industry: ``,
     category: ``,
@@ -126,6 +169,9 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+
+  const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
+    useState({});
   //state for store the input fields value of industry
   const [categoryData, setCategoryData] = useState({
     title: "",
@@ -139,7 +185,7 @@ const ContentLogic = (props) => {
     description: "",
     isActive: true,
     industry: "",
-    title:''
+    title: "",
   });
 
   //state for store the input fields value of industry
@@ -167,6 +213,31 @@ const ContentLogic = (props) => {
     isActive: true,
   });
   const [userData, setUserData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    aadharCard: "",
+    panCard: "",
+    note: "",
+    email: "",
+    contactNo: "",
+    roleId: 0,
+    isActive: true,
+  });
+  const [updateUserData, setUpdateUserData] = useState({
     fullName: "",
     dob: "",
     gender: "",
@@ -250,7 +321,8 @@ const ContentLogic = (props) => {
     lastCompany: 0,
     designation: 0,
   });
-  const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] = useState({});
+  const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
+    useState({});
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   // const useStyles = makeStyles((theme) => {
   //   const appbarHeight = 64;
@@ -265,13 +337,6 @@ const ContentLogic = (props) => {
   const [editStatus, setEditStatus] = useState(false);
   // used to select multiple value from select field for batch priority module
   const [batchNo, setBatchNo] = useState([]);
-
-  var categoryTestData = {
-    title: "",
-  };
-  const setCategoryTestData = (value) => {
-    categoryTestData.title = value;
-  };
 
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -847,13 +912,17 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setTblData(response.data.data.Candidates);
+          setTblData(response.data.data.result.Candidates);
+          setTblDataCount(response.data.data.count);
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
@@ -863,19 +932,26 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet("/v1/candidate-upload-batches", {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/candidate-upload-batches?limit${rowsPerPage}&page=${page}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setTblData(response.data.data.items);
+          setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
           console.log("candidate-upload-batches", tblData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAPIcall",
           error
@@ -902,6 +978,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getAgentMasterAPIcall", error);
       });
   };
@@ -930,6 +1009,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error(
           "There was an error!- getCandidateVerificationAPIcall",
           error
@@ -961,6 +1043,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error(
           "There was an error!- getAgentTemplatePricingAPIcall",
           error
@@ -992,6 +1077,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAdminAPIcall",
           error
@@ -1021,6 +1109,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getCategoryAPIcall", error);
       });
   };
@@ -1043,6 +1134,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getCompanyAPIcall", error);
       });
   };
@@ -1067,6 +1161,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getCustomerAPIcall", error);
       });
   };
@@ -1093,6 +1190,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
@@ -1116,6 +1216,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getRoleAPIcall", error);
       });
   };
@@ -1139,6 +1242,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getSkillSetAPIcall", error);
       });
   };
@@ -1165,6 +1271,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getSubscriptionAPIcall", error);
       });
   };
@@ -1188,6 +1297,9 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
         console.error("There was an error!- getUserAPIcall", error);
       });
   };
@@ -1291,7 +1403,7 @@ const ContentLogic = (props) => {
     }
   };
 
-  const getCompanyAPIcallById =()=>{
+  const getCompanyAPIcallById = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
@@ -1304,7 +1416,81 @@ const ContentLogic = (props) => {
           setLoader(false);
           setCompanyData(response.data.data);
           // setTblDataCount(response.data.data.users);
-          console.log("batch priority",companyData);
+          console.log("batch priority", companyData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+
+  //get user details by id of user module modal on click of edit
+  const getUserAPIcallById = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/users/${editId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setUpdateUserData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log("user Data to update by id", updateUserData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+  const getCandidateMsaterAPIcallById = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/candidates/${editId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setUpdateCandidateMasterData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log(
+            "candidate Data to update by id",
+            updateCandidateMasterData
+          );
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+  const getCandidateVerificationById = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/candidate-verifications/${editId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setUpdateCandidateMasterData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log(
+            "candidate Data to update by id",
+            updateCandidateMasterData
+          );
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -1528,6 +1714,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1550,6 +1737,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1572,6 +1760,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1596,6 +1785,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+
               //getBatchPriorityAPIcall()
               setOpenAlertMsg(true);
             } else {
@@ -1618,6 +1808,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getCategoryAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1640,6 +1831,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getCompanyAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1662,6 +1854,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getUserAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1684,6 +1877,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getRoleAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1706,6 +1900,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getSkillSetAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1728,6 +1923,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getSubscriptionAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1750,6 +1946,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
+              setOpenModal(false);
               getUserAPIcall();
               setOpenAlertMsg(true);
             } else {
@@ -1769,12 +1966,76 @@ const ContentLogic = (props) => {
     }
   };
 
-  // update the record 
+  // update the record
   const updateAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     console.log(editId);
     switch (pageName) {
+      case "candidate-master":
+        let updateCandidatesMasterData = {
+          ...updateCandidateMasterData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/candidates/:${updateCandidatesMasterData.id}`,
+            updateCandidatesMasterData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenAlertMsg(true);
+              setOpenModal(false);
+              getCandidateMasterAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCategoryAPICall", error);
+          });
+        break;
+      case "candidate-upload-batch":
+        return null;
+      case "candidate-verification":
+        let updateCandidateVerifnData = {
+          ...updateCandidateVerificationData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/candidates/:${updateCandidatesMasterData.id}`,
+            updateCandidatesMasterData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenAlertMsg(true);
+              setOpenModal(false);
+              getCandidateMasterAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCategoryAPICall", error);
+          });
+        break;
       case "category":
         let updateCategoryData = {
           ...categoryData,
@@ -1793,7 +2054,7 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-              setOpenModal(false)
+              setOpenModal(false);
               getCategoryAPIcall();
             } else {
               window.alert(response.data.message);
@@ -1823,7 +2084,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-              setOpenModal(false)
+              setOpenModal(false);
               setOpenAlertMsg(true);
               getCategoryAPIcall();
             } else {
@@ -1838,45 +2099,14 @@ const ContentLogic = (props) => {
           });
         break;
       case "industry":
-          let updateIndustryData = {
-            ...industryData,
-            id: editId,
-          };
-          handler
-            .dataPut(
-              `/v1/industries/:${updateIndustryData.id}`,
-              updateIndustryData,
-              {
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }
-            )
-            .then((response) => {
-              console.log(response);
-              if (response.status == 204) {
-                console.log(response.data.message);
-                setOpenModal(false)
-                setOpenAlertMsg(true);
-                getCategoryAPIcall();
-              } else {
-                window.alert(response.data.message);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                window.alert(error.data.message);
-              }
-              console.error("There was an error!- updateCompanyAPICall", error);
-            });
-          break;
-      case "skillset":
-        let updateSkillsetData = {
-          ...skillSetData,
+        let updateIndustryData = {
+          ...industryData,
           id: editId,
         };
         handler
           .dataPut(
-            `/v1/skills/:${updateSkillsetData.id}`,
-            updateSkillsetData,
+            `/v1/industries/:${updateIndustryData.id}`,
+            updateIndustryData,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
             }
@@ -1885,7 +2115,34 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-              setOpenModal(false)
+              setOpenModal(false);
+              setOpenAlertMsg(true);
+              getCategoryAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCompanyAPICall", error);
+          });
+        break;
+      case "skillset":
+        let updateSkillsetData = {
+          ...skillSetData,
+          id: editId,
+        };
+        handler
+          .dataPut(`/v1/skills/:${updateSkillsetData.id}`, updateSkillsetData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenModal(false);
               setOpenAlertMsg(true);
               getSkillSetAPIcall();
             } else {
@@ -1899,12 +2156,75 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateSkillsetAPICall", error);
           });
         break;
+      case "subscription":
+        let updateSubscriptionData = {
+          ...subscriptionData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/subscriptions/:${updateSubscriptionData.id}`,
+            updateSubscriptionData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenModal(false);
+              setOpenAlertMsg(true);
+              getSubscriptionAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error(
+              "There was an error!- updateSubscriptionAPICall",
+              error
+            );
+          });
+        break;
+      case "user":
+        let updateUsersData = {
+          ...updateUserData,
+          id: editId,
+        };
+        handler
+          .dataPut(`/v1/users/:${updateUsersData.id}`, updateUsersData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenModal(false);
+              setOpenAlertMsg(true);
+              getUserAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error(
+              "There was an error!- updateSubscriptionAPICall",
+              error
+            );
+          });
+        break;
     }
-
   };
   // const onChangeVal = useCallback((value) => {
   //   setCategoryData(value)
-  // }, [categoryData]) 
+  // }, [categoryData])
 
   const handleClickOpenAddBtchprty = () => {
     setOpenAddBtchprty(true);
@@ -1950,7 +2270,7 @@ const ContentLogic = (props) => {
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-// used to go next page for candidate master module
+  // used to go next page for candidate master module
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -2002,26 +2322,26 @@ const ContentLogic = (props) => {
     setOpenModal(false);
   };
 
-   //multi select value for the select field of batch priority
-   const ITEM_HEIGHT = 48;
-   const ITEM_PADDING_TOP = 8;
-   const MenuProps = {
-     PaperProps: {
-       style: {
-         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-         width: 250,
-       },
-     },
-   };
-   const handleChangeValueOfBatch = (event) => {
-     const {
-       target: { value },
-     } = event;
-     setBatchNo(
-       // On autofill we get a stringified value.
-       typeof value === value.split(",")
-     );
-   };
+  //multi select value for the select field of batch priority
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+  const handleChangeValueOfBatch = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setBatchNo(
+      // On autofill we get a stringified value.
+      typeof value === value.split(",")
+    );
+  };
 
   //it handle the buttons of content page
   const handleButtons = () => {
@@ -2029,9 +2349,18 @@ const ContentLogic = (props) => {
       case "candidate-master":
         return (
           <>
-            {numSelected === 1 ? (
+            {editStatus ? (
               <Button
-                style={{ marginTop: "80px", marginRight: "50px" }}
+                onClick={() => {
+                  handleClickOpen();
+                  getCandidateMsaterAPIcallById();
+                }}
+                style={{
+                  marginTop: "0px",
+                  // marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
                 variant="outlined"
               >
                 <EditIcon />
@@ -2226,13 +2555,52 @@ const ContentLogic = (props) => {
             )}
           </>
         );
+      case "user":
+        return (
+          <>
+            {editStatus ? (
+              <Button
+                onClick={() => {
+                  handleClickOpen();
+                  getUserAPIcallById();
+                }}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <EditIcon />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                onClick={handleClickOpen}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            )}
+          </>
+        );
 
       default:
         return (
           <>
-            {editStatus? (
+            {editStatus ? (
               <Button
-                onClick={handleClickOpen}
+                onClick={() => {
+                  handleClickOpen();
+                }}
                 style={{
                   marginTop: "80px",
                   marginRight: "5px",
@@ -2354,12 +2722,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Full Name"
                             variant="filled"
-                            value={candidateMasterData.fullName}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.fullName
+                                : updateCandidateMasterData.fullName
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                fullName: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    fullName: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    fullName: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch", mb: 4 }}
                           />
@@ -2370,12 +2747,21 @@ const ContentLogic = (props) => {
                             label="Birthdate"
                             InputLabelProps={{ shrink: true }}
                             type="date"
-                            value={candidateMasterData.birthDate}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.birthDate
+                                : updateCandidateMasterData.dob
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                birthDate: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    birthDate: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    dob: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ width: "69ch" }}
@@ -2413,12 +2799,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             multiline
                             rows={5}
-                            value={candidateMasterData.perm_address}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.perm_address
+                                : updateCandidateMasterData.permAddress
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                perm_address: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    perm_address: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    permAddress: e.target.value,
+                                  });
                             }}
                             variant="filled"
                           />
@@ -2430,12 +2825,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="City"
                             variant="filled"
-                            value={candidateMasterData.perm_city}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.perm_city
+                                : updateCandidateMasterData.permCity
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                perm_city: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    perm_city: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    permCity: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch" }}
                           />
@@ -2443,12 +2847,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="State"
                             variant="filled"
-                            value={candidateMasterData.perm_state}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.perm_state
+                                : updateCandidateMasterData.permState
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                perm_state: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    perm_state: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    permState: e.target.value,
+                                  });
                             }}
                             sx={{ ml: 3, width: "69ch" }}
                           />
@@ -2458,12 +2871,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Country"
                             disabled
-                            value={candidateMasterData.perm_country}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.perm_country
+                                : updateCandidateMasterData.permCountry
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                perm_country: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    perm_country: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    permCountry: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ width: "69ch" }}
@@ -2471,12 +2893,21 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Zip Code"
-                            value={candidateMasterData.perm_zip}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.perm_zip
+                                : updateCandidateMasterData.permZip
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                perm_zip: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    perm_zip: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    permZip: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
@@ -2497,12 +2928,21 @@ const ContentLogic = (props) => {
                             label="Current Address"
                             id="filled-basic"
                             multiline
-                            value={candidateMasterData.curr_address}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.curr_address
+                                : updateCandidateMasterData.currAddress
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                curr_address: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    curr_address: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    currAddress: e.target.value,
+                                  });
                             }}
                             rows={5}
                             variant="filled"
@@ -2513,24 +2953,42 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="City"
                             variant="filled"
-                            value={candidateMasterData.curr_city}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.curr_city
+                                : updateCandidateMasterData.currCity
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                curr_city: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    curr_city: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    currCity: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch" }}
                           />
                           <TextField
                             id="filled-basic"
                             label="State"
-                            value={candidateMasterData.curr_state}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.curr_state
+                                : updateCandidateMasterData.currState
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                curr_state: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    curr_state: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    currState: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
@@ -2541,12 +2999,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Country"
                             disabled
-                            value={candidateMasterData.curr_country}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.curr_country
+                                : updateCandidateMasterData.currCountry
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                curr_country: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    curr_country: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    currCountry: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ width: "69ch" }}
@@ -2554,12 +3021,21 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Zip Code"
-                            value={candidateMasterData.curr_zip}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.curr_zip
+                                : updateCandidateMasterData.currZip
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                curr_zip: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    curr_zip: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    currZip: e.target.value,
+                                  });
                             }}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
@@ -2570,12 +3046,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Primary email address"
                             variant="filled"
-                            value={candidateMasterData.email1}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.email1
+                                : updateCandidateMasterData.email1
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                email1: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    email1: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    email1: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch" }}
                           />
@@ -2583,12 +3068,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Secondary email address"
                             variant="filled"
-                            value={candidateMasterData.email2}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.email2
+                                : updateCandidateMasterData.email2
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                email2: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    email2: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    email2: e.target.value,
+                                  });
                             }}
                             sx={{ ml: 3, width: "69ch" }}
                           />
@@ -2598,12 +3092,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Primary contact no"
                             variant="filled"
-                            value={candidateMasterData.contactNo1}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.contactNo1
+                                : updateCandidateMasterData.contactNo1
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                contactNo1: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    contactNo1: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    contactNo1: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch" }}
                           />
@@ -2611,12 +3114,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Secondary contact no"
                             variant="filled"
-                            value={candidateMasterData.contactNo2}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.contactNo2
+                                : updateCandidateMasterData.contactNo2
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                contactNo2: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    contactNo2: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    contactNo2: e.target.value,
+                                  });
                             }}
                             sx={{ ml: 3, width: "69ch" }}
                           />
@@ -2626,12 +3138,21 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Aadhar no"
                             variant="filled"
-                            value={candidateMasterData.aadharNo}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.aadharNo
+                                : updateCandidateMasterData.aadharNo
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                aadharNo: e.target.value,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    aadharNo: e.target.value,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    aadharNo: e.target.value,
+                                  });
                             }}
                             sx={{ width: "69ch" }}
                           />
@@ -2647,12 +3168,21 @@ const ContentLogic = (props) => {
                           <FormControlLabel
                             control={<Checkbox defaultChecked />}
                             label="Is Active"
-                            value={candidateMasterData.isActive}
+                            value={
+                              !editStatus
+                                ? candidateMasterData.isActive
+                                : updateCandidateMasterData.isActive
+                            }
                             onChange={(e) => {
-                              setCandidateMasterData({
-                                ...candidateMasterData,
-                                isActive: e.target.checked,
-                              });
+                              !editStatus
+                                ? setCandidateMasterData({
+                                    ...candidateMasterData,
+                                    isActive: e.target.checked,
+                                  })
+                                : setUpdateCandidateMasterData({
+                                    ...updateCandidateMasterData,
+                                    isActive: e.target.checked,
+                                  });
                             }}
                           />
                         </ListItem>
@@ -2670,18 +3200,33 @@ const ContentLogic = (props) => {
                           >
                             PREV
                           </Button>
-                          <Button
-                            style={{
-                              backgroundColor: "brown",
-                              color: "white",
-                              margin: "10px",
-                            }}
-                            onClick={() => {
-                              addAPICalls("candidate-master");
-                            }}
-                          >
-                            SAVE AND NEXT
-                          </Button>
+                          {!editStatus ? (
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              onClick={() => {
+                                addAPICalls("candidate-master");
+                              }}
+                            >
+                              SAVE AND NEXT
+                            </Button>
+                          ) : (
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              onClick={() => {
+                                updateAPICalls("candidate-master");
+                              }}
+                            >
+                              UPDATE AND NEXT
+                            </Button>
+                          )}
                           <Button
                             onClick={() => {
                               handleNext();
@@ -2790,15 +3335,31 @@ const ContentLogic = (props) => {
                             PREV
                           </Button>
 
-                          <Button
-                            onClick={handleNext}
-                            style={{
-                              backgroundColor: "brown",
-                              color: "white",
-                            }}
-                          >
-                            NEXT
-                          </Button>
+                          {!editStatus ? (
+                            <Button
+                              onClick={() => {
+                                addAPICalls("candidate-master");
+                              }}
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                              }}
+                            >
+                              SAVE
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => {
+                                updateAPICalls("candidate-master");
+                              }}
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                              }}
+                            >
+                              UPDATE
+                            </Button>
+                          )}
                           <Button
                             style={{
                               backgroundColor: "black",
@@ -3225,6 +3786,15 @@ const ContentLogic = (props) => {
           </>
         );
 
+      case "candidate-verification":
+        return (
+          <>
+            <TextField>
+
+            </TextField>
+            
+          </>
+        )
       case "agent-master":
         return (
           <>
@@ -4234,11 +4804,10 @@ const ContentLogic = (props) => {
                   type="name"
                   variant="filled"
                   style={{ width: "130ch" }}
-                  onChange={(e)=>{
-                    setCategoryData(
-                      {...categoryData,
-                    title:e.target.value})
-                    console.log(categoryData);}}
+                  onChange={(e) => {
+                    setCategoryData({ ...categoryData, title: e.target.value });
+                    console.log(categoryData);
+                  }}
                 />
               </List>
               <List sx={{ mb: 5 }}>
@@ -4263,7 +4832,8 @@ const ContentLogic = (props) => {
                 <FormGroup>
                   <FormControlLabel
                     control={
-                      <Checkbox defaultChecked
+                      <Checkbox
+                        defaultChecked
                         value={categoryData.isActive}
                         onChange={() => {
                           setCategoryData((prev) => ({
@@ -4380,30 +4950,33 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-                {editStatus === false?(<Button
-                  onClick={() => {
-                    addAPICalls("company");
-                  }}
-                  style={{
-                    backgroundColor: "brown",
-                    color: "white",
-                    marginTop: "12px",
-                  }}
-                >
-                  Save
-                </Button>):(
-                <Button
-                  onClick={() => {
-                    updateAPICalls("company");
-                  }}
-                  style={{
-                    backgroundColor: "brown",
-                    color: "white",
-                    marginTop: "12px",
-                  }}
-                >
-                  Update
-                </Button>)}
+                {editStatus === false ? (
+                  <Button
+                    onClick={() => {
+                      addAPICalls("company");
+                    }}
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginTop: "12px",
+                    }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      updateAPICalls("company");
+                    }}
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginTop: "12px",
+                    }}
+                  >
+                    Update
+                  </Button>
+                )}
               </List>
             </Box>
           </>
@@ -4462,18 +5035,21 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-                {!editStatus?(<Button
-                  onClick={() => addAPICalls("industry")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  Save
-                </Button>):
-                (<Button
-                  onClick={() => updateAPICalls("industry")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  update
-                </Button>)}
+                {!editStatus ? (
+                  <Button
+                    onClick={() => addAPICalls("industry")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => updateAPICalls("industry")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    update
+                  </Button>
+                )}
               </List>
             </Box>
           </>
@@ -4839,7 +5415,10 @@ const ContentLogic = (props) => {
                   type="name"
                   value={skillSetData.description}
                   onChange={(e) => {
-                    setSkillSetData({ ...skillSetData, description: e.target.value });
+                    setSkillSetData({
+                      ...skillSetData,
+                      description: e.target.value,
+                    });
                   }}
                   variant="filled"
                   sx={{ width: "130ch" }}
@@ -4861,18 +5440,23 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-                {!editStatus?(<Button
-                  onClick={() => addAPICalls("skillset")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  Save
-                </Button>):
-                (<Button
-                  onClick={() => updateAPICalls("skillset")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  update
-                </Button>)}
+                {!editStatus ? (
+                  <Button
+                    onClick={() => addAPICalls("skillset")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      updateAPICalls("skillset");
+                    }}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    update
+                  </Button>
+                )}
               </List>
             </Box>
           </>
@@ -4888,6 +5472,7 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Plan Name"
                     variant="filled"
+                    disabled={editStatus}
                     value={subscriptionData.planName}
                     onChange={(e) => {
                       setSubscriptionData({
@@ -4903,6 +5488,7 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Data Count"
                     variant="filled"
+                    disabled={editStatus}
                     value={subscriptionData.dataCount}
                     onChange={(e) => {
                       setSubscriptionData({
@@ -4916,6 +5502,7 @@ const ContentLogic = (props) => {
                     id="filled-basic"
                     label="Duration in months"
                     variant="filled"
+                    disabled={editStatus}
                     value={subscriptionData.durationMonths}
                     onChange={(e) => {
                       setSubscriptionData({
@@ -4928,6 +5515,7 @@ const ContentLogic = (props) => {
                   <TextField
                     id="filled-basic"
                     label="Price"
+                    disabled={editStatus}
                     value={subscriptionData.price}
                     onChange={(e) => {
                       setSubscriptionData({
@@ -4970,12 +5558,21 @@ const ContentLogic = (props) => {
                   </FormGroup>
                 </List>
                 <List>
-                  <Button
-                    onClick={() => addAPICalls("subscription")}
-                    style={{ color: "white", backgroundColor: "brown" }}
-                  >
-                    Save
-                  </Button>
+                  {!editStatus ? (
+                    <Button
+                      onClick={() => addAPICalls("subscription")}
+                      style={{ color: "white", backgroundColor: "brown" }}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => updateAPICalls("subscription")}
+                      style={{ color: "white", backgroundColor: "brown" }}
+                    >
+                      Update
+                    </Button>
+                  )}
                 </List>
               </Box>
             </Box>
@@ -5000,9 +5597,16 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Full Name"
                   variant="filled"
-                  value={userData.fullName}
+                  value={
+                    !editStatus ? userData.fullName : updateUserData.fullName
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, fullName: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, fullName: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          fullName: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch" }}
                 />
@@ -5010,9 +5614,14 @@ const ContentLogic = (props) => {
                   type="date"
                   id="filled-basic"
                   label="Birthdate"
-                  value={userData.dob}
+                  value={!editStatus ? userData.dob : updateUserData.dob}
                   onChange={(e) => {
-                    setUserData({ ...userData, dob: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, dob: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          dob: e.target.value,
+                        });
                   }}
                   variant="filled"
                   InputLabelProps={{ shrink: true }}
@@ -5022,9 +5631,14 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Gender"
-                  value={userData.gender}
+                  value={!editStatus ? userData.gender : updateUserData.gender}
                   onChange={(e) => {
-                    setUserData({ ...userData, gender: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, gender: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          gender: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch", ml: 3 }}
@@ -5041,9 +5655,14 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Email"
                   variant="filled"
-                  value={userData.email}
+                  value={!editStatus ? userData.email : updateUserData.email}
                   onChange={(e) => {
-                    setUserData({ ...userData, email: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, email: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          email: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch" }}
                 />
@@ -5051,9 +5670,16 @@ const ContentLogic = (props) => {
                   required
                   id="filled-basic"
                   label="Contact no"
-                  value={userData.contactNo}
+                  value={
+                    !editStatus ? userData.contactNo : updateUserData.contactNo
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, contactNo: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, contactNo: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          contactNo: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch", ml: 3 }}
@@ -5063,9 +5689,14 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Role"
-                  value={userData.roleId}
+                  value={!editStatus ? userData.roleId : updateUserData.roleId}
                   onChange={(e) => {
-                    setUserData({ ...userData, roleId: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, roleId: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          roleId: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch", ml: 3 }}
@@ -5085,9 +5716,21 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current Address"
                   variant="filled"
-                  value={userData.currAddress}
+                  value={
+                    !editStatus
+                      ? userData.currAddress
+                      : updateUserData.currAddress
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, currAddress: e.target.value });
+                    !editStatus
+                      ? setUserData({
+                          ...userData,
+                          currAddress: e.target.value,
+                        })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          currAddress: e.target.value,
+                        });
                   }}
                   multiline
                   rows={4}
@@ -5099,9 +5742,16 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current pincode"
                   variant="filled"
-                  value={userData.currZip}
+                  value={
+                    !editStatus ? userData.currZip : updateUserData.currZip
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, currZip: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, currZip: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          currZip: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch" }}
                 />
@@ -5109,9 +5759,16 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current city"
                   variant="filled"
-                  value={userData.currCity}
+                  value={
+                    !editStatus ? userData.currCity : updateUserData.currCity
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, currCity: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, currCity: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          currCity: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
@@ -5119,9 +5776,16 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Current State"
-                  value={userData.currState}
+                  value={
+                    !editStatus ? userData.currState : updateUserData.currState
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, currState: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, currState: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          currState: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch", ml: 3 }}
@@ -5147,9 +5811,21 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent Address"
                   variant="filled"
-                  value={userData.permAddress}
+                  value={
+                    !editStatus
+                      ? userData.permAddress
+                      : updateUserData.permAddress
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, permAddress: e.target.value });
+                    !editStatus
+                      ? setUserData({
+                          ...userData,
+                          permAddress: e.target.value,
+                        })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          permAddress: e.target.value,
+                        });
                   }}
                   multiline
                   rows={4}
@@ -5160,9 +5836,16 @@ const ContentLogic = (props) => {
                 <TextField
                   id="filled-basic"
                   label="Permanent pincode"
-                  value={userData.permZip}
+                  value={
+                    !editStatus ? userData.permZip : updateUserData.permZip
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, permZip: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, permZip: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          permZip: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch" }}
@@ -5171,9 +5854,16 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent city"
                   variant="filled"
-                  value={userData.permCity}
+                  value={
+                    !editStatus ? userData.permCity : updateUserData.permCity
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, permCity: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, permCity: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          permCity: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
@@ -5183,9 +5873,14 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent State"
                   variant="filled"
-                  value={userData.permState}
+                  value={!editStatus ? userData.permState : updateUserData}
                   onChange={(e) => {
-                    setUserData({ ...userData, permState: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, permState: e.target.value })
+                      : setUserData({
+                          ...updateUserData,
+                          permState: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 >
@@ -5200,9 +5895,16 @@ const ContentLogic = (props) => {
                 <TextField
                   id="filled-basic"
                   label="Pan card"
-                  value={userData.panCard}
+                  value={
+                    !editStatus ? userData.panCard : updateUserData.panCard
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, panCard: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, panCard: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          panCard: e.target.value,
+                        });
                   }}
                   variant="filled"
                   sx={{ width: "40ch" }}
@@ -5211,9 +5913,18 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Aadhar card"
                   variant="filled"
-                  value={userData.aadharCard}
+                  value={
+                    !editStatus
+                      ? userData.aadharCard
+                      : updateUserData.aadharCard
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, aadharCard: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, aadharCard: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          aadharCard: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
@@ -5226,9 +5937,21 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Primary Language"
                   variant="filled"
-                  value={userData.primaryLang}
+                  value={
+                    !editStatus
+                      ? userData.primaryLang
+                      : updateUserData.primaryLang
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, primaryLang: e.target.value });
+                    !editStatus
+                      ? setUserData({
+                          ...userData,
+                          primaryLang: e.target.value,
+                        })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          primaryLang: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch" }}
                 />
@@ -5236,12 +5959,21 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Secondary Language"
                   variant="filled"
-                  value={userData.secondaryLang}
+                  value={
+                    !editStatus
+                      ? userData.secondaryLang
+                      : updateUserData.secondaryLang
+                  }
                   onChange={(e) => {
-                    setUserData({
-                      ...userData,
-                      secondaryLang: e.target.value,
-                    });
+                    !editStatus
+                      ? setUserData({
+                          ...userData,
+                          secondaryLang: e.target.value,
+                        })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          secondaryLang: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
@@ -5249,9 +5981,16 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Third Language"
                   variant="filled"
-                  value={userData.thirdLang}
+                  value={
+                    !editStatus ? userData.thirdLang : updateUserData.thirdLang
+                  }
                   onChange={(e) => {
-                    setUserData({ ...userData, thirdLang: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, thirdLang: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          thirdLang: e.target.value,
+                        });
                   }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
@@ -5262,9 +6001,14 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Note"
                   variant="filled"
-                  value={userData.note}
+                  value={!editStatus ? userData.note : updateUserData.note}
                   onChange={(e) => {
-                    setUserData({ ...userData, note: e.target.value });
+                    !editStatus
+                      ? setUserData({ ...userData, note: e.target.value })
+                      : setUpdateUserData({
+                          ...updateUserData,
+                          note: e.target.value,
+                        });
                   }}
                   multiline
                   rows={4}
@@ -5276,20 +6020,36 @@ const ContentLogic = (props) => {
                   <FormControlLabel
                     control={<Checkbox defaultChecked />}
                     label="Is Active"
-                    value={userData.isActive}
+                    value={
+                      !editStatus ? userData.isActive : updateUserData.isActive
+                    }
                     onChange={(e) => {
-                      setUserData({ ...userData, isActive: e.target.value });
+                      !editStatus
+                        ? setUserData({ ...userData, isActive: e.target.value })
+                        : setUpdateUserData({
+                            ...updateUserData,
+                            isActive: e.target.value,
+                          });
                     }}
                   />
                 </FormGroup>
               </List>
               <List sx={{ mb: 4, mt: 4 }}>
-                <Button
-                  onClick={() => addAPICalls("user")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  Save
-                </Button>
+                {!editStatus ? (
+                  <Button
+                    onClick={() => addAPICalls("user")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => updateAPICalls("user")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Update
+                  </Button>
+                )}
               </List>
             </Box>
           </>
@@ -5298,7 +6058,7 @@ const ContentLogic = (props) => {
         break;
     }
   }
- 
+
   const EnhancedTableToolbar = () => {
     return (
       <Toolbar
@@ -5332,31 +6092,35 @@ const ContentLogic = (props) => {
           >
             <h2>{pageTitle}</h2>
             <Stack spacing={2} sx={{ width: "100%" }}>
-              {editStatus===true?(<Snackbar
-                open={openAlertMsg}
-                autoHideDuration={6000}
-                onClose={() => setOpenAlertMsg(false)}
-              >
-                <Alert
+              {editStatus === true ? (
+                <Snackbar
+                  open={openAlertMsg}
+                  autoHideDuration={6000}
                   onClose={() => setOpenAlertMsg(false)}
-                  severity="success"
-                  sx={{ width: "100%" }}
                 >
-                  Data successfully Updated!
-                </Alert>
-              </Snackbar>):(<Snackbar
-                open={openAlertMsg}
-                autoHideDuration={6000}
-                onClose={() => setOpenAlertMsg(false)}
-              >
-                <Alert
+                  <Alert
+                    onClose={() => setOpenAlertMsg(false)}
+                    severity="success"
+                    sx={{ width: "100%", backgroundColor: "#24f05e" }}
+                  >
+                    Data successfully Updated!
+                  </Alert>
+                </Snackbar>
+              ) : (
+                <Snackbar
+                  open={openAlertMsg}
+                  autoHideDuration={6000}
                   onClose={() => setOpenAlertMsg(false)}
-                  severity="success"
-                  sx={{ width: "100%" }}
                 >
-                  Data successfully inserted!
-                </Alert>
-              </Snackbar>)}
+                  <Alert
+                    onClose={() => setOpenAlertMsg(false)}
+                    severity="success"
+                    sx={{ width: "100%", backgroundColor: "#24f05e" }}
+                  >
+                    Data successfully inserted!
+                  </Alert>
+                </Snackbar>
+              )}
             </Stack>
             {renderDesign()}
           </Typography>
@@ -5379,6 +6143,15 @@ const ContentLogic = (props) => {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
+          <Backdrop
+            sx={{
+              color: "#bc48ff",
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+            open={loader}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
           <Box sx={{ bgcolor: "brown", color: "white", height: "55px" }}>
             <IconButton
               edge="start"
@@ -5391,9 +6164,7 @@ const ContentLogic = (props) => {
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-          <DialogContent>
-            {handleModalInputs()}
-            </DialogContent>
+          <DialogContent>{handleModalInputs()}</DialogContent>
         </Dialog>
         {/* admin candidate upload batch modal */}
         <Dialog
@@ -5599,7 +6370,8 @@ const ContentLogic = (props) => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
 
   const StateContainer = {
     order,
@@ -5665,7 +6437,11 @@ const ContentLogic = (props) => {
     setCategoryData,
     setCompanyData,
     setIndustryData,
-    setSkillSetData
+    setSkillSetData,
+    setSubscriptionData,
+    setUserData,
+    setCandidateMasterData,
+    handleClickOpen
   };
 
   return StateContainer;

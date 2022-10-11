@@ -20,6 +20,9 @@ import {
   Alert,
   Backdrop,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -78,6 +81,7 @@ const ContentLogic = (props) => {
   const [permissions, setPermissions] = useState([]);
   const [numSelected] = useState([]);
 
+  const [cndVrfnTabValue, setCndVrfnTabValue] = useState("1");
   const [id, setId] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -2245,6 +2249,9 @@ const ContentLogic = (props) => {
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
+  const handleChangeCndVrfnTab = (event, newValue) => {
+    setCndVrfnTabValue(newValue);
+  };
 
   // used to handle child modal of candidate master module modal to insert certificate
   const handleClickOpenChildModal = () => {
@@ -3789,12 +3796,700 @@ const ContentLogic = (props) => {
       case "candidate-verification":
         return (
           <>
-            <TextField>
+            <Box
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "nowrap",
+              }}
+            >
+              <h3 style={{ color: "red", textAlign: "center" }}>
+                Everything is readonly.
+              </h3>
 
-            </TextField>
-            
+              <Card
+                sx={{
+                  maxWidth: 1545,
+                  bgcolor: "#F0FDFF",
+                  mb: 2,
+                  border: "1px solid #b6e6ee",
+                  boxShadow: "0 1px 4px 0.25px #b6e6ee",
+                }}
+              >
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                    <b>Assigned To</b>
+                  </Typography>
+                </CardContent>
+              </Card>
+              <ListItem style={{ justifyContent: "flex-end" }}>
+                <Button style={{ backgroundColor: "brown", color: "white" }}>
+                  Save
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "brown",
+                    color: "white",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: "#f5f5f5",
+                    color: "black",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Exit
+                </Button>
+              </ListItem>
+              <ListItem
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Card
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    maxWidth: 1345,
+                    backgroundColor: "#ffeaeb",
+                    marginBottom: 2,
+                    borderRadius: "3px",
+                    border: "1px solid #eecacb",
+                    boxShadow: "0 1px 4px 0.25px #eecacb",
+                  }}
+                >
+                  <CardContent>
+                    <TextField
+                      select
+                      required
+                      sx={{ width: "30ch" }}
+                      label="Candidate consent"
+                    />
+                    <TextField
+                      select
+                      required
+                      sx={{ width: "30ch", ml: 2 }}
+                      label="Call Status"
+                    />
+                    <TextField
+                      multiline
+                      rows={2}
+                      sx={{ width: "50ch", ml: 2 }}
+                      label="Comment"
+                    />
+                  </CardContent>
+                </Card>
+                <h3>Call Centre History (0)</h3>
+              </ListItem>
+              <ListItem
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                }}
+              >
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Old Industry:"
+                ></FormControlLabel>
+                <b>NA</b>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Old Category:"
+                ></FormControlLabel>
+                <b>INSTRUMENTATION ENGINEER</b>
+                <FormControlLabel
+                  disabled
+                  control={<Checkbox />}
+                  label="Old Education:"
+                ></FormControlLabel>
+              </ListItem>
+              {/* <ListItem> */}
+              <TabContext value={cndVrfnTabValue}>
+                <Box>
+                  <TabList
+                    style={{ backgroundColor: "#c7c1c1" }}
+                    onChange={handleChangeCndVrfnTab}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab label="PART 1" value="1" />
+                    <Tab label="PART 2" value="2" />
+                    <Tab label="PART 3" value="3" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                    }}
+                  >
+                    <TextField
+                      required
+                      sx={{ width: "30ch" }}
+                      size="small"
+                      label="Full Name"
+                    />
+                    <TextField
+                      required
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Primary Mobile"
+                    />
+                    <TextField
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Secondary Mobile"
+                    />
+                    <TextField
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Primary Email"
+                    />
+                  </ListItem>
+                  <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                    }}
+                  >
+                    <TextField
+                      sx={{ width: "30ch" }}
+                      size="small"
+                      label="Total Exp years"
+                    />
+                    <TextField
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Education"
+                    />
+                    <TextField
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Birthdate"
+                    />
+                    <TextField
+                      select
+                      value={gender}
+                      sx={{ ml: 3, width: "30ch" }}
+                      size="small"
+                      label="Gender"
+                    />
+                  </ListItem>
+                  {/* <ListItem style={{display:'flex',flexDirection:'row',flexWrap:'nowrap'}}> */}
+                  <Card
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      justifyContent: "space-around",
+                      maxWidth: 1170,
+                      backgroundColor: "#F0FDFF",
+                      marginBottom: 2,
+                      border: "1px solid #b6e6ee",
+                      boxShadow: "0 1px 4px 0.25px #b6e6ee",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <b style={{ color: "red" }}>Industry</b>
+                      <TextField
+                        size="small"
+                        sx={{ width: "30ch" }}
+                        select
+                        label="Industry"
+                      />
+                      <Button
+                        disabled
+                        size="small"
+                        style={{
+                          backgroundColor: "gray",
+                          color: "white",
+                          marginTop: "20px",
+                        }}
+                      >
+                        Add More
+                      </Button>
+                    </ListItem>
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <b style={{ color: "red" }}>Category</b>
+                      <TextField
+                        size="small"
+                        sx={{ width: "30ch" }}
+                        select
+                        label="Category"
+                      />
+                      <Button
+                        disabled
+                        size="small"
+                        style={{
+                          backgroundColor: "gray",
+                          color: "white",
+                          marginTop: "20px",
+                        }}
+                      >
+                        Add More
+                      </Button>
+                    </ListItem>
+                  </Card>
+                  <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                    }}
+                  >
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Old Company:"
+                    ></FormControlLabel>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Old Designation:"
+                    ></FormControlLabel>
+                  </ListItem>
+                  <Card
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      // justifyContent:'space-around',
+                      maxWidth: 1170,
+                      backgroundColor: "#e6fbf0",
+                      marginBottom: 2,
+                      border: "1px solid #b5ddc8",
+                      boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Currently Employed?"
+                      ></FormControlLabel>
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch" }}
+                          label="Company Name"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          select
+                          label="Industry"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          select
+                          label="Category(Designation)"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "10ch", ml: 2 }}
+                          helperText="Start date"
+                          select
+                          label="MM"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "20ch", ml: 2 }}
+                          select
+                          label="YYYY"
+                        />
+                      </ListItem>
+
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "10ch", ml: 2 }}
+                          helperText="End date"
+                          select
+                          label="MM"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "20ch", ml: 2 }}
+                          select
+                          label="YYYY"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "40ch", ml: 2 }}
+                          multiline
+                          rows={2}
+                          label="Job Description"
+                        />
+                      </ListItem>
+                    </ListItem>
+                  </Card>
+                  <ListItem>
+                    <Button
+                      disabled
+                      size="small"
+                      style={{ backgroundColor: "gray", color: "white" }}
+                    >
+                      Add More
+                    </Button>
+                  </ListItem>
+                </TabPanel>
+                <TabPanel value="2">
+                  <Card
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      // justifyContent:'space-around',
+                      maxWidth: 1170,
+                      backgroundColor: "#F0FDFF",
+                      marginBottom: 2,
+                      border: "1px solid #b6e6ee",
+                      boxShadow: "0 1px 4px 0.25px #b6e6ee",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Primary skill Name"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          select
+                          label="Secondary skill"
+                        />
+                      </ListItem>
+
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Preffered location 1"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Preffered location 2"
+                        />
+                      </ListItem>
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Primary Lanugage"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Secondary Lanugage"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Third Lanugage"
+                        />
+                      </ListItem>
+                    </ListItem>
+                  </Card>
+
+                  <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                    }}
+                  >
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Old Primary Language:"
+                    ></FormControlLabel>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Old Secondary Language:"
+                    ></FormControlLabel>
+                  </ListItem>
+                  <Card
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      // justifyContent:'space-around',
+                      maxWidth: 1170,
+                      backgroundColor: "#e6fbf0",
+                      marginBottom: 2,
+                      border: "1px solid #b5ddc8",
+                      boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Current Pincode"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Current City"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Current State"
+                        />
+                      </ListItem>
+
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "40ch", ml: 2 }}
+                          multiline
+                          rows={2}
+                          label="Current Address"
+                        />
+                      </ListItem>
+                    </ListItem>
+                  </Card>
+                </TabPanel>
+                <TabPanel value="3">
+                  <Card
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      // justifyContent:'space-around',
+                      maxWidth: 1170,
+                      backgroundColor: "#e6fbf0",
+                      marginBottom: 2,
+                      border: "1px solid #b5ddc8",
+                      boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Same as current address"
+                      ></FormControlLabel>
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Permanent Pincode"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Permanent City"
+                        />
+                        <TextField
+                          size="small"
+                          sx={{ width: "30ch", ml: 2 }}
+                          label="Permanent State"
+                        />
+                      </ListItem>
+
+                      <ListItem
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          sx={{ width: "40ch", ml: 2 }}
+                          multiline
+                          rows={2}
+                          label="Permanent Address"
+                        />
+                      </ListItem>
+                    </ListItem>
+                  </Card>
+                  <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "nowrap",
+                      }}
+                    >
+                      <TextField
+                        size="small"
+                        sx={{ width: "30ch", ml: 2 }}
+                        label="Aadhar No"
+                      />
+                      <TextField
+                        size="small"
+                        sx={{ width: "30ch", ml: 2 }}
+                        label="Pan No"
+                      />
+                      <TextField
+                        size="small"
+                        sx={{ width: "30ch", ml: 2 }}
+                        label="Driving Licence no"
+                      />
+                    </ListItem>
+
+                    <ListItem
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "nowrap",
+                      }}
+                    >
+                      <TextField
+                        size="small"
+                        sx={{ width: "40ch", ml: 2 }}
+                        multiline
+                        rows={2}
+                        label="Note"
+                      />
+                    </ListItem>
+                  </ListItem>
+                </TabPanel>
+                <Box>
+                  <TabList
+                    style={{ backgroundColor: "#c7c1c1" }}
+                    onChange={handleChangeCndVrfnTab}
+                    aria-label="lab API tabs example"
+                  >
+                    <Tab label="PART 1" value="1" />
+                    <Tab label="PART 2" value="2" />
+                    <Tab label="PART 3" value="3" />
+                  </TabList>
+                </Box>
+                <Box
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    style={{
+                      backgroundColor: "#f5f5f5",
+                      color: "black",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    Exit
+                  </Button>
+                </Box>
+              </TabContext>
+            </Box>
           </>
-        )
+        );
       case "agent-master":
         return (
           <>
@@ -6441,7 +7136,7 @@ const ContentLogic = (props) => {
     setSubscriptionData,
     setUserData,
     setCandidateMasterData,
-    handleClickOpen
+    handleClickOpen,
   };
 
   return StateContainer;

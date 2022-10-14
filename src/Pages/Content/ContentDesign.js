@@ -65,7 +65,8 @@ export default function ContentDesign(props) {
     setUserData,
     setCandidateMasterData,
     handleClickOpen,
-    getCandidateVerificationById
+    getCandidateVerificationById,
+    setAgentMasterData
   } = ContentLogic();
 
   useEffect(() => {
@@ -266,7 +267,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setAgentMasterData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setAgentMasterData([])
+                  }}}/>
                   </TableCell>
                   <TableCell
                     component="th"
@@ -304,7 +315,15 @@ export default function ContentDesign(props) {
             <>
               <TableRow hover role="checkbox" tabIndex={-1}>
                 <TableCell padding="checkbox">
-                  <Checkbox color="primary" />
+                  <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                  }
+                  else{
+                    setEditStatus(false)
+                  }}}/>
                 </TableCell>
                 <TableCell
                     component="th"

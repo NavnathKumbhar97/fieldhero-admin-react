@@ -57,7 +57,7 @@ import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
-import { CheckBox, Info, PriorityHigh } from "@mui/icons-material";
+import { CheckBox, Info, PriorityHigh, ToggleOn } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
@@ -1103,9 +1103,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/agent-pricing-templates?take=${rowsPerPage}&skip=${
-          page * rowsPerPage
-        }`,
+        `/v1/agent-pricing-templates`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -1565,6 +1563,30 @@ const ContentLogic = (props) => {
           setUpdateCandidateVerificationData(response.data.data);
           console.log("candidate verification by id",response.data.data);
           console.log("getcandidateVerification",updateCandidateVerificationData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false)
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+
+  const getAgentMasteById = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/agents/${editId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setAgentMasterData(response.data.data);
+          // console.log("agent by id",response.data.data);
+          // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
           setLoader(false)
@@ -2189,6 +2211,73 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateCategoryAPICall", error);
           });
         break;
+      case "agent-master":
+        let updateAgentMaster = {
+          ...agentMasterData,
+          id: editId,
+        };
+        setLoader(true)
+        handler
+          .dataPut(
+            `/v1/agents/${updateAgentMaster.id}`,
+            updateAgentMaster,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenAlertMsg(true);
+              setOpenModal(false);
+              getAgentMasterAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateAgentByAPICall", error);
+          });
+        break;
+      case "agent-pricing-template":
+        let updateAgentPricingTemplate = {
+          ...agentMasterData,
+          id: editId,
+        };
+        setLoader(true)
+        handler
+          .dataPost(
+            `/v1/agent-pricing-templates/${updateAgentPricingTemplate.id}/active`,
+            updateAgentPricingTemplate,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenAlertMsg(true);
+              setOpenModal(false);
+              getAgentTemplatePricingAPIcall();
+            } else {
+              window.alert(response.data.message);
+              console.log("else part");
+              getAgentTemplatePricingAPIcall();
+              setOpenAlertMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCategoryAPICall", error);
+          });
+        break;
       case "category":
         let updateCategoryData = {
           ...categoryData,
@@ -2580,10 +2669,17 @@ const ContentLogic = (props) => {
       case "agent-master":
         return (
           <>
-            {numSelected === 1 ? (
+            {editStatus ? (
               <Button
-                style={{ marginTop: "50px", marginRight: "50px" }}
-                variant="outlined"
+              onClick={()=>{handleClickOpen()
+                getAgentMasteById()}}
+              style={{
+                marginTop: "50px",
+                marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
               >
                 <EditIcon />
                 Edit
@@ -2608,13 +2704,20 @@ const ContentLogic = (props) => {
       case "agent-pricing-template":
         return (
           <>
-            {numSelected === 1 ? (
+            {editStatus ? (
               <Button
-                style={{ marginTop: "80px", marginRight: "50px" }}
-                variant="outlined"
+             onClick={()=>{updateAPICalls('agent-pricing-template')}}
+
+              style={{
+                marginTop: "80px",
+                marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
               >
-                <EditIcon />
-                Edit
+                <ToggleOn />
+                Set Active
               </Button>
             ) : (
               <Button
@@ -3967,9 +4070,19 @@ const ContentLogic = (props) => {
                 }}
               >
                 <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    <b>Assigned To</b>
-                  </Typography>
+                <ListItem
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+
+                    }}
+                  >
+                    <b>Batch no :</b> {updateCandidateVerificationData.batchNo} 
+                    <b style={{marginLeft:'10px'}}>Row no :</b> {updateCandidateVerificationData.rowNo}
+                    <b style={{marginLeft:'10px'}}>Batch Owner :</b> {updateCandidateVerificationData.createdBy}
+                    <b style={{marginLeft:'10px'}}>Role :</b> {updateCandidateVerificationData.role}
+                  </ListItem>
                 </CardContent>
               </Card>
               <ListItem style={{ justifyContent: "flex-end" }}>
@@ -4940,6 +5053,7 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Agent No"
                           variant="filled"
+                          disabled={editStatus}
                           sx={{ width: "30ch" }}
                           value={agentMasterData.agentNo}
                           onChange={(e) => {
@@ -5065,6 +5179,7 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Email"
                           required
+                          disabled={editStatus}
                           type="email"
                           variant="filled"
                           sx={{ width: "30ch" }}
@@ -5347,12 +5462,18 @@ const ContentLogic = (props) => {
                         />
                       </List>
                       <List>
-                        <Button
+                        {!editStatus ? (<Button
                           onClick={() => addAPICalls("agent-master")}
                           style={{ color: "white", backgroundColor: "brown" }}
                         >
                           Save
-                        </Button>
+                        </Button>):
+                        (<Button
+                          onClick={() => updateAPICalls("agent-master")}
+                          style={{ color: "white", backgroundColor: "brown" }}
+                        >
+                          Update
+                        </Button>)}
                       </List>
                     </div>
                   </Box>
@@ -7540,7 +7661,9 @@ const ContentLogic = (props) => {
     setUserData,
     setCandidateMasterData,
     handleClickOpen,
-    getCandidateVerificationById
+    getCandidateVerificationById,
+    setAgentMasterData,
+    
   };
 
   return StateContainer;

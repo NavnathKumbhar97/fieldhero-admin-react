@@ -173,9 +173,83 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+  const [candidateVerificationData,setCandidateVerificationData] = useState({})
 
-  const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
-    useState({});
+  //store to update candidate verification data 
+  const [updateCandidateVerificationData, setUpdateCandidateVerificationData] = useState({
+      aadharNo:0,
+      batchNo:0,
+      callCentre:'',
+      category:'',
+      contactNo1:'',
+      contactNo2:'',
+      createdBy:'',
+      currAddress:'',
+      currCity:'',
+      currState:'',
+      currZip:'',
+      designation:'',
+      dlNo:'',
+      dob:'',
+      education:'',
+      educationRaw:'',
+      email1:'',
+      expYears:'',
+      fullName:'',
+      gender:'',
+      industry:'',
+      lastCompany:'',
+      note:'',
+      panNo:'',
+      permAddress:'',
+      permCity:'',
+      permState:'',
+      permZip:'',
+      preferLocation1:'',
+      preferLocation2:'',
+      primaryLanguage:'',
+      primaryLanguageRaw:'',
+      role:'',
+      rowNo:0,
+      secondaryLanguage:'',
+      secondaryLanguageRaw:'',
+      skill1:'',
+      skill2:'',
+      status:'',
+      thirdLanguage:'',
+      verification:{
+        candidateId:0,
+        category:'',
+        contactNo1:'',
+        createdBy:'',
+        createdOn:'',
+        currCity:'',
+        currZip:'',
+        designation:'',
+        dob:'',
+        education:'',
+        email1:'',
+        expYears:'',
+        fullName:'',
+        id:0,
+        industry:'',
+        lastCompany:'',
+        modifiedBy:0,
+        modifiedOn:'',
+        preferLocation1:'',
+        preferLocation2:'',
+        primaryLanguage:'',
+        secondaryLanguage:'',
+        skill1:'',
+        skill2:'',
+
+      },
+      CandidateCategory:[],
+      CandidateIndustry:[],
+      CandidateWorkHistory:[],
+      callCentre:[],
+
+  });
   //state for store the input fields value of industry
   const [categoryData, setCategoryData] = useState({
     title: "",
@@ -1429,7 +1503,6 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-
   //get user details by id of user module modal on click of edit
   const getUserAPIcallById = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1478,31 +1551,30 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-  const getCandidateVerificationById = () => {
+  const getCandidateVerificationById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/candidate-verifications/${editId}`, {
+      .dataGet(`/v1/candidate-verifications/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setUpdateCandidateMasterData(response.data.data);
-          // setTblDataCount(response.data.data.users);
-          console.log(
-            "candidate Data to update by id",
-            updateCandidateMasterData
-          );
+          setUpdateCandidateVerificationData(response.data.data);
+          console.log("candidate verification by id",response.data.data);
+          console.log("getcandidateVerification",updateCandidateVerificationData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
+          setLoader(false)
         }
       })
       .catch((error) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
+  
 
   function EnhancedTableHead(props) {
     const {
@@ -1687,6 +1759,61 @@ const ContentLogic = (props) => {
       label: "User",
     },
   ];
+  const candidateConsent =[
+    {
+      value:'Consent Pending ',
+      label:'Consent Pending '
+    },
+    {
+      value:'Consent Declined ',
+      label:'Consent Declined '
+    },
+    {
+      value:'Consent Received ',
+      label:'Consent Received '
+    }
+  ]
+  const callStatus =[
+    {
+      value:'Busy',
+      label:'Busy'
+    },
+    {
+      value:'Call Back',
+      label:'Call Back'
+    },
+    {
+      value:'Completed ',
+      label:'Completed'
+    },
+    {
+      value:'Disconnected ',
+      label:'Disconnected'
+    },
+    {
+      value:'Half Details ',
+      label:'Half Details'
+    },
+    {
+      value:'Not Reachable ',
+      label:'Not Reachable'
+    },
+    {
+      value:'Ringing ',
+      label:'Ringing'
+    },
+    {
+      value:'Switch Off ',
+      label:'Switch Off'
+    },
+  ]
+
+  const industrySelectField =[
+    {
+      label:industryData.title,
+      value:industryData.title
+    }
+  ]
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -1720,6 +1847,28 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               setOpenModal(false);
               getAgentMasterAPIcall();
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+        break;
+      case 'candidate-verification':
+        handler
+          .dataPost(`/v1/candidate-verifications`, candidateVerificationData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              getCandidateVerificationAPIcall();
               setOpenAlertMsg(true);
             } else {
               window.alert(response.data.message);
@@ -2016,8 +2165,8 @@ const ContentLogic = (props) => {
         };
         handler
           .dataPut(
-            `/v1/candidates/:${updateCandidatesMasterData.id}`,
-            updateCandidatesMasterData,
+            `/v1/candidate-verifications/${updateCandidateVerifnData.id}`,
+            updateCandidateVerifnData,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
             }
@@ -2028,7 +2177,7 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               setOpenAlertMsg(true);
               setOpenModal(false);
-              getCandidateMasterAPIcall();
+              getCandidateVerificationAPIcall();
             } else {
               window.alert(response.data.message);
             }
@@ -2413,6 +2562,7 @@ const ContentLogic = (props) => {
         return (
           <>
             <Button
+            onClick={()=>addAPICalls('candidate-verification')}
               style={{
                 marginTop: "80px",
                 marginRight: "0px",
@@ -3823,7 +3973,11 @@ const ContentLogic = (props) => {
                 </CardContent>
               </Card>
               <ListItem style={{ justifyContent: "flex-end" }}>
-                <Button style={{ backgroundColor: "brown", color: "white" }}>
+                <Button 
+                style={{ backgroundColor: "brown", color: "white" }}
+                 onClick={()=>{
+                      updateAPICalls('candidate-verification')
+                    }}>
                   Save
                 </Button>
                 <Button
@@ -3872,13 +4026,25 @@ const ContentLogic = (props) => {
                       required
                       sx={{ width: "30ch" }}
                       label="Candidate consent"
-                    />
+                      // value={updateCandidateVerificationData}
+                    >
+                      {candidateConsent.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                    </TextField>
                     <TextField
                       select
                       required
                       sx={{ width: "30ch", ml: 2 }}
-                      label="Call Status"
-                    />
+                      label="Call Status">
+                      {callStatus.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                     <TextField
                       multiline
                       rows={2}
@@ -3938,22 +4104,50 @@ const ContentLogic = (props) => {
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Full Name"
+                      value={updateCandidateVerificationData.fullName}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          fullName:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       required
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Mobile"
+                      value={updateCandidateVerificationData.contactNo1}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          contactNo1:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Secondary Mobile"
+                      value={updateCandidateVerificationData.contactNo2}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          contactNo2:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Email"
+                      value={updateCandidateVerificationData.email1}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          email1:e.target.value
+                        })
+                      }}
                     />
                   </ListItem>
                   <ListItem
@@ -3967,24 +4161,57 @@ const ContentLogic = (props) => {
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Total Exp years"
+                      value={updateCandidateVerificationData.expYears}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          expYears:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Education"
+                      value={updateCandidateVerificationData.education}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          education:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Birthdate"
+                      value={updateCandidateVerificationData.dob}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          dob:e.target.value
+                        })
+                      }}
                     />
                     <TextField
                       select
-                      value={gender}
+                      value={updateCandidateVerificationData.gender}
+                      onSelect={(e)=>{
+                        setUpdateCandidateVerificationData({
+                        ...updateCandidateVerificationData,
+                        gender:e.target.value
+                      })
+                      }}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Gender"
-                    />
+                    >
+                      {gender.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                    </TextField>
                   </ListItem>
                   {/* <ListItem style={{display:'flex',flexDirection:'row',flexWrap:'nowrap'}}> */}
                   <Card
@@ -4013,7 +4240,20 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch" }}
                         select
                         label="Industry"
-                      />
+                        value={updateCandidateVerificationData.industry}
+                        onChange={(e)=>{
+                          setUpdateCandidateVerificationData({
+                            ...updateCandidateVerificationData,
+                            industry:e.target.value
+                          })
+                        }}
+                      >
+                        {industrySelectField.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                        ))}
+                        </TextField>
                       <Button
                         disabled
                         size="small"
@@ -4039,7 +4279,20 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch" }}
                         select
                         label="Category"
-                      />
+                        value={updateCandidateVerificationData.category}
+                        onChange={(e)=>{
+                          setUpdateCandidateVerificationData({
+                            ...updateCandidateVerificationData,
+                            category:e.target.value
+                          })
+                        }}
+                      >
+                        {industrySelectField.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                        ))}
+                      </TextField>
                       <Button
                         disabled
                         size="small"
@@ -4104,18 +4357,36 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch" }}
                           label="Company Name"
+                          value={updateCandidateVerificationData.verification.lastCompany}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData.verification,
+                              lastCompany:e.target.value})
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
                           label="Industry"
+                          value={updateCandidateVerificationData.verification.industry}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData.verification,
+                              industry:e.target.value})
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
                           label="Category(Designation)"
+                          value={updateCandidateVerificationData.verification.designation}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData.verification,
+                              designation:e.target.value})
+                          }}
                         />
                         <TextField
                           size="small"
@@ -4204,12 +4475,26 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary skill Name"
+                          value={updateCandidateVerificationData.skill1}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              skill1:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
                           label="Secondary skill"
+                          value={updateCandidateVerificationData.skill2}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              skill2:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
 
@@ -4224,11 +4509,25 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 1"
+                          value={updateCandidateVerificationData.preferLocation1}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              preferLocation1:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 2"
+                          value={updateCandidateVerificationData.preferLocation2}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              preferLocation2:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
                       <ListItem
@@ -4242,16 +4541,37 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary Lanugage"
+                          value={updateCandidateVerificationData.primaryLanguage}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              primaryLanguage:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Secondary Lanugage"
+                          value={updateCandidateVerificationData.secondaryLanguage}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              secondaryLanguage:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Third Lanugage"
+                          value={updateCandidateVerificationData.thirdLanguage}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              thirdLanguage:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
                     </ListItem>
@@ -4304,16 +4624,37 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current Pincode"
+                          value={updateCandidateVerificationData.currZip}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              currZip:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current City"
+                          value={updateCandidateVerificationData.currCity}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              currCity:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current State"
+                          value={updateCandidateVerificationData.currState}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              currState:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
 
@@ -4371,16 +4712,37 @@ const ContentLogic = (props) => {
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent Pincode"
+                          value={updateCandidateVerificationData.permZip}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              permZip:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent City"
+                          value={updateCandidateVerificationData.permCity}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              permCity:e.target.value
+                            })
+                          }}
                         />
                         <TextField
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent State"
+                          value={updateCandidateVerificationData.permState}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              permState:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
 
@@ -4397,6 +4759,13 @@ const ContentLogic = (props) => {
                           multiline
                           rows={2}
                           label="Permanent Address"
+                          value={updateCandidateVerificationData.permAddress}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              permAddress:e.target.value
+                            })
+                          }}
                         />
                       </ListItem>
                     </ListItem>
@@ -4419,16 +4788,37 @@ const ContentLogic = (props) => {
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Aadhar No"
+                        value={updateCandidateVerificationData.aadharNo}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              aadharNo:e.target.value
+                            })
+                          }}
                       />
                       <TextField
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Pan No"
+                        value={updateCandidateVerificationData.panNo}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              panNo:e.target.value
+                            })
+                          }}
                       />
                       <TextField
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Driving Licence no"
+                        value={updateCandidateVerificationData.dlNo}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              dlNo:e.target.value
+                            })
+                          }}
                       />
                     </ListItem>
 
@@ -4445,6 +4835,13 @@ const ContentLogic = (props) => {
                         multiline
                         rows={2}
                         label="Note"
+                        value={updateCandidateVerificationData.note}
+                          onChange={(e)=>{
+                            setUpdateCandidateVerificationData({
+                              ...updateCandidateVerificationData,
+                              note:e.target.value
+                            })
+                          }}
                       />
                     </ListItem>
                   </ListItem>
@@ -4472,6 +4869,9 @@ const ContentLogic = (props) => {
                       backgroundColor: "brown",
                       color: "white",
                       marginLeft: "10px",
+                    }}
+                    onClick={()=>{
+                      updateAPICalls('candidate-verification')
                     }}
                   >
                     Save
@@ -6840,12 +7240,15 @@ const ContentLogic = (props) => {
         >
           <Backdrop
             sx={{
-              color: "#bc48ff",
+              color: "#7d1810",
               zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
             open={loader}
           >
-            <CircularProgress color="inherit" />
+            <CircularProgress 
+                size={130}
+                thickness={2}
+                color="inherit" />
           </Backdrop>
           <Box sx={{ bgcolor: "brown", color: "white", height: "55px" }}>
             <IconButton
@@ -7137,6 +7540,7 @@ const ContentLogic = (props) => {
     setUserData,
     setCandidateMasterData,
     handleClickOpen,
+    getCandidateVerificationById
   };
 
   return StateContainer;

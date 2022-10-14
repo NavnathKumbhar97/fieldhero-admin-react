@@ -70,11 +70,11 @@ function LoginDesign() {
       <Container component="main" maxWidth="md">
         <CssBaseline />
         <Backdrop
-        sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{color: '#7d1810', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}
         // onClick={handleClose}
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress size={130} thickness={2} color="inherit" />
       </Backdrop>
         <Box
           sx={{

@@ -7,9 +7,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import { Backdrop, Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress} from "@mui/material";
 import ContentLogic from "./ContentLogic";
-import { Download, Edit, ViewAgenda, Visibility } from "@mui/icons-material";
+import { Download, Edit, Visibility } from "@mui/icons-material";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -17,7 +17,6 @@ export default function ContentDesign(props) {
   let {
     order,
     orderBy,
-    selected,
     page,
     rowsPerPage,
     tblData,
@@ -65,12 +64,12 @@ export default function ContentDesign(props) {
     setSubscriptionData,
     setUserData,
     setCandidateMasterData,
-    handleClickOpen
+    handleClickOpen,
+    getCandidateVerificationById
   } = ContentLogic();
 
   useEffect(() => {
     setPageName(data.page);
-    console.log(data.page);
     setPageTitle(data.pageTitle);
     setButtonText(data.buttonText);
     setModalTitle(data.modalTitle);
@@ -249,6 +248,9 @@ export default function ContentDesign(props) {
                   onClick={()=>{
                     handleClickOpen()
                     setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getCandidateVerificationById(tblData[item].id)
                   }}>
                     <Edit/>Edit</Button>
                   </TableCell>
@@ -754,12 +756,15 @@ export default function ContentDesign(props) {
     <Box sx={{ width: "100%", mt: 1 }}>
       
         <Backdrop
-        sx={{color: '#bc48ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{color: '#7d1810', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}>
-        <CircularProgress color="inherit" />
+        <CircularProgress 
+        size={130}
+        thickness={2}
+        color="inherit" />
       </Backdrop>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar key={"test1"} />
+        <EnhancedTableToolbar />
         {handleTable()}
       </Paper>
     </Box>

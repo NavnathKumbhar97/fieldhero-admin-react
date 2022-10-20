@@ -66,7 +66,8 @@ export default function ContentDesign(props) {
     setCandidateMasterData,
     handleClickOpen,
     getCandidateVerificationById,
-    setAgentMasterData
+    setAgentMasterData,
+    setCandidateUploadBatchAdminData
   } = ContentLogic();
 
   useEffect(() => {
@@ -358,10 +359,21 @@ export default function ContentDesign(props) {
         return (
           <>
             {Object.keys(tblData).map((item, i) => (
+              // console.log(tblData[item].AgentPricingTemplate),
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setCandidateUploadBatchAdminData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setCandidateUploadBatchAdminData([])
+                  }}}/>
                   </TableCell>
                   <TableCell
                     component="th"

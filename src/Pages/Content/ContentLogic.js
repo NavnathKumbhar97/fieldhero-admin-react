@@ -93,6 +93,13 @@ const ContentLogic = (props) => {
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
+  const [candidateUploadBatchAdminSelect,setCandidateUploadBatchAdminSelect] = useState({
+    id:0,
+  })
+  const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
+    useState({
+      id:0,
+    });
 
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
@@ -398,9 +405,9 @@ const ContentLogic = (props) => {
     skill2: 0,
     lastCompany: 0,
     designation: 0,
+    
   });
-  const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
-    useState({});
+  
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   // const useStyles = makeStyles((theme) => {
   //   const appbarHeight = 64;
@@ -1596,8 +1603,38 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-  
 
+  const getAgentPricingForCndUplBatchAPICalls=()=>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/agent-pricing-templates`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCandidateUploadBatchAdminData(response.data.data.agentPricingTemplates);
+          console.log("agent template data", candidateUploadBatchAdminData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
+        console.error(
+          "There was an error!- getAgentTemplatePricingAPIcall",
+          error
+        );
+      });
+  }
+  
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -2030,7 +2067,7 @@ const ContentLogic = (props) => {
             if (response.status == 201) {
               console.log(response.data.message);
               setOpenModal(false);
-              getUserAPIcall();
+              getIndustryAPIcall();
               setOpenAlertMsg(true);
             } else {
               window.alert(response.data.message);
@@ -2154,7 +2191,7 @@ const ContentLogic = (props) => {
         };
         handler
           .dataPut(
-            `/v1/candidates/:${updateCandidatesMasterData.id}`,
+            `/v1/candidates/${updateCandidatesMasterData.id}`,
             updateCandidatesMasterData,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2278,6 +2315,37 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateCategoryAPICall", error);
           });
         break;
+      case "candidate-upload-batch-admin":
+        let updateCandidateUploadBatchAdmin = {
+          ...candidateUploadBatchAdminSelect,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/admin/candidate-upload-batches/${updateCandidateUploadBatchAdmin.id}/change-pricing-template`,
+            updateCandidateUploadBatchAdmin,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+              setOpenAlertMsg(true);
+              setOpenModal(false);
+              getCandidateUploadBatchAdminAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateCategoryAPICall", error);
+          });
+        break;
       case "category":
         let updateCategoryData = {
           ...categoryData,
@@ -2328,7 +2396,7 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               setOpenModal(false);
               setOpenAlertMsg(true);
-              getCategoryAPIcall();
+              getCompanyAPIcall();
             } else {
               window.alert(response.data.message);
             }
@@ -2359,7 +2427,7 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               setOpenModal(false);
               setOpenAlertMsg(true);
-              getCategoryAPIcall();
+              getIndustryAPIcall();
             } else {
               window.alert(response.data.message);
             }
@@ -2740,7 +2808,7 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch-admin":
         return (
           <>
-            <Button
+            {!editStatus ? (<Button
               onClick={handleClickOpenAdminCanUplBtch}
               style={{
                 marginTop: "80px",
@@ -2752,7 +2820,21 @@ const ContentLogic = (props) => {
             >
               <FileUploadIcon />
               {buttonText}
-            </Button>
+            </Button>):
+            (<Button
+              onClick={()=>{handleClickOpenAdminCanUplBtch()
+                getAgentPricingForCndUplBatchAPICalls()}}
+              style={{
+                marginTop: "80px",
+                marginRight: "0px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              {/* <FileUploadIcon /> */}
+              Change Pricing Template
+            </Button>)}
           </>
         );
 
@@ -2782,7 +2864,7 @@ const ContentLogic = (props) => {
       case "role":
         return (
           <>
-            {!editStatus ? (
+            {editStatus ? (
               <Button
                 style={{
                   marginTop: "80px",
@@ -5999,6 +6081,8 @@ const ContentLogic = (props) => {
           </>
         );
 
+      case "candidate-upload-batch-admin":
+        return 
       case "category":
         return (
           <>
@@ -6274,7 +6358,7 @@ const ContentLogic = (props) => {
       case "role":
         return (
           <>
-            {Object.keys(permissions).map((item, i) => (
+            {/* {Object.keys(permissions).map((item, i) => ( */}
               <>
                 <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
                   <List sx={{ mb: 5 }}>
@@ -6319,7 +6403,7 @@ const ContentLogic = (props) => {
                     <List>
                       <b>Permissions Section</b>
                       <p style={{ color: "brown" }}>
-                        {permissions[item].group}
+                        {/* {permissions[item].group} */}
                       </p>
                     </List>
                     <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
@@ -6603,7 +6687,7 @@ const ContentLogic = (props) => {
                   </List>
                 </Box>
               </>
-            ))}
+            {/* ))} */}
           </>
         );
 
@@ -7393,7 +7477,7 @@ const ContentLogic = (props) => {
         >
           <DialogTitle>Admin - Candidate Upload Batch</DialogTitle>
 
-          <DialogContent>
+          {!editStatus ? (<DialogContent>
             <Button
               variant="contained"
               onClick={onDownload}
@@ -7453,9 +7537,54 @@ const ContentLogic = (props) => {
               fullWidth
               select
             />
-          </DialogContent>
+          </DialogContent>):(
+          <>
+            <DialogContent>
+            
+            <tr>
+              <td>Batch no:</td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>Uploaded by:</td>
+              <td>Mr.Navnath</td>
+            </tr>
+            <tr>
+              <td>Uploader role:</td>
+              <td>HO Agent</td>
+            </tr>
+            <tr>
+              <td>Current pricing template:</td>
+              <td>Navnath Test</td>
+            </tr>
+            <List>
+              <TextField 
+              onChange={(e)=>{
+                setCandidateUploadBatchAdminSelect({
+                  ...candidateUploadBatchAdminSelect,
+                  id:e.target.value})
+              }} 
+              label="New pricing template" 
+              value={candidateUploadBatchAdminSelect.id}
+              required 
+              style={{width:'50ch'}} 
+              select
+              >
+              {Object.keys(candidateUploadBatchAdminData).map((item,x) => (
+                  <MenuItem key={item} value={candidateUploadBatchAdminData[item].templateName}>
+                    <ListItemText primary={candidateUploadBatchAdminData[item].templateName} />
+                  </MenuItem>
+                ))}
+              </TextField>
+            </List>
+            <tr>
+              <p>*indicates required field</p>
+            </tr>
+            </DialogContent>
+          </>)}
           <DialogActions>
             <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
+            <Button onClick={()=>{updateAPICalls("candidate-upload-batch-admin")}}>Save</Button>
           </DialogActions>
         </Dialog>
         {/* batch priority modal */}
@@ -7663,7 +7792,7 @@ const ContentLogic = (props) => {
     handleClickOpen,
     getCandidateVerificationById,
     setAgentMasterData,
-    
+    setCandidateUploadBatchAdminData,
   };
 
   return StateContainer;

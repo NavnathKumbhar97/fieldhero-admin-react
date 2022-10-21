@@ -15,15 +15,18 @@ import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import Modal from "@mui/material/Modal";
+import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
   Backdrop,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
@@ -422,6 +425,23 @@ const ContentLogic = (props) => {
   const [editStatus, setEditStatus] = useState(false);
   // used to select multiple value from select field for batch priority module
   const [batchNo, setBatchNo] = useState([]);
+
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
 
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -1398,9 +1418,31 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setTblData(response.data.data.batches);
-          setTblDataCount(response.data.data.users);
+          setBatchPriorityData(response.data.data.batches);
+          // setBatchPriorityData(response.data.data.users);
           console.log("batch priority", response.data.data.users);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
+      });
+  };
+  const getBatchPriorityDataAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/batch-priorities`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setTblData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log("batch priority", response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -1455,6 +1497,7 @@ const ContentLogic = (props) => {
         break;
       case "batch-priority":
         getBatchPriorityAPIcall();
+        getBatchPriorityDataAPIcall()
         break;
       case "category":
         getCategoryAPIcall();
@@ -2987,7 +3030,110 @@ const ContentLogic = (props) => {
         return null;
 
       case "Batch Priority":
-        return <BatchPriority />;
+        return (
+          <>
+          {Object.keys(tblData).map((item, i) => (
+            <>
+           <Card
+      sx={{
+        maxWidth: 345,
+        bgcolor: "#e6fbf0",
+        mb: 2,
+        border: "1px solid #b5ddc8",
+        boxShadow: "0 1px 4px 0.25px #b5ddc8",
+      }}
+    >
+      <CardHeader
+        style={{ alignItem: "center", marginLeft: "110px" }}
+        action={
+          <IconButton aria-label="">
+            <EditIcon onClick={handleClickOpenAddBtchprty} style={{ color: "#d32f2f" }} />
+          </IconButton>
+        }
+        title="Batch no"
+      />
+      <h3
+        style={{
+          color: "#d32f2f",
+          display: "flex",
+          alignItem: "center",
+          justifyContent: "center",
+          position: "absolute",
+          marginLeft: "162px",
+          marginTop: "17px",
+        }}
+      >
+        {tblData[item].batchId}
+      </h3>
+
+      <CircularProgress
+        style={{ marginLeft: "140px",marginBottom:'-20px' }}
+        color="error"
+        variant="determinate"
+        value={100}
+        size={70}
+        thickness={3.4}
+      />
+
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          <b>Assigned To</b>
+          <p style={{ marginLeft: "40px", marginBottom: "-30px" }}>{tblData[item].assignedTo[item].fullName}</p>
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <p
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="SHOW STATS"
+          style={{
+            fontSize: "13px",
+            color: "#d32f2f",
+            marginLeft: "230px",
+            font: "bold",
+            cursor: "pointer",
+          }}
+        >
+          SHOW STATS
+        </p>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography paragraph>Method:</Typography>
+          <Typography paragraph>
+            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
+            set aside for 10 minutes.
+          </Typography>
+          <Typography paragraph>
+            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
+            over medium-high heat. Add chicken, shrimp and chorizo, and cook,
+            stirring occasionally until lightly browned, 6 to 8 minutes.
+            Transfer shrimp to a large plate and set aside, leaving chicken and
+            chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes,
+            onion, salt and pepper, and cook, stirring often until thickened and
+            fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2
+            cups chicken broth; bring to a boil.
+          </Typography>
+          <Typography paragraph>
+            Add rice and stir very gently to distribute. Top with artichokes and
+            peppers, and cook without stirring, until most of the liquid is
+            absorbed, 15 to 18 minutes. Reduce heat to medium-low, add reserved
+            shrimp and mussels, tucking them down into the rice, and cook again
+            without stirring, until mussels have opened and rice is just tender,
+            5 to 7 minutes more. (Discard any mussels that don&apos;t open.)
+          </Typography>
+          <Typography>
+            Set aside off of the heat to let rest for 10 minutes, and then
+            serve.
+          </Typography>
+        </CardContent>
+      </Collapse>
+    </Card>
+         </>
+            ))}
+          </>
+        );
 
       case "Other Industry Category":
         return <OtherIndCategory />;

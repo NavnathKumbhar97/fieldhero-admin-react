@@ -99,11 +99,11 @@ const ContentLogic = (props) => {
   const [candidateUploadBatchAdminSelect,setCandidateUploadBatchAdminSelect] = useState({
     id:0,
   })
+
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
     useState({
       id:0,
     });
-
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "123123123121",
@@ -1440,7 +1440,7 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setTblData(response.data.data);
+          // setTblData(response.data.data);
           // setTblDataCount(response.data.data.users);
           console.log("batch priority", response.data.data);
         } else if (response.status == 400) {
@@ -2360,12 +2360,12 @@ const ContentLogic = (props) => {
         break;
       case "candidate-upload-batch-admin":
         let updateCandidateUploadBatchAdmin = {
-          ...candidateUploadBatchAdminSelect,
-          id: editId,
+          // ...candidateUploadBatchAdminData,
+          templateId: candidateUploadBatchAdminData.id,
         };
         handler
           .dataPut(
-            `/v1/admin/candidate-upload-batches/${updateCandidateUploadBatchAdmin.id}/change-pricing-template`,
+            `/v1/admin/candidate-upload-batches/${candidateUploadBatchAdminData.id}/change-pricing-template`,
             updateCandidateUploadBatchAdmin,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -3032,8 +3032,6 @@ const ContentLogic = (props) => {
       case "Batch Priority":
         return (
           <>
-          {Object.keys(tblData).map((item, i) => (
-            <>
            <Card
       sx={{
         maxWidth: 345,
@@ -3063,7 +3061,7 @@ const ContentLogic = (props) => {
           marginTop: "17px",
         }}
       >
-        {tblData[item].batchId}
+        90
       </h3>
 
       <CircularProgress
@@ -3078,7 +3076,7 @@ const ContentLogic = (props) => {
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           <b>Assigned To</b>
-          <p style={{ marginLeft: "40px", marginBottom: "-30px" }}>{tblData[item].assignedTo[item].fullName}</p>
+          <p style={{ marginLeft: "40px", marginBottom: "-30px" }}>select</p>
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -3131,8 +3129,6 @@ const ContentLogic = (props) => {
       </Collapse>
     </Card>
          </>
-            ))}
-          </>
         );
 
       case "Other Industry Category":
@@ -7704,24 +7700,28 @@ const ContentLogic = (props) => {
               <td>Navnath Test</td>
             </tr>
             <List>
-              <TextField 
+              <Select 
               onChange={(e)=>{
-                setCandidateUploadBatchAdminSelect({
-                  ...candidateUploadBatchAdminSelect,
-                  id:e.target.value})
+                setCandidateUploadBatchAdminData({
+                  ...candidateUploadBatchAdminData,
+                  id:e.target.value
+                })
+                console.log("tt1",candidateUploadBatchAdminData.id);
               }} 
               label="New pricing template" 
-              value={candidateUploadBatchAdminSelect.id}
+              value={candidateUploadBatchAdminData.id}
               required 
               style={{width:'50ch'}} 
-              select
               >
               {Object.keys(candidateUploadBatchAdminData).map((item,x) => (
-                  <MenuItem key={item} value={candidateUploadBatchAdminData[item].templateName}>
-                    <ListItemText primary={candidateUploadBatchAdminData[item].templateName} />
+
+                  <MenuItem
+                  key={item} 
+                  value={candidateUploadBatchAdminData[item].id}>
+                    <ListItemText primary={candidateUploadBatchAdminData[item].templateName } />
                   </MenuItem>
-                ))}
-              </TextField>
+                ))} 
+              </Select>
             </List>
             <tr>
               <p>*indicates required field</p>
@@ -7755,7 +7755,6 @@ const ContentLogic = (props) => {
                 variant="filled"
                 onChange={handleChangeValueOfBatch}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
                 {tblData.map((item) => (

@@ -98,6 +98,12 @@ const ContentLogic = (props) => {
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [candidateUploadBatchAdminSelect,setCandidateUploadBatchAdminSelect] = useState({
     id:0,
+    createdBy:'',
+    role:'',
+    AgentPricingTemplate:{
+      templateName:''
+    }
+
   })
 
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
@@ -1139,8 +1145,9 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setTblData(response.data.data.agentPricingTemplates);
+          setCandidateUploadBatchAdminSelect(response.data.data)
           setTblDataCount(response.data.data.count);
-          console.log("agent template data", tblData);
+          console.log("agent template data", candidateUploadBatchAdminSelect);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -7682,14 +7689,15 @@ const ContentLogic = (props) => {
           </DialogContent>):(
           <>
             <DialogContent>
-            
+              
+            <List>
             <tr>
               <td>Batch no:</td>
-              <td>6</td>
+              <td>{candidateUploadBatchAdminSelect.id}</td>
             </tr>
             <tr>
               <td>Uploaded by:</td>
-              <td>Mr.Navnath</td>
+              <td>{candidateUploadBatchAdminSelect.createdBy}</td>
             </tr>
             <tr>
               <td>Uploader role:</td>
@@ -7699,6 +7707,7 @@ const ContentLogic = (props) => {
               <td>Current pricing template:</td>
               <td>Navnath Test</td>
             </tr>
+            </List>
             <List>
               <Select 
               onChange={(e)=>{
@@ -7707,6 +7716,7 @@ const ContentLogic = (props) => {
                   id:e.target.value
                 })
                 console.log("tt1",candidateUploadBatchAdminData.id);
+                console.log("all data",candidateUploadBatchAdminData);
               }} 
               label="New pricing template" 
               value={candidateUploadBatchAdminData.id}
@@ -7730,7 +7740,8 @@ const ContentLogic = (props) => {
           </>)}
           <DialogActions>
             <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
-            <Button onClick={()=>{updateAPICalls("candidate-upload-batch-admin")}}>Save</Button>
+            <Button onClick={()=>{updateAPICalls("candidate-upload-batch-admin")
+          handleCloseAdminCanUplBtch()}}>Save</Button>
           </DialogActions>
         </Dialog>
         {/* batch priority modal */}
@@ -7938,6 +7949,7 @@ const ContentLogic = (props) => {
     getCandidateVerificationById,
     setAgentMasterData,
     setCandidateUploadBatchAdminData,
+    setCandidateUploadBatchAdminSelect
   };
 
   return StateContainer;

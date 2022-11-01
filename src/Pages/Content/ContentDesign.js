@@ -67,7 +67,8 @@ export default function ContentDesign(props) {
     handleClickOpen,
     getCandidateVerificationById,
     setAgentMasterData,
-    setCandidateUploadBatchAdminData
+    setCandidateUploadBatchAdminData,
+    setCandidateUploadBatchAdminSelect
   } = ContentLogic();
 
   useEffect(() => {
@@ -369,6 +370,8 @@ export default function ContentDesign(props) {
                     setEditId(tblData[item].id);
                     setEditStatus(true)
                     setCandidateUploadBatchAdminData(tblData[item])
+                    setCandidateUploadBatchAdminSelect(tblData[item])
+                    console.log(tblData[item]);
                   }
                   else{
                     setEditStatus(false)

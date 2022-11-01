@@ -418,6 +418,18 @@ const ContentLogic = (props) => {
   });
   
   const [batchPriorityData, setBatchPriorityData] = useState([]);
+  const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
+    id:1
+  });
+  const [updateBatchPriority, setUpdateBatchPriority] = useState({
+    // assignedTo:{
+    //   fullName:'',
+    //   id:0
+    // },
+    batchId:0
+  });
+
+
   // const useStyles = makeStyles((theme) => {
   //   const appbarHeight = 64;
   //   return {
@@ -430,7 +442,10 @@ const ContentLogic = (props) => {
   const [editId, setEditId] = useState("");
   const [editStatus, setEditStatus] = useState(false);
   // used to select multiple value from select field for batch priority module
-  const [batchNo, setBatchNo] = useState([]);
+  const [batchNo, setBatchNo] = useState({
+    batchId:0,
+    assignedTo:[createBatchPriorityData.id]
+  });
 
   const [expanded, setExpanded] = useState(false);
 
@@ -746,19 +761,19 @@ const ContentLogic = (props) => {
     {
       id: "SrNo",
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: "Sr.No",
     },
     {
       id: "batchNo",
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: "Batch No",
     },
     {
       id: "timestamp",
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       label: "Timestamp",
     },
     {
@@ -1426,8 +1441,8 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setBatchPriorityData(response.data.data.batches);
-          // setBatchPriorityData(response.data.data.users);
-          console.log("batch priority", response.data.data.users);
+          setCreateBatchPriorityData(response.data.data.users);
+          console.log("batch priority passive create", response.data.data.batches);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -1447,9 +1462,9 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          // setTblData(response.data.data);
+          setUpdateBatchPriority(response.data.data);
           // setTblDataCount(response.data.data.users);
-          console.log("batch priority", response.data.data);
+          console.log("batch priority ", response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -2040,15 +2055,14 @@ const ContentLogic = (props) => {
         break;
       case "batch-priority":
         handler
-          .dataPost(`/v1/batch-priorities`, batchPriorityData, {
+          .dataPost(`/v1/batch-priorities`, batchNo, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-
-              //getBatchPriorityAPIcall()
+              getBatchPriorityAPIcall()
               setOpenAlertMsg(true);
             } else {
               window.alert(response.data.message);
@@ -2591,6 +2605,7 @@ const ContentLogic = (props) => {
   };
 
   const handleCloseAddBtchprty = () => {
+    setEditStatus(false)
     setOpenAddBtchprty(false);
   };
 
@@ -3039,6 +3054,7 @@ const ContentLogic = (props) => {
       case "Batch Priority":
         return (
           <>
+          {Object.keys(updateBatchPriority).map((item,x)=>(
            <Card
       sx={{
         maxWidth: 345,
@@ -3051,8 +3067,12 @@ const ContentLogic = (props) => {
       <CardHeader
         style={{ alignItem: "center", marginLeft: "110px" }}
         action={
-          <IconButton aria-label="">
-            <EditIcon onClick={handleClickOpenAddBtchprty} style={{ color: "#d32f2f" }} />
+          <IconButton aria-label="Edit">
+            <EditIcon onClick={()=>{
+              setEditStatus(true)
+              setId(updateBatchPriority[item].id)
+              setOpenAddBtchprty(true)
+            }} style={{ color: "#d32f2f" }} />
           </IconButton>
         }
         title="Batch no"
@@ -3068,7 +3088,7 @@ const ContentLogic = (props) => {
           marginTop: "17px",
         }}
       >
-        90
+        {updateBatchPriority[item].batchId}
       </h3>
 
       <CircularProgress
@@ -3135,6 +3155,7 @@ const ContentLogic = (props) => {
         </CardContent>
       </Collapse>
     </Card>
+    ))}
          </>
         );
 
@@ -7750,7 +7771,8 @@ const ContentLogic = (props) => {
           open={openAddBtchprty}
           onClose={handleCloseAddBtchprty}
         >
-          <DialogTitle>Add Batch Priority</DialogTitle>
+         {!editStatus?(<List>
+         <DialogTitle>Add Batch Priority</DialogTitle>
 
           <DialogContent>
             <List sx={{ mb: 3 }}>
@@ -7762,13 +7784,18 @@ const ContentLogic = (props) => {
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 fullWidth
-                value={batchNo}
+                value={batchNo.batchId}
                 variant="filled"
-                onChange={handleChangeValueOfBatch}
+                onChange={(e)=>{
+                  setBatchNo({
+                    ...batchNo,
+                    batchId:e.target.value
+                  })
+                }}
                 input={<OutlinedInput label="Tag" />}
                 MenuProps={MenuProps}
               >
-                {tblData.map((item) => (
+                {batchPriorityData.map((item) => (
                   <MenuItem key={item} value={item}>
                     <ListItemText primary={item} />
                   </MenuItem>
@@ -7780,37 +7807,41 @@ const ContentLogic = (props) => {
                 Assigned To
               </InputLabel>
               <Select
-                Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
-                multiple
+                // multiple
                 fullWidth
-                value={batchNo}
+                value={createBatchPriorityData.id}
                 variant="filled"
-                onChange={handleChangeValueOfBatch}
+                onChange={(e)=>{
+                  setCreateBatchPriorityData({
+                    ...createBatchPriorityData,
+                    id:e.target.value
+                  })
+                }}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={MenuProps}
+                // renderValue={(selected) => selected.join(", ")}
+                // MenuProps={MenuProps}
               >
-                {Object.keys(tblDataCount).map((item, i) => (
+                {Object.keys(createBatchPriorityData).map((item, i) => (
                   <MenuItem
                     key={
-                      tblDataCount[item].fullName +
+                      createBatchPriorityData[item].fullName +
                       " - " +
-                      tblDataCount[item].role
+                      createBatchPriorityData[item].role
                     }
                     value={
-                      tblDataCount[item].fullName +
+                      createBatchPriorityData[item].fullName +
                       " - " +
-                      tblDataCount[item].role
+                      createBatchPriorityData[item].role
                     }
                   >
-                    <CheckBox checked={tblDataCount.indexOf(item) > -1} />
+                    <CheckBox />
                     <ListItemText
                       primary={
-                        tblDataCount[item].fullName +
+                        createBatchPriorityData[item].fullName +
                         " - " +
-                        tblDataCount[item].role
+                        createBatchPriorityData[item].role
                       }
                     />
                   </MenuItem>
@@ -7820,8 +7851,89 @@ const ContentLogic = (props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAddBtchprty}>Close</Button>
-            <Button onClick={handleCloseAddBtchprty}>Save</Button>
-          </DialogActions>
+            <Button onClick={()=>{addAPICalls('batch-priority')}}>Save</Button>
+          </DialogActions></List>):
+          (<List><DialogTitle>Update Batch Priority</DialogTitle>
+
+<DialogContent>
+  <List sx={{ mb: 3 }}>
+    <InputLabel id="demo-multiple-checkbox-label">
+      Batch no
+    </InputLabel>
+    <Select
+      Select
+      labelId="demo-multiple-checkbox-label"
+      id="demo-multiple-checkbox"
+      fullWidth
+      value={batchNo.batchId}
+      variant="filled"
+      onChange={(e)=>{
+        setBatchNo({
+          ...batchNo,
+          batchId:e.target.value
+        })
+      }}
+      input={<OutlinedInput label="Tag" />}
+      MenuProps={MenuProps}
+    >
+      {batchPriorityData.map((item) => (
+        <MenuItem key={item} value={item}>
+          <ListItemText primary={item} />
+        </MenuItem>
+      ))}
+    </Select>
+  </List>
+  <List>
+    <InputLabel id="demo-multiple-checkbox-label">
+      Assigned To
+    </InputLabel>
+    <Select
+      labelId="demo-multiple-checkbox-label"
+      id="demo-multiple-checkbox"
+      // multiple
+      fullWidth
+      value={createBatchPriorityData.id}
+      variant="filled"
+      onChange={(e)=>{
+        setCreateBatchPriorityData({
+          ...createBatchPriorityData,
+          id:e.target.value
+        })
+      }}
+      input={<OutlinedInput label="Tag" />}
+      // renderValue={(selected) => selected.join(", ")}
+      // MenuProps={MenuProps}
+    >
+      {Object.keys(createBatchPriorityData).map((item, i) => (
+        <MenuItem
+          key={
+            createBatchPriorityData[item].fullName +
+            " - " +
+            createBatchPriorityData[item].role
+          }
+          value={
+            createBatchPriorityData[item].fullName +
+            " - " +
+            createBatchPriorityData[item].role
+          }
+        >
+          <CheckBox />
+          <ListItemText
+            primary={
+              createBatchPriorityData[item].fullName +
+              " - " +
+              createBatchPriorityData[item].role
+            }
+          />
+        </MenuItem>
+      ))}
+    </Select>
+  </List>
+</DialogContent>
+<DialogActions>
+  <Button onClick={handleCloseAddBtchprty}>Close</Button>
+  <Button onClick={()=>{addAPICalls('batch-priority')}}>Update</Button>
+</DialogActions></List>)}
         </Dialog>
       </Toolbar>
     );

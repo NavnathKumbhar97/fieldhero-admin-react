@@ -396,16 +396,14 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].timestamp}</TableCell>
                   <TableCell align="left">{tblData[item].count}</TableCell>
-                  <TableCell align="left">
-                    {tblData[item].status}
-                  </TableCell>
+                  <TableCell align="left">{tblData[item].status}</TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].approvedCount}</TableCell>
                   <TableCell align="left">{tblData[item].rejectedCount}</TableCell>
                   <TableCell align="left">{tblData[item].templateName}</TableCell>
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
-                  <TableCell align="center"><Button><Download/></Button></TableCell>
+                  <TableCell align="center"><Button title="Download Rejection Summary"><Download/></Button></TableCell>
                 </TableRow>
               </>
             ))}

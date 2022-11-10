@@ -57,6 +57,7 @@ export default function ContentDesign(props) {
     setEditId,
     setEditStatus,
     editId,
+    setRoleData,
     setCategoryData,
     setCompanyData,
     setIndustryData,
@@ -578,7 +579,17 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e)=>
+                  {
+                    if(e.target.checked){
+                    setEditId(tblData[item].id);
+                    setEditStatus(true)
+                    setRoleData(tblData[item])
+                  }
+                  else{
+                    setEditStatus(false)
+                    setRoleData([])
+                  }}} />
                   </TableCell>
                   <TableCell
                     component="th"

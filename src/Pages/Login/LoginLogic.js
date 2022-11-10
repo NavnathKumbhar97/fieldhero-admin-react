@@ -91,6 +91,9 @@ const loginAPIcall = async (e) => {
                   setTimeout(() => {
                       navigate("/")
                   }, 500)
+              }else{
+              alert("Invalid Email or Password")
+              setLoader(false)
               }
           } 
       } 

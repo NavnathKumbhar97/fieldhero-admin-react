@@ -293,6 +293,7 @@ const ContentLogic = (props) => {
 		name: "",
 		description: "",
 		isActive: true,
+		permissionId:[]
 	});
 	const [skillSetData, setSkillSetData] = useState({
 		title: "",
@@ -1498,20 +1499,41 @@ const ContentLogic = (props) => {
 	const getPermissionsAPIcall = async (e) => {
 		let authTok = localStorage.getItem("user"); // string
 		let convertTokenToObj = JSON.parse(authTok);
+		setLoader(true);
 		await handler
 			.dataGet(`/v1/permissions`, {
 				headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
 			})
 			.then((response) => {
 				if (response.status == 200) {
-					setPermissions(response.data);
-					console.log("permissions", permissions);
+					setLoader(false);
+					setPermissions(response.data.data);
 				} else if (response.status == 400) {
 					window.alert(response.data.message);
 				}
 			})
 			.catch((error) => {
 				console.error("There was an error!- getPermissionsAPIcall", error);
+			});
+	};
+	const getRoleByIdAPIcall = async (e) => {
+		let authTok = localStorage.getItem("user"); // string
+		let convertTokenToObj = JSON.parse(authTok);
+		setLoader(true);
+		await handler
+			.dataGet(`/v1/roles/${editId}`, {
+				headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+			})
+			.then((response) => {
+				if (response.status == 200) {
+					setLoader(false);
+					setRoleData(response.data.data);
+				} else if (response.status == 400) {
+					window.alert(response.data.message);
+				}
+			})
+			.catch((error) => {
+				console.error("There was an error!- getRolesById", error);
 			});
 	};
 
@@ -1555,7 +1577,7 @@ const ContentLogic = (props) => {
 				break;
 			case "role":
 				getRoleAPIcall();
-				getPermissionsAPIcall();
+				// getPermissionsAPIcall();
 				break;
 			case "skillset":
 				getSkillSetAPIcall();
@@ -2957,6 +2979,10 @@ const ContentLogic = (props) => {
 					<>
 						{editStatus ? (
 							<Button
+							onClick={()=>{
+								handleClickOpen()
+								getRoleByIdAPIcall()
+							getPermissionsAPIcall()}}
 								style={{
 									marginTop: "80px",
 									marginRight: "5px",
@@ -2972,7 +2998,7 @@ const ContentLogic = (props) => {
 							<Button
 								onClick={() => {
 									handleClickOpen();
-									// getPermissionsAPIcall();
+									getPermissionsAPIcall();
 								}}
 								style={{
 									marginTop: "80px",
@@ -6586,8 +6612,7 @@ const ContentLogic = (props) => {
 			case "role":
 				return (
 					<>
-						{/* {Object.keys(permissions).map((item, i) => ( */}
-						<>
+						
 							<Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
 								<List sx={{ mb: 5 }}>
 									<TextField
@@ -6622,25 +6647,37 @@ const ContentLogic = (props) => {
 								<List>
 									<FormGroup>
 										<FormControlLabel
-											control={<Checkbox defaultChecked />}
+											control={<Checkbox defaultChecked
+												value={roleData.isActive}
+												onChange={() => {
+													setCategoryData((prev) => ({
+														...prev,
+														isActive: !roleData.isActive,
+													}));
+												}}/>}
 											label="Is Active"
 										/>
 									</FormGroup>
 								</List>
 								<List>
+									
+									<b>Permissions Section</b>
+									{Object.keys(permissions).map((item)=>(
+										<>
 									<List>
-										<b>Permissions Section</b>
 										<p style={{ color: "brown" }}>
-											{/* {permissions[item].group} */}
+											 {permissions[item].group} 
 										</p>
 									</List>
 									<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-										<FormControlLabel control={<Checkbox />} label="Read All" />
-										<FormControlLabel control={<Checkbox />} label="Read" />
-										<FormControlLabel control={<Checkbox />} label="Create" />
-										<FormControlLabel control={<Checkbox />} label="Update" />
+										<FormControlLabel control={<Checkbox />} label={permissions[item].displayName} />
+										{/* <FormControlLabel control={<Checkbox />} label={permissions[item].displayName} />
+										<FormControlLabel control={<Checkbox />} label={permissions[item].displayName} />
+										<FormControlLabel control={<Checkbox />} label={permissions[item].displayName}/> */}
 									</FormGroup>
-									<p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
+									</>
+									))}
+									{/* <p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
 									<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
 										<FormControlLabel control={<Checkbox />} label="Read All" />
 										<FormControlLabel
@@ -6822,10 +6859,10 @@ const ContentLogic = (props) => {
 											control={<Checkbox />}
 											label="Change password"
 										/>
-									</FormGroup>
-								</List>
+									</FormGroup> */}
+								</List> 
 								<List>
-									<Button style={{ backgroundColor: "brown", color: "white" }}>
+									<Button onClick={()=>addAPICalls('role')} style={{ backgroundColor: "brown", color: "white" }}>
 										Save
 									</Button>
 									<Button
@@ -6839,8 +6876,7 @@ const ContentLogic = (props) => {
 									</Button>
 								</List>
 							</Box>
-						</>
-						{/* ))} */}
+						 
 					</>
 				);
 
@@ -8068,6 +8104,7 @@ const ContentLogic = (props) => {
 		setSkillSetData,
 		setSubscriptionData,
 		setUserData,
+		setRoleData,
 		setCandidateMasterData,
 		handleClickOpen,
 		getCandidateVerificationById,

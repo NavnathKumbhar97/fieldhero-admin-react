@@ -29,7 +29,7 @@ export default function ContentDesign(props) {
     setModalTitle,
     pageTitle,
     setPageTitle,
-    EnhancedTableToolbar,
+    // EnhancedTableToolbar,
     stableSort,
     EnhancedTableHead,
     emptyRows,
@@ -69,7 +69,10 @@ export default function ContentDesign(props) {
     getCandidateVerificationById,
     setAgentMasterData,
     setCandidateUploadBatchAdminData,
-    setCandidateUploadBatchAdminSelect
+    setCandidateUploadBatchAdminSelect,
+    handleCommonModal,
+    handleTableDesign,
+    handleOpenCandidateModal
   } = ContentLogic();
 
   useEffect(() => {
@@ -250,7 +253,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">
                     <Button 
                   onClick={()=>{
-                    handleClickOpen()
+                    handleOpenCandidateModal()
                     setEditId(tblData[item].id)
                     setEditStatus(true)
                     console.log(tblData[item].id);
@@ -797,7 +800,7 @@ export default function ContentDesign(props) {
 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
-      
+        
         <Backdrop
         sx={{color: '#7d1810', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}>
@@ -807,7 +810,8 @@ export default function ContentDesign(props) {
         color="inherit" />
       </Backdrop>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar />
+        {handleCommonModal()}
+       { handleTableDesign()}
         {handleTable()}
       </Paper>
     </Box>

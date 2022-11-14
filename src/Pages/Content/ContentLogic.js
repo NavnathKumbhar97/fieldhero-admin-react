@@ -289,12 +289,18 @@ const ContentLogic = (props) => {
     description: "",
     isActive: true,
   });
+  const [checkedp, setCheckedP] = useState([]);
+
   const [roleData, setRoleData] = useState({
     name: "",
     description: "",
     isActive: true,
+    id:0,
     permissionId: [],
   });
+  const [uroleData,setURoleData] = useState({
+    permissions:[]
+  })
   const [skillSetData, setSkillSetData] = useState({
     title: "",
     description: "",
@@ -1517,7 +1523,7 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setRoleData(response.data.data);
+          setURoleData(response.data.data);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
@@ -2077,6 +2083,7 @@ const ContentLogic = (props) => {
     },
   };
 
+
   // {editStatus?Object.keys(tblData).map((item)=>{setCategoryData(tblData[item])}):"teste 3"}
 
   //defined states and inputs for modules
@@ -2628,6 +2635,37 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateCompanyAPICall", error);
           });
         break;
+      case "role":
+        let udateRoleData = {
+          ...roleData,
+          id: editId,
+        };
+        handler
+          .dataPut(
+            `/v1/roles/:${udateRoleData.id}`,
+            udateRoleData,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              console.log(response.data.message);
+			        setOpenCandidateModal(false);
+              setOpenAlertMsg(true);
+              getRoleAPIcall();
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- updateRoleById", error);
+          });
+        break;
       case "skillset":
         let updateSkillsetData = {
           ...skillSetData,
@@ -2945,7 +2983,7 @@ const ContentLogic = (props) => {
                 onClick={() => {
                   handleOpenCandidateModal();
                   getRoleByIdAPIcall();
-                  getPermissionsAPIcall();
+                  getPermissionsAPIcall()
                 }}
                 style={{
                   marginTop: "80px",
@@ -6617,7 +6655,7 @@ const ContentLogic = (props) => {
                         defaultChecked
                         value={roleData.isActive}
                         onChange={() => {
-                          setCategoryData((prev) => ({
+                          setRoleData((prev) => ({
                             ...prev,
                             isActive: !roleData.isActive,
                           }));
@@ -6630,21 +6668,35 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <b>Permissions Section</b>
-                {Object.keys(permissions).map((item) => (
+                {Object.keys(permissions).map((item,index) => (
                   <>
-                    <List>
+                    <List >
                       <p style={{ color: "brown" }}>
                         {permissions[item].group}
                       </p>
-                    </List>
-					<List >
-                    <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+                    <FormGroup style={{ display: "flex", flexDirection: "row" }}>
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={<Checkbox checked={uroleData.permissions[index]?true:false}
+                          value={roleData.permissionId}
+                          onChange={(e)=>{
+                            setRoleData({
+                              ...roleData,
+                              permissionId: e.target.checked,
+                            });
+                            if (e.target.checked) {
+                              // console.log("permissions[item].id",permissions[item].id)
+                              checkedp.push(permissions[item].id)
+                              setRoleData({...roleData, permissionId: checkedp});
+                            } else {
+                              roleData.permissionId.splice(checkedp.indexOf(e.target.value), 1);
+                            }
+                            // console.log(roleData);
+                          }
+                          }/>}
                         label={permissions[item].displayName}
-						/>
+						          />
                     </FormGroup>
-				</List>
+				            </List>
                   </>
                 ))}
                 {/* <p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
@@ -6832,12 +6884,18 @@ const ContentLogic = (props) => {
 										</FormGroup> */}
               </List>
               <List>
-                <Button
+                {!editStatus?(<Button
                   onClick={() => addAPICalls("role")}
                   style={{ backgroundColor: "brown", color: "white" }}
                 >
                   Save
-                </Button>
+                </Button>):
+                (<Button
+                  onClick={() => updateAPICalls("role")}
+                  style={{ backgroundColor: "brown", color: "white" }}
+                >
+                  Update
+                </Button>)}
                 <Button
                   style={{
                     marginLeft: 2,

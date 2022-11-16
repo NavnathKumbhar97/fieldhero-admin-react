@@ -67,6 +67,7 @@ export default function ContentDesign(props) {
     setCandidateMasterData,
     handleClickOpen,
     getCandidateVerificationById,
+    getAgentPricingTemplateById,
     setAgentMasterData,
     setCandidateUploadBatchAdminData,
     setCandidateUploadBatchAdminSelect,
@@ -353,7 +354,13 @@ export default function ContentDesign(props) {
                   {tblData[item].totalAmount}
                 </TableCell>
                 <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
-                <TableCell align="left"><Button><Visibility/>View</Button></TableCell>
+                <TableCell align="left"><Button onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getAgentPricingTemplateById(tblData[item].id)
+                  }}><Visibility/>View</Button></TableCell>
               </TableRow>
             </>
           ))}

@@ -144,6 +144,7 @@ const loginAPIcall = async (e) => {
     setPassword,
     setPass,
     setShowPass,
+    showPass,
     handleChange,validateEmail,setErrorTextEmail,
     loginAPIcall,
     loader,setLoader

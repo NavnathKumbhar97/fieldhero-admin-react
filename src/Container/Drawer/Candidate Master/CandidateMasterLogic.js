@@ -8,7 +8,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 function CandidateMasterLogic() {
 
   return (
-    <div style={{background:'aliceblue',marginRight:'10px'}}>
+    <div style={{background:'aliceblue',marginRight:'10px'}} >
     <Box
       component="form"
       sx={{

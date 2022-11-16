@@ -67,6 +67,7 @@ import { Link } from "react-router-dom";
 import Help from "../../Container/Drawer/Help/Help";
 import handler from "../../handlers/generalHandlers";
 import { Stack } from "@mui/system";
+import moment from "moment";
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -1682,7 +1683,29 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getBatchPriorityAPIcall", error);
+        console.error("There was an error!- getCandidateVerificationById", error);
+      });
+  };
+  const getAgentPricingTemplateById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/agent-pricing-templates/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setAgentPricingTemplateData(response.data.data);
+          console.log("candidate verification by id", agentPricingTemplateData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getAgentPeicingTemplateById", error);
       });
   };
 
@@ -4530,6 +4553,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
+                    disabled={editStatus}
                       required
                       sx={{ width: "30ch" }}
                       size="small"
@@ -4543,6 +4567,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       required
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
@@ -4556,6 +4581,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Secondary Mobile"
@@ -4568,6 +4594,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Email"
@@ -5953,6 +5980,7 @@ const ContentLogic = (props) => {
       case "agent-pricing-template":
         return (
           <>
+          <Box>
             <List
               sx={{
                 display: "flex",
@@ -5961,10 +5989,10 @@ const ContentLogic = (props) => {
                 alignItems: "flex-start",
               }}
             >
-              <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
+              {!editStatus?(<><Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
                 Save
               </Button>
-              <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button>
+              <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button></>):null}
 
               <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
                 <h2>Total:0</h2>
@@ -5979,6 +6007,7 @@ const ContentLogic = (props) => {
             >
               <List sx={{ mb: 5 }}>
                 <TextField
+                disabled={editStatus}
                   required
                   id="filled-basic"
                   label="Template Name"
@@ -5994,6 +6023,7 @@ const ContentLogic = (props) => {
                   sx={{ width: "30ch" }}
                 />
                 <TextField
+                disabled={editStatus}
                   id="filled-basic"
                   label="Description"
                   type="name"
@@ -6008,6 +6038,7 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 4 }}
                 />
                 <TextField
+                disabled={editStatus}
                   id="filled-basic"
                   label="Approval Remarks"
                   type="name"
@@ -6024,6 +6055,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6038,6 +6070,7 @@ const ContentLogic = (props) => {
                   variant="outlined"
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6053,6 +6086,7 @@ const ContentLogic = (props) => {
                   variant="outlined"
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6070,6 +6104,7 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6086,6 +6121,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6102,6 +6138,7 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6116,6 +6153,7 @@ const ContentLogic = (props) => {
                   }}
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6133,6 +6171,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6149,6 +6188,7 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6163,6 +6203,7 @@ const ContentLogic = (props) => {
                   }}
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6180,6 +6221,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6196,6 +6238,7 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6210,6 +6253,7 @@ const ContentLogic = (props) => {
                   }}
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6227,6 +6271,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6243,6 +6288,7 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6257,6 +6303,7 @@ const ContentLogic = (props) => {
                   }}
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6274,6 +6321,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mt: 4, mb: 4 }}>
                 <TextField
+                disabled={editStatus}
                   id="outlined-basic"
                   size="small"
                   type="number"
@@ -6288,6 +6336,7 @@ const ContentLogic = (props) => {
                   }}
                 />
                 <TextField
+                disabled={editStatus}
                   sx={{ ml: 2 }}
                   id="outlined-basic"
                   size="small"
@@ -6306,7 +6355,7 @@ const ContentLogic = (props) => {
               <List>
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox defaultChecked />}
+                    control={<Checkbox disabled={editStatus} defaultChecked />}
                     label="Is Active"
                     value={agentPricingTemplateData.isActive}
                     onChange={(e) => {
@@ -6318,7 +6367,7 @@ const ContentLogic = (props) => {
                   />
                 </FormGroup>
               </List>
-              <List sx={{ mt: 4, mb: 4 }}>
+              {!editStatus?(<List sx={{ mt: 4, mb: 4 }}>
                 <Button
                   onClick={() => addAPICalls("agent-pricing-template")}
                   style={{ color: "white", backgroundColor: "brown" }}
@@ -6329,13 +6378,13 @@ const ContentLogic = (props) => {
                   style={{
                     backgroundColor: "#f5f0e4",
                     color: "black",
-                    marginTop: "9px",
                   }}
                 >
                   Exit
                 </Button>
-              </List>
+              </List>):null}
             </Box>
+          </Box>
           </>
         );
 
@@ -6679,10 +6728,6 @@ const ContentLogic = (props) => {
                         control={<Checkbox checked={uroleData.permissions[index]?true:false}
                           value={roleData.permissionId}
                           onChange={(e)=>{
-                            setRoleData({
-                              ...roleData,
-                              permissionId: e.target.checked,
-                            });
                             if (e.target.checked) {
                               // console.log("permissions[item].id",permissions[item].id)
                               checkedp.push(permissions[item].id)
@@ -7579,7 +7624,7 @@ const ContentLogic = (props) => {
   };
 
   const handleCommonModal = () => {
-    const candidateModal = (
+    const commonModal = (
       <div>
         <Dialog
           fullScreen
@@ -7611,7 +7656,7 @@ const ContentLogic = (props) => {
         </Dialog>
       </div>
     );
-    return candidateModal;
+    return commonModal;
   };
 
   const handleTableDesign = () => {
@@ -8129,6 +8174,7 @@ const ContentLogic = (props) => {
     setCandidateMasterData,
     handleClickOpen,
     getCandidateVerificationById,
+    getAgentPricingTemplateById,
     setAgentMasterData,
     setCandidateUploadBatchAdminData,
     setCandidateUploadBatchAdminSelect,

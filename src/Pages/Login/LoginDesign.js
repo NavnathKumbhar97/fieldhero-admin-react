@@ -16,6 +16,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { NavLink } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
+import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 
 function Copyright(props) {
   return (
@@ -149,8 +150,8 @@ function LoginDesign() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPass(!showPass)}>
-                      {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    <IconButton onClick={() => setShowPass(s => !s)}>
+                      {showPass ? <VisibilityIcon /> : <VisibilityOffIcon/>}
                     </IconButton>
                   </InputAdornment>
                 ),

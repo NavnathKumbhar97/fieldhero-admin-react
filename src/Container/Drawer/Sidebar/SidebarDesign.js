@@ -110,10 +110,10 @@ function SidebarDesign() {
   } = SidebarLogic();
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", }}>
       <CssBaseline />
       <AppBar
-        style={{ backgroundColor: "brown", color: "white" }}
+        style={{ backgroundColor: "brown", color: "white",flexDirection:'row',justifyContent:'space-between',flexWrap:'nowrap',alignItems:'center' }}
         position="fixed"
         open={open}
       >
@@ -130,11 +130,11 @@ function SidebarDesign() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography style={{display:'flex'}} variant="h6" noWrap component="div">
             {open ? "" : "Apexa Group"}
           </Typography>
-          <Profile/>
         </Toolbar>
+        <Profile/>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader

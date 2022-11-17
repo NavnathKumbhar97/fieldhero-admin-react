@@ -449,6 +449,16 @@ const ContentLogic = (props) => {
 
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
+  const [WorkExperianceData,setWorkExperianceData] = useState({
+    companyId:'',
+    description:'',
+    endDate:'',
+    skillId:[],
+    startDate:''
+  })
+
+  const [candidateVerDashboard,setCandidateVerDashboard] = useState([])
+ 
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
   };
@@ -1138,6 +1148,36 @@ const ContentLogic = (props) => {
         );
       });
   };
+  const getDashboardAPICall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/candidate-verifications/dashboard`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCandidateVerDashboard(response.data.data.count);
+          console.log("candidate verification", candidateVerDashboard);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
+        console.error(
+          "There was an error!- getCandidateVerificationAPIcall",
+          error
+        );
+      });
+  };
   //fetch the agent pricing template data
   const getAgentTemplatePricingAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1763,6 +1803,32 @@ const ContentLogic = (props) => {
       });
   };
 
+  const addWorkExperiance= () =>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
+    handler
+          .dataPost(`/v1/candidates`, candidateMasterData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              handleClickOpenChildModal()
+              setLoader(false)
+              setOpenAlertMsg(true);
+            } else {
+              window.alert(response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              window.alert(error.data.message);
+            }
+            console.error("There was an error!- createWorkExperiance", error);
+          });
+  }
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -2212,6 +2278,7 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch-admin":
         break;
       case "batch-priority":
+        setLoader(true)
         handler
           .dataPost(`/v1/batch-priorities`, batchNo, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2222,16 +2289,20 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               getBatchPriorityAPIcall();
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenAddBtchprty(false);
+              setLoader(true)
             } else {
               window.alert(response.data.message);
+              setOpenAddBtchprty(false);
+              setLoader(false)
+              setOpenAlertMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               window.alert(error.data.message);
             }
-            console.error("There was an error!- createCompany", error);
+            console.error("There was an error!- createBatchPriority", error);
           });
         break;
       case "category":
@@ -2831,8 +2902,8 @@ const ContentLogic = (props) => {
             <Button
               onClick={handleOpenCandidateModal}
               style={{
-                marginTop: "80px",
-                marginRight: "0px",
+                marginTop: "60px",
+                marginBottom: "6px",
                 backgroundColor: "brown",
                 color: "white",
               }}
@@ -2981,7 +3052,7 @@ const ContentLogic = (props) => {
             <Button
               onClick={handleClickOpenAddBtchprty}
               style={{
-                marginTop: "80px",
+                marginTop: "0px",
                 marginRight: "0px",
                 backgroundColor: "brown",
                 color: "white",
@@ -3222,7 +3293,7 @@ const ContentLogic = (props) => {
                       </tr>
                       <tr>
                         <td>Uploaded by:</td>
-                        <td>tes 2</td>
+                        <td>Navnath</td>
                       </tr>
                       <tr>
                         <td>Uploader role:</td>
@@ -3982,6 +4053,7 @@ const ContentLogic = (props) => {
                 <DialogContent>
                   <ListItem>
                     <TextField
+
                       id="name"
                       label="Company Name"
                       sx={{ width: "30ch" }}
@@ -4615,6 +4687,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
+                    disabled={editStatus}
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Total Exp years"
@@ -4627,6 +4700,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Education"
@@ -4639,6 +4713,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Birthdate"
@@ -4651,6 +4726,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
+                    disabled={editStatus}
                       select
                       value={updateCandidateVerificationData.gender}
                       onSelect={(e) => {
@@ -4664,7 +4740,7 @@ const ContentLogic = (props) => {
                       label="Gender"
                     >
                       {gender.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem disabled={editStatus} key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -4693,6 +4769,7 @@ const ContentLogic = (props) => {
                     >
                       <b style={{ color: "red" }}>Industry</b>
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch" }}
                         select
@@ -4712,7 +4789,7 @@ const ContentLogic = (props) => {
                         ))}
                       </TextField>
                       <Button
-                        disabled
+                        disabled={editStatus}
                         size="small"
                         style={{
                           backgroundColor: "gray",
@@ -4732,6 +4809,7 @@ const ContentLogic = (props) => {
                     >
                       <b style={{ color: "red" }}>Category</b>
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch" }}
                         select
@@ -4751,7 +4829,7 @@ const ContentLogic = (props) => {
                         ))}
                       </TextField>
                       <Button
-                        disabled
+                        disabled={editStatus}
                         size="small"
                         style={{
                           backgroundColor: "gray",
@@ -4771,11 +4849,11 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox disabled={editStatus} />}
                       label="Old Company:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox disabled={editStatus} />}
                       label="Old Designation:"
                     ></FormControlLabel>
                   </ListItem>
@@ -4800,7 +4878,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={<Checkbox disabled={editStatus} />}
                         label="Currently Employed?"
                       ></FormControlLabel>
                       <ListItem
@@ -4811,6 +4889,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch" }}
                           label="Company Name"
@@ -4826,6 +4905,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -4842,6 +4922,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -4858,6 +4939,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="Start date"
@@ -4880,6 +4962,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="End date"
@@ -4887,12 +4970,14 @@ const ContentLogic = (props) => {
                           label="MM"
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "20ch", ml: 2 }}
                           select
                           label="YYYY"
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -4904,7 +4989,7 @@ const ContentLogic = (props) => {
                   </Card>
                   <ListItem>
                     <Button
-                      disabled
+                      disabled={editStatus}
                       size="small"
                       style={{ backgroundColor: "gray", color: "white" }}
                     >
@@ -4941,6 +5026,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary skill Name"
@@ -4953,6 +5039,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -4975,6 +5062,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 1"
@@ -4989,6 +5077,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 2"
@@ -5011,6 +5100,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary Lanugage"
@@ -5025,6 +5115,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Secondary Lanugage"
@@ -5039,6 +5130,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Third Lanugage"
@@ -5062,11 +5154,11 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox disabled={editStatus}/>}
                       label="Old Primary Language:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={<Checkbox disabled={editStatus}/>}
                       label="Old Secondary Language:"
                     ></FormControlLabel>
                   </ListItem>
@@ -5098,6 +5190,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current Pincode"
@@ -5110,6 +5203,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current City"
@@ -5122,6 +5216,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current State"
@@ -5143,6 +5238,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -5175,7 +5271,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={<Checkbox disabled={editStatus}/>}
                         label="Same as current address"
                       ></FormControlLabel>
                       <ListItem
@@ -5186,6 +5282,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent Pincode"
@@ -5198,6 +5295,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent City"
@@ -5210,6 +5308,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent State"
@@ -5231,6 +5330,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
+                        disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -5262,6 +5362,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Aadhar No"
@@ -5274,6 +5375,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Pan No"
@@ -5286,6 +5388,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Driving Licence no"
@@ -5307,6 +5410,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
+                      disabled={editStatus}
                         size="small"
                         sx={{ width: "40ch", ml: 2 }}
                         multiline
@@ -7663,6 +7767,7 @@ const ContentLogic = (props) => {
     const handleModalsInputs = (
       <Toolbar
         sx={{
+          display:'flex',flexDirection:'row',alignItems:'flex-end',justifyContent:'flex-end',
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
           ...(numSelected > 0 && {
@@ -7674,16 +7779,6 @@ const ContentLogic = (props) => {
           }),
         }}
       >
-        {numSelected > 0 ? (
-          <Typography
-            sx={{ flex: "1 1 100%" }}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
-          >
-            {numSelected} selected
-          </Typography>
-        ) : (
           <Typography
             sx={{ flex: "1 1 100%", display: "flex", flexDirection: "column" }}
             variant="h6"
@@ -7724,16 +7819,7 @@ const ContentLogic = (props) => {
             </Stack>
             {renderDesign()}
           </Typography>
-        )}
-        <Typography>{handleButtons()}</Typography>
-
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : null}
+        <Typography sx={{mb:'20px'}}>{handleButtons()}</Typography>
 
         {/* admin candidate upload batch modal */}
         <Dialog

@@ -108,6 +108,7 @@ export default function Profile() {
 //     }
 // }
 
+    
   return (
     <div>
       <Box sx={{ mr: "30px" }}>
@@ -140,12 +141,12 @@ export default function Profile() {
           <Divider></Divider>
           <MenuItem onClick={handleOpenChangePassModal}>
             <KeyIcon />
-            <Typography textAlign="center"> Chnage Password</Typography>
+            <Typography textAlign="center" style={{paddingLeft:'20px'}}> Chnage Password</Typography>
           </MenuItem>
           <Divider></Divider>
           <MenuItem onClick={handleLogout}>
             <Logout></Logout>
-            <Typography textAlign="center">SIGN OUT</Typography>
+            <Typography textAlign="center" style={{paddingLeft:'50px'}}>SIGN OUT</Typography>
           </MenuItem>
         </Menu>
       </Box>
@@ -162,6 +163,7 @@ export default function Profile() {
             id="outlined-basic"
             label="Old Password"
             variant="outlined"
+            sx={{ mt: 3, }}
             value={changePass.old_password}
             onChange={(e)=>{
               setChangePass({...changePass,
@@ -192,7 +194,7 @@ export default function Profile() {
               setChangePass({...changePass,
               new_password:e.target.value})
             }}
-            sx={{ mt: 5, mb: 5 }}
+            sx={{ mt: 4, mb: 4 }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -234,8 +236,8 @@ export default function Profile() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseChangePassModal}>Close</Button>
-          <Button onClick={changePasswordAPICall}>Save</Button>
+          <Button style={{color:'white',background:'brown'}} onClick={changePasswordAPICall}>Save</Button>
+          <Button style={{color:'white',background:'black'}} onClick={handleCloseChangePassModal}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>

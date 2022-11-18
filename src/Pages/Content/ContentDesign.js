@@ -73,7 +73,16 @@ export default function ContentDesign(props) {
     setCandidateUploadBatchAdminSelect,
     handleCommonModal,
     handleTableDesign,
-    handleOpenCandidateModal
+    handleOpenCandidateModal,
+    getCandidateMsaterAPIcallById,
+    getAgentMasteById,
+    getCategoryById,
+    getCompanyAPIcallById,
+    getIndustryById,
+    getRoleByIdAPIcall,
+    getSkillSetById,
+    getSubscriptionByIdAPIcall,
+    getUserAPIcallById
   } = ContentLogic();
 
   useEffect(() => {
@@ -151,7 +160,7 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell
                     component="th"
-                    // id={labelId}
+                    align="left"
                     scope="row"
                     padding="none"
                   >
@@ -170,7 +179,13 @@ export default function ContentDesign(props) {
                   <TableCell align="left">
                     {tblData[item].contactNo1}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell style={{color:'green'}} align="left">{tblData[item].isActive===true?<p style={{border:'1px solid green',borderRadius:'15px',width:'50px',padding:'3px'}}>Active</p>:"Inactive"}</TableCell>
+                  <TableCell><Button style={{color:'brown',marginLeft:'-10px'}} onClick={()=>{
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    getCandidateMsaterAPIcallById(tblData[item].id)
+                    handleOpenCandidateModal()
+                  }}><Edit/> Edit</Button></TableCell>
                 </TableRow>
 
               </>
@@ -252,7 +267,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].callStatus}</TableCell>
                   <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
                   <TableCell align="left">
-                    <Button 
+                    <Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
                     setEditId(tblData[item].id)
@@ -309,6 +324,17 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">
+                    <Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getAgentMasteById(tblData[item].id)
+                  }}>
+                    <Edit/>Edit</Button>
+                  </TableCell>
                 </TableRow>
               </>
             ))}
@@ -405,13 +431,13 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].timestamp}</TableCell>
+                  {/* <TableCell align="left">{tblData[item].timestamp}</TableCell> */}
                   <TableCell align="left">{tblData[item].count}</TableCell>
-                  <TableCell align="left">{tblData[item].status}</TableCell>
+                  {/* <TableCell align="left">{tblData[item].status}</TableCell> */}
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].approvedCount}</TableCell>
                   <TableCell align="left">{tblData[item].rejectedCount}</TableCell>
-                  <TableCell align="left">{tblData[item].templateName}</TableCell>
+                  {/* <TableCell align="left">{tblData[item].templateName}</TableCell> */}
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
                   <TableCell align="center"><Button title="Download Rejection Summary"><Download/></Button></TableCell>
@@ -451,6 +477,14 @@ export default function ContentDesign(props) {
 
                 <TableCell align="left">{tblData[item].title}</TableCell>
                 <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getCategoryById(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
               </TableRow>
             </>
           ))}
@@ -495,7 +529,14 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].industry}</TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
-                  
+                  <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getCompanyAPIcallById(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -577,6 +618,14 @@ export default function ContentDesign(props) {
                     {tblData[item].title}
                   </TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getIndustryById(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -619,6 +668,7 @@ export default function ContentDesign(props) {
                     {tblData[item].name}
                   </TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  
                 </TableRow>
               </>
             ))}
@@ -661,6 +711,14 @@ export default function ContentDesign(props) {
                     {tblData[item].title}
                   </TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getSkillSetById(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -704,6 +762,14 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].dataCount}</TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getSubscriptionByIdAPIcall(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}
@@ -748,6 +814,14 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
                   <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left"><Button style={{color:'brown'}}
+                  onClick={()=>{
+                    handleOpenCandidateModal()
+                    setEditId(tblData[item].id)
+                    setEditStatus(true)
+                    console.log(tblData[item].id);
+                    getUserAPIcallById(tblData[item].id)
+                  }}><Edit/>Edit</Button></TableCell>
                 </TableRow>
               </>
             ))}

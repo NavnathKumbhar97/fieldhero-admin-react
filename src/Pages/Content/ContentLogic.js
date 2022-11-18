@@ -97,6 +97,8 @@ const ContentLogic = (props) => {
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
+  const [openErrMsg, setOpenErrtMsg] = useState(false);
+  const [errMsg,setErrMsg] = useState("")
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
     useState({
       id: 0,
@@ -113,43 +115,43 @@ const ContentLogic = (props) => {
     });
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
-    aadharNo: "123123123121",
-    gender: "MALE",
-    dob: "12-12-12",
+    aadharNo: "",
+    gender: "",
+    dob: "",
     permAddress: "",
-    contactNo1: "34534534343",
-    contactNo2: "1234554321",
-    curr_address: "test address",
-    curr_city: "test city",
-    curr_country: "India",
-    curr_state: "test state",
-    curr_zip: "123121",
-    email1: "testbynrk@gmai.com",
-    email2: "test@g.c",
-    fullName: "Test by Navnah",
-    gender: "MALE",
-    perm_address: "tes address",
-    perm_city: "tes city",
+    contactNo1: "",
+    contactNo2: "",
+    curr_address: "",
+    curr_city: "",
+    curr_country: "",
+    curr_state: "",
+    curr_zip: "",
+    email1: "",
+    email2: "",
+    fullName: "",
+    gender: "",
+    perm_address: "",
+    perm_city: "",
     perm_country: "India",
-    perm_state: "test state",
-    perm_zip: "123123",
+    perm_state: "",
+    perm_zip: "",
     registrationStatus: "",
-    totalExpMonths: "1",
-    totalExpYears: "1",
+    totalExpMonths: "",
+    totalExpYears: "",
     // birthDate:new Date(),
     isActive: true,
-    industry: "test",
-    category: "test",
-    expYears: "1",
-    prefLocation1: "test",
-    prefLocation2: "test",
-    skill1: "test",
-    skill2: "test",
-    primaryLang: "test",
-    secondaryLang: "test",
-    lastCompany: "test",
-    designation: "test",
-    education: "test",
+    industry: "",
+    category: "",
+    expYears: "",
+    prefLocation1: "",
+    prefLocation2: "",
+    skill1: "",
+    skill2: "",
+    primaryLang: "",
+    secondaryLang: "",
+    lastCompany: "",
+    designation: "",
+    education: "",
   });
   const [updateCandidateMasterData, setUpdateCandidateMasterData] = useState({
     aadharNo: "",
@@ -461,6 +463,7 @@ const ContentLogic = (props) => {
  
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
+    setEditStatus(false)
   };
   const handleOpenCandidateModal = () => {
     setOpenCandidateModal(true);
@@ -552,6 +555,12 @@ const ContentLogic = (props) => {
       numeric: true,
       disablePadding: false,
       label: "Status",
+    },
+    {
+      id: "action",
+      numeric: true,
+      disablePadding: false,
+      label: "Actions",
     },
   ];
   const candUploadBatch = [
@@ -715,6 +724,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
+    {
+      id: "actions",
+      numeric: true,
+      disablePadding: false,
+      label: "Actions",
+    },
   ];
   const agentPricingTemplate = [
     {
@@ -775,12 +790,6 @@ const ContentLogic = (props) => {
       label: "Batch No",
     },
     {
-      id: "timestamp",
-      numeric: false,
-      disablePadding: false,
-      label: "Timestamp",
-    },
-    {
       id: "count",
       numeric: true,
       disablePadding: false,
@@ -794,12 +803,6 @@ const ContentLogic = (props) => {
     },
 
     {
-      id: "inProgress",
-      numeric: true,
-      disablePadding: false,
-      label: "In-Progress",
-    },
-    {
       id: "approved",
       numeric: true,
       disablePadding: false,
@@ -811,12 +814,7 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Rejected",
     },
-    {
-      id: "pricingTemplate",
-      numeric: true,
-      disablePadding: false,
-      label: "Pricing Template",
-    },
+    
     {
       id: "owner",
       numeric: true,
@@ -855,6 +853,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
+    },
   ];
   const companyMaster = [
     {
@@ -880,6 +884,12 @@ const ContentLogic = (props) => {
       numeric: true,
       disablePadding: false,
       label: "Status",
+    },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
     },
   ];
   const customerMaster = [
@@ -927,6 +937,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
+    },
   ];
   const roleMaster = [
     {
@@ -967,6 +983,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
+    },
   ];
   const subscriptionMaster = [
     {
@@ -992,6 +1014,12 @@ const ContentLogic = (props) => {
       numeric: false,
       disablePadding: false,
       label: "Status",
+    },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
     },
   ];
   const userMaster = [
@@ -1024,6 +1052,12 @@ const ContentLogic = (props) => {
       numeric: false,
       disablePadding: false,
       label: "Status",
+    },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
     },
   ];
 
@@ -1080,7 +1114,7 @@ const ContentLogic = (props) => {
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
         setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAPIcall",
@@ -1553,7 +1587,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getPermissionsAPIcall", error);
       });
   };
-  const getRoleByIdAPIcall = async (e) => {
+  const getRoleByIdAPIcall = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
@@ -1630,26 +1664,24 @@ const ContentLogic = (props) => {
     }
   };
 
-  const getCompanyAPIcallById = () => {
+  const getCompanyAPIcallById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/companies/${editId}`, {
+      .dataGet(`/v1/companies/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
           setCompanyData(response.data.data);
-          // setTblDataCount(response.data.data.users);
-          console.log("batch priority", companyData);
         } else if (response.status == 400) {
           window.alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getBatchPriorityAPIcall", error);
+        console.error("There was an error!- getCompanyDataById", error);
       });
   };
   //get user details by id of user module modal on click of edit
@@ -1675,12 +1707,12 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-  const getCandidateMsaterAPIcallById = () => {
+  const getCandidateMsaterAPIcallById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/candidates/${editId}`, {
+      .dataGet(`/v1/candidates/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -1749,12 +1781,12 @@ const ContentLogic = (props) => {
       });
   };
 
-  const getAgentMasteById = () => {
+  const getAgentMasteById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/agents/${editId}`, {
+      .dataGet(`/v1/agents/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -1772,6 +1804,100 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
+  const getCategoryById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/categories/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCategoryData(response.data.data);
+          console.log("agent by id",response.data.data);
+          // console.log("getAgentMasterData",agentMasterData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCategoryById", error);
+      });
+  };
+
+  const getIndustryById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/industries/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setIndustryData(response.data.data);
+          // console.log("industy by id",response.data.data);
+          // console.log("getAgentMasterData",agentMasterData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCategoryById", error);
+      });
+  };
+  const getSkillSetById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/skills/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setSkillSetData(response.data.data);
+          // console.log("agent by id",response.data.data);
+          // console.log("getAgentMasterData",agentMasterData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSkillSetById", error);
+      });
+  };
+  const getSubscriptionByIdAPIcall = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/subscriptions/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setSubscriptionData(response.data.data);
+          // console.log("agent by id",response.data.data);
+          // console.log("getAgentMasterData",agentMasterData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSkillSetById", error);
+      });
+  };
+  
 
   const getAgentPricingForCndUplBatchAPICalls = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2196,12 +2322,14 @@ const ContentLogic = (props) => {
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              // window.alert(response.data.message);
+              setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2224,7 +2352,8 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2247,7 +2376,8 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2270,7 +2400,8 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2300,7 +2431,8 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createBatchPriority", error);
           });
@@ -2322,8 +2454,9 @@ const ContentLogic = (props) => {
             }
           })
           .catch((error) => {
-            if (error.status == 400) {
-              window.alert(error.data.message);
+            if (error.status == 409) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- getCategoryAPIcall", error);
           });
@@ -2346,7 +2479,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2369,7 +2504,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2392,7 +2529,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2415,7 +2554,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2438,7 +2579,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2461,7 +2604,9 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              // window.alert(error.data.message);
+              setErrMsg(true)
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -3384,6 +3529,7 @@ const ContentLogic = (props) => {
                       <div>
                         <ListItem>
                           <TextField
+                          required
                             id="filled-basic"
                             label="Full Name"
                             variant="filled"
@@ -3938,14 +4084,6 @@ const ContentLogic = (props) => {
                             variant="filled"
                             sx={{ width: "20ch", margin: "20px 20px" }}
                           />
-                          <Button
-                            style={{
-                              color: "white",
-                              backgroundColor: "brown",
-                            }}
-                          >
-                            SAVE
-                          </Button>
                         </ListItem>
                       </div>
                       <div>
@@ -7787,6 +7925,19 @@ const ContentLogic = (props) => {
           >
             <h2>{pageTitle}</h2>
             <Stack spacing={2} sx={{ width: "100%" }}>
+            <Snackbar
+                  open={openErrMsg}
+                  autoHideDuration={6000}
+                  onClose={() => setOpenErrtMsg(false)}
+                >
+                  <Alert
+                    onClose={() => setOpenErrtMsg(false)}
+                    severity="warning"
+                    sx={{ width: "100%", backgroundColor: "brown",color:'yellow' }}
+                  >
+                    {errMsg}
+                  </Alert>
+                </Snackbar>
               {editStatus === true ? (
                 <Snackbar
                   open={openAlertMsg}
@@ -8219,7 +8370,7 @@ const ContentLogic = (props) => {
     handleChangeDense,
     isSelected,
     handleCommonModal,
-
+    getCandidateMsaterAPIcallById,
     stableSort,
     EnhancedTableHead,
     emptyRows,
@@ -8275,6 +8426,15 @@ const ContentLogic = (props) => {
     CloseIcon,
     handleTableDesign,
     handleOpenCandidateModal,
+    setUpdateCandidateMasterData,
+    getAgentMasteById,
+    getCategoryById,
+    getCompanyAPIcallById,
+    getIndustryById,
+    getRoleByIdAPIcall,
+    getSkillSetById,
+    getSubscriptionByIdAPIcall,
+    getUserAPIcallById
   };
 
   return StateContainer;

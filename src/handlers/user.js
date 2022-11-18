@@ -17,11 +17,12 @@ const login = async ({ email, password }) => {
             password,
         })
         if (response.status === OK) {
-            const { token, user } = response.data
+            const { token, user,name } = response.data
             const _user = {
                 ...user,
                 token,
                 auth: true,
+                name
             }
             localStorage.setItem("user", JSON.stringify(_user))
             return { status: true }

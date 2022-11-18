@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box, Grid, Typography } from "@mui/material";
+import DashboardDesign from "../Dashboard/DashboardDesign";
 
 const TheContent = () => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -38,6 +39,9 @@ const TheContent = () => {
               component="div"
             >
               <h2>Dashboard</h2>
+            </Typography>
+            <Typography>
+              <DashboardDesign/>
             </Typography>
           </Box>
           <Box mb={2} alignSelf="end" marginRight="70px"></Box>

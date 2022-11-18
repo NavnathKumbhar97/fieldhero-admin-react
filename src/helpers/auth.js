@@ -72,6 +72,7 @@ export const auth = {
                 const _user = {
                     id: response.data.user.id,
                     userEmail: response.data.user.email,
+                    name: response.data.user.name,
                     token: response.data.token,
                     permissions: response.data.user.permissions,
                     // user: response.data.user.userDetails.user,

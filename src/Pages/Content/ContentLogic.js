@@ -2881,7 +2881,7 @@ const ContentLogic = (props) => {
         };
         handler
           .dataPut(
-            `/v1/roles/:${udateRoleData.id}`,
+            `/v1/roles/${udateRoleData.id}`,
             udateRoleData,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -3494,6 +3494,56 @@ const ContentLogic = (props) => {
     }
   };
 
+  const groups = permissions.reduce((groups, item) => ({
+    ...groups,
+    [item.group]: [...(groups[item.group] || []), item]
+  }), {});
+  
+  // console.log("first solutions",groups);
+  
+  const array = [
+    { id: 1, displayName: "Create", group: "admin" },
+    { id: 2, displayName: "Update", group: "admin" },
+    { id: 3, displayName: "Delete", group: "admin" },
+    { id: 4, displayName: "all", group: "admin" },
+    { id: 11, displayName: "Create", group: "agent" },
+    { id: 12, displayName: "Update", group: "agent" },
+    { id: 13, displayName: "Delete", group: "agent" },
+    { id: 14, displayName: "all", group: "agent" }
+  ];
+  
+  const dict = {};
+  
+  for (const item of permissions) {
+    if (item.group in dict) {
+      dict[item.group].push({
+        displayName: item.displayName,
+        id: item.id
+      });
+    } else {
+      dict[item.group] = [
+        {
+          displayName: item.displayName,
+          id: item.id
+        }
+      ];
+    }
+  }
+  
+  // console.log("dict", dict);
+  
+  // if you need an array
+  const list = []
+  
+  for (const key in dict) {
+    list.push({
+      group: key,
+      items: dict[key],
+    })
+  }
+  // console.log(list);
+
+
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {
@@ -3570,10 +3620,12 @@ const ContentLogic = (props) => {
                                     ...candidateMasterData,
                                     birthDate: e.target.value,
                                   })
+
                                 : setUpdateCandidateMasterData({
                                     ...updateCandidateMasterData,
                                     dob: e.target.value,
                                   });
+                                  
                             }}
                             variant="filled"
                             sx={{ width: "69ch" }}
@@ -3626,6 +3678,7 @@ const ContentLogic = (props) => {
                                     ...updateCandidateMasterData,
                                     permAddress: e.target.value,
                                   });
+                                  console.log(candidateMasterData.perm_address);
                             }}
                             variant="filled"
                           />
@@ -6958,217 +7011,76 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
+
+  {/* {Object.entries(([groupName, permissionss]) => (
+    <List style={{ display: "flex" }}>
+      <p>{groupName}
+      </p>
+      {permissionss.map((permission) => (
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={uroleData.permissions ? true : false} // the index will not be the same since the data is grouped
+                value={roleData.permissionId}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    checkedp.push(permission.id);
+                    setRoleData({ ...roleData, permissionId: checkedp });
+                  } else {
+                    roleData.permissionId.splice(
+                      checkedp.indexOf(e.target.value),
+                      1
+                    );
+                  }
+                  // console.log(roleData);
+                }}
+              />
+            }
+            label={permission.displayName}
+          />
+        </FormGroup>
+      ))}
+    </List>
+  ))} */}
+
                 <b>Permissions Section</b>
-                {Object.keys(permissions).map((item,index) => (
+                {list.map((item,index) => (
                   <>
-                    <List >
-                      <p style={{ color: "brown" }}>
-                        {permissions[item].group}
-                      </p>
-                    <FormGroup style={{ display: "flex", flexDirection: "row" }}>
+                    <List style={{display:'flex', flexDirection: "column" }}>
+                        <p style={{ color: "brown" }}>
+                        {/* {console.log(item)} */}
+                        {item.group}
+                        </p>
+                    <FormGroup style={{ display: "flex",flexDirection:'row'}}>
+                    {item.items.map((i,s)=>(
+                      <>
                       <FormControlLabel
-                        control={<Checkbox checked={uroleData.permissions[index]?true:false}
+                      style={{display:'flex'}}
+                        control={<Checkbox 
+                          // checked={uroleData.permissions[index]?true:false}
                           value={roleData.permissionId}
                           onChange={(e)=>{
                             if (e.target.checked) {
-                              // console.log("permissions[item].id",permissions[item].id)
-                              checkedp.push(permissions[item].id)
+                              console.log("permissions[item].id",i.id)
+                              checkedp.push(i.id)
+                              console.log(checkedp);
                               setRoleData({...roleData, permissionId: checkedp});
                             } else {
                               roleData.permissionId.splice(checkedp.indexOf(e.target.value), 1);
                             }
-                            // console.log(roleData);
+                            
                           }
                           }/>}
-                        label={permissions[item].displayName}
-						          />
+                        label={i.displayName}
+						          >
+                        </FormControlLabel>
+                        </>))}
                     </FormGroup>
 				            </List>
                   </>
                 ))}
-                {/* <p style={{ color: "brown" }}>Admin-Candidate Upload Batch</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Change Pricing Template"
-											/>
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Approval" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Admin-Candidate Verification</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>
-											Admin-Other Industry Category
-										</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Admin-User</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Reset Password"
-											/>
-										</FormGroup>
-										<p style={{ color: "brown" }}>Agent</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Change Password"
-											/>
-										</FormGroup>
-										<p style={{ color: "brown" }}>Agent Pricing Template</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Set Active"
-											/>
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Batch Priority</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate - Basic</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Bulk Create"
-											/>
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Upload profile image"
-											/>
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate - Certification</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate - Work History</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate Upload Batch</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Candidate Verification</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Category</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Company</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Customer</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Reset password"
-											/>
-										</FormGroup>
-										<p style={{ color: "brown" }}>Customer - Subscription</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Industry</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Permission</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Public</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel
-												control={<Checkbox defaultChecked />}
-												disabled
-												label="User - Login"
-											/>
-										</FormGroup>
-										<p style={{ color: "brown" }}>Role</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Skill</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>Subscription</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read All" />
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Create" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-										</FormGroup>
-										<p style={{ color: "brown" }}>User</p>
-										<FormGroup sx={{ display: "flex", flexDirection: "row" }}>
-											<FormControlLabel control={<Checkbox />} label="Read" />
-											<FormControlLabel control={<Checkbox />} label="Update" />
-											<FormControlLabel
-												control={<Checkbox />}
-												label="Change password"
-											/>
-										</FormGroup> */}
+               
               </List>
               <List>
                 {!editStatus?(<Button

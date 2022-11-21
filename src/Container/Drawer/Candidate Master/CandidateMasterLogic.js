@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Outlet } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 function CandidateMasterLogic() {

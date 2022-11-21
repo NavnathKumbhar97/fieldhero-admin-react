@@ -141,7 +141,8 @@ function SidebarDesign() {
           style={{ backgroundColor: "brown", color: "white", fontSize: "20px" }}
         >
          {/* <img src="https://apexa.in/wp-content/uploads/elementor/thum…al-pjmk2duu7uzmt6g1cpme5i5x49b6w0wl06ydvzs9da.png"></img> */}
-         <img style={{width:'50px',height:'45px',background:"white"}} src="https://apexa.in/wp-content/uploads/elementor/thumbs/Logo-final-pjmk2duu7uzmt6g1cpme5i5x49b6w0wl06ydvzs9da.png"></img>
+         <img style={{width:'50px',height:'45px',background:"white"}} 
+         src="https://apexa.in/wp-content/uploads/elementor/thumbs/Logo-final-pjmk2duu7uzmt6g1cpme5i5x49b6w0wl06ydvzs9da.png"></img>
          <p style={{paddingLeft:'60px'}}>
            Apexa Group
           </p>

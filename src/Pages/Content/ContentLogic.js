@@ -15,6 +15,8 @@ import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import Modal from "@mui/material/Modal";
+import { Outlet } from 'react-router-dom';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import {
@@ -440,6 +442,13 @@ const ContentLogic = (props) => {
   const [loader, setLoader] = useState(false);
   const [editId, setEditId] = useState("");
   const [editStatus, setEditStatus] = useState(false);
+  const [sameAddress,setSameAddress] = useState(false)
+  const [filterData,setFilterData] = useState({
+    fullName:'',
+    contact:'',
+    id:0,
+    isActive:true
+  })
 
   // used to select multiple value from select field for batch priority module
   const [batchNo, setBatchNo] = useState({
@@ -1090,6 +1099,35 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
+  const filterCandiateMasterAPICall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/filter-candidate?fullName=${filterData.fullName}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setTblData(response.data.data.result.Candidates);
+          setTblDataCount(response.data.data.count);
+          console.log("tbldataCandidate", tblData);
+        } else if (response.status == 400) {
+          window.alert(response.data.message);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        alert("Timeout - Login Again");
+        setLoader(false);
+        console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+  
   //candidate upload batch api call
   const getCandidateUploadBatchAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1685,12 +1723,12 @@ const ContentLogic = (props) => {
       });
   };
   //get user details by id of user module modal on click of edit
-  const getUserAPIcallById = () => {
+  const getUserAPIcallById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/users/${editId}`, {
+      .dataGet(`/v1/users/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -1897,8 +1935,6 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSkillSetById", error);
       });
   };
-  
-
   const getAgentPricingForCndUplBatchAPICalls = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -1929,12 +1965,12 @@ const ContentLogic = (props) => {
       });
   };
 
-  const addWorkExperiance= () =>{
+  const filterRecords = () =>{
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true)
     handler
-          .dataPost(`/v1/candidates`, candidateMasterData, {
+          .dataPost(`/v1/candidates`, filterData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
@@ -1955,6 +1991,7 @@ const ContentLogic = (props) => {
             console.error("There was an error!- createWorkExperiance", error);
           });
   }
+
   function EnhancedTableHead(props) {
     const {
       onSelectAllClick,
@@ -3336,7 +3373,52 @@ const ContentLogic = (props) => {
   const renderDesign = () => {
     switch (pageTitle) {
       case "Candidate Master":
-        return <CandidateMasterLogic />;
+        return (
+          <div style={{background:'aliceblue',marginRight:'-80px',marginTop:'-20px',marginBottom:'65px'}} >
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1, width: '25ch',mb:2},
+      }}
+    >
+      <TextField size='small' id="outlined-basic" value={filterData.fullName} label="Full Name" variant="outlined" 
+      onChange={(e)=>{
+        setFilterData({
+          ...filterData,
+          fullName:e.target.value
+        })
+      }} />
+      <TextField size='small' id="outlined-basic" value={filterData.contact} label="Contact No" variant="outlined" 
+      onChange={(e)=>{
+        setFilterData({
+          ...filterData,
+          contact:e.target.value
+        })
+      }}/>
+      <TextField size='small' id="outlined-basic" label="Id" variant="outlined" />
+      <TextField size='small' id="outlined-basic" label="Status" variant="outlined" />
+      <TextField select size='small' id="outlined-basic" label="Skill" variant="outlined" />
+      <TextField select size='small' id="outlined-basic" label="Industry" variant="outlined" />
+      <TextField select size='small' id="outlined-basic" label="Category" variant="outlined" />
+      <Button
+            style={{
+             marginLeft:'1100px',
+              backgroundColor: "brown",
+              color: "white",
+              width:'90px',
+              marginTop:'-70px',
+            }}
+            variant="outlined"
+            href="#outlined-buttons"
+            onClick={filterCandiateMasterAPICall}
+          >
+            <FilterAltIcon />
+            Filter
+          </Button>
+    </Box>
+    <Outlet></Outlet>
+    </div>
+        )
 
       case "Candidate Upload Batch":
         return null;
@@ -3494,13 +3576,7 @@ const ContentLogic = (props) => {
     }
   };
 
-  const groups = permissions.reduce((groups, item) => ({
-    ...groups,
-    [item.group]: [...(groups[item.group] || []), item]
-  }), {});
-  
-  // console.log("first solutions",groups);
-  
+
   const array = [
     { id: 1, displayName: "Create", group: "admin" },
     { id: 2, displayName: "Update", group: "admin" },
@@ -3529,9 +3605,7 @@ const ContentLogic = (props) => {
       ];
     }
   }
-  
-  // console.log("dict", dict);
-  
+
   // if you need an array
   const list = []
   
@@ -3541,8 +3615,17 @@ const ContentLogic = (props) => {
       items: dict[key],
     })
   }
-  // console.log(list);
 
+  // const handleModalInputLogic = () =>{
+  //   !editStatus
+  //   ? candidateMasterData.perm_zip
+  //   : updateCandidateMasterData.permZip
+  // }
+  // const handleInputEditStatus =()=>{
+  //   !editStatus
+  //   ? candidateMasterData.perm_zip
+  //   : updateCandidateMasterData.permZip
+  // }
 
   // its handle the module modal inputs
   const handleModalInput = () => {
@@ -3780,7 +3863,12 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <FormControlLabel
-                            control={<Checkbox />}
+                            control={<Checkbox 
+                            checked={sameAddress}
+                            onChange={(e)=>{
+                              setSameAddress(true)
+                            }}
+                            />}
                             label="Same as permanent address"
                           />
                         </ListItem>
@@ -4783,12 +4871,12 @@ const ContentLogic = (props) => {
                   label="Old Industry:"
                 ></FormControlLabel>
                 <b>NA</b>
-                <FormControlLabel
-                  control={<Checkbox />}
+                <FormControlLabel style={{marginLeft:'40px'}}
+                  control={<Checkbox/>}
                   label="Old Category:"
                 ></FormControlLabel>
                 <b>INSTRUMENTATION ENGINEER</b>
-                <FormControlLabel
+                <FormControlLabel style={{marginLeft:'40px'}}
                   disabled
                   control={<Checkbox />}
                   label="Old Education:"
@@ -4958,7 +5046,7 @@ const ContentLogic = (props) => {
                         alignItems: "flex-start",
                       }}
                     >
-                      <b style={{ color: "red" }}>Industry</b>
+                      <b style={{ color: "red",marginBottom:'10px' }}>Industry</b>
                       <TextField
                       disabled={editStatus}
                         size="small"
@@ -4998,7 +5086,7 @@ const ContentLogic = (props) => {
                         alignItems: "flex-start",
                       }}
                     >
-                      <b style={{ color: "red" }}>Category</b>
+                      <b style={{ color: "red",marginBottom:'10px' }}>Category</b>
                       <TextField
                       disabled={editStatus}
                         size="small"
@@ -7011,39 +7099,6 @@ const ContentLogic = (props) => {
                 </FormGroup>
               </List>
               <List>
-
-  {/* {Object.entries(([groupName, permissionss]) => (
-    <List style={{ display: "flex" }}>
-      <p>{groupName}
-      </p>
-      {permissionss.map((permission) => (
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={uroleData.permissions ? true : false} // the index will not be the same since the data is grouped
-                value={roleData.permissionId}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    checkedp.push(permission.id);
-                    setRoleData({ ...roleData, permissionId: checkedp });
-                  } else {
-                    roleData.permissionId.splice(
-                      checkedp.indexOf(e.target.value),
-                      1
-                    );
-                  }
-                  // console.log(roleData);
-                }}
-              />
-            }
-            label={permission.displayName}
-          />
-        </FormGroup>
-      ))}
-    </List>
-  ))} */}
-
                 <b>Permissions Section</b>
                 {list.map((item,index) => (
                   <>
@@ -7058,7 +7113,7 @@ const ContentLogic = (props) => {
                       <FormControlLabel
                       style={{display:'flex'}}
                         control={<Checkbox 
-                          // checked={uroleData.permissions[index]?true:false}
+                          // checked={uroleData.permissions?true:false}
                           value={roleData.permissionId}
                           onChange={(e)=>{
                             if (e.target.checked) {

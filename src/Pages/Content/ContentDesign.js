@@ -179,7 +179,17 @@ export default function ContentDesign(props) {
                   <TableCell align="left">
                     {tblData[item].contactNo1}
                   </TableCell>
-                  <TableCell style={{color:'green'}} align="left">{tblData[item].isActive===true?<p style={{border:'1px solid green',borderRadius:'15px',width:'50px',padding:'3px'}}>Active</p>:"Inactive"}</TableCell>
+                  <TableCell
+                  align="left">
+                    {tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}
+                    </TableCell>
                   <TableCell><Button style={{color:'brown',marginLeft:'-10px'}} onClick={()=>{
                     setEditId(tblData[item].id)
                     setEditStatus(true)
@@ -323,7 +333,14 @@ export default function ContentDesign(props) {
                     {tblData[item].contactNo}
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'60px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left">
                     <Button style={{color:'brown'}}
                   onClick={()=>{
@@ -379,7 +396,14 @@ export default function ContentDesign(props) {
                 <TableCell align="left">
                   {tblData[item].totalAmount}
                 </TableCell>
-                <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                 <TableCell align="left"><Button onClick={()=>{
                     handleOpenCandidateModal()
                     setEditId(tblData[item].id)
@@ -476,7 +500,14 @@ export default function ContentDesign(props) {
                   </TableCell>
 
                 <TableCell align="left">{tblData[item].title}</TableCell>
-                <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                 <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
@@ -528,7 +559,14 @@ export default function ContentDesign(props) {
                     {tblData[item].companyName}
                   </TableCell>
                   <TableCell align="left">{tblData[item].industry}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
@@ -574,7 +612,14 @@ export default function ContentDesign(props) {
                     {tblData[item].contactNo}
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                 </TableRow>
               </>
             ))}
@@ -617,7 +662,14 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
@@ -667,7 +719,14 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].name}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   
                 </TableRow>
               </>
@@ -710,7 +769,14 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].title}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
@@ -761,7 +827,14 @@ export default function ContentDesign(props) {
                     {tblData[item].planName}
                   </TableCell>
                   <TableCell align="left">{tblData[item].dataCount}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">{tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()
@@ -813,7 +886,15 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">{tblData[item].email}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
-                  <TableCell align="left">{tblData[item].isActive===true?"Active":"Inactive"}</TableCell>
+                  <TableCell align="left">
+                    {tblData[item].isActive===true?
+                    <p style={{border:'1px solid green',
+                    borderRadius:'15px',width:'50px',
+                    padding:'3px',color:'green'}}
+                    >Active</p>:<p style={{border:'1px solid red',
+                    borderRadius:'15px',width:'58px',
+                    padding:'3px',color:'red'}}
+                    >Inactive</p>}</TableCell>
                   <TableCell align="left"><Button style={{color:'brown'}}
                   onClick={()=>{
                     handleOpenCandidateModal()

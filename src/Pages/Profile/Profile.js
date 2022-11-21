@@ -16,6 +16,7 @@ import {
   IconButton,
   InputAdornment,
   Snackbar,
+  Stack,
   TextField,
   Tooltip,
   Typography,
@@ -38,6 +39,9 @@ export default function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [openErrMsg,setOpenErrtMsg] = useState(false)
+  const [errMsg,setErrMsg] = useState("")
+
   const [localStorageData, setLocalStorageData] = useState([]);
   const [changePass, setChangePass] = useState({
     new_password: "",
@@ -96,7 +100,8 @@ export default function Profile() {
       })
       .catch((error) => {
         if (error.status == 400) {
-          window.alert(error.data.message);
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true)
         }
         console.error("There was an error!- changePasswordAPICall", error);
       });
@@ -255,6 +260,21 @@ export default function Profile() {
             Close
           </Button>
         </DialogActions>
+        <Stack spacing={2} sx={{ width: "100%" }}>
+            <Snackbar
+                  open={openErrMsg}
+                  autoHideDuration={6000}
+                  onClose={() => setOpenErrtMsg(false)}
+                >
+                  <Alert
+                    onClose={() => setOpenErrtMsg(false)}
+                    severity="warning"
+                    sx={{ width: "100%", backgroundColor: "brown",color:'yellow' }}
+                  >
+                    {errMsg}
+                  </Alert>
+                </Snackbar>
+        </Stack>
       </Dialog>
       <Snackbar
         open={openAlertMsg}
@@ -269,6 +289,7 @@ export default function Profile() {
           Data successfully Updated!
         </Alert>
       </Snackbar>
+      
     </div>
   );
 }

@@ -15,8 +15,8 @@ import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import Modal from "@mui/material/Modal";
-import { Outlet } from 'react-router-dom';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { Outlet } from "react-router-dom";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import {
@@ -100,7 +100,7 @@ const ContentLogic = (props) => {
   const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [openErrMsg, setOpenErrtMsg] = useState(false);
-  const [errMsg,setErrMsg] = useState("")
+  const [errMsg, setErrMsg] = useState("");
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
     useState({
       id: 0,
@@ -118,8 +118,8 @@ const ContentLogic = (props) => {
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
-    gender: "",
-    dob: "",
+    // gender: "MALE",
+    dob: "12-12-12",
     permAddress: "",
     contactNo1: "",
     contactNo2: "",
@@ -131,7 +131,7 @@ const ContentLogic = (props) => {
     email1: "",
     email2: "",
     fullName: "",
-    gender: "",
+    gender: "MALE",
     perm_address: "",
     perm_city: "",
     perm_country: "India",
@@ -300,12 +300,12 @@ const ContentLogic = (props) => {
     name: "",
     description: "",
     isActive: true,
-    id:0,
+    id: 0,
     permissionId: [],
   });
-  const [uroleData,setURoleData] = useState({
-    permissions:[]
-  })
+  const [uroleData, setURoleData] = useState({
+    permissions: [],
+  });
   const [skillSetData, setSkillSetData] = useState({
     title: "",
     description: "",
@@ -372,7 +372,7 @@ const ContentLogic = (props) => {
   const [agentMasterData, setAgentMasterData] = useState({
     fullName: "",
     dob: "",
-    gender: "",
+    gender: "MALE",
     permAddress: "",
     permCity: "",
     permState: "",
@@ -442,13 +442,13 @@ const ContentLogic = (props) => {
   const [loader, setLoader] = useState(false);
   const [editId, setEditId] = useState("");
   const [editStatus, setEditStatus] = useState(false);
-  const [sameAddress,setSameAddress] = useState(false)
-  const [filterData,setFilterData] = useState({
-    fullName:'',
-    contact:'',
-    id:0,
-    isActive:true
-  })
+  const [sameAddress, setSameAddress] = useState(false);
+  const [filterData, setFilterData] = useState({
+    fullName: "",
+    contact: "",
+    id: 0,
+    isActive: true,
+  });
 
   // used to select multiple value from select field for batch priority module
   const [batchNo, setBatchNo] = useState({
@@ -460,19 +460,19 @@ const ContentLogic = (props) => {
 
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
-  const [WorkExperianceData,setWorkExperianceData] = useState({
-    companyId:'',
-    description:'',
-    endDate:'',
-    skillId:[],
-    startDate:''
-  })
+  const [WorkExperianceData, setWorkExperianceData] = useState({
+    companyId: "",
+    description: "",
+    endDate: "",
+    skillId: [],
+    startDate: "",
+  });
 
-  const [candidateVerDashboard,setCandidateVerDashboard] = useState([])
- 
+  const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
+
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
-    setEditStatus(false)
+    setEditStatus(false);
   };
   const handleOpenCandidateModal = () => {
     setOpenCandidateModal(true);
@@ -823,7 +823,7 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Rejected",
     },
-    
+
     {
       id: "owner",
       numeric: true,
@@ -1089,27 +1089,29 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
-        navigate("/login");
-        alert("Timeout - Login Again");
+        // alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
+        navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
+
+  //filter records of candidate master module
   const filterCandiateMasterAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(
-        `/v1/filter-candidate?fullName=${filterData.fullName}`,
-        {
-          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-        }
-      )
+      .dataGet(`/v1/filter-candidate?fullName=${filterData.fullName}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
@@ -1117,17 +1119,19 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
-        navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
+        navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
-  
+
   //candidate upload batch api call
   const getCandidateUploadBatchAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1147,12 +1151,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("candidate-upload-batches", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
-        navigate("/login");
         setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
+        navigate("/login");
         setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAPIcall",
@@ -1176,13 +1182,15 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("tblData", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
-        navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
+        navigate("/login");
         console.error("There was an error!- getAgentMasterAPIcall", error);
       });
   };
@@ -1207,12 +1215,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("candidate verification", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         navigate("/login");
-        alert("Timeout - Login Again");
         setLoader(false);
         console.error(
           "There was an error!- getCandidateVerificationAPIcall",
@@ -1225,24 +1235,23 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(
-        `/v1/candidate-verifications/dashboard`,
-        {
-          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-        }
-      )
+      .dataGet(`/v1/candidate-verifications/dashboard`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
           setCandidateVerDashboard(response.data.data.count);
           console.log("candidate verification", candidateVerDashboard);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error(
           "There was an error!- getCandidateVerificationAPIcall",
@@ -1267,13 +1276,15 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("agent template data", candidateUploadBatchAdminSelect);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
-        navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
+        navigate("/login");
         console.error(
           "There was an error!- getAgentTemplatePricingAPIcall",
           error
@@ -1301,12 +1312,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.totalItems);
           console.log("upload batch ", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAdminAPIcall",
@@ -1333,12 +1346,14 @@ const ContentLogic = (props) => {
           console.log("category", tblData);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         navigate("/login");
-        alert("Timeout - Login Again");
         setLoader(false);
         console.error("There was an error!- getCategoryAPIcall", error);
       });
@@ -1358,12 +1373,15 @@ const ContentLogic = (props) => {
           setTblData(response.data.data.result);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         navigate("/login");
-        alert("Timeout - Login Again");
+        // alert("Timeout - Login Again");
         setLoader(false);
         console.error("There was an error!- getCompanyAPIcall", error);
       });
@@ -1385,12 +1403,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("customer", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getCustomerAPIcall", error);
       });
@@ -1414,12 +1434,14 @@ const ContentLogic = (props) => {
           console.log("industry", tblData);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getIndustryAPIcall", error);
       });
@@ -1440,12 +1462,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("roles", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getRoleAPIcall", error);
       });
@@ -1466,12 +1490,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("skill set", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getSkillSetAPIcall", error);
       });
@@ -1495,12 +1521,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("subscriptions", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getSubscriptionAPIcall", error);
       });
@@ -1521,12 +1549,14 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
           console.log("users", tblData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error("There was an error!- getUserAPIcall", error);
       });
@@ -1550,7 +1580,8 @@ const ContentLogic = (props) => {
             response.data.data.batches
           );
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1573,7 +1604,8 @@ const ContentLogic = (props) => {
           // setTblDataCount(response.data.data.users);
           console.log("batch priority ", response.data.data);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1596,7 +1628,8 @@ const ContentLogic = (props) => {
           // setTblDataCount(response.data.data.users);
           console.log("batch priority stats ", response.data.data.assignedTo);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1618,7 +1651,8 @@ const ContentLogic = (props) => {
           setLoader(false);
           setPermissions(response.data.data);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1638,7 +1672,8 @@ const ContentLogic = (props) => {
           setLoader(false);
           setURoleData(response.data.data);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1715,7 +1750,8 @@ const ContentLogic = (props) => {
           setLoader(false);
           setCompanyData(response.data.data);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1738,7 +1774,8 @@ const ContentLogic = (props) => {
           // setTblDataCount(response.data.data.users);
           console.log("user Data to update by id", updateUserData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1763,7 +1800,8 @@ const ContentLogic = (props) => {
             updateCandidateMasterData
           );
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
@@ -1788,12 +1826,16 @@ const ContentLogic = (props) => {
             updateCandidateVerificationData
           );
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCandidateVerificationById", error);
+        console.error(
+          "There was an error!- getCandidateVerificationById",
+          error
+        );
       });
   };
   const getAgentPricingTemplateById = (id) => {
@@ -1810,12 +1852,16 @@ const ContentLogic = (props) => {
           setAgentPricingTemplateData(response.data.data);
           console.log("candidate verification by id", agentPricingTemplateData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getAgentPeicingTemplateById", error);
+        console.error(
+          "There was an error!- getAgentPeicingTemplateById",
+          error
+        );
       });
   };
 
@@ -1834,7 +1880,8 @@ const ContentLogic = (props) => {
           // console.log("agent by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
@@ -1854,10 +1901,11 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setCategoryData(response.data.data);
-          console.log("agent by id",response.data.data);
+          console.log("agent by id", response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
@@ -1881,7 +1929,8 @@ const ContentLogic = (props) => {
           // console.log("industy by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
@@ -1904,7 +1953,8 @@ const ContentLogic = (props) => {
           // console.log("agent by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
@@ -1927,7 +1977,8 @@ const ContentLogic = (props) => {
           // console.log("agent by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
           setLoader(false);
         }
       })
@@ -1951,12 +2002,14 @@ const ContentLogic = (props) => {
           );
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
-          window.alert(response.data.message);
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
         }
       })
       .catch((error) => {
         navigate("/login");
-        alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true)
         setLoader(false);
         console.error(
           "There was an error!- getAgentTemplatePricingAPIcall",
@@ -1965,32 +2018,34 @@ const ContentLogic = (props) => {
       });
   };
 
-  const filterRecords = () =>{
+  const filterRecords = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true)
+    setLoader(true);
     handler
-          .dataPost(`/v1/candidates`, filterData, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            if (response.status == 201) {
-              console.log(response.data.message);
-              handleClickOpenChildModal()
-              setLoader(false)
-              setOpenAlertMsg(true);
-            } else {
-              window.alert(response.data.message);
-            }
-          })
-          .catch((error) => {
-            if (error.status == 400) {
-              window.alert(error.data.message);
-            }
-            console.error("There was an error!- createWorkExperiance", error);
-          });
-  }
+      .dataPost(`/v1/candidates`, filterData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 201) {
+          console.log(response.data.message);
+          handleClickOpenChildModal();
+          setLoader(false);
+          setOpenAlertMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
+        }
+        console.error("There was an error!- createWorkExperiance", error);
+      });
+  };
 
   function EnhancedTableHead(props) {
     const {
@@ -2161,18 +2216,22 @@ const ContentLogic = (props) => {
     {
       value: "Admin",
       label: "Admin",
+      id: 4,
     },
     {
       value: "Call Center Staff",
       label: "Call Center Staff",
+      id: 5,
     },
     {
       value: "HO Agent",
       label: "HO Agent",
+      id: 6,
     },
     {
       value: "User",
       label: "User",
+      id: 2,
     },
   ];
   const candidateConsent = [
@@ -2335,11 +2394,31 @@ const ContentLogic = (props) => {
     },
   };
 
-
-  // {editStatus?Object.keys(tblData).map((item)=>{setCategoryData(tblData[item])}):"teste 3"}
-
-  //defined states and inputs for modules
-  // const EnhancedTableToolbar = (props) => {
+  //grouping all the role module checkbox
+  const dict = {};
+  for (const item of permissions) {
+    if (item.group in dict) {
+      dict[item.group].push({
+        displayName: item.displayName,
+        id: item.id,
+      });
+    } else {
+      dict[item.group] = [
+        {
+          displayName: item.displayName,
+          id: item.id,
+        },
+      ];
+    }
+  }
+  // if you need an array
+  const list = [];
+  for (const key in dict) {
+    list.push({
+      group: key,
+      items: dict[key],
+    });
+  }
 
   // add API calls
   const addAPICalls = (pageName) => {
@@ -2359,14 +2438,15 @@ const ContentLogic = (props) => {
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
             } else {
-              // window.alert(response.data.message);
-              setOpenErrtMsg(true)
+              // setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2382,15 +2462,16 @@ const ContentLogic = (props) => {
               console.log(response.data.message);
               getCandidateVerificationAPIcall();
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2404,17 +2485,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2428,17 +2510,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2446,7 +2529,7 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch-admin":
         break;
       case "batch-priority":
-        setLoader(true)
+        setLoader(true);
         handler
           .dataPost(`/v1/batch-priorities`, batchNo, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2458,18 +2541,19 @@ const ContentLogic = (props) => {
               getBatchPriorityAPIcall();
               setOpenAlertMsg(true);
               setOpenAddBtchprty(false);
-              setLoader(true)
+              setLoader(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
               setOpenAddBtchprty(false);
-              setLoader(false)
+              setLoader(false);
               setOpenAlertMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createBatchPriority", error);
           });
@@ -2483,17 +2567,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getCategoryAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 409) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- getCategoryAPIcall", error);
           });
@@ -2507,18 +2592,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getCompanyAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               // window.alert(error.data.message);
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2532,18 +2618,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getIndustryAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               // window.alert(error.data.message);
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2557,18 +2644,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getRoleAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               // window.alert(error.data.message);
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2582,18 +2670,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getSkillSetAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               // window.alert(error.data.message);
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2607,18 +2696,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getSubscriptionAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               // window.alert(error.data.message);
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2632,18 +2722,19 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getUserAPIcall();
               setOpenAlertMsg(true);
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
               // window.alert(error.data.message);
-              setErrMsg(true)
+              setErrMsg(true);
             }
             console.error("There was an error!- createCompany", error);
           });
@@ -2681,12 +2772,14 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2711,15 +2804,17 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getCandidateVerificationAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2739,15 +2834,17 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getAgentMasterAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateAgentByAPICall", error);
           });
@@ -2771,10 +2868,11 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
               console.log("else part");
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
@@ -2782,7 +2880,8 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2805,15 +2904,17 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getCandidateUploadBatchAdminAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2836,15 +2937,17 @@ const ContentLogic = (props) => {
             if (response.status == 204) {
               console.log(response.data.message);
               setOpenAlertMsg(true);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               getCategoryAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2866,16 +2969,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getCompanyAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCompanyAPICall", error);
           });
@@ -2897,16 +3002,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getIndustryAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateCompanyAPICall", error);
           });
@@ -2917,27 +3024,25 @@ const ContentLogic = (props) => {
           id: editId,
         };
         handler
-          .dataPut(
-            `/v1/roles/${udateRoleData.id}`,
-            udateRoleData,
-            {
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }
-          )
+          .dataPut(`/v1/roles/${udateRoleData.id}`, udateRoleData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
           .then((response) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			        setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getRoleAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateRoleById", error);
           });
@@ -2955,16 +3060,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSkillSetAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error("There was an error!- updateSkillsetAPICall", error);
           });
@@ -2986,16 +3093,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSubscriptionAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error(
               "There was an error!- updateSubscriptionAPICall",
@@ -3016,16 +3125,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-			  setOpenCandidateModal(false);
+              setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getUserAPIcall();
             } else {
-              window.alert(response.data.message);
+              setErrMsg(response.data.message);
+         setOpenErrtMsg(true)
             }
           })
           .catch((error) => {
             if (error.status == 400) {
-              window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);;
             }
             console.error(
               "There was an error!- updateSubscriptionAPICall",
@@ -3035,7 +3146,6 @@ const ContentLogic = (props) => {
         break;
     }
   };
-
 
   //it handle the buttons of content page
   const handleButtons = () => {
@@ -3259,7 +3369,7 @@ const ContentLogic = (props) => {
                 onClick={() => {
                   handleOpenCandidateModal();
                   getRoleByIdAPIcall();
-                  getPermissionsAPIcall()
+                  getPermissionsAPIcall();
                 }}
                 style={{
                   marginTop: "80px",
@@ -3374,51 +3484,98 @@ const ContentLogic = (props) => {
     switch (pageTitle) {
       case "Candidate Master":
         return (
-          <div style={{background:'aliceblue',marginRight:'-80px',marginTop:'-20px',marginBottom:'65px'}} >
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch',mb:2},
-      }}
-    >
-      <TextField size='small' id="outlined-basic" value={filterData.fullName} label="Full Name" variant="outlined" 
-      onChange={(e)=>{
-        setFilterData({
-          ...filterData,
-          fullName:e.target.value
-        })
-      }} />
-      <TextField size='small' id="outlined-basic" value={filterData.contact} label="Contact No" variant="outlined" 
-      onChange={(e)=>{
-        setFilterData({
-          ...filterData,
-          contact:e.target.value
-        })
-      }}/>
-      <TextField size='small' id="outlined-basic" label="Id" variant="outlined" />
-      <TextField size='small' id="outlined-basic" label="Status" variant="outlined" />
-      <TextField select size='small' id="outlined-basic" label="Skill" variant="outlined" />
-      <TextField select size='small' id="outlined-basic" label="Industry" variant="outlined" />
-      <TextField select size='small' id="outlined-basic" label="Category" variant="outlined" />
-      <Button
+          <div
             style={{
-             marginLeft:'1100px',
-              backgroundColor: "brown",
-              color: "white",
-              width:'90px',
-              marginTop:'-70px',
+              background: "aliceblue",
+              marginRight: "-80px",
+              marginTop: "-20px",
+              marginBottom: "65px",
             }}
-            variant="outlined"
-            href="#outlined-buttons"
-            onClick={filterCandiateMasterAPICall}
           >
-            <FilterAltIcon />
-            Filter
-          </Button>
-    </Box>
-    <Outlet></Outlet>
-    </div>
-        )
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "25ch", mb: 2 },
+              }}
+            >
+              <TextField
+                size="small"
+                id="outlined-basic"
+                value={filterData.fullName}
+                label="Full Name"
+                variant="outlined"
+                onChange={(e) => {
+                  setFilterData({
+                    ...filterData,
+                    fullName: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                size="small"
+                id="outlined-basic"
+                value={filterData.contact}
+                label="Contact No"
+                variant="outlined"
+                onChange={(e) => {
+                  setFilterData({
+                    ...filterData,
+                    contact: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                size="small"
+                id="outlined-basic"
+                label="Id"
+                variant="outlined"
+              />
+              <TextField
+                size="small"
+                id="outlined-basic"
+                label="Status"
+                variant="outlined"
+              />
+              <TextField
+                select
+                size="small"
+                id="outlined-basic"
+                label="Skill"
+                variant="outlined"
+              />
+              <TextField
+                select
+                size="small"
+                id="outlined-basic"
+                label="Industry"
+                variant="outlined"
+              />
+              <TextField
+                select
+                size="small"
+                id="outlined-basic"
+                label="Category"
+                variant="outlined"
+              />
+              <Button
+                style={{
+                  marginLeft: "1100px",
+                  backgroundColor: "brown",
+                  color: "white",
+                  width: "90px",
+                  marginTop: "-70px",
+                }}
+                variant="outlined"
+                href="#outlined-buttons"
+                onClick={filterCandiateMasterAPICall}
+              >
+                <FilterAltIcon />
+                Filter
+              </Button>
+            </Box>
+            <Outlet></Outlet>
+          </div>
+        );
 
       case "Candidate Upload Batch":
         return null;
@@ -3576,57 +3733,6 @@ const ContentLogic = (props) => {
     }
   };
 
-
-  const array = [
-    { id: 1, displayName: "Create", group: "admin" },
-    { id: 2, displayName: "Update", group: "admin" },
-    { id: 3, displayName: "Delete", group: "admin" },
-    { id: 4, displayName: "all", group: "admin" },
-    { id: 11, displayName: "Create", group: "agent" },
-    { id: 12, displayName: "Update", group: "agent" },
-    { id: 13, displayName: "Delete", group: "agent" },
-    { id: 14, displayName: "all", group: "agent" }
-  ];
-  
-  const dict = {};
-  
-  for (const item of permissions) {
-    if (item.group in dict) {
-      dict[item.group].push({
-        displayName: item.displayName,
-        id: item.id
-      });
-    } else {
-      dict[item.group] = [
-        {
-          displayName: item.displayName,
-          id: item.id
-        }
-      ];
-    }
-  }
-
-  // if you need an array
-  const list = []
-  
-  for (const key in dict) {
-    list.push({
-      group: key,
-      items: dict[key],
-    })
-  }
-
-  // const handleModalInputLogic = () =>{
-  //   !editStatus
-  //   ? candidateMasterData.perm_zip
-  //   : updateCandidateMasterData.permZip
-  // }
-  // const handleInputEditStatus =()=>{
-  //   !editStatus
-  //   ? candidateMasterData.perm_zip
-  //   : updateCandidateMasterData.permZip
-  // }
-
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {
@@ -3662,7 +3768,7 @@ const ContentLogic = (props) => {
                       <div>
                         <ListItem>
                           <TextField
-                          required
+                            required
                             id="filled-basic"
                             label="Full Name"
                             variant="filled"
@@ -3703,12 +3809,10 @@ const ContentLogic = (props) => {
                                     ...candidateMasterData,
                                     birthDate: e.target.value,
                                   })
-
                                 : setUpdateCandidateMasterData({
                                     ...updateCandidateMasterData,
                                     dob: e.target.value,
                                   });
-                                  
                             }}
                             variant="filled"
                             sx={{ width: "69ch" }}
@@ -3725,8 +3829,18 @@ const ContentLogic = (props) => {
                               name="row-radio-buttons-group"
                             >
                               <FormControlLabel
-                                value="male"
-                                control={<Radio />}
+                                value={"MALE"}
+                                control={
+                                  <Radio
+                                    value={candidateMasterData.gender}
+                                    onChange={(e) => {
+                                      setCandidateMasterData({
+                                        ...candidateMasterData,
+                                        gender: e.target.checked,
+                                      });
+                                    }}
+                                  />
+                                }
                                 label="Male"
                               />
                               <FormControlLabel
@@ -3761,7 +3875,7 @@ const ContentLogic = (props) => {
                                     ...updateCandidateMasterData,
                                     permAddress: e.target.value,
                                   });
-                                  console.log(candidateMasterData.perm_address);
+                              console.log(candidateMasterData.perm_address);
                             }}
                             variant="filled"
                           />
@@ -3863,12 +3977,14 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <FormControlLabel
-                            control={<Checkbox 
-                            checked={sameAddress}
-                            onChange={(e)=>{
-                              setSameAddress(true)
-                            }}
-                            />}
+                            control={
+                              <Checkbox
+                                checked={sameAddress}
+                                onChange={(e) => {
+                                  setSameAddress(true);
+                                }}
+                              />
+                            }
                             label="Same as permanent address"
                           />
                         </ListItem>
@@ -3998,6 +4114,7 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Primary email address"
+                            required
                             variant="filled"
                             value={
                               !editStatus
@@ -4044,6 +4161,7 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Primary contact no"
+                            required
                             variant="filled"
                             value={
                               !editStatus
@@ -4090,6 +4208,7 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Aadhar no"
+                            required
                             variant="filled"
                             value={
                               !editStatus
@@ -4332,7 +4451,6 @@ const ContentLogic = (props) => {
                 <DialogContent>
                   <ListItem>
                     <TextField
-
                       id="name"
                       label="Company Name"
                       sx={{ width: "30ch" }}
@@ -4871,12 +4989,14 @@ const ContentLogic = (props) => {
                   label="Old Industry:"
                 ></FormControlLabel>
                 <b>NA</b>
-                <FormControlLabel style={{marginLeft:'40px'}}
-                  control={<Checkbox/>}
+                <FormControlLabel
+                  style={{ marginLeft: "40px" }}
+                  control={<Checkbox />}
                   label="Old Category:"
                 ></FormControlLabel>
                 <b>INSTRUMENTATION ENGINEER</b>
-                <FormControlLabel style={{marginLeft:'40px'}}
+                <FormControlLabel
+                  style={{ marginLeft: "40px" }}
                   disabled
                   control={<Checkbox />}
                   label="Old Education:"
@@ -4904,7 +5024,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       required
                       sx={{ width: "30ch" }}
                       size="small"
@@ -4918,7 +5038,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       required
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
@@ -4932,7 +5052,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Secondary Mobile"
@@ -4945,7 +5065,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Email"
@@ -4966,7 +5086,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Total Exp years"
@@ -4979,7 +5099,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Education"
@@ -4992,7 +5112,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Birthdate"
@@ -5005,7 +5125,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                    disabled={editStatus}
+                      disabled={editStatus}
                       select
                       value={updateCandidateVerificationData.gender}
                       onSelect={(e) => {
@@ -5019,7 +5139,11 @@ const ContentLogic = (props) => {
                       label="Gender"
                     >
                       {gender.map((option) => (
-                        <MenuItem disabled={editStatus} key={option.value} value={option.value}>
+                        <MenuItem
+                          disabled={editStatus}
+                          key={option.value}
+                          value={option.value}
+                        >
                           {option.label}
                         </MenuItem>
                       ))}
@@ -5046,9 +5170,11 @@ const ContentLogic = (props) => {
                         alignItems: "flex-start",
                       }}
                     >
-                      <b style={{ color: "red",marginBottom:'10px' }}>Industry</b>
+                      <b style={{ color: "red", marginBottom: "10px" }}>
+                        Industry
+                      </b>
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch" }}
                         select
@@ -5086,9 +5212,11 @@ const ContentLogic = (props) => {
                         alignItems: "flex-start",
                       }}
                     >
-                      <b style={{ color: "red",marginBottom:'10px' }}>Category</b>
+                      <b style={{ color: "red", marginBottom: "10px" }}>
+                        Category
+                      </b>
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch" }}
                         select
@@ -5168,7 +5296,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch" }}
                           label="Company Name"
@@ -5184,7 +5312,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -5201,7 +5329,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -5218,7 +5346,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="Start date"
@@ -5241,7 +5369,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="End date"
@@ -5249,14 +5377,14 @@ const ContentLogic = (props) => {
                           label="MM"
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "20ch", ml: 2 }}
                           select
                           label="YYYY"
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -5305,7 +5433,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary skill Name"
@@ -5318,7 +5446,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -5341,7 +5469,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 1"
@@ -5356,7 +5484,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 2"
@@ -5379,7 +5507,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary Lanugage"
@@ -5394,7 +5522,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Secondary Lanugage"
@@ -5409,7 +5537,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Third Lanugage"
@@ -5433,11 +5561,11 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus}/>}
+                      control={<Checkbox disabled={editStatus} />}
                       label="Old Primary Language:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus}/>}
+                      control={<Checkbox disabled={editStatus} />}
                       label="Old Secondary Language:"
                     ></FormControlLabel>
                   </ListItem>
@@ -5469,7 +5597,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current Pincode"
@@ -5482,7 +5610,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current City"
@@ -5495,7 +5623,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current State"
@@ -5517,7 +5645,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -5550,7 +5678,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox disabled={editStatus}/>}
+                        control={<Checkbox disabled={editStatus} />}
                         label="Same as current address"
                       ></FormControlLabel>
                       <ListItem
@@ -5561,7 +5689,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent Pincode"
@@ -5574,7 +5702,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent City"
@@ -5587,7 +5715,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent State"
@@ -5609,7 +5737,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                        disabled={editStatus}
+                          disabled={editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -5641,7 +5769,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Aadhar No"
@@ -5654,7 +5782,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Pan No"
@@ -5667,7 +5795,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Driving Licence no"
@@ -5689,7 +5817,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                      disabled={editStatus}
+                        disabled={editStatus}
                         size="small"
                         sx={{ width: "40ch", ml: 2 }}
                         multiline
@@ -5880,46 +6008,48 @@ const ContentLogic = (props) => {
                         <FormLabel id="demo-row-radio-buttons-group-label">
                           Select
                         </FormLabel>
-                        <RadioGroup
+                        {/* <RadioGroup
                           row
                           aria-labelledby="demo-row-radio-buttons-group-label"
                           name="row-radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Female"
-                            value={agentMasterData.gender}
-                            onChange={(e) => {
-                              setAgentMasterData({
-                                ...agentMasterData,
-                                gender: e.target.value,
-                              });
-                            }}
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Male"
-                            checked
-                            value={agentMasterData.gender}
-                            onChange={(e) => {
-                              setAgentMasterData({
-                                ...agentMasterData,
-                                gender: e.target.value,
-                              });
-                            }}
-                          />
-                          <FormControlLabel
-                            control={<Radio />}
-                            label="Other"
-                            value={agentMasterData.gender}
-                            onChange={(e) => {
-                              setAgentMasterData({
-                                ...agentMasterData,
-                                gender: e.target.value,
-                              });
-                            }}
-                          />
-                        </RadioGroup>
+                        > */}
+                        <FormControlLabel
+                          control={<Radio />}
+                          label="Female"
+                          // value={agentMasterData.gender}
+                          // onChange={(e) => {
+                          //   setAgentMasterData({
+                          //     ...agentMasterData,
+                          //     gender: e.target.value,
+                          //   });
+                          // }}
+                        />
+                        <FormControlLabel
+                          control={
+                            <Radio
+                              value={agentMasterData.gender}
+                              onChange={(e) => {
+                                setAgentMasterData({
+                                  ...agentMasterData,
+                                  gender: e.target.value,
+                                });
+                              }}
+                            />
+                          }
+                          label="Male"
+                        />
+                        <FormControlLabel
+                          control={<Radio />}
+                          label="Other"
+                          // value={agentMasterData.gender}
+                          // onChange={(e) => {
+                          //   setAgentMasterData({
+                          //     ...agentMasterData,
+                          //     gender: e.target.value,
+                          //   });
+                          // }}
+                        />
+                        {/* </RadioGroup> */}
                       </List>
                       <List>
                         <TextField
@@ -6030,7 +6160,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent Address"
-                          required
                           value={agentMasterData.permAddress}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6050,7 +6179,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent pincode"
-                          required
                           type="name"
                           value={agentMasterData.permZip}
                           onChange={(e) => {
@@ -6065,7 +6193,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent city"
-                          required
                           value={agentMasterData.permCity}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6080,7 +6207,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent state"
-                          required
                           value={agentMasterData.permState}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6097,7 +6223,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Pan Card"
-                          required
                           value={agentMasterData.panCard}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6112,7 +6237,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Aadhar card"
-                          required
                           value={agentMasterData.aadharCard}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6132,7 +6256,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Primary language"
-                          required
                           value={agentMasterData.primaryLang}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6147,7 +6270,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Secondary language"
-                          required
                           value={agentMasterData.secondaryLang}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6162,7 +6284,6 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Third language"
-                          required
                           value={agentMasterData.thirdLang}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6363,411 +6484,421 @@ const ContentLogic = (props) => {
       case "agent-pricing-template":
         return (
           <>
-          <Box>
-            <List
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                mr: 20,
-                alignItems: "flex-start",
-              }}
-            >
-              {!editStatus?(<><Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
-                Save
-              </Button>
-              <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>Exit</Button></>):null}
+            <Box>
+              <List
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mr: 20,
+                  alignItems: "flex-start",
+                }}
+              >
+                {!editStatus ? (
+                  <>
+                    <Button sx={{ color: "white", bgcolor: "brown", mr: 1 }}>
+                      Save
+                    </Button>
+                    <Button sx={{ color: "black", bgcolor: "#f5f0e4" }}>
+                      Exit
+                    </Button>
+                  </>
+                ) : null}
 
-              <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
-                <h2>Total:0</h2>
-                <li>Last modified by:</li>
-                <li>Last modified on:</li>
-                <li>Created by:</li>
-                <li>Created on:</li>
-              </ul>
-            </List>
-            <Box
-              sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
-            >
-              <List sx={{ mb: 5 }}>
-                <TextField
-                disabled={editStatus}
-                  required
-                  id="filled-basic"
-                  label="Template Name"
-                  type="name"
-                  variant="filled"
-                  value={agentPricingTemplateData.templateName}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      templateName: e.target.value,
-                    });
-                  }}
-                  sx={{ width: "30ch" }}
-                />
-                <TextField
-                disabled={editStatus}
-                  id="filled-basic"
-                  label="Description"
-                  type="name"
-                  value={agentPricingTemplateData.description}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      description: e.target.value,
-                    });
-                  }}
-                  variant="filled"
-                  sx={{ width: "40ch", ml: 4 }}
-                />
-                <TextField
-                disabled={editStatus}
-                  id="filled-basic"
-                  label="Approval Remarks"
-                  type="name"
-                  value={agentPricingTemplateData.approvalRemarks}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      approvalRemarks: e.target.value,
-                    });
-                  }}
-                  variant="filled"
-                  sx={{ width: "40ch", ml: 4 }}
-                />
+                <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
+                  <h2>Total:0</h2>
+                  <li>Last modified by:</li>
+                  <li>Last modified on:</li>
+                  <li>Created by:</li>
+                  <li>Created on:</li>
+                </ul>
               </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  value={agentPricingTemplateData.industry}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      industry: e.target.value,
-                    });
-                  }}
-                  label="Industry"
-                  variant="outlined"
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  value={agentPricingTemplateData.category}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      category: e.target.value,
-                    });
-                  }}
-                  type="number"
-                  label="Category"
-                  variant="outlined"
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Education"
-                  variant="outlined"
-                  value={agentPricingTemplateData.education}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      education: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Full Name"
-                  variant="outlined"
-                  value={agentPricingTemplateData.fullName}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      fullName: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Birthdate"
-                  variant="outlined"
-                  value={agentPricingTemplateData.dob}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      dob: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Primary language"
-                  variant="outlined"
-                  value={agentPricingTemplateData.primaryLanguage}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      primaryLanguage: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Secondary language"
-                  variant="outlined"
-                  value={agentPricingTemplateData.secondaryLanguage}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      secondaryLanguage: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Primary Mobile"
-                  variant="outlined"
-                  value={agentPricingTemplateData.contactNo1}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      contactNo1: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Current city"
-                  variant="outlined"
-                  value={agentPricingTemplateData.currCity}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      currCity: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Current pincode"
-                  variant="outlined"
-                  value={agentPricingTemplateData.currZip}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      currZip: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Primary Email"
-                  variant="outlined"
-                  value={agentPricingTemplateData.email1}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      email1: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Preffered location 1"
-                  variant="outlined"
-                  value={agentPricingTemplateData.preferLocation1}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      preferLocation1: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Preffered location 2"
-                  variant="outlined"
-                  value={agentPricingTemplateData.preferLocation2}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      preferLocation2: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Work Exp yrs"
-                  variant="outlined"
-                  value={agentPricingTemplateData.expYears}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      expYears: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Last company name"
-                  variant="outlined"
-                  value={agentPricingTemplateData.lastCompany}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      lastCompany: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Designation"
-                  variant="outlined"
-                  value={agentPricingTemplateData.designation}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      designation: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List sx={{ mt: 4, mb: 4 }}>
-                <TextField
-                disabled={editStatus}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Primary skills"
-                  variant="outlined"
-                  value={agentPricingTemplateData.skill1}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      skill1: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                disabled={editStatus}
-                  sx={{ ml: 2 }}
-                  id="outlined-basic"
-                  size="small"
-                  type="number"
-                  label="Secondary skills"
-                  variant="outlined"
-                  value={agentPricingTemplateData.skill2}
-                  onChange={(e) => {
-                    setAgentPricingTemplateData({
-                      ...agentPricingTemplateData,
-                      skill2: e.target.value,
-                    });
-                  }}
-                />
-              </List>
-              <List>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox disabled={editStatus} defaultChecked />}
-                    label="Is Active"
-                    value={agentPricingTemplateData.isActive}
+              <Box
+                sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
+              >
+                <List sx={{ mb: 5 }}>
+                  <TextField
+                    disabled={editStatus}
+                    required
+                    id="filled-basic"
+                    label="Template Name"
+                    type="name"
+                    variant="filled"
+                    value={agentPricingTemplateData.templateName}
                     onChange={(e) => {
                       setAgentPricingTemplateData({
                         ...agentPricingTemplateData,
-                        isActive: e.target.checked,
+                        templateName: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "30ch" }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    id="filled-basic"
+                    label="Description"
+                    type="name"
+                    value={agentPricingTemplateData.description}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        description: e.target.value,
+                      });
+                    }}
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 4 }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    id="filled-basic"
+                    label="Approval Remarks"
+                    type="name"
+                    value={agentPricingTemplateData.approvalRemarks}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        approvalRemarks: e.target.value,
+                      });
+                    }}
+                    variant="filled"
+                    sx={{ width: "40ch", ml: 4 }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    value={agentPricingTemplateData.industry}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        industry: e.target.value,
+                      });
+                    }}
+                    label="Industry"
+                    variant="outlined"
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    value={agentPricingTemplateData.category}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        category: e.target.value,
+                      });
+                    }}
+                    type="number"
+                    label="Category"
+                    variant="outlined"
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Education"
+                    variant="outlined"
+                    value={agentPricingTemplateData.education}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        education: e.target.value,
                       });
                     }}
                   />
-                </FormGroup>
-              </List>
-              {!editStatus?(<List sx={{ mt: 4, mb: 4 }}>
-                <Button
-                  onClick={() => addAPICalls("agent-pricing-template")}
-                  style={{ color: "white", backgroundColor: "brown" }}
-                >
-                  Save
-                </Button>
-                <Button
-                  style={{
-                    backgroundColor: "#f5f0e4",
-                    color: "black",
-                  }}
-                >
-                  Exit
-                </Button>
-              </List>):null}
+                </List>
+                <List>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Full Name"
+                    variant="outlined"
+                    value={agentPricingTemplateData.fullName}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        fullName: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Birthdate"
+                    variant="outlined"
+                    value={agentPricingTemplateData.dob}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        dob: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Primary language"
+                    variant="outlined"
+                    value={agentPricingTemplateData.primaryLanguage}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        primaryLanguage: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Secondary language"
+                    variant="outlined"
+                    value={agentPricingTemplateData.secondaryLanguage}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        secondaryLanguage: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Primary Mobile"
+                    variant="outlined"
+                    value={agentPricingTemplateData.contactNo1}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        contactNo1: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Current city"
+                    variant="outlined"
+                    value={agentPricingTemplateData.currCity}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        currCity: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Current pincode"
+                    variant="outlined"
+                    value={agentPricingTemplateData.currZip}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        currZip: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Primary Email"
+                    variant="outlined"
+                    value={agentPricingTemplateData.email1}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        email1: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Preffered location 1"
+                    variant="outlined"
+                    value={agentPricingTemplateData.preferLocation1}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        preferLocation1: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Preffered location 2"
+                    variant="outlined"
+                    value={agentPricingTemplateData.preferLocation2}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        preferLocation2: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Work Exp yrs"
+                    variant="outlined"
+                    value={agentPricingTemplateData.expYears}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        expYears: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Last company name"
+                    variant="outlined"
+                    value={agentPricingTemplateData.lastCompany}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        lastCompany: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Designation"
+                    variant="outlined"
+                    value={agentPricingTemplateData.designation}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        designation: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List sx={{ mt: 4, mb: 4 }}>
+                  <TextField
+                    disabled={editStatus}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Primary skills"
+                    variant="outlined"
+                    value={agentPricingTemplateData.skill1}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        skill1: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={editStatus}
+                    sx={{ ml: 2 }}
+                    id="outlined-basic"
+                    size="small"
+                    type="number"
+                    label="Secondary skills"
+                    variant="outlined"
+                    value={agentPricingTemplateData.skill2}
+                    onChange={(e) => {
+                      setAgentPricingTemplateData({
+                        ...agentPricingTemplateData,
+                        skill2: e.target.value,
+                      });
+                    }}
+                  />
+                </List>
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox disabled={editStatus} defaultChecked />
+                      }
+                      label="Is Active"
+                      value={agentPricingTemplateData.isActive}
+                      onChange={(e) => {
+                        setAgentPricingTemplateData({
+                          ...agentPricingTemplateData,
+                          isActive: e.target.checked,
+                        });
+                      }}
+                    />
+                  </FormGroup>
+                </List>
+                {!editStatus ? (
+                  <List sx={{ mt: 4, mb: 4 }}>
+                    <Button
+                      onClick={() => addAPICalls("agent-pricing-template")}
+                      style={{ color: "white", backgroundColor: "brown" }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      style={{
+                        backgroundColor: "#f5f0e4",
+                        color: "black",
+                      }}
+                    >
+                      Exit
+                    </Button>
+                  </List>
+                ) : null}
+              </Box>
             </Box>
-          </Box>
           </>
         );
 
@@ -7100,56 +7231,67 @@ const ContentLogic = (props) => {
               </List>
               <List>
                 <b>Permissions Section</b>
-                {list.map((item,index) => (
+                {list.map((item, index) => (
                   <>
-                    <List style={{display:'flex', flexDirection: "column" }}>
-                        <p style={{ color: "brown" }}>
+                    <List style={{ display: "flex", flexDirection: "column" }}>
+                      <p style={{ color: "brown" }}>
                         {/* {console.log(item)} */}
                         {item.group}
-                        </p>
-                    <FormGroup style={{ display: "flex",flexDirection:'row'}}>
-                    {item.items.map((i,s)=>(
-                      <>
-                      <FormControlLabel
-                      style={{display:'flex'}}
-                        control={<Checkbox 
-                          // checked={uroleData.permissions?true:false}
-                          value={roleData.permissionId}
-                          onChange={(e)=>{
-                            if (e.target.checked) {
-                              console.log("permissions[item].id",i.id)
-                              checkedp.push(i.id)
-                              console.log(checkedp);
-                              setRoleData({...roleData, permissionId: checkedp});
-                            } else {
-                              roleData.permissionId.splice(checkedp.indexOf(e.target.value), 1);
-                            }
-                            
-                          }
-                          }/>}
-                        label={i.displayName}
-						          >
-                        </FormControlLabel>
-                        </>))}
-                    </FormGroup>
-				            </List>
+                      </p>
+                      <FormGroup
+                        style={{ display: "flex", flexDirection: "row" }}
+                      >
+                        {item.items.map((i, s) => (
+                          <>
+                            <FormControlLabel
+                              style={{ display: "flex" }}
+                              control={
+                                <Checkbox
+                                  // checked={uroleData.permissions?true:false}
+                                  value={roleData.permissionId}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      console.log("permissions[item].id", i.id);
+                                      checkedp.push(i.id);
+                                      console.log(checkedp);
+                                      setRoleData({
+                                        ...roleData,
+                                        permissionId: checkedp,
+                                      });
+                                    } else {
+                                      roleData.permissionId.splice(
+                                        checkedp.indexOf(e.target.value),
+                                        1
+                                      );
+                                    }
+                                  }}
+                                />
+                              }
+                              label={i.displayName}
+                            ></FormControlLabel>
+                          </>
+                        ))}
+                      </FormGroup>
+                    </List>
                   </>
                 ))}
-               
               </List>
               <List>
-                {!editStatus?(<Button
-                  onClick={() => addAPICalls("role")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  Save
-                </Button>):
-                (<Button
-                  onClick={() => updateAPICalls("role")}
-                  style={{ backgroundColor: "brown", color: "white" }}
-                >
-                  Update
-                </Button>)}
+                {!editStatus ? (
+                  <Button
+                    onClick={() => addAPICalls("role")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => updateAPICalls("role")}
+                    style={{ backgroundColor: "brown", color: "white" }}
+                  >
+                    Update
+                  </Button>
+                )}
                 <Button
                   style={{
                     marginLeft: 2,
@@ -7465,10 +7607,10 @@ const ContentLogic = (props) => {
                   value={!editStatus ? userData.roleId : updateUserData.roleId}
                   onChange={(e) => {
                     !editStatus
-                      ? setUserData({ ...userData, roleId: e.target.value })
+                      ? setUserData({ ...userData, roleId: 2 })
                       : setUpdateUserData({
                           ...updateUserData,
-                          roleId: e.target.value,
+                          roleId: 0,
                         });
                   }}
                   variant="filled"
@@ -7872,7 +8014,10 @@ const ContentLogic = (props) => {
     const handleModalsInputs = (
       <Toolbar
         sx={{
-          display:'flex',flexDirection:'row',alignItems:'flex-end',justifyContent:'flex-end',
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-end",
+          justifyContent: "flex-end",
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
           ...(numSelected > 0 && {
@@ -7884,60 +8029,64 @@ const ContentLogic = (props) => {
           }),
         }}
       >
-          <Typography
-            sx={{ flex: "1 1 100%", display: "flex", flexDirection: "column" }}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            <h2>{pageTitle}</h2>
-            <Stack spacing={2} sx={{ width: "100%" }}>
+        <Typography
+          sx={{ flex: "1 1 100%", display: "flex", flexDirection: "column" }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          <h2>{pageTitle}</h2>
+          <Stack spacing={2} sx={{ width: "100%" }}>
             <Snackbar
-                  open={openErrMsg}
-                  autoHideDuration={6000}
-                  onClose={() => setOpenErrtMsg(false)}
-                >
-                  <Alert
-                    onClose={() => setOpenErrtMsg(false)}
-                    severity="warning"
-                    sx={{ width: "100%", backgroundColor: "brown",color:'yellow' }}
-                  >
-                    {errMsg}
-                  </Alert>
-                </Snackbar>
-              {editStatus === true ? (
-                <Snackbar
-                  open={openAlertMsg}
-                  autoHideDuration={6000}
+              open={openErrMsg}
+              autoHideDuration={6000}
+              onClose={() => setOpenErrtMsg(false)}
+            >
+              <Alert
+                onClose={() => setOpenErrtMsg(false)}
+                severity="warning"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "brown",
+                  color: "yellow",
+                }}
+              >
+                {errMsg}
+              </Alert>
+            </Snackbar>
+            {editStatus === true ? (
+              <Snackbar
+                open={openAlertMsg}
+                autoHideDuration={6000}
+                onClose={() => setOpenAlertMsg(false)}
+              >
+                <Alert
                   onClose={() => setOpenAlertMsg(false)}
+                  severity="success"
+                  sx={{ width: "100%", backgroundColor: "#24f05e" }}
                 >
-                  <Alert
-                    onClose={() => setOpenAlertMsg(false)}
-                    severity="success"
-                    sx={{ width: "100%", backgroundColor: "#24f05e" }}
-                  >
-                    Data successfully Updated!
-                  </Alert>
-                </Snackbar>
-              ) : (
-                <Snackbar
-                  open={openAlertMsg}
-                  autoHideDuration={6000}
+                  Data successfully Updated!
+                </Alert>
+              </Snackbar>
+            ) : (
+              <Snackbar
+                open={openAlertMsg}
+                autoHideDuration={6000}
+                onClose={() => setOpenAlertMsg(false)}
+              >
+                <Alert
                   onClose={() => setOpenAlertMsg(false)}
+                  severity="success"
+                  sx={{ width: "100%", backgroundColor: "#24f05e" }}
                 >
-                  <Alert
-                    onClose={() => setOpenAlertMsg(false)}
-                    severity="success"
-                    sx={{ width: "100%", backgroundColor: "#24f05e" }}
-                  >
-                    Data successfully inserted!
-                  </Alert>
-                </Snackbar>
-              )}
-            </Stack>
-            {renderDesign()}
-          </Typography>
-        <Typography sx={{mb:'20px'}}>{handleButtons()}</Typography>
+                  Data successfully inserted!
+                </Alert>
+              </Snackbar>
+            )}
+          </Stack>
+          {renderDesign()}
+        </Typography>
+        <Typography sx={{ mb: "20px" }}>{handleButtons()}</Typography>
 
         {/* admin candidate upload batch modal */}
         <Dialog
@@ -8401,7 +8550,7 @@ const ContentLogic = (props) => {
     getRoleByIdAPIcall,
     getSkillSetById,
     getSubscriptionByIdAPIcall,
-    getUserAPIcallById
+    getUserAPIcallById,
   };
 
   return StateContainer;

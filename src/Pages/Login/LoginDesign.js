@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Login.css";
-import { Backdrop, CircularProgress, IconButton, InputAdornment, Stack } from "@mui/material";
+import { Alert, Backdrop, CircularProgress, IconButton, InputAdornment, Snackbar, Stack } from "@mui/material";
 import LoginLogic from "./LoginLogic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -55,6 +55,7 @@ function LoginDesign() {
     loginAPIcall,
     loader,
     setLoader,
+    openErrMsg,setOpenErrtMsg
   } = LoginLogic();
 
   const handleSubmit = (event) => {
@@ -213,6 +214,23 @@ function LoginDesign() {
             </Grid>
           </Box>
         </Box>
+        <Snackbar
+              open={openErrMsg}
+              autoHideDuration={6000}
+              onClose={() => setOpenErrtMsg(false)}
+            >
+              <Alert
+                onClose={() => setOpenErrtMsg(false)}
+                severity="warning"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "brown",
+                  color: "yellow",
+                }}
+              >
+                Invalid Email or Password 
+              </Alert>
+            </Snackbar>
       </Container>
       <Copyright style={{ backgroundColor: "white" }} />
     </ThemeProvider>

@@ -22,6 +22,7 @@ const LoginLogic = () => {
   const [isValid, setIsValid] = useState(false);
   const [message, setMessage] = useState('');
   const [loader, setLoader] = useState(false)
+  const [openErrMsg,setOpenErrtMsg] = useState(false)
   const navigate = useNavigate();
 
   // The regular exprssion to validate the email pattern
@@ -92,7 +93,7 @@ const loginAPIcall = async (e) => {
                       navigate("/")
                   }, 500)
               }else{
-              alert("Invalid Email or Password")
+              setOpenErrtMsg(true)
               setLoader(false)
               }
           } 
@@ -147,7 +148,8 @@ const loginAPIcall = async (e) => {
     showPass,
     handleChange,validateEmail,setErrorTextEmail,
     loginAPIcall,
-    loader,setLoader
+    loader,setLoader,
+    openErrMsg,setOpenErrtMsg
   };
 };
 

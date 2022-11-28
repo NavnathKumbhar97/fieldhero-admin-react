@@ -460,13 +460,15 @@ const ContentLogic = (props) => {
 
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
-  const [WorkExperianceData, setWorkExperianceData] = useState({
-    companyId: "",
+  const [workExperianceData, setWorkExperianceData] = useState({
+    companyId: 3,
     description: "",
     endDate: "",
-    skillId: [],
+    skillId: [2,3,4],
     startDate: "",
+
   });
+  const [candidateId,setCandidateId] = useState("")
 
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
@@ -2017,37 +2019,39 @@ const ContentLogic = (props) => {
         );
       });
   };
-
-  const filterRecords = () => {
+ 
+  const addWorkExperienceAPICall=()=>{
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true);
     handler
-      .dataPost(`/v1/candidates`, filterData, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.status == 201) {
-          console.log(response.data.message);
-          handleClickOpenChildModal();
-          setLoader(false);
-          setOpenAlertMsg(true);
-        } else {
-          setErrMsg(response.data.message);
+          .dataPost(`/v1/candidates/:${candidateId}/work-history`, workExperianceData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // setOpenCandidateModal(false);
+              // setCandidateId(response.data.data.id)
+              // console.log("setcandidate id",candidateId);
+              // getCandidateMasterAPIcall();
+              setOpenAlertMsg(true);
+              
+            } else {
+              // setErrMsg(response.data.message);
          setOpenErrtMsg(true)
-        }
-      })
-      .catch((error) => {
-        if (error.status == 400) {
-          setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
-        }
-        console.error("There was an error!- createWorkExperiance", error);
-      });
-  };
+              setOpenErrtMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+  }
 
-  function EnhancedTableHead(props) {
+  const EnhancedTableHead=(props)=> {
     const {
       onSelectAllClick,
       order,
@@ -2433,10 +2437,13 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              console.log(response.data.message);
-              setOpenCandidateModal(false);
-              getAgentMasterAPIcall();
+              console.log("testing candidate master",response.data.data.id);
+              // setOpenCandidateModal(false);
+              setCandidateId(response.data.data.id)
+              console.log("setcandidate id",candidateId);
+              getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
+              
             } else {
               // setErrMsg(response.data.message);
          setOpenErrtMsg(true)
@@ -2867,15 +2874,15 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-              setOpenAlertMsg(true);
+              // setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true)
               console.log("else part");
               getAgentTemplatePricingAPIcall();
-              setOpenAlertMsg(true);
+              // setOpenAlertMsg(true);
             }
           })
           .catch((error) => {
@@ -4282,6 +4289,7 @@ const ContentLogic = (props) => {
                               }}
                               onClick={() => {
                                 addAPICalls("candidate-master");
+                                handleNext();
                               }}
                             >
                               SAVE AND NEXT
@@ -4303,6 +4311,7 @@ const ContentLogic = (props) => {
                           <Button
                             onClick={() => {
                               handleNext();
+                              
                             }}
                             style={{
                               backgroundColor: "brown",
@@ -4312,6 +4321,9 @@ const ContentLogic = (props) => {
                             NEXT
                           </Button>
                           <Button
+                          onClick={()=>{
+                            setOpenCandidateModal(false);
+                          }}
                             style={{
                               backgroundColor: "black",
                               color: "white",
@@ -4404,6 +4416,7 @@ const ContentLogic = (props) => {
                             <Button
                               onClick={() => {
                                 addAPICalls("candidate-master");
+                                
                               }}
                               style={{
                                 backgroundColor: "brown",
@@ -4426,6 +4439,9 @@ const ContentLogic = (props) => {
                             </Button>
                           )}
                           <Button
+                          onClick={()=>{
+                            setOpenCandidateModal(false);
+                          }}
                             style={{
                               backgroundColor: "black",
                               color: "white",
@@ -4453,12 +4469,22 @@ const ContentLogic = (props) => {
                     <TextField
                       id="name"
                       label="Company Name"
+                      value={workExperianceData.companyId}
+                      onChange={(e)=>{
+                        setWorkExperianceData({...workExperianceData,
+                        companyId:e.target.value})
+                      }}
                       sx={{ width: "30ch" }}
                       variant="filled"
                     />
                     <TextField
                       id="name"
                       label="Skills"
+                      value={workExperianceData.skillId}
+                      onChange={(e)=>{
+                        setWorkExperianceData({...workExperianceData,
+                        skillId:e.target.value})
+                      }}
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                     />
@@ -4467,6 +4493,11 @@ const ContentLogic = (props) => {
                       label="Start Date"
                       InputLabelProps={{ shrink: true }}
                       type="date"
+                      value={workExperianceData.startDate}
+                      onChange={(e)=>{
+                        setWorkExperianceData({...workExperianceData,
+                        startDate:e.target.value})
+                      }}
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                     />
@@ -4477,6 +4508,11 @@ const ContentLogic = (props) => {
                       type="date"
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
+                      value={workExperianceData.endDate}
+                      onChange={(e)=>{
+                        setWorkExperianceData({...workExperianceData,
+                        endDate:e.target.value})
+                      }}
                     />
                   </ListItem>
                   <ListItem>
@@ -4488,6 +4524,11 @@ const ContentLogic = (props) => {
                       multiline
                       rows={5}
                       variant="filled"
+                      value={workExperianceData.description}
+                      onChange={(e)=>{
+                        setWorkExperianceData({...workExperianceData,
+                        description:e.target.value})
+                      }}
                     />
                   </ListItem>
                 </DialogContent>
@@ -4495,7 +4536,7 @@ const ContentLogic = (props) => {
                   <Button onClick={handleCloseChildModal}>Close</Button>
                   <Button
                     style={{ backgroundColor: "brown", color: "white" }}
-                    onClick={handleCloseChildModal}
+                    onClick={addWorkExperienceAPICall}
                   >
                     Add
                   </Button>

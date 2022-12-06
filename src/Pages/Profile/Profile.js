@@ -29,6 +29,10 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
 const settings = ["Navnath Kumbhar", "CHANGE PASSWORD", "SIGN OUT"];
 
 export default function Profile() {
@@ -46,6 +50,7 @@ export default function Profile() {
   const [changePass, setChangePass] = useState({
     new_password: "",
     old_password: "",
+    confirm_password:""
   });
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
 
@@ -89,13 +94,14 @@ export default function Profile() {
       })
       .then((response) => {
         console.log(response);
-        if (response.status == 201) {
+        if (response.status == 200) {
           console.log(response.data.message);
           setOpenChangePassModal(false);
           handleCloseChangePassModal();
           setOpenAlertMsg(true);
         } else {
           setOpenAlertMsg(true);
+          setOpenChangePassModal(false);
         }
       })
       .catch((error) => {
@@ -112,6 +118,23 @@ export default function Profile() {
   console.log(loc.name);
   // setLocalStorageData(loc)
   // console.log(localStorageData);
+
+  const validation= Yup.object().shape({
+    old_password: Yup.string()
+      .required('Old Password is required'),
+    password: Yup.string().required('Password is required'),
+    passwordConfirmation: Yup.string()
+         .oneOf([Yup.ref('password'), null], 'Passwords must match')
+  })
+
+  const {register, control, handleSubmit,formState: { errors }
+  } = useForm({
+      resolver: yupResolver(validation)
+  });
+
+  const onSubmit = data => {
+    changePasswordAPICall()
+  };
 
   return (
     <div>
@@ -178,6 +201,9 @@ export default function Profile() {
             label="Old Password"
             variant="outlined"
             sx={{ mt: 3 }}
+            {...register('old_password')}
+            error={errors.old_password ? true : false}
+            helperText={errors.old_password?.message}
             value={changePass.old_password}
             onChange={(e) => {
               setChangePass({ ...changePass, old_password: e.target.value });
@@ -202,6 +228,9 @@ export default function Profile() {
             id="outlined-basic"
             label="New Password"
             variant="outlined"
+            {...register('password')}
+            error={errors.password ? true : false}
+            helperText={errors.password?.message}
             value={changePass.new_password}
             onChange={(e) => {
               setChangePass({ ...changePass, new_password: e.target.value });
@@ -225,9 +254,12 @@ export default function Profile() {
             type={showPassword2 ? "text" : "password"}
             fullWidth
             id="outlined-basic"
-            value={changePass.new_password}
+            {...register('passwordConfirmation')}
+            error={errors.passwordConfirmation ? true : false}
+            helperText={errors.passwordConfirmation?.message}
+            value={changePass.confirm_password}
             onChange={(e) => {
-              setChangePass({ ...changePass, new_password: e.target.value });
+              setChangePass({ ...changePass, confirm_password: e.target.value });
             }}
             InputProps={{
               endAdornment: (
@@ -249,7 +281,7 @@ export default function Profile() {
         <DialogActions>
           <Button
             style={{ color: "white", background: "brown" }}
-            onClick={changePasswordAPICall}
+            onClick={handleSubmit(onSubmit)}
           >
             Save
           </Button>

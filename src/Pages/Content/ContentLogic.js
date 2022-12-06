@@ -1,4 +1,4 @@
-import { forwardRef, React, useCallback, useState } from "react";
+import { forwardRef, React, useCallback, useState,Fragment } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -42,11 +42,16 @@ import {
   ListItemText,
   MenuItem,
   OutlinedInput,
+  Paper,
   Radio,
   RadioGroup,
   Select,
   Snackbar,
   Tab,
+  Table,
+  TableBody,
+  TableContainer,
+  TablePagination,
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -70,6 +75,11 @@ import Help from "../../Container/Drawer/Help/Help";
 import handler from "../../handlers/generalHandlers";
 import { Stack } from "@mui/system";
 import moment from "moment";
+
+// import React, { Fragment } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -461,14 +471,23 @@ const ContentLogic = (props) => {
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
   const [workExperianceData, setWorkExperianceData] = useState({
-    companyId: 3,
+    companyId: 5,
     description: "",
-    endDate: "",
-    skillId: [2,3,4],
-    startDate: "",
-
+    endDate: "2020-10-11T15:56:28+11:00",
+    skillId: [2, 3, 4],
+    startDate: "2020-10-11T15:56:28+11:00",
   });
-  const [candidateId,setCandidateId] = useState("")
+
+  const [ certificateData,setCertificateData] = useState({
+    title:'',
+    description:'',
+    issueDate:null,
+    issuedBy:'',
+    skillId:'',
+    type:''
+  })
+  const [expData,setExptData] = useState([])
+  const [candidateId, setCandidateId] = useState("");
 
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
@@ -534,6 +553,226 @@ const ContentLogic = (props) => {
   const handleCloseLoader = () => {
     setLoader(false);
   };
+
+  //form validations
+
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+
+  const validationSchemaForCandidateMaster = Yup.object().shape({
+    fullname: Yup.string().required('Full Name is required'),
+    mobileNo: Yup.string().required('Contact number is not valid')
+    .min(10,'Contact number is not valid'),
+    aadharNo: Yup.string()
+      .required('Aadhar number is required')
+      .min(12, 'Aadhar number is not valid'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Email is invalid'),
+  });
+  const validationForWorkExp= Yup.object().shape({
+    companyId: Yup.string()
+      .required('Company Name is required'),
+    skillId: Yup.string()
+      .required('Skills are required'),
+    startDate: Yup.string()
+      .required('Start date is required')
+  })
+  const validationForCertificate= Yup.object().shape({
+    certificateName: Yup.string()
+      .required('Certificate Name is required'),
+    issuedBy: Yup.string()
+      .required('Issued by is required'),
+
+  })
+  const validationCandidateVfn= Yup.object().shape({
+    candidateConsent: Yup.string()
+      .required('Candidate conset is required'),
+    callStat: Yup.string()
+      .required('Call Status is required'),
+
+  })
+  const validationAgentMstr= Yup.object().shape({
+    agentNo: Yup.string()
+      .required('Agent no is required'),
+    fullName: Yup.string()
+      .required('Full name is required'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Please enter correct email address'),
+    mobileNo: Yup.string().required('Contact number is not valid')
+      .min(10,'Contact number is not valid'),
+    currAddress:Yup.string()
+      .required('Current address is required'),
+    currPin:Yup.string()
+      .required('Current pincode is required'),
+    currCity:Yup.string()
+      .required('Current city is required'),
+    currState:Yup.string()
+      .required('Current state is required'),
+  })
+
+  const validationAgentTmpt= Yup.object().shape({
+    agentTitle: Yup.string()
+      .required('Template name is required'),
+  })
+  const validationBatchPty= Yup.object().shape({
+    batchNum: Yup.string()
+      .required('Batch no is required'),
+    assignedTo: Yup.string()
+      .required('Assigned to is required'),
+  })
+  const validationCategory= Yup.object().shape({
+    title: Yup.string()
+      .required('Title is required'),
+  })
+  const validationCompany= Yup.object().shape({
+    title: Yup.string()
+      .required('Company Name is required'),
+  })
+  const validationIndustry= Yup.object().shape({
+    title: Yup.string()
+      .required('Title is required'),
+  })
+  const validationRole= Yup.object().shape({
+    rName: Yup.string()
+      .required('Name is required'),
+  })
+  const validationSkillset= Yup.object().shape({
+    title: Yup.string()
+      .required('Title is required'),
+  })
+  const validationSubscription= Yup.object().shape({
+    title: Yup.string()
+      .required('Plan name is required'),
+  })
+
+  const validationUsers= Yup.object().shape({
+    fullName: Yup.string()
+      .required('Full name is required'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Please enter correct email address'),
+    mobileNo: Yup.string().required('Contact number is not valid')
+      .min(10,'Contact number is not valid'),
+    role:Yup.string()
+      .required('Role is required'),
+    currAddress:Yup.string()
+      .required('Current Address is required'),
+    currPin:Yup.string()
+      .required('Current pincode is required'),
+    currCity:Yup.string()
+      .required('Current city is required'),
+    currState:Yup.string()
+      .required('Current state is required'),
+  })
+
+
+  const {register, control, handleSubmit,formState: { errors }
+  } = useForm({
+      resolver: yupResolver(validationSchemaForCandidateMaster)
+  });
+
+  const {  register: register2, handleSubmit:
+     handleSubmitReset,formState: { errors:errors2 } } = useForm({
+    resolver: yupResolver(validationForWorkExp),
+  });
+  const {  register: register3, handleSubmit:
+     handleSubmitCert,formState: { errors:errors3 } } = useForm({
+    resolver: yupResolver(validationForCertificate),
+  });
+  const {  register: register4, handleSubmit:
+     handleSubmitCndVfn,formState: { errors:errors4 } } = useForm({
+    resolver: yupResolver(validationCandidateVfn),
+  });
+  const {  register: register5, handleSubmit:
+     handleSubmitAgentMstr,formState: { errors:errors5 } } = useForm({
+    resolver: yupResolver(validationAgentMstr),
+  });
+  const {  register: register6, handleSubmit:
+     handleSubmitAgentTmpt,formState: { errors:errors6 } } = useForm({
+    resolver: yupResolver(validationAgentTmpt),
+  });
+  const {  register: register7, handleSubmit:
+     handleSubmitBatchPrty,formState: { errors:errors7 } } = useForm({
+    resolver: yupResolver(validationBatchPty),
+  });
+  const {  register: register8, handleSubmit:
+     handleSubmitCategory,formState: { errors:errors8 } } = useForm({
+    resolver: yupResolver(validationCategory),
+  });
+  const {  register: register9, handleSubmit:
+     handleSubmitCompany,formState: { errors:errors9 } } = useForm({
+    resolver: yupResolver(validationCompany),
+  });
+  const {  register: register10, handleSubmit:
+     handleSubmitIndustry,formState: { errors:errors10 } } = useForm({
+    resolver: yupResolver(validationIndustry),
+  });
+  const {  register: register11, handleSubmit:
+     handleSubmitRole,formState: { errors:errors11 } } = useForm({
+    resolver: yupResolver(validationRole),
+  });
+  const {  register: register12, handleSubmit:
+     handleSubmitSkill,formState: { errors:errors12 } } = useForm({
+    resolver: yupResolver(validationSkillset),
+  });
+  const {  register: register13, handleSubmit:
+     handleSubmitSubscritpion,formState: { errors:errors13 } } = useForm({
+    resolver: yupResolver(validationSubscription),
+  });
+  const {  register: registerUser, handleSubmit:
+     handleSubmitUsers,formState: { errors:errorsUsers } } = useForm({
+    resolver: yupResolver(validationUsers),
+  });
+
+  const onSubmit = data => {
+    addAPICalls("candidate-master");
+  };
+
+  const onSubmitExp =data=>{
+    addWorkExperienceAPICall()
+  }
+  const onSubmitCert =data=>{
+    console.log("data onSubmitCert ",data);
+  }
+  const onSubmitCndVfn = data => {
+    updateAPICalls("candidate-verification");
+  };
+  const onSubmitAgentMstr = data => {
+    addAPICalls("agent-master");
+  };
+  const onUpdateAgentMstr = data => {
+    updateAPICalls("agent-master");
+  };
+  const onSubmitAgentTmpt = data => {
+    addAPICalls("agent-pricing-template");
+  };
+  const onSubmitBatchPrty = data => {
+    addAPICalls("batch-priority");
+  };
+  const onSubmitCategory = data => {
+    addAPICalls("category");
+  };
+  const onSubmitCompany = data => {
+    addAPICalls("company");
+  };
+  const onSubmitIndustry = data => {
+    addAPICalls("industry")
+  };
+  const onSubmitRole = data => {
+    addAPICalls("role")
+  };
+  const onSubmitSkillset = data => {
+    addAPICalls("skillset");
+  };
+  const onSubmitSubscription = data => {
+    addAPICalls("subscription")
+  };
+  const onSubmitUser = data => {
+    addAPICalls("user")
+  };
+
 
   // table headings array for each module
   const canMasterTblHerader = [
@@ -1092,13 +1331,13 @@ const ContentLogic = (props) => {
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         // alert("Timeout - Login Again");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
@@ -1122,12 +1361,12 @@ const ContentLogic = (props) => {
           console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
@@ -1154,12 +1393,12 @@ const ContentLogic = (props) => {
           console.log("candidate-upload-batches", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         navigate("/login");
         setLoader(false);
         console.error(
@@ -1185,12 +1424,12 @@ const ContentLogic = (props) => {
           console.log("tblData", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         navigate("/login");
         console.error("There was an error!- getAgentMasterAPIcall", error);
@@ -1218,12 +1457,12 @@ const ContentLogic = (props) => {
           console.log("candidate verification", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         navigate("/login");
         setLoader(false);
         console.error(
@@ -1247,13 +1486,13 @@ const ContentLogic = (props) => {
           console.log("candidate verification", candidateVerDashboard);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error(
           "There was an error!- getCandidateVerificationAPIcall",
@@ -1279,12 +1518,12 @@ const ContentLogic = (props) => {
           console.log("agent template data", candidateUploadBatchAdminSelect);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         navigate("/login");
         console.error(
@@ -1315,13 +1554,13 @@ const ContentLogic = (props) => {
           console.log("upload batch ", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error(
           "There was an error!- getCandidateUploadBatchAdminAPIcall",
@@ -1349,12 +1588,12 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         navigate("/login");
         setLoader(false);
         console.error("There was an error!- getCategoryAPIcall", error);
@@ -1376,12 +1615,12 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-          setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         navigate("/login");
         // alert("Timeout - Login Again");
         setLoader(false);
@@ -1406,13 +1645,13 @@ const ContentLogic = (props) => {
           console.log("customer", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getCustomerAPIcall", error);
       });
@@ -1437,13 +1676,13 @@ const ContentLogic = (props) => {
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getIndustryAPIcall", error);
       });
@@ -1465,13 +1704,13 @@ const ContentLogic = (props) => {
           console.log("roles", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getRoleAPIcall", error);
       });
@@ -1493,13 +1732,13 @@ const ContentLogic = (props) => {
           console.log("skill set", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getSkillSetAPIcall", error);
       });
@@ -1524,13 +1763,13 @@ const ContentLogic = (props) => {
           console.log("subscriptions", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getSubscriptionAPIcall", error);
       });
@@ -1552,13 +1791,13 @@ const ContentLogic = (props) => {
           console.log("users", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getUserAPIcall", error);
       });
@@ -1583,7 +1822,7 @@ const ContentLogic = (props) => {
           );
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1607,7 +1846,7 @@ const ContentLogic = (props) => {
           console.log("batch priority ", response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1631,7 +1870,7 @@ const ContentLogic = (props) => {
           console.log("batch priority stats ", response.data.data.assignedTo);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1654,7 +1893,7 @@ const ContentLogic = (props) => {
           setPermissions(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1675,7 +1914,7 @@ const ContentLogic = (props) => {
           setURoleData(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1753,7 +1992,7 @@ const ContentLogic = (props) => {
           setCompanyData(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1777,7 +2016,7 @@ const ContentLogic = (props) => {
           console.log("user Data to update by id", updateUserData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1803,7 +2042,7 @@ const ContentLogic = (props) => {
           );
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
@@ -1829,7 +2068,7 @@ const ContentLogic = (props) => {
           );
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1855,7 +2094,7 @@ const ContentLogic = (props) => {
           console.log("candidate verification by id", agentPricingTemplateData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1883,7 +2122,7 @@ const ContentLogic = (props) => {
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1907,7 +2146,7 @@ const ContentLogic = (props) => {
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1932,7 +2171,7 @@ const ContentLogic = (props) => {
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1956,7 +2195,7 @@ const ContentLogic = (props) => {
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -1980,7 +2219,7 @@ const ContentLogic = (props) => {
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
           setLoader(false);
         }
       })
@@ -2005,13 +2244,13 @@ const ContentLogic = (props) => {
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+          setOpenErrtMsg(true);
         }
       })
       .catch((error) => {
         navigate("/login");
         setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true)
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error(
           "There was an error!- getAgentTemplatePricingAPIcall",
@@ -2019,39 +2258,94 @@ const ContentLogic = (props) => {
         );
       });
   };
- 
-  const addWorkExperienceAPICall=()=>{
+
+  const addWorkExperienceAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-          .dataPost(`/v1/candidates/:${candidateId}/work-history`, workExperianceData, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            if (response.status == 201) {
-              // setOpenCandidateModal(false);
-              // setCandidateId(response.data.data.id)
-              // console.log("setcandidate id",candidateId);
-              // getCandidateMasterAPIcall();
-              setOpenAlertMsg(true);
-              
-            } else {
-              // setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
-              setOpenErrtMsg(true);
-            }
-          })
-          .catch((error) => {
-            if (error.status == 400) {
-              setErrMsg(error.data.message);
-              setOpenErrtMsg(true);
-            }
-            console.error("There was an error!- createCompany", error);
-          });
-  }
+      .dataPost(
+        `/v1/candidates/${!editStatus?candidateId:editId}/work-history`,
+        workExperianceData,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status == 201) {
+          handleCloseChildModal()
+          setOpenAlertMsg(true);
+        } else {
+          // setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          // setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- createCompany", error);
+      });
+  };
 
-  const EnhancedTableHead=(props)=> {
+  const addCertificateAPICalls = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(
+        `/v1/candidates/${!editStatus?candidateId:editId}/training-cert`,
+        workExperianceData,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status == 201) {
+          handleCloseChildModal()
+          setOpenAlertMsg(true);
+        } else {
+          // setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          // setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- addCertificateAPICalls", error);
+      });
+  };
+
+  const getExperienceData = async () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    await handler
+      .dataGet(`/v1//candidates/${editId}/work-history/`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setExptData(response.data.data);
+          setLoader(false);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getExperienceData", error);
+        setLoader(false);
+      });
+  };
+
+  const EnhancedTableHead = (props) => {
     const {
       onSelectAllClick,
       order,
@@ -2107,7 +2401,7 @@ const ContentLogic = (props) => {
         </TableRow>
       </TableHead>
     );
-  }
+  };
 
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
@@ -2437,16 +2731,16 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              console.log("testing candidate master",response.data.data.id);
+              // console.log("testing candidate master", response.data.data.id);
               // setOpenCandidateModal(false);
-              setCandidateId(response.data.data.id)
-              console.log("setcandidate id",candidateId);
+              setCandidateId(response.data.data.id);
+              console.log("setcandidate id", candidateId);
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
-              
+              handleNext()
             } else {
               // setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
               setOpenErrtMsg(true);
             }
           })
@@ -2472,7 +2766,7 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2497,7 +2791,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2522,7 +2816,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2550,8 +2844,8 @@ const ContentLogic = (props) => {
               setOpenAddBtchprty(false);
               setLoader(true);
             } else {
-              setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              // setErrMsg(response.data.message);
+              // setOpenErrtMsg(true);
               setOpenAddBtchprty(false);
               setLoader(false);
               setOpenAlertMsg(true);
@@ -2579,7 +2873,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2604,7 +2898,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2630,7 +2924,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2656,7 +2950,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2682,7 +2976,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2708,7 +3002,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2734,7 +3028,7 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
@@ -2780,13 +3074,13 @@ const ContentLogic = (props) => {
               getCandidateMasterAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2815,13 +3109,13 @@ const ContentLogic = (props) => {
               getCandidateVerificationAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2845,13 +3139,13 @@ const ContentLogic = (props) => {
               getAgentMasterAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateAgentByAPICall", error);
           });
@@ -2879,7 +3173,7 @@ const ContentLogic = (props) => {
               getAgentTemplatePricingAPIcall();
             } else {
               setErrMsg(response.data.message);
-              setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
               console.log("else part");
               getAgentTemplatePricingAPIcall();
               // setOpenAlertMsg(true);
@@ -2888,7 +3182,7 @@ const ContentLogic = (props) => {
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2915,13 +3209,13 @@ const ContentLogic = (props) => {
               getCandidateUploadBatchAdminAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2948,13 +3242,13 @@ const ContentLogic = (props) => {
               getCategoryAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCategoryAPICall", error);
           });
@@ -2981,13 +3275,13 @@ const ContentLogic = (props) => {
               getCompanyAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCompanyAPICall", error);
           });
@@ -3014,13 +3308,13 @@ const ContentLogic = (props) => {
               getIndustryAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateCompanyAPICall", error);
           });
@@ -3043,13 +3337,13 @@ const ContentLogic = (props) => {
               getRoleAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateRoleById", error);
           });
@@ -3072,13 +3366,13 @@ const ContentLogic = (props) => {
               getSkillSetAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error("There was an error!- updateSkillsetAPICall", error);
           });
@@ -3105,13 +3399,13 @@ const ContentLogic = (props) => {
               getSubscriptionAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error(
               "There was an error!- updateSubscriptionAPICall",
@@ -3137,13 +3431,13 @@ const ContentLogic = (props) => {
               getUserAPIcall();
             } else {
               setErrMsg(response.data.message);
-         setOpenErrtMsg(true)
+              setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
             if (error.status == 400) {
               setErrMsg(error.data.message);
-              setOpenErrtMsg(true);;
+              setOpenErrtMsg(true);
             }
             console.error(
               "There was an error!- updateSubscriptionAPICall",
@@ -3160,25 +3454,7 @@ const ContentLogic = (props) => {
       case "candidate-master":
         return (
           <>
-            {editStatus ? (
-              <Button
-                onClick={() => {
-                  // handleClickOpen();
-                  handleOpenCandidateModal();
-                  getCandidateMsaterAPIcallById();
-                }}
-                style={{
-                  marginTop: "0px",
-                  // marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <EditIcon />
-                Edit
-              </Button>
-            ) : (
+            
               <Button
                 onClick={handleOpenCandidateModal}
                 style={{
@@ -3192,7 +3468,6 @@ const ContentLogic = (props) => {
                 <AddIcon />
                 {buttonText}
               </Button>
-            )}
           </>
         );
       case "candidate-upload-batch":
@@ -3236,24 +3511,6 @@ const ContentLogic = (props) => {
       case "agent-master":
         return (
           <>
-            {editStatus ? (
-              <Button
-                onClick={() => {
-                  handleOpenCandidateModal();
-                  getAgentMasteById();
-                }}
-                style={{
-                  marginTop: "50px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <EditIcon />
-                Edit
-              </Button>
-            ) : (
               <Button
                 onClick={handleOpenCandidateModal}
                 style={{
@@ -3267,7 +3524,6 @@ const ContentLogic = (props) => {
                 <AddIcon />
                 {buttonText}
               </Button>
-            )}
           </>
         );
       case "agent-pricing-template":
@@ -3775,7 +4031,10 @@ const ContentLogic = (props) => {
                       <div>
                         <ListItem>
                           <TextField
-                            required
+                          required
+                          {...register('fullname')}
+                           error={errors.fullname ? true : false}
+                           helperText={errors.fullname?.message}
                             id="filled-basic"
                             label="Full Name"
                             variant="filled"
@@ -4122,6 +4381,9 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Primary email address"
                             required
+                            {...register('email')}
+                            error={errors.email ? true : false}
+                            helperText={errors.email?.message}
                             variant="filled"
                             value={
                               !editStatus
@@ -4167,8 +4429,12 @@ const ContentLogic = (props) => {
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
+                            type='number'
                             label="Primary contact no"
                             required
+                            {...register('mobileNo')}
+                            error={errors.mobileNo ? true : false}
+                            helperText={errors.mobileNo?.message}
                             variant="filled"
                             value={
                               !editStatus
@@ -4190,6 +4456,7 @@ const ContentLogic = (props) => {
                           />
                           <TextField
                             id="filled-basic"
+                            type='number'
                             label="Secondary contact no"
                             variant="filled"
                             value={
@@ -4214,7 +4481,11 @@ const ContentLogic = (props) => {
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
+                            type='number'
                             label="Aadhar no"
+                            {...register('aadharNo')}
+                            error={errors.aadharNo ? true : false}
+                            helperText={errors.aadharNo?.message}
                             required
                             variant="filled"
                             value={
@@ -4287,10 +4558,8 @@ const ContentLogic = (props) => {
                                 color: "white",
                                 margin: "10px",
                               }}
-                              onClick={() => {
-                                addAPICalls("candidate-master");
-                                handleNext();
-                              }}
+                              onClick={
+                                handleSubmit(onSubmit)}
                             >
                               SAVE AND NEXT
                             </Button>
@@ -4302,7 +4571,9 @@ const ContentLogic = (props) => {
                                 margin: "10px",
                               }}
                               onClick={() => {
+                                // onSubmitData()
                                 updateAPICalls("candidate-master");
+                                getExperienceData()
                               }}
                             >
                               UPDATE AND NEXT
@@ -4311,7 +4582,7 @@ const ContentLogic = (props) => {
                           <Button
                             onClick={() => {
                               handleNext();
-                              
+                              getExperienceData()
                             }}
                             style={{
                               backgroundColor: "brown",
@@ -4321,9 +4592,9 @@ const ContentLogic = (props) => {
                             NEXT
                           </Button>
                           <Button
-                          onClick={()=>{
-                            setOpenCandidateModal(false);
-                          }}
+                            onClick={() => {
+                              setOpenCandidateModal(false);
+                            }}
                             style={{
                               backgroundColor: "black",
                               color: "white",
@@ -4375,7 +4646,66 @@ const ContentLogic = (props) => {
                           </Button>
                         </ListItem>
                         <ListItem>
-                          <WorkExperiance />
+                          {/* <WorkExperiance /> */}
+                          <Box sx={{ width: "100%" }}>
+                            <Paper >
+                              <TableContainer>
+                                <Table
+                                  sx={{ minWidth: 500 }}
+                                  aria-labelledby="tableTitle"
+                                  size={dense ? "small" : "medium"}
+                                >
+                                 <TableHead>
+                                    <TableRow>
+                                      <TableCell padding="checkbox"><Checkbox
+                                      color="primary"
+                                    />
+                                    </TableCell>
+                                      <TableCell align="left">Campany Name</TableCell>
+                                      <TableCell align="left">Start Date</TableCell>
+                                      <TableCell align="left">End Date</TableCell>
+                                      <TableCell align="left">Year Of Experiance</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+
+                                  <TableBody>
+                                  {Object.keys(expData).map((item, i) => (
+                                    <>
+                                    
+                                    <TableRow
+                                      hover
+                                      role="checkbox"
+                                      tabIndex={-1}
+                                    >
+                                      <TableCell padding="checkbox">
+                                        <Checkbox color="primary" />
+                                      </TableCell>
+                                      <TableCell
+                                        align="left"
+                                      >
+                                        {expData[item].company}
+                                      </TableCell>
+                                      <TableCell align="left"> {expData[item].startDate}</TableCell>
+                                      <TableCell align="left"> {expData[item].endDate}</TableCell>
+                                      <TableCell align="left"> 2</TableCell>
+                                      {/* <TableCell align="right"> test1</TableCell> */}
+                                    </TableRow>
+                                    </>
+                                  ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                              <TablePagination
+                                rowsPerPageOptions={[5, 10, 25]}
+                                component="div"
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                              />
+                            </Paper>
+                          </Box>
                         </ListItem>
                       </div>
                       <div>
@@ -4395,7 +4725,62 @@ const ContentLogic = (props) => {
                           </Button>
                         </ListItem>
                         <ListItem>
-                          <AddCertificates />
+                          {/* <AddCertificates /> */}
+                          <Box sx={{ width: '100%' }}>
+                            <Paper>
+                              <TableContainer>
+                                <Table
+                                  sx={{ minWidth: 500 }}
+                                  aria-labelledby="tableTitle"
+                                  size={dense ? 'small' : 'medium'}
+                                >
+                                  <TableHead>
+                                <TableRow>
+                                  <TableCell padding="checkbox"><Checkbox
+                                  color="primary"
+                                />
+                                </TableCell>
+                                  <TableCell align="left">CertificateName</TableCell>
+                                  <TableCell align="left">Certificate Type</TableCell>
+                                  <TableCell align="left">Issued Date</TableCell>
+                                </TableRow>
+                              </TableHead>
+                                  <TableBody>
+                                    
+                                          <TableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                          >
+                                            <TableCell padding="checkbox">
+                                              <Checkbox
+                                                color="primary"
+                                              />
+                                            </TableCell>
+                                            <TableCell
+                                              align="left"
+                                            >
+                                              test
+                                            </TableCell>
+                                            <TableCell align="left">Test</TableCell>
+                                            <TableCell align="left">test</TableCell>
+                                            {/* <TableCell align="right">Test</TableCell> */}
+                                            {/* <TableCell align="right">{row.protein}</TableCell> */}
+                                          </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                              <TablePagination
+                                rowsPerPageOptions={[5, 10, 25]}
+                                component="div"
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                              />
+                            </Paper>
+                          </Box>
                         </ListItem>
                       </div>
                       <div>
@@ -4416,7 +4801,6 @@ const ContentLogic = (props) => {
                             <Button
                               onClick={() => {
                                 addAPICalls("candidate-master");
-                                
                               }}
                               style={{
                                 backgroundColor: "brown",
@@ -4439,9 +4823,9 @@ const ContentLogic = (props) => {
                             </Button>
                           )}
                           <Button
-                          onClick={()=>{
-                            setOpenCandidateModal(false);
-                          }}
+                            onClick={() => {
+                              setOpenCandidateModal(false);
+                            }}
                             style={{
                               backgroundColor: "black",
                               color: "white",
@@ -4467,23 +4851,34 @@ const ContentLogic = (props) => {
                 <DialogContent>
                   <ListItem>
                     <TextField
-                      id="name"
+                      id="number"
                       label="Company Name"
                       value={workExperianceData.companyId}
-                      onChange={(e)=>{
-                        setWorkExperianceData({...workExperianceData,
-                        companyId:e.target.value})
+                      {...register2('companyId')}
+                      error={errors2.companyId ? true : false}
+                      helperText={errors2.companyId?.message}
+                      onChange={(e) => {
+                        setWorkExperianceData({
+                          ...workExperianceData,
+                          companyId: e.target.value,
+                        });
                       }}
                       sx={{ width: "30ch" }}
                       variant="filled"
+                      type="name"
                     />
                     <TextField
                       id="name"
                       label="Skills"
                       value={workExperianceData.skillId}
-                      onChange={(e)=>{
-                        setWorkExperianceData({...workExperianceData,
-                        skillId:e.target.value})
+                      {...register2('skillId')}
+                      error={errors2.skillId ? true : false}
+                      helperText={errors2.skillId?.message}
+                      onChange={(e) => {
+                        setWorkExperianceData({
+                          ...workExperianceData,
+                          skillId: e.target.value,
+                        });
                       }}
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
@@ -4494,9 +4889,14 @@ const ContentLogic = (props) => {
                       InputLabelProps={{ shrink: true }}
                       type="date"
                       value={workExperianceData.startDate}
-                      onChange={(e)=>{
-                        setWorkExperianceData({...workExperianceData,
-                        startDate:e.target.value})
+                      {...register2('startDate')}
+                      error={errors2.startDate ? true : false}
+                      helperText={errors2.startDate?.message}
+                      onChange={(e) => {
+                        setWorkExperianceData({
+                          ...workExperianceData,
+                          startDate: e.target.value,
+                        });
                       }}
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
@@ -4509,9 +4909,11 @@ const ContentLogic = (props) => {
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                       value={workExperianceData.endDate}
-                      onChange={(e)=>{
-                        setWorkExperianceData({...workExperianceData,
-                        endDate:e.target.value})
+                      onChange={(e) => {
+                        setWorkExperianceData({
+                          ...workExperianceData,
+                          endDate: e.target.value,
+                        });
                       }}
                     />
                   </ListItem>
@@ -4525,9 +4927,11 @@ const ContentLogic = (props) => {
                       rows={5}
                       variant="filled"
                       value={workExperianceData.description}
-                      onChange={(e)=>{
-                        setWorkExperianceData({...workExperianceData,
-                        description:e.target.value})
+                      onChange={(e) => {
+                        setWorkExperianceData({
+                          ...workExperianceData,
+                          description: e.target.value,
+                        });
                       }}
                     />
                   </ListItem>
@@ -4536,7 +4940,7 @@ const ContentLogic = (props) => {
                   <Button onClick={handleCloseChildModal}>Close</Button>
                   <Button
                     style={{ backgroundColor: "brown", color: "white" }}
-                    onClick={addWorkExperienceAPICall}
+                    onClick={handleSubmitReset(onSubmitExp)}
                   >
                     Add
                   </Button>
@@ -4555,18 +4959,37 @@ const ContentLogic = (props) => {
                     <TextField
                       id="name"
                       label="Certificate Name"
+                      value={certificateData.title}
+                      {...register3('certificateName')}
+                      error={errors3.certificateName ? true : false}
+                      helperText={errors3.certificateName?.message}
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,title:e.target.value})
+                      }}
                       sx={{ width: "45ch" }}
                       variant="filled"
                     />
                     <TextField
                       id="name"
                       label="Certificate Type"
+                      value={certificateData.type}
+                      
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,type:e.target.value})
+                      }}
                       sx={{ width: "45ch", ml: 4 }}
                       variant="filled"
                     />
                     <TextField
                       id="name"
                       label="Issued By"
+                      value={certificateData.issuedBy}
+                      {...register3('issuedBy')}
+                      error={errors3.issuedBy ? true : false}
+                      helperText={errors3.issuedBy?.message}
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,issuedBy:e.target.value})
+                      }}
                       sx={{ width: "45ch", ml: 4 }}
                       variant="filled"
                     />
@@ -4576,6 +4999,10 @@ const ContentLogic = (props) => {
                       id="name"
                       select
                       children
+                      value={certificateData.skillId}
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,skillId:e.target.value})
+                      }}
                       label="Skills"
                       sx={{ width: "45ch" }}
                       variant="filled"
@@ -4583,6 +5010,10 @@ const ContentLogic = (props) => {
                     <TextField
                       id="date"
                       label="Issued Date"
+                      value={certificateData.issueDate}
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,issueDate:e.target.value})
+                      }}
                       InputLabelProps={{ shrink: true }}
                       type="date"
                       sx={{ width: "45ch", ml: 4 }}
@@ -4597,6 +5028,10 @@ const ContentLogic = (props) => {
                       id="filled-basic"
                       multiline
                       rows={5}
+                      value={certificateData.description}
+                      onChange={(e)=>{
+                        setCertificateData({...certificateData,description:e.target.value})
+                      }}
                       variant="filled"
                     />
                   </ListItem>
@@ -4605,7 +5040,7 @@ const ContentLogic = (props) => {
                   <Button onClick={handleCloseChildModalCerti}>Close</Button>
                   <Button
                     style={{ backgroundColor: "brown", color: "white" }}
-                    onClick={handleCloseChildModalCerti}
+                    onClick={handleSubmitCert(onSubmitCert)}
                   >
                     Add
                   </Button>
@@ -4936,9 +5371,7 @@ const ContentLogic = (props) => {
               <ListItem style={{ justifyContent: "flex-end" }}>
                 <Button
                   style={{ backgroundColor: "brown", color: "white" }}
-                  onClick={() => {
-                    updateAPICalls("candidate-verification");
-                  }}
+                  onClick={handleSubmitCndVfn(onSubmitCndVfn)}
                 >
                   Save
                 </Button>
@@ -4986,7 +5419,12 @@ const ContentLogic = (props) => {
                     <TextField
                       select
                       required
+                      id="candidateConsent"
+                      name="candidateConsent"
                       sx={{ width: "30ch" }}
+                      {...register4('candidateConsent')}
+                      error={errors4.candidateConsent ? true : false}
+                      helperText={errors4.candidateConsent?.message}
                       label="Candidate consent"
                       // value={updateCandidateVerificationData}
                     >
@@ -4999,8 +5437,13 @@ const ContentLogic = (props) => {
                     <TextField
                       select
                       required
+                      id="callStat"
+                      name="callStat"
                       sx={{ width: "30ch", ml: 2 }}
                       label="Call Status"
+                      {...register4('callStat')}
+                      error={errors4.callStat ? true : false}
+                      helperText={errors4.callStat?.message}
                     >
                       {callStatus.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -5970,6 +6413,9 @@ const ContentLogic = (props) => {
                           label="Agent No"
                           variant="filled"
                           disabled={editStatus}
+                          {...register5('agentNo')}
+                          error={errors5.agentNo ? true : false}
+                          helperText={errors5.agentNo?.message}
                           sx={{ width: "30ch" }}
                           value={agentMasterData.agentNo}
                           onChange={(e) => {
@@ -6019,6 +6465,9 @@ const ContentLogic = (props) => {
                           label="Full Name"
                           required
                           value={agentMasterData.fullName}
+                          {...register5('fullName')}
+                          error={errors5.fullName ? true : false}
+                          helperText={errors5.fullName?.message}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -6046,7 +6495,7 @@ const ContentLogic = (props) => {
                         />
                       </List>
                       <List sx={{ mb: 5, mt: 5 }}>
-                        <FormLabel id="demo-row-radio-buttons-group-label">
+                        <FormLabel sx={{mr: 3 }} id="demo-row-radio-buttons-group-label">
                           Select
                         </FormLabel>
                         {/* <RadioGroup
@@ -6098,6 +6547,9 @@ const ContentLogic = (props) => {
                           label="Email"
                           required
                           disabled={editStatus}
+                          {...register5('email')}
+                          error={errors5.email ? true : false}
+                          helperText={errors5.email?.message}
                           type="email"
                           variant="filled"
                           sx={{ width: "30ch" }}
@@ -6115,6 +6567,9 @@ const ContentLogic = (props) => {
                           required
                           type="number"
                           variant="filled"
+                          {...register5('mobileNo')}
+                          error={errors5.mobileNo ? true : false}
+                          helperText={errors5.mobileNo?.message}
                           value={agentMasterData.contactNo}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6133,6 +6588,9 @@ const ContentLogic = (props) => {
                           rows={3}
                           multiline
                           value={agentMasterData.currAddress}
+                          {...register5('currAddress')}
+                          error={errors5.currAddress ? true : false}
+                          helperText={errors5.currAddress?.message}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -6150,6 +6608,9 @@ const ContentLogic = (props) => {
                           label="Current pincode"
                           required
                           type="name"
+                          {...register5('currPin')}
+                          error={errors5.currPin ? true : false}
+                          helperText={errors5.currPin?.message}
                           value={agentMasterData.currZip}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -6165,6 +6626,9 @@ const ContentLogic = (props) => {
                           label="Current city"
                           required
                           value={agentMasterData.currCity}
+                          {...register5('currCity')}
+                          error={errors5.currCity ? true : false}
+                          helperText={errors5.currCity?.message}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -6180,6 +6644,9 @@ const ContentLogic = (props) => {
                           label="Current state"
                           required
                           value={agentMasterData.currState}
+                          {...register5('currState')}
+                          error={errors5.currState ? true : false}
+                          helperText={errors5.currState?.message}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -6373,7 +6840,7 @@ const ContentLogic = (props) => {
                       <List>
                         {!editStatus ? (
                           <Button
-                            onClick={() => addAPICalls("agent-master")}
+                            onClick={handleSubmitAgentMstr(onSubmitAgentMstr)}
                             style={{ color: "white", backgroundColor: "brown" }}
                           >
                             Save
@@ -6565,6 +7032,9 @@ const ContentLogic = (props) => {
                     type="name"
                     variant="filled"
                     value={agentPricingTemplateData.templateName}
+                    {...register6('agentTitle')}
+                    error={errors6.agentTitle ? true : false}
+                    helperText={errors6.agentTitle?.message}
                     onChange={(e) => {
                       setAgentPricingTemplateData({
                         ...agentPricingTemplateData,
@@ -6923,7 +7393,7 @@ const ContentLogic = (props) => {
                 {!editStatus ? (
                   <List sx={{ mt: 4, mb: 4 }}>
                     <Button
-                      onClick={() => addAPICalls("agent-pricing-template")}
+                      onClick={handleSubmitAgentTmpt(onSubmitAgentTmpt)}
                       style={{ color: "white", backgroundColor: "brown" }}
                     >
                       Save
@@ -6963,6 +7433,9 @@ const ContentLogic = (props) => {
                   label="Title"
                   name="title"
                   value={categoryData.title}
+                  {...register8('title')}
+                  error={errors8.title ? true : false}
+                  helperText={errors8.title?.message}
                   type="name"
                   variant="filled"
                   style={{ width: "130ch" }}
@@ -7012,9 +7485,7 @@ const ContentLogic = (props) => {
               <List>
                 {editStatus === false ? (
                   <Button
-                    onClick={() => {
-                      addAPICalls("category");
-                    }}
+                    onClick={handleSubmitCategory(onSubmitCategory)}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
@@ -7051,8 +7522,10 @@ const ContentLogic = (props) => {
                   required
                   id="filled-basic"
                   label="Company Name"
-                  type="name"
                   value={companyData.companyName}
+                  {...register9('title')}
+                  error={errors9.title ? true : false}
+                  helperText={errors9.title?.message}
                   variant="filled"
                   onChange={(e) => {
                     setCompanyData({
@@ -7114,9 +7587,7 @@ const ContentLogic = (props) => {
               <List>
                 {editStatus === false ? (
                   <Button
-                    onClick={() => {
-                      addAPICalls("company");
-                    }}
+                    onClick={handleSubmitCompany(onSubmitCompany)}
                     style={{
                       backgroundColor: "brown",
                       color: "white",
@@ -7155,6 +7626,9 @@ const ContentLogic = (props) => {
                   label="Title"
                   type="name"
                   value={industryData.title}
+                  {...register10('title')}
+                  error={errors10.title ? true : false}
+                  helperText={errors10.title?.message}
                   onChange={(e) => {
                     setIndustryData({
                       ...industryData,
@@ -7199,7 +7673,7 @@ const ContentLogic = (props) => {
               <List>
                 {!editStatus ? (
                   <Button
-                    onClick={() => addAPICalls("industry")}
+                    onClick={handleSubmitIndustry(onSubmitIndustry)}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
@@ -7227,6 +7701,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Title"
                   type="name"
+                  {...register11('rName')}
+                  error={errors11.rName ? true : false}
+                  helperText={errors11.rName?.message}
                   variant="filled"
                   value={roleData.name}
                   onChange={(e) => {
@@ -7320,7 +7797,7 @@ const ContentLogic = (props) => {
               <List>
                 {!editStatus ? (
                   <Button
-                    onClick={() => addAPICalls("role")}
+                    onClick={handleSubmitRole(onSubmitRole)}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
@@ -7356,6 +7833,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Title"
                   type="name"
+                  {...register12('title')}
+                  error={errors12.title ? true : false}
+                  helperText={errors12.title?.message}
                   variant="filled"
                   value={skillSetData.title}
                   onChange={(e) => {
@@ -7398,7 +7878,7 @@ const ContentLogic = (props) => {
               <List>
                 {!editStatus ? (
                   <Button
-                    onClick={() => addAPICalls("skillset")}
+                    onClick={handleSubmitSkill(onSubmitSkillset)}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
@@ -7429,6 +7909,9 @@ const ContentLogic = (props) => {
                     label="Plan Name"
                     variant="filled"
                     disabled={editStatus}
+                    {...register13('title')}
+                    error={errors13.title ? true : false}
+                    helperText={errors13.title?.message}
                     value={subscriptionData.planName}
                     onChange={(e) => {
                       setSubscriptionData({
@@ -7516,7 +7999,7 @@ const ContentLogic = (props) => {
                 <List>
                   {!editStatus ? (
                     <Button
-                      onClick={() => addAPICalls("subscription")}
+                      onClick={handleSubmitSubscritpion(onSubmitSubscription)}
                       style={{ color: "white", backgroundColor: "brown" }}
                     >
                       Save
@@ -7553,6 +8036,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Full Name"
                   variant="filled"
+                  {...registerUser('fullName')}
+                  error={errorsUsers.fullName ? true : false}
+                  helperText={errorsUsers.fullName?.message}
                   value={
                     !editStatus ? userData.fullName : updateUserData.fullName
                   }
@@ -7611,6 +8097,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Email"
                   variant="filled"
+                  {...registerUser('email')}
+                  error={errorsUsers.email ? true : false}
+                  helperText={errorsUsers.email?.message}
                   value={!editStatus ? userData.email : updateUserData.email}
                   onChange={(e) => {
                     !editStatus
@@ -7626,6 +8115,9 @@ const ContentLogic = (props) => {
                   required
                   id="filled-basic"
                   label="Contact no"
+                  {...registerUser('mobileNo')}
+                  error={errorsUsers.mobileNo ? true : false}
+                  helperText={errorsUsers.mobileNo?.message}
                   value={
                     !editStatus ? userData.contactNo : updateUserData.contactNo
                   }
@@ -7645,6 +8137,9 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Role"
+                  {...registerUser('role')}
+                  error={errorsUsers.role ? true : false}
+                  helperText={errorsUsers.role?.message}
                   value={!editStatus ? userData.roleId : updateUserData.roleId}
                   onChange={(e) => {
                     !editStatus
@@ -7672,6 +8167,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current Address"
                   variant="filled"
+                  {...registerUser('currAddress')}
+                  error={errorsUsers.currAddress ? true : false}
+                  helperText={errorsUsers.currAddress?.message}
                   value={
                     !editStatus
                       ? userData.currAddress
@@ -7698,6 +8196,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current pincode"
                   variant="filled"
+                  {...registerUser('currPin')}
+                  error={errorsUsers.currPin ? true : false}
+                  helperText={errorsUsers.currPin?.message}
                   value={
                     !editStatus ? userData.currZip : updateUserData.currZip
                   }
@@ -7715,6 +8216,9 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current city"
                   variant="filled"
+                  {...registerUser('currCity')}
+                  error={errorsUsers.currCity ? true : false}
+                  helperText={errorsUsers.currCity?.message}
                   value={
                     !editStatus ? userData.currCity : updateUserData.currCity
                   }
@@ -7732,6 +8236,9 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Current State"
+                  {...registerUser('currState')}
+                  error={errorsUsers.currState ? true : false}
+                  helperText={errorsUsers.currState?.message}
                   value={
                     !editStatus ? userData.currState : updateUserData.currState
                   }
@@ -7993,7 +8500,7 @@ const ContentLogic = (props) => {
               <List sx={{ mb: 4, mt: 4 }}>
                 {!editStatus ? (
                   <Button
-                    onClick={() => addAPICalls("user")}
+                    onClick={handleSubmitUsers(onSubmitUser)}
                     style={{ backgroundColor: "brown", color: "white" }}
                   >
                     Save
@@ -8284,13 +8791,14 @@ const ContentLogic = (props) => {
                   <InputLabel id="demo-multiple-checkbox-label">
                     Batch no
                   </InputLabel>
-                  <Select
-                    Select
-                    labelId="demo-multiple-checkbox-label"
-                    id="demo-multiple-checkbox"
+                  <TextField
+                    select
                     fullWidth
                     value={batchNo.batchId}
-                    variant="filled"
+                    {...register7('batchNum')}
+                      error={errors7.batchNum ? true : false}
+                      helperText={errors7.batchNum?.message}
+                    variant="outlined"
                     onChange={(e) => {
                       setBatchNo({
                         ...batchNo,
@@ -8305,19 +8813,23 @@ const ContentLogic = (props) => {
                         <ListItemText primary={item} />
                       </MenuItem>
                     ))}
-                  </Select>
+                  </TextField>
                 </List>
                 <List>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Assigned To
                   </InputLabel>
-                  <Select
+                  <TextField
+                  select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     // multiple
                     fullWidth
                     value={createBatchPriorityData.id}
-                    variant="filled"
+                    variant="outlined"
+                    {...register7('assignedTo')}
+                      error={errors7.assignedTo ? true : false}
+                      helperText={errors7.assignedTo?.message}
                     onChange={(e) => {
                       setCreateBatchPriorityData({
                         ...createBatchPriorityData,
@@ -8351,15 +8863,13 @@ const ContentLogic = (props) => {
                         />
                       </MenuItem>
                     ))}
-                  </Select>
+                  </TextField>
                 </List>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseAddBtchprty}>Close</Button>
                 <Button
-                  onClick={() => {
-                    addAPICalls("batch-priority");
-                  }}
+                  onClick={handleSubmitBatchPrty(onSubmitBatchPrty)}
                 >
                   Save
                 </Button>

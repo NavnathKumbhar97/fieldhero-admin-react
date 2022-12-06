@@ -21,6 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import ContentLogic from '../../../../Pages/Content/ContentLogic';
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -33,8 +34,8 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Donut', 452, 25.0, 51, 4.9),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Donut', 452, 25.0, 51, 4.9),
 //   createData('Eclair', 262, 16.0, 24, 6.0),
 //   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
 //   createData('Gingerbread', 356, 16.0, 49, 3.9),
@@ -193,6 +194,11 @@ export default function WorkExperiance() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const {
+    editId
+  } = ContentLogic()
+  // console.log("edit id",editId);
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -240,6 +246,8 @@ export default function WorkExperiance() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+
+
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 

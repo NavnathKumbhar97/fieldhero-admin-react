@@ -14,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
-import Modal from "@mui/material/Modal";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Outlet } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
@@ -32,6 +32,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControlLabel,
   FormGroup,
@@ -204,11 +205,13 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+  //States for the candidate varification modules
   const [candidateVerificationData, setCandidateVerificationData] = useState(
     {}
   );
-
+  
   //store to update candidate verification data
+  const [candidateConsentVal,setCandidateConsentVal] = useState('')
   const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
     useState({
       aadharNo: 0,
@@ -280,7 +283,11 @@ const ContentLogic = (props) => {
       CandidateCategory: [],
       CandidateIndustry: [],
       CandidateWorkHistory: [],
-      callCentre: [],
+      callCentre: [{
+        id:0,
+        callStatus:'',
+        candidateConsent:candidateConsentVal
+      }],
     });
   //state for store the input fields value of industry
   const [categoryData, setCategoryData] = useState({
@@ -466,10 +473,27 @@ const ContentLogic = (props) => {
     assignedTo: [createBatchPriorityData.id],
   });
 
+  // States for the other category module
+  const [categoryFields,setCategoryFields] = useState("")
+  const [otherIndustryC,setOtherIndustryC] = useState({
+    candidateId:20947,
+    description:'',
+    id:20,
+    itemIdtoUpdate:17601,
+    mode:categoryFields,
+    text:'Test 122',
+    type:'INDUSTRY'
+  })
+  const [otherIndCategory,setOtherIndCategory] = useState([])
+  const [otherIndCategoryResult,setOtherIndCategoryResult] = useState([])
+  const [otherIndCategoryStats,setOtherIndCategoryStats] = useState([])
+
   const [expanded, setExpanded] = useState(false);
 
+  //State for common modal of the all modules
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
+  //State for the Work experience table in candidate master module
   const [workExperianceData, setWorkExperianceData] = useState({
     companyId: 5,
     description: "",
@@ -477,7 +501,10 @@ const ContentLogic = (props) => {
     skillId: [2, 3, 4],
     startDate: "2020-10-11T15:56:28+11:00",
   });
+  const [expData,setExptData] = useState([])
+  const [candidateId, setCandidateId] = useState("");
 
+  //State for the Certificate/training table in candidate master module
   const [ certificateData,setCertificateData] = useState({
     title:'',
     description:'',
@@ -486,8 +513,6 @@ const ContentLogic = (props) => {
     skillId:'',
     type:''
   })
-  const [expData,setExptData] = useState([])
-  const [candidateId, setCandidateId] = useState("");
 
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
@@ -1922,6 +1947,42 @@ const ContentLogic = (props) => {
       });
   };
 
+
+  const getOtherIndustryCategoryAPIcall = async() => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    await handler
+      .dataGet(
+        `/v1/admin/other-industries-categories`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setOtherIndCategory(response.data.data.candidates);
+          setOtherIndCategoryResult(response.data.data)
+          setOtherIndCategoryStats(response.data.data.stats)
+          // setTblDataCount(response.data.data.count);
+          // console.log("industry category", otherIndCategory);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          console.log("somthing wrong in other industry category");
+        }
+      })
+      .catch((error) => {
+        // alert("Timeout - Login Again");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        navigate("/login");
+        console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
     console.log("getallData pagename :", pageName);
@@ -1947,6 +2008,10 @@ const ContentLogic = (props) => {
       case "batch-priority":
         getBatchPriorityAPIcall();
         getBatchPriorityDataAPIcall();
+        break;
+      case "other-industry-category":
+        getOtherIndustryCategoryAPIcall();
+        // getBatchPriorityDataAPIcall();
         break;
       case "category":
         getCategoryAPIcall();
@@ -2534,15 +2599,15 @@ const ContentLogic = (props) => {
   ];
   const candidateConsent = [
     {
-      value: "Consent Pending ",
+      value: "PENDING ",
       label: "Consent Pending ",
     },
     {
-      value: "Consent Declined ",
+      value: "DECLINED ",
       label: "Consent Declined ",
     },
     {
-      value: "Consent Received ",
+      value: "RECEIVED ",
       label: "Consent Received ",
     },
   ];
@@ -2586,6 +2651,18 @@ const ContentLogic = (props) => {
       label: industryData.title,
       value: industryData.title,
     },
+  ];
+
+  const categoryList =[
+    {
+      value: "New",
+      label: "New",
+    },
+    {
+      value: "Existing",
+      label: "Existing",
+    },
+    
   ];
 
   const handleChangePage = (event, newPage) => {
@@ -2842,6 +2919,36 @@ const ContentLogic = (props) => {
               getBatchPriorityAPIcall();
               setOpenAlertMsg(true);
               setOpenAddBtchprty(false);
+              setLoader(true);
+            } else {
+              // setErrMsg(response.data.message);
+              // setOpenErrtMsg(true);
+              setOpenAddBtchprty(false);
+              setLoader(false);
+              setOpenAlertMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createBatchPriority", error);
+          });
+        break;
+      case "other-industry-category":
+        setLoader(true);
+        handler
+          .dataPost(`/v1/admin/other-industries-categories`, otherIndustryC, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // console.log(response.data.message);
+              // getBatchPriorityAPIcall();
+              setOpenAlertMsg(true);
+              setOpenOtherIndCategory(false);
               setLoader(true);
             } else {
               // setErrMsg(response.data.message);
@@ -3742,6 +3849,15 @@ const ContentLogic = (props) => {
     }
   };
 
+  const [openOtherIndCategory,setOpenOtherIndCategory] = useState(false)
+
+  const handleCloseOtherIndCategory=()=>{
+    setOpenOtherIndCategory(false)
+  }
+  const handleOpenOtherIndCategory=()=>{
+    setOpenOtherIndCategory(true)
+  }
+
   // shows the content page design
   const renderDesign = () => {
     switch (pageTitle) {
@@ -3960,7 +4076,182 @@ const ContentLogic = (props) => {
         );
 
       case "Other Industry Category":
-        return <OtherIndCategory />;
+        return (
+          <>
+      {Object.keys(otherIndCategory).map((item,i)=>(<>
+          <Box
+            component="div"
+            sx={{
+              display: "flex",
+              flex: "0",
+              fontSize: "15px",
+              marginTop: "-30px",
+              mb: 2,
+            }}
+          >
+            CATEGORY:<b style={{ marginRight: "20px" }}>{otherIndCategory[item].id}</b>
+            INDUSTRY:<b style={{ marginRight: "20px" }}>22</b>
+            WH_CATEGORY:<b style={{ marginRight: "20px" }}>116</b>
+            WH_INDUSTRY:<b>1</b>
+          </Box>
+          </>))}
+          <Box style={{display:'flex'}}>
+            <Box
+              component="form"
+              style={{
+                backgroundColor: "#e6fbf0",
+                marginBottom: "20px",
+                border: "1px solid #b5ddc8",
+                boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                width:'110ch'
+              }}
+              sx={{
+                "& > :not(style)": {
+                  m: 1,
+                  width: "25ch",
+                  mb: 2,
+                  bgcolor: "#e6fbf0",
+                },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              {Object.keys(otherIndCategoryResult).map((item,i)=>(<>
+              {/* <Box> */}
+              <ListItem
+                // component="div"
+                sx={{ display: "flex", flex: "0", fontSize: "15px" }}
+                >
+                Title:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].text}</b>
+                Type:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].type}</b>
+                BatchNo:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].batchNo}</b>
+                Count:<b>1</b>
+              </ListItem>
+              {/* </Box> */}
+                </>))}
+              {/* <ListItem style={{display:'flex'}}> */}
+              <TextField
+                select
+                // style={{width:'50px',marginRight:20}}
+                fullWidth
+                id="outlined-basic"
+                label="Choose"
+                variant="outlined"
+              >
+              {categoryList.map((option) => (
+                  <MenuItem key={option.value} value={option.value} onClick={()=>{
+                    setCategoryFields(option.label)
+                  }}>
+                      {option.label}
+                  </MenuItem>
+                    ))}
+              </TextField>
+              {categoryFields==="New"?<TextField 
+              fullWidth 
+              id="outlined-basic" 
+              label="Title" 
+              variant="outlined" 
+              />:null}
+              {categoryFields==="Existing"?<TextField 
+              select 
+              id="outlined-basic" 
+              label="Select" 
+              variant="outlined" 
+              />:null}
+              {categoryFields==="New"?<TextField 
+                id="outlined-basic"
+                label="Description"
+                variant="outlined"
+              />:null}
+              
+              <Button
+              onClick={()=>{
+                addAPICalls('other-industry-category')
+              }}
+                style={{
+                  background: "brown",
+                  color: "white",
+                  width: "10px",
+                  marginTop: "15px",
+                  marginLeft:'40px'
+                }}
+              >
+                Save
+              </Button>
+              <VisibilityIcon onClick={handleOpenOtherIndCategory} style={{marginLeft:'-260px',marginBottom:'-10px',cursor:'pointer'}}/>
+              {/* </ListItem> */}
+            </Box>
+          </Box>
+          <Dialog
+          maxWidth='lg'
+        open={openOtherIndCategory}
+        onClose={handleCloseOtherIndCategory}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        {/* {Object.keys(otherIndCategoryStats).map((item,i)=>( */}
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+
+            
+          <table>
+            <tr>
+              <td>ID:</td>
+              {/* <th>{console.log("test 1",otherIndCategoryStats[item])}</th> */}
+             
+            </tr>
+            <tr>
+              <td>Full Name:</td>
+              <th>Company</th>
+              <td>Gender:</td>
+              <th>Male</th>
+            </tr>
+            <tr>
+              <td>Current City:</td>
+              <th>Pune</th>
+              <td>Current State:</td>
+              <th>Maharashtra</th>
+             
+            </tr>
+            
+            <tr>
+              <td>Primary Contact no:</td>
+              <th>8668539767</th>
+              <td>Education:</td>
+              <th>Graduate</th> 
+            </tr>
+            <tr>
+            Industry:
+                  <ul>
+                    <li><b>THEATER</b></li>
+                  </ul>
+            </tr>
+            <tr>
+            Categories:
+                    <ul>
+                      <li><b>THEATER</b></li>
+                    </ul>
+            </tr>
+            <tr>
+            Work history:
+                <ul>Company:<b>PVR</b></ul>
+                <ul>Industry:<b>THEATER</b></ul>
+                <ul>Category:<b>CUSTOMER SERVICE</b></ul>
+            </tr>
+          </table>
+          </DialogContentText>
+        </DialogContent>
+          {/* ))} */}
+        <DialogActions>
+          <Button onClick={handleCloseOtherIndCategory}>Disagree</Button>
+          <Button onClick={handleCloseOtherIndCategory} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+        </>
+        )
+        // <OtherIndCategory />;
 
       case "Admin - Candidate Upload Batch":
         return <AdminCanUploadBatch />;
@@ -5426,10 +5717,20 @@ const ContentLogic = (props) => {
                       error={errors4.candidateConsent ? true : false}
                       helperText={errors4.candidateConsent?.message}
                       label="Candidate consent"
+                      // onChange={(e)=>{
+                      //   setUpdateCandidateVerificationData({...updateCandidateVerificationData,
+                      //   })
+                      // }}
                       // value={updateCandidateVerificationData}
                     >
                       {candidateConsent.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.value} value={option.value} 
+                        onClick={()=>
+                        {
+                          setCandidateConsentVal(option.value)
+                          console.log("testing options",updateCandidateVerificationData);
+
+                          }}>
                           {option.label}
                         </MenuItem>
                       ))}

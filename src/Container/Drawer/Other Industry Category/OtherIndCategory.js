@@ -1,12 +1,15 @@
-import {React,useState} from "react";
+import {React,useEffect,useState} from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button, ListItem, MenuItem } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import handler from "../../../handlers/generalHandlers";
 
 function OtherIndCategory() {
 
   const [categoryFields,setCategoryFields] = useState("")
+
+  
   const categoryList =[
     {
       value: "New",
@@ -20,6 +23,7 @@ function OtherIndCategory() {
   ];
   return (
     <>
+    
       <Box
         component="div"
         sx={{

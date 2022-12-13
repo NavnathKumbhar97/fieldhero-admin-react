@@ -212,6 +212,11 @@ const ContentLogic = (props) => {
   
   //store to update candidate verification data
   const [candidateConsentVal,setCandidateConsentVal] = useState('')
+  const [callCenter,setCallCenter] = useState({
+    id:0,
+    callStatus:'',
+    candidateConsent:candidateConsentVal
+  })
   const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
     useState({
       aadharNo: 0,
@@ -283,12 +288,14 @@ const ContentLogic = (props) => {
       CandidateCategory: [],
       CandidateIndustry: [],
       CandidateWorkHistory: [],
-      callCentre: [{
+      callCentre: {
         id:0,
         callStatus:'',
-        candidateConsent:candidateConsentVal
-      }],
+        candidateConsent:''
+      },
     });
+
+   
   //state for store the input fields value of industry
   const [categoryData, setCategoryData] = useState({
     title: "",
@@ -2599,49 +2606,49 @@ const ContentLogic = (props) => {
   ];
   const candidateConsent = [
     {
-      value: "PENDING ",
+      value: "PENDING",
       label: "Consent Pending ",
     },
     {
-      value: "DECLINED ",
+      value: "DECLINED",
       label: "Consent Declined ",
     },
     {
-      value: "RECEIVED ",
+      value: "RECEIVED",
       label: "Consent Received ",
     },
   ];
   const callStatus = [
     {
-      value: "Busy",
+      value: "BUSY",
       label: "Busy",
     },
     {
-      value: "Call Back",
+      value: "CALL_BACK",
       label: "Call Back",
     },
     {
-      value: "Completed ",
+      value: "COMPLETED",
       label: "Completed",
     },
     {
-      value: "Disconnected ",
+      value: "DISCONNECTED",
       label: "Disconnected",
     },
     {
-      value: "Half Details ",
+      value: "HALF_DETAILS",
       label: "Half Details",
     },
     {
-      value: "Not Reachable ",
+      value: "NOT_REACHABLE",
       label: "Not Reachable",
     },
     {
-      value: "Ringing ",
+      value: "RINGING",
       label: "Ringing",
     },
     {
-      value: "Switch Off ",
+      value: "SWITCH_OFF",
       label: "Switch Off",
     },
   ];
@@ -5717,20 +5724,17 @@ const ContentLogic = (props) => {
                       error={errors4.candidateConsent ? true : false}
                       helperText={errors4.candidateConsent?.message}
                       label="Candidate consent"
-                      // onChange={(e)=>{
-                      //   setUpdateCandidateVerificationData({...updateCandidateVerificationData,
-                      //   })
-                      // }}
-                      // value={updateCandidateVerificationData}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          callCentre:{candidateConsent:e.target.value}
+                        })
+                      }
+                    }
+                    value={updateCandidateVerificationData.callCentre.candidateConsent}
                     >
                       {candidateConsent.map((option) => (
-                        <MenuItem key={option.value} value={option.value} 
-                        onClick={()=>
-                        {
-                          setCandidateConsentVal(option.value)
-                          console.log("testing options",updateCandidateVerificationData);
-
-                          }}>
+                        <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -5745,6 +5749,15 @@ const ContentLogic = (props) => {
                       {...register4('callStat')}
                       error={errors4.callStat ? true : false}
                       helperText={errors4.callStat?.message}
+                      onChange={(e)=>{
+                        setUpdateCandidateVerificationData({
+                          ...updateCandidateVerificationData,
+                          callCentre:{callStatus:e.target.value}
+                        })
+                        console.log("testing e ",e.target.value);
+                      }
+                    }
+                    value={updateCandidateVerificationData.callCentre.callStatus}
                     >
                       {callStatus.map((option) => (
                         <MenuItem key={option.value} value={option.value}>

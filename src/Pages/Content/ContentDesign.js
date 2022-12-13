@@ -302,9 +302,9 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].batchNo}</TableCell>
                   <TableCell align="left">{tblData[item].createdOn}</TableCell>
                   <TableCell align="left">{tblData[item].modifiedOn}</TableCell>
-                  <TableCell align="left">{tblData[item].callStatus}</TableCell>
+                  <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
                   <TableCell align="left">
-                    {tblData[item].candidateConsent}
+                    {tblData[item].callStatus}
                   </TableCell>
                   <TableCell align="left">
                     <Button

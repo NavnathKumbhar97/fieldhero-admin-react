@@ -523,6 +523,93 @@ const ContentLogic = (props) => {
 
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
+  // States for the add multiple industry when we click on add more button in candidate verification module
+  const inputArr = [
+    {
+      type: "text",
+      id: 1,
+      value: ""
+    }
+  ];
+  const [arr, setArr] = useState(inputArr);
+  const addInput = () => {
+    setArr(s => {
+      return [
+        ...s,
+        {
+          type: "text",
+          value: ""
+        }
+      ];
+    });
+  };
+  const handleChangea = e => {
+    e.preventDefault();
+    const index = e.target.id;
+    setArr(s => {
+      const newArr = s.slice();
+      newArr[index].value = e.target.value;
+      return newArr;
+    });
+  };
+  const inputCurrEmployed = [
+    {
+      type: "text",
+      id: 1,
+      value: ""
+    }
+  ];
+  const [arrCurrEmployed, setArrCurrentEmployed] = useState(inputCurrEmployed);
+  const addInputCurrEmployed = () => {
+    setArrCurrentEmployed(s => {
+      return [
+        ...s,
+        {
+          type: "text",
+          value: ""
+        }
+      ];
+    });
+  };
+  const handleChangeCurrEmployed = e => {
+    e.preventDefault();
+    const index = e.target.id;
+    setArrCurrentEmployed(s => {
+      const newArr = s.slice();
+      newArr[index].value = e.target.value;
+      return newArr;
+    });
+  };
+
+  const inputArrCategory = [
+    {
+      type: "text",
+      id: 1,
+      value: ""
+    }
+  ];
+  const [arrCategory, setArrCategory] = useState(inputArrCategory);
+  const addInputCategory = () => {
+    setArrCategory(s => {
+      return [
+        ...s,
+        {
+          type: "text",
+          value: ""
+        }
+      ];
+    });
+  };
+  const handleChangeCategory = e => {
+    e.preventDefault();
+    const index = e.target.id;
+    setArrCategory(s => {
+      const newArr = s.slice();
+      newArr[index].value = e.target.value;
+      return newArr;
+    });
+  };
+
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
     setEditStatus(false);
@@ -4293,6 +4380,8 @@ const ContentLogic = (props) => {
         );
     }
   };
+  
+
 
   // its handle the module modal inputs
   const handleModalInput = () => {
@@ -5713,7 +5802,7 @@ const ContentLogic = (props) => {
                     boxShadow: "0 1px 4px 0.25px #eecacb",
                   }}
                 >
-                  <CardContent>
+                  <CardContent style={{display:'flex',}}>
                     <TextField
                       select
                       required
@@ -5729,6 +5818,7 @@ const ContentLogic = (props) => {
                           ...updateCandidateVerificationData,
                           callCentre:{candidateConsent:e.target.value}
                         })
+                        setCandidateConsentVal(e.target.value)
                       }
                     }
                     value={updateCandidateVerificationData.callCentre.candidateConsent}
@@ -5753,14 +5843,20 @@ const ContentLogic = (props) => {
                         setUpdateCandidateVerificationData({
                           ...updateCandidateVerificationData,
                           callCentre:{callStatus:e.target.value}
+                          
                         })
-                        console.log("testing e ",e.target.value);
+                      
                       }
                     }
                     value={updateCandidateVerificationData.callCentre.callStatus}
                     >
                       {callStatus.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.value} 
+                        // onClick={()=>{
+                        //   setCandidateConsentVal(option.label)
+                        //   console.log("test 1",candidateConsentVal);
+                        // }} 
+                        value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -5773,7 +5869,19 @@ const ContentLogic = (props) => {
                     />
                   </CardContent>
                 </Card>
+                {/* <ListItem 
+                // style={{
+                //   display: "flex",
+                //   flexDirection: "column",
+                //   flexWrap: "nowrap",
+                //   alignItems:'flex-end'
+                // }}
+                > */}
                 <h3>Call Centre History (0)</h3>
+                {/* <p>13-12-2022 11:48:01 AM</p>
+                <p>Call back</p>
+                <p>Consent Pending</p> */}
+                {/* </ListItem> */}
               </ListItem>
               <ListItem
                 style={{
@@ -5782,6 +5890,7 @@ const ContentLogic = (props) => {
                   flexWrap: "nowrap",
                 }}
               >
+                
                 <FormControlLabel
                   control={<Checkbox />}
                   label="Old Industry:"
@@ -5822,7 +5931,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       required
                       sx={{ width: "30ch" }}
                       size="small"
@@ -5836,7 +5945,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       required
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
@@ -5850,7 +5959,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Secondary Mobile"
@@ -5863,7 +5972,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Email"
@@ -5884,7 +5993,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Total Exp years"
@@ -5897,7 +6006,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Education"
@@ -5910,7 +6019,7 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Birthdate"
@@ -5923,12 +6032,12 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={editStatus}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       select
                       value={updateCandidateVerificationData.gender}
                       onSelect={(e) => {
                         setUpdateCandidateVerificationData({
-                          ...updateCandidateVerificationData,
+                          ...updateCandidateVerificationData.gender,
                           gender: e.target.value,
                         });
                       }}
@@ -5938,7 +6047,7 @@ const ContentLogic = (props) => {
                     >
                       {gender.map((option) => (
                         <MenuItem
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           key={option.value}
                           value={option.value}
                         >
@@ -5971,8 +6080,37 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Industry
                       </b>
-                      <TextField
-                        disabled={editStatus}
+                      {arr.map((item, i) => {
+                        return (
+                          <TextField
+                            // onChange={handleChangea}
+                            // value={item.value}
+                            id={i}
+                            type={item.type}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        size="small"
+                        sx={{ width: "30ch",marginBottom:3 }}
+                        select
+                        label="Industry"
+                        value={updateCandidateVerificationData.industry}
+                        onChange={(e) => {
+                          handleChangea()
+                          setUpdateCandidateVerificationData({
+                            ...updateCandidateVerificationData,
+                            industry: e.target.value,
+                          });
+                        }}
+                          >
+                          {industrySelectField.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                        );
+                      })}
+                      {/* <TextField
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         sx={{ width: "30ch" }}
                         select
@@ -5984,21 +6122,22 @@ const ContentLogic = (props) => {
                             industry: e.target.value,
                           });
                         }}
-                      >
-                        {industrySelectField.map((option) => (
+                      > */}
+                        {/* {industrySelectField.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
                             {option.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </TextField> */}
                       <Button
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         style={{
                           backgroundColor: "gray",
                           color: "white",
                           marginTop: "20px",
                         }}
+                        onClick={addInput}
                       >
                         Add More
                       </Button>
@@ -6013,14 +6152,19 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Category
                       </b>
+                      {arrCategory.map((item, i) => {
+                        return (
                       <TextField
-                        disabled={editStatus}
+                        id={i}
+                        type={item.type}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
-                        sx={{ width: "30ch" }}
+                        sx={{ width: "30ch",marginBottom:3 }}
                         select
                         label="Category"
                         value={updateCandidateVerificationData.category}
                         onChange={(e) => {
+                          handleChangeCategory()
                           setUpdateCandidateVerificationData({
                             ...updateCandidateVerificationData,
                             category: e.target.value,
@@ -6033,14 +6177,16 @@ const ContentLogic = (props) => {
                           </MenuItem>
                         ))}
                       </TextField>
+                      )})}
                       <Button
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         style={{
                           backgroundColor: "gray",
                           color: "white",
                           marginTop: "20px",
                         }}
+                        onClick={addInputCategory}
                       >
                         Add More
                       </Button>
@@ -6054,14 +6200,16 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus} />}
+                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                       label="Old Company:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus} />}
+                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                       label="Old Designation:"
                     ></FormControlLabel>
                   </ListItem>
+                  {arrCurrEmployed.map((item, i) => {
+                        return (
                   <Card
                     style={{
                       display: "flex",
@@ -6083,7 +6231,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox disabled={editStatus} />}
+                        control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                         label="Currently Employed?"
                       ></FormControlLabel>
                       <ListItem
@@ -6094,7 +6242,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch" }}
                           label="Company Name"
@@ -6104,13 +6252,13 @@ const ContentLogic = (props) => {
                           }
                           onChange={(e) => {
                             setUpdateCandidateVerificationData({
-                              ...updateCandidateVerificationData.verification,
-                              lastCompany: e.target.value,
+                              ...updateCandidateVerificationData,
+                              verification:{lastCompany: e.target.value},
                             });
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -6127,7 +6275,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -6144,7 +6292,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="Start date"
@@ -6167,7 +6315,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "10ch", ml: 2 }}
                           helperText="End date"
@@ -6175,14 +6323,14 @@ const ContentLogic = (props) => {
                           label="MM"
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "20ch", ml: 2 }}
                           select
                           label="YYYY"
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -6192,9 +6340,11 @@ const ContentLogic = (props) => {
                       </ListItem>
                     </ListItem>
                   </Card>
+                  )})}
                   <ListItem>
                     <Button
-                      disabled={editStatus}
+                    onClick={addInputCurrEmployed}
+                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                       size="small"
                       style={{ backgroundColor: "gray", color: "white" }}
                     >
@@ -6231,7 +6381,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary skill Name"
@@ -6244,7 +6394,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -6267,7 +6417,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 1"
@@ -6282,7 +6432,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 2"
@@ -6305,7 +6455,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary Lanugage"
@@ -6320,7 +6470,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Secondary Lanugage"
@@ -6335,7 +6485,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Third Lanugage"
@@ -6359,11 +6509,11 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus} />}
+                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                       label="Old Primary Language:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox disabled={editStatus} />}
+                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                       label="Old Secondary Language:"
                     ></FormControlLabel>
                   </ListItem>
@@ -6395,7 +6545,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current Pincode"
@@ -6408,7 +6558,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current City"
@@ -6421,7 +6571,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current State"
@@ -6443,7 +6593,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -6476,7 +6626,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox disabled={editStatus} />}
+                        control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
                         label="Same as current address"
                       ></FormControlLabel>
                       <ListItem
@@ -6487,7 +6637,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent Pincode"
@@ -6500,7 +6650,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent City"
@@ -6513,7 +6663,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent State"
@@ -6535,7 +6685,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={editStatus}
+                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -6567,7 +6717,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Aadhar No"
@@ -6580,7 +6730,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Pan No"
@@ -6593,7 +6743,7 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Driving Licence no"
@@ -6615,7 +6765,7 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                        disabled={editStatus}
+                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
                         size="small"
                         sx={{ width: "40ch", ml: 2 }}
                         multiline

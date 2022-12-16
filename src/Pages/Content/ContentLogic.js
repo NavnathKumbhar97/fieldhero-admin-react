@@ -5784,8 +5784,9 @@ const ContentLogic = (props) => {
               <ListItem
                 style={{
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   flexWrap: "nowrap",
+                  alignItems:'flex-start',
                   justifyContent: "space-between",
                 }}
               >
@@ -5869,19 +5870,48 @@ const ContentLogic = (props) => {
                     />
                   </CardContent>
                 </Card>
-                {/* <ListItem 
-                // style={{
-                //   display: "flex",
-                //   flexDirection: "column",
-                //   flexWrap: "nowrap",
-                //   alignItems:'flex-end'
-                // }}
-                > */}
-                <h3>Call Centre History (0)</h3>
-                {/* <p>13-12-2022 11:48:01 AM</p>
+                
+                <ListItem 
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexWrap: "nowrap",
+                  alignItems:'flex-end',
+                  justifyContent:'flex-end',
+                  marginTop:'-150px'
+                }}
+                >
+                  <h3 >Call Centre History (0)</h3>
+                  <Card 
+                style={{
+                  backgroundColor: "#ffeaeb",
+                  marginBottom: 2,
+                  borderRadius: "3px",
+                  border: "1px solid #eecacb",
+                  boxShadow: "0 1px 4px 0.25px #eecacb",
+                }}>
+                  <CardContent>
+                <p style={{marginBottom:'-12x',marginTop:'-12px'}}>13-12-2022 11:48:01 AM</p>
+                <p style={{marginTop:'-12px'}}>Call back</p>
+                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>Consent Pending</p>
+                </CardContent>
+                </Card>
+                  <Card 
+                style={{
+                  backgroundColor: "#ffeaeb",
+                  marginBottom: 2,
+                  borderRadius: "3px",
+                  border: "1px solid #eecacb",
+                  boxShadow: "0 1px 4px 0.25px #eecacb",
+                }}>
+                  <CardContent>
+                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>13-12-2022 11:48:01 AM</p>
                 <p>Call back</p>
-                <p>Consent Pending</p> */}
-                {/* </ListItem> */}
+                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>Consent Pending</p>
+                </CardContent>
+                </Card>
+                </ListItem>
+                
               </ListItem>
               <ListItem
                 style={{

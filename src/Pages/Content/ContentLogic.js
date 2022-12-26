@@ -212,6 +212,7 @@ const ContentLogic = (props) => {
   
   //store to update candidate verification data
   const [candidateConsentVal,setCandidateConsentVal] = useState('')
+  const [candidateCallStatusVal,setCandidateCallStatusVal] = useState('')
   const [callCenter,setCallCenter] = useState({
     id:0,
     callStatus:'',
@@ -496,6 +497,14 @@ const ContentLogic = (props) => {
   const [otherIndCategoryStats,setOtherIndCategoryStats] = useState([])
 
   const [expanded, setExpanded] = useState(false);
+  const [openOtherIndCategory,setOpenOtherIndCategory] = useState(false)
+
+  const handleCloseOtherIndCategory=()=>{
+    setOpenOtherIndCategory(false)
+  }
+  const handleOpenOtherIndCategory=()=>{
+    setOpenOtherIndCategory(true)
+  }
 
   //State for common modal of the all modules
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
@@ -2739,6 +2748,47 @@ const ContentLogic = (props) => {
       label: "Switch Off",
     },
   ];
+  const callStatusDeclined = [
+  
+    {
+      value: "NOT_REACHABLE",
+      label: "Not Reachable",
+    },
+    {
+      value: "NOT_INTERESTED",
+      label: "Not Interested",
+    },
+    {
+      value: "WRONG_NO",
+      label: "Wrong No",
+    },
+  ];
+  const callStatusPending = [
+    {
+      value: "BUSY",
+      label: "Busy",
+    },
+    {
+      value: "CALL_BACK",
+      label: "Call Back",
+    },
+    {
+      value: "DISCONNECTED",
+      label: "Disconnected",
+    },
+    {
+      value: "NOT_REACHABLE",
+      label: "Not Reachable",
+    },
+    {
+      value: "RINGING",
+      label: "Ringing",
+    },
+    {
+      value: "SWITCH_OFF",
+      label: "Switch Off",
+    },
+  ];
 
   const industrySelectField = [
     {
@@ -3942,14 +3992,46 @@ const ContentLogic = (props) => {
         );
     }
   };
-
-  const [openOtherIndCategory,setOpenOtherIndCategory] = useState(false)
-
-  const handleCloseOtherIndCategory=()=>{
-    setOpenOtherIndCategory(false)
-  }
-  const handleOpenOtherIndCategory=()=>{
-    setOpenOtherIndCategory(true)
+  // its handle the call status when we change the consent of candidate verification
+  const handleCallStatus = ()=>{
+    switch (candidateConsentVal) {
+      case "RECEIVED":
+        return (
+          <div>
+          {callStatus.map((option) => (
+            <MenuItem key={option.value} 
+            value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+          </div>
+        )
+      case "PENDING":
+        return (
+          <>
+          {callStatusPending.map((option) => (
+            <MenuItem key={option.value} 
+            value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+          </>
+        )
+      case "DECLINED":
+        return (
+          <>
+          {callStatusDeclined.map((option) => (
+            <MenuItem key={option.value} 
+            value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+          </>
+        )
+    
+      default:
+        break;
+    }
   }
 
   // shows the content page design
@@ -5762,7 +5844,7 @@ const ContentLogic = (props) => {
                 >
                   Save
                 </Button>
-                <Button
+                {candidateConsentVal==="RECEIVED" && candidateCallStatusVal ==="COMPLETED"?<Button
                   style={{
                     backgroundColor: "brown",
                     color: "white",
@@ -5770,7 +5852,7 @@ const ContentLogic = (props) => {
                   }}
                 >
                   Submit
-                </Button>
+                </Button>:null}
                 <Button
                   style={{
                     backgroundColor: "#f5f5f5",
@@ -5815,11 +5897,14 @@ const ContentLogic = (props) => {
                       helperText={errors4.candidateConsent?.message}
                       label="Candidate consent"
                       onChange={(e)=>{
-                        setUpdateCandidateVerificationData({
-                          ...updateCandidateVerificationData,
-                          callCentre:{candidateConsent:e.target.value}
-                        })
+                        setUpdateCandidateVerificationData(prevState => (
+                          {
+                            ...prevState, 
+                            callCentre: {...prevState.callCentre, candidateConsent: e.target.value}
+                          }
+                        ))
                         setCandidateConsentVal(e.target.value)
+                        
                       }
                     }
                     value={updateCandidateVerificationData.callCentre.candidateConsent}
@@ -5841,16 +5926,20 @@ const ContentLogic = (props) => {
                       error={errors4.callStat ? true : false}
                       helperText={errors4.callStat?.message}
                       onChange={(e)=>{
-                        setUpdateCandidateVerificationData({
-                          ...updateCandidateVerificationData,
-                          callCentre:{callStatus:e.target.value}
-                          
-                        })
+                        setUpdateCandidateVerificationData(prevState => (
+                          {
+                            ...prevState, 
+                            callCentre: {...prevState.callCentre, callStatus: e.target.value}
+                          }
+                        ))
+                        setCandidateCallStatusVal(e.target.value)
+                        console.log("testing",e.target.value);
                       
                       }
                     }
                     value={updateCandidateVerificationData.callCentre.callStatus}
                     >
+                      {/* {handleCallStatus()} */}
                       {callStatus.map((option) => (
                         <MenuItem key={option.value} 
                         // onClick={()=>{
@@ -5878,7 +5967,8 @@ const ContentLogic = (props) => {
                   flexWrap: "nowrap",
                   alignItems:'flex-end',
                   justifyContent:'flex-end',
-                  marginTop:'-150px'
+                  // marginTop:'-150px',
+
                 }}
                 >
                   <h3 >Call Centre History (0)</h3>

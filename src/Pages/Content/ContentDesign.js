@@ -549,8 +549,8 @@ export default function ContentDesign(props) {
                   </TableCell>
                   {/* <TableCell align="left">{tblData[item].timestamp}</TableCell> */}
                   <TableCell align="left">{tblData[item].count}</TableCell>
-                  {/* <TableCell align="left">{tblData[item].status}</TableCell> */}
-                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  <TableCell align="left">{tblData[item].status}</TableCell>
+                  {/* <TableCell align="left">{tblData[item].email}</TableCell> */}
                   <TableCell align="left">
                     {tblData[item].approvedCount}
                   </TableCell>

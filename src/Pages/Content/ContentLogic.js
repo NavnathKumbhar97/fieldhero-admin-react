@@ -116,6 +116,7 @@ const ContentLogic = (props) => {
 
   // state for the admin candidate upload batch module
   const [tabOfCndBatchValue,setTabOfCndBatchValue] = useState("1")
+  const [filterTableOnTabs,setFilterTableOnTabs] = useState('in-progress')
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
     useState({
       id: 0,
@@ -1671,7 +1672,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/admin/candidate-upload-batches?limit=${rowsPerPage}&page=${
+        `/v1/admin/candidate-upload-batches?mode=${filterTableOnTabs}&limit=${rowsPerPage}&page=${
           page * rowsPerPage
         }`,
         {
@@ -4039,6 +4040,7 @@ const ContentLogic = (props) => {
     }
   }
  // handle the tabs value of admin candidate upload batch module
+
   const handleTabOfCndtUpBatch = (event, newValue) => {
     setTabOfCndBatchValue(newValue);
   };
@@ -4454,13 +4456,17 @@ const ContentLogic = (props) => {
               // aria-label="scrollable prevent tabs example"
             >
               <Tab label="IN-PROGRESS" value="1" onClick={()=>{
-                console.log("test set name")
+                // console.log("test set name")
+                setFilterTableOnTabs("in-progress")
+                getAllData('candidate-upload-batch-admin')
               }}/>
               <Tab label="PENDING APPROVAL" value="2" onClick={()=>{
-                console.log("test set name 2")
+                setFilterTableOnTabs("pending-approval")
+                getAllData('candidate-upload-batch-admin')
               }}/>
               <Tab label="PROCESSED" value="3" onClick={()=>{
-                console.log("test set name 3")
+                setFilterTableOnTabs("processed")
+                getAllData('candidate-upload-batch-admin')
               }}/>
             </TabList>
             </TabContext>

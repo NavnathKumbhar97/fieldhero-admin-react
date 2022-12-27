@@ -53,6 +53,7 @@ import {
   TableBody,
   TableContainer,
   TablePagination,
+  Tabs,
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -112,6 +113,9 @@ const ContentLogic = (props) => {
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+
+  // state for the admin candidate upload batch module
+  const [tabOfCndBatchValue,setTabOfCndBatchValue] = useState("1")
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
     useState({
       id: 0,
@@ -3992,6 +3996,7 @@ const ContentLogic = (props) => {
         );
     }
   };
+
   // its handle the call status when we change the consent of candidate verification
   const handleCallStatus = ()=>{
     switch (candidateConsentVal) {
@@ -4033,6 +4038,11 @@ const ContentLogic = (props) => {
         break;
     }
   }
+ // handle the tabs value of admin candidate upload batch module
+  const handleTabOfCndtUpBatch = (event, newValue) => {
+    setTabOfCndBatchValue(newValue);
+  };
+
 
   // shows the content page design
   const renderDesign = () => {
@@ -4430,7 +4440,35 @@ const ContentLogic = (props) => {
         // <OtherIndCategory />;
 
       case "Admin - Candidate Upload Batch":
-        return <AdminCanUploadBatch />;
+        return (
+          <>
+          <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper',mb:2,mt:6 }}>
+          <TabContext value={tabOfCndBatchValue}>
+            <TabList
+              aria-label="lab API tabs example"
+              
+              onChange={handleTabOfCndtUpBatch}
+              variant="scrollable"
+              scrollButtons={false}
+              style={{border:'1px solid gray',borderRadius:'10px'}}
+              // aria-label="scrollable prevent tabs example"
+            >
+              <Tab label="IN-PROGRESS" value="1" onClick={()=>{
+                console.log("test set name")
+              }}/>
+              <Tab label="PENDING APPROVAL" value="2" onClick={()=>{
+                console.log("test set name 2")
+              }}/>
+              <Tab label="PROCESSED" value="3" onClick={()=>{
+                console.log("test set name 3")
+              }}/>
+            </TabList>
+            </TabContext>
+          </Box>
+          </>
+        )
+
+        // <AdminCanUploadBatch />;
 
       case "Candidate Verification":
         return (
@@ -5850,6 +5888,7 @@ const ContentLogic = (props) => {
                     color: "white",
                     marginLeft: "10px",
                   }}
+                  onClick={handleSubmitCndVfn(onSubmitCndVfn)}
                 >
                   Submit
                 </Button>:null}

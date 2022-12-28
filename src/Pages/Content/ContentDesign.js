@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Backdrop, Box, Button, CircularProgress } from "@mui/material";
 import ContentLogic from "./ContentLogic";
 import { Download, Edit, Visibility } from "@mui/icons-material";
+import ArticleIcon from '@mui/icons-material/Article';
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -83,6 +84,7 @@ export default function ContentDesign(props) {
     getSkillSetById,
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
+    filterTableOnTabs
   } = ContentLogic();
 
   useEffect(() => {
@@ -561,6 +563,9 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
                   <TableCell align="center">
+                    {filterTableOnTabs==="pending-approval"?<Button title="Approval">
+                      <ArticleIcon />
+                    </Button>:null}
                     <Button title="Download Rejection Summary">
                       <Download />
                     </Button>

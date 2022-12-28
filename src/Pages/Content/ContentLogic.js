@@ -9731,6 +9731,7 @@ const ContentLogic = (props) => {
     getSkillSetById,
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
+    filterTableOnTabs
   };
 
   return StateContainer;

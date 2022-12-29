@@ -9187,6 +9187,16 @@ const ContentLogic = (props) => {
     return commonModal;
   };
 
+  // state for open confirmation modal of admin candidate upload batch module
+  const [openConfirmation,setOpenConfirmation] = useState(false)
+
+  const handleCloseConfirmation = () =>{
+    setOpenConfirmation(false)
+  }
+  const handleOpenConfirmation = () =>{
+    setOpenConfirmation(true)
+  }
+
   const handleTableDesign = () => {
     const handleModalsInputs = (
       <Toolbar
@@ -9596,6 +9606,33 @@ const ContentLogic = (props) => {
             </List>
           )}
         </Dialog>
+        {/* dialog for the confirmation page for the admin candidate upload batch module */}
+      <div>
+      <Dialog open={openConfirmation} onClose={handleCloseConfirmation}>
+        <DialogTitle>Confirmation - Batch no - 4</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          Are you sure you want to approve?
+          </DialogContentText>
+          {/* <ListItem> */}
+          <b>Batch Details</b>
+          {/* </ListItem> */}
+          <TextField  
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmation}>No</Button>
+          <Button onClick={handleCloseConfirmation}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
       </Toolbar>
     );
     return handleModalsInputs;
@@ -9645,7 +9682,8 @@ const ContentLogic = (props) => {
     tblData,
     setTblData,
     rowsPerPage,
-    // useStyles,
+    handleCloseConfirmation,
+    handleOpenConfirmation,
     dense,
     pageTitle,
     setPageTitle,

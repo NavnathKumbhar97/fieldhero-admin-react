@@ -31,6 +31,8 @@ export default function ContentDesign(props) {
     pageTitle,
     setPageTitle,
     // EnhancedTableToolbar,
+    handleCloseConfirmation,
+    handleOpenConfirmation,
     stableSort,
     EnhancedTableHead,
     emptyRows,
@@ -563,7 +565,7 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
                   <TableCell align="center">
-                    {filterTableOnTabs==="pending-approval"?<Button title="Approval">
+                    {filterTableOnTabs==="pending-approval"?<Button onClick={handleOpenConfirmation} title="Approval">
                       <ArticleIcon />
                     </Button>:null}
                     <Button title="Download Rejection Summary">
@@ -1273,6 +1275,7 @@ export default function ContentDesign(props) {
 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
+      
       <Backdrop
         sx={{ color: "#7d1810", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}

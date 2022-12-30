@@ -9608,24 +9608,105 @@ const ContentLogic = (props) => {
         </Dialog>
         {/* dialog for the confirmation page for the admin candidate upload batch module */}
       <div>
-      <Dialog open={openConfirmation} onClose={handleCloseConfirmation}>
-        <DialogTitle>Confirmation - Batch no - 4</DialogTitle>
+      <Dialog open={openConfirmation} onClose={handleCloseConfirmation} maxWidth='lg'>
+        <DialogTitle sx={{mr:30}}>Confirmation - Batch no - 4</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          Are you sure you want to approve?
+          Are you sure you want to approve? 
           </DialogContentText>
           {/* <ListItem> */}
           <b>Batch Details</b>
           {/* </ListItem> */}
-          <TextField  
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#e6fbf0",
+                  border: "1px solid #b5ddc8",
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                }}>
+                <p>Owner:</p>
+                <b>Jayesh Sanghavi</b>
+          </Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#ffeee9",
+                  border: "1px solid #e3c5c5",
+                  boxShadow: "0 1px 4px 0.25px #e3c5c5",
+                }}>
+                <p>Role:</p>
+                <b>Admin</b>
+          </Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#e6fbf0",
+                  border: "1px solid #b5ddc8",
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8"
+                }}>
+                <p>Pricing Template:</p>
+                <b>Test</b>
+          </Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#ffeee9",
+                  border: "1px solid #e3c5c5",
+                  boxShadow: "0 1px 4px 0.25px #e3c5c5",
+                }}>
+                <p>Count:</p>
+                <b>0</b>
+          </Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#e6fbf0",
+                  border: "1px solid #b5ddc8",
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8"
+                }}>
+                <p>Approved:</p>
+                <b>0</b>
+          </Card>
+          <Card sx={{
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',  
+            height:'40px',
+            fontSize:'14px',
+                  maxWidth: 845,
+                  bgcolor: "#ffeee9",
+                  border: "1px solid #e3c5c5",
+                  boxShadow: "0 1px 4px 0.25px #e3c5c5",
+                }}>
+                <p>Rejected:</p>
+                <b>199</b>
+          </Card>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmation}>No</Button>

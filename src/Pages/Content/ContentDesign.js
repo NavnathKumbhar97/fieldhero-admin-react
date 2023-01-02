@@ -11,6 +11,7 @@ import { Backdrop, Box, Button, CircularProgress } from "@mui/material";
 import ContentLogic from "./ContentLogic";
 import { Download, Edit, Visibility } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
+import moment from "moment";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -304,8 +305,8 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].fullName}</TableCell>
                   <TableCell align="left">{tblData[item].contactNo1}</TableCell>
                   <TableCell align="left">{tblData[item].batchNo}</TableCell>
-                  <TableCell align="left">{tblData[item].createdOn}</TableCell>
-                  <TableCell align="left">{tblData[item].modifiedOn}</TableCell>
+                  <TableCell align="left">{moment(tblData[item].createdOn).format('DD/MM/YYYY')}</TableCell>
+                  <TableCell align="left">{moment(tblData[item].modifiedOn).format('DD/MM/YYYY')}</TableCell>
                   <TableCell align="left">{tblData[item].candidateConsent}</TableCell>
                   <TableCell align="left">
                     {tblData[item].callStatus}
@@ -551,7 +552,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  {/* <TableCell align="left">{tblData[item].timestamp}</TableCell> */}
+                  {/* <TableCell align="left">{moment(tblData[item].timestamp).format('DD/MM/YYYY')}</TableCell> */}
                   <TableCell align="left">{tblData[item].count}</TableCell>
                   <TableCell align="left">{tblData[item].status}</TableCell>
                   {/* <TableCell align="left">{tblData[item].email}</TableCell> */}

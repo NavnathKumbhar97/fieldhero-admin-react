@@ -108,13 +108,15 @@ const ContentLogic = (props) => {
   const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
   const [tabValue, setTabValue] = useState("1");
   const [cmpyvalue, setCmpyValue] = useState("");
-  const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
-
+  
+  
   // state for the admin candidate upload batch module
+  const [confirmationData,setConfirmationData] = useState([])
+  const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [tabOfCndBatchValue,setTabOfCndBatchValue] = useState("1")
   const [filterTableOnTabs,setFilterTableOnTabs] = useState('in-progress')
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
@@ -9609,12 +9611,14 @@ const ContentLogic = (props) => {
         {/* dialog for the confirmation page for the admin candidate upload batch module */}
       <div>
       <Dialog open={openConfirmation} onClose={handleCloseConfirmation} maxWidth='lg'>
-        <DialogTitle sx={{mr:30}}>Confirmation - Batch no - 4</DialogTitle>
+          {console.log("test 1",confirmationData)},
+            <DialogTitle sx={{mr:30}}>Confirmation - Batch no - {confirmationData.id}</DialogTitle>
         <DialogContent>
           <DialogContentText>
           Are you sure you want to approve? 
           </DialogContentText>
           {/* <ListItem> */}
+          {/* {console.log("confirm data",confirmationData)} */}
           <b>Batch Details</b>
           {/* </ListItem> */}
           <Card sx={{
@@ -9630,7 +9634,7 @@ const ContentLogic = (props) => {
                   boxShadow: "0 1px 4px 0.25px #b5ddc8",
                 }}>
                 <p>Owner:</p>
-                <b>Jayesh Sanghavi</b>
+                <b>{confirmationData.createdBy}</b>
           </Card>
           <Card sx={{
             display:'flex',
@@ -9645,7 +9649,7 @@ const ContentLogic = (props) => {
                   boxShadow: "0 1px 4px 0.25px #e3c5c5",
                 }}>
                 <p>Role:</p>
-                <b>Admin</b>
+                <b>{confirmationData.role}</b>
           </Card>
           <Card sx={{
             display:'flex',
@@ -9654,13 +9658,17 @@ const ContentLogic = (props) => {
             alignItems:'center',
             height:'40px',
             fontSize:'14px',
-                  maxWidth: 845,
-                  bgcolor: "#e6fbf0",
-                  border: "1px solid #b5ddc8",
-                  boxShadow: "0 1px 4px 0.25px #b5ddc8"
-                }}>
-                <p>Pricing Template:</p>
-                <b>Test</b>
+            maxWidth: 845,
+            bgcolor: "#e6fbf0",
+            border: "1px solid #b5ddc8",
+            boxShadow: "0 1px 4px 0.25px #b5ddc8"
+          }}>
+            <p>Pricing Template:</p>
+          {Object.keys(confirmationData).map((item,i)=>(
+            <>
+                <b>{confirmationData[item].templateName}</b>
+                </>
+          ))}
           </Card>
           <Card sx={{
             display:'flex',
@@ -9675,7 +9683,7 @@ const ContentLogic = (props) => {
                   boxShadow: "0 1px 4px 0.25px #e3c5c5",
                 }}>
                 <p>Count:</p>
-                <b>0</b>
+                <b>{confirmationData.count}</b>
           </Card>
           <Card sx={{
             display:'flex',
@@ -9690,7 +9698,7 @@ const ContentLogic = (props) => {
                   boxShadow: "0 1px 4px 0.25px #b5ddc8"
                 }}>
                 <p>Approved:</p>
-                <b>0</b>
+                <b>{confirmationData.approvedCount}</b>
           </Card>
           <Card sx={{
             display:'flex',
@@ -9705,9 +9713,10 @@ const ContentLogic = (props) => {
                   boxShadow: "0 1px 4px 0.25px #e3c5c5",
                 }}>
                 <p>Rejected:</p>
-                <b>199</b>
+                <b>{confirmationData.rejectedCount}</b>
           </Card>
         </DialogContent>
+        
         <DialogActions>
           <Button onClick={handleCloseConfirmation}>No</Button>
           <Button onClick={handleCloseConfirmation}>Yes</Button>
@@ -9850,7 +9859,9 @@ const ContentLogic = (props) => {
     getSkillSetById,
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
-    filterTableOnTabs
+    filterTableOnTabs,
+    setConfirmationData,
+    confirmationData
   };
 
   return StateContainer;

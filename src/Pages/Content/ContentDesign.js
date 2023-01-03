@@ -61,6 +61,8 @@ export default function ContentDesign(props) {
     setEditId,
     setEditStatus,
     editId,
+    setConfirmationData,
+    confirmationData,
     setRoleData,
     setCategoryData,
     setCompanyData,
@@ -568,8 +570,8 @@ export default function ContentDesign(props) {
                   <TableCell align="center">
                     {filterTableOnTabs==="pending-approval"?<Button onClick={(e)=>{
                       handleOpenConfirmation()
-                      console.log("testing id",tblData[item].id)
-
+                      console.log("testing id",tblData[item])
+                      setConfirmationData(tblData[item])
                       }} title="Approval">
                       <ArticleIcon />
                     </Button>:null}

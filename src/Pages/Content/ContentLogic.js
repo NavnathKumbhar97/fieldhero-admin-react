@@ -2949,6 +2949,28 @@ const ContentLogic = (props) => {
     });
   }
 
+  //condition based fields to use while adding,updating and if both address are same
+    const permCurrAddress =()=>{
+      return !editStatus
+      ? candidateMasterData.curr_address
+      : updateCandidateMasterData.currAddress
+    }
+    const permCurrCity =()=>{
+      return  !editStatus
+      ? candidateMasterData.curr_city
+      : updateCandidateMasterData.currCity
+    }
+    const permCurrState =()=>{
+      return !editStatus
+      ? candidateMasterData.curr_state
+      : updateCandidateMasterData.currState
+    }
+    const permCurrZip =()=>{
+      return !editStatus
+      ? candidateMasterData.curr_zip
+      : updateCandidateMasterData.currZip
+    }
+
   // add API calls
   const addAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
@@ -4101,7 +4123,6 @@ const ContentLogic = (props) => {
     // }
   };
 
-
   // shows the content page design
   const renderDesign = () => {
     switch (pageTitle) {
@@ -4569,30 +4590,7 @@ const ContentLogic = (props) => {
         );
     }
   };
-  
-  //condition based fields to use while adding,updating and if both address are same
-  const permCurrAddress =()=>{
-    return !editStatus
-    ? candidateMasterData.curr_address
-    : updateCandidateMasterData.currAddress
-  }
-  const permCurrCity =()=>{
-    return  !editStatus
-    ? candidateMasterData.curr_city
-    : updateCandidateMasterData.currCity
-  }
-  const permCurrState =()=>{
-    return !editStatus
-    ? candidateMasterData.curr_state
-    : updateCandidateMasterData.currState
-  }
-  const permCurrZip =()=>{
-    return !editStatus
-    ? candidateMasterData.curr_zip
-    : updateCandidateMasterData.currZip
-  }
-
-  
+ 
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {

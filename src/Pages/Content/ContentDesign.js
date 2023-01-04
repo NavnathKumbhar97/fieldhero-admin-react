@@ -89,7 +89,7 @@ export default function ContentDesign(props) {
     getSkillSetById,
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
-    filterTableOnTabs
+    filterTableOnTabs,
   } = ContentLogic();
 
   useEffect(() => {
@@ -526,11 +526,11 @@ export default function ContentDesign(props) {
                       color="primary"
                       onChange={(e) => {
                         if (e.target.checked) {
+                          console.log("test 1",tblData[item].id);
                           setEditId(tblData[item].id);
                           setEditStatus(true);
                           setCandidateUploadBatchAdminData(tblData[item]);
                           setCandidateUploadBatchAdminSelect(tblData[item]);
-                          console.log(tblData[item]);
                         } else {
                           setEditStatus(false);
                           setCandidateUploadBatchAdminData([]);
@@ -567,7 +567,7 @@ export default function ContentDesign(props) {
                   {/* <TableCell align="left">{tblData[item].templateName}</TableCell> */}
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
-                  <TableCell align="center">
+                  <TableCell aria-label="Approval" align="center">
                     {filterTableOnTabs==="pending-approval"?<Button onClick={(e)=>{
                       handleOpenConfirmation()
                       console.log("testing id",tblData[item])

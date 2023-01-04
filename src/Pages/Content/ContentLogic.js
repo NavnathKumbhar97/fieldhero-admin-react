@@ -304,14 +304,14 @@ const ContentLogic = (props) => {
     });
 
    
-  //state for store the input fields value of industry
+  //state for store the input fields value of category
   const [categoryData, setCategoryData] = useState({
     title: "",
     description: "",
     isActive: false,
   });
 
-  //state for store the input fields value of industry
+  //state for store the input fields value of company
   const [companyData, setCompanyData] = useState({
     companyName: " ",
     description: "",
@@ -401,6 +401,8 @@ const ContentLogic = (props) => {
     roleId: 0,
     isActive: true,
   });
+  //states for the agent master module
+  const [sameAddressAgent,setSameAddressAgent] = useState(false)
   const [agentMasterData, setAgentMasterData] = useState({
     fullName: "",
     dob: "",
@@ -460,15 +462,15 @@ const ContentLogic = (props) => {
     lastCompany: 0,
     designation: 0,
   });
-
+  // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
     id: 1,
   });
   const [updateBatchPriority, setUpdateBatchPriority] = useState([]);
-
   const [batchPriorityAssingend, setBatchPriorityAssingend] = useState([]);
   const [batchPriorityId, setBatchPriorityId] = useState("87");
+
   const [pageName, setPageName] = useState();
   const [tblHeader, setTblHeader] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -1667,6 +1669,7 @@ const ContentLogic = (props) => {
         );
       });
   };
+  
   //fetch the candidate upload batch admin data
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -3056,6 +3059,34 @@ const ContentLogic = (props) => {
           });
         break;
       case "candidate-upload-batch-admin":
+        setLoader(true);
+        handler
+          .dataPost(`/v1/admin/candidate-upload-batches/${confirmationData.id}/approval`, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // console.log(response.data.message);
+              getCandidateUploadBatchAdminAPIcall();
+              setOpenAlertMsg(true);
+              // setOpenAddBtchprty(false);
+              setLoader(true);
+            } else {
+              // setErrMsg(response.data.message);
+              // setOpenErrtMsg(true);
+              setOpenAddBtchprty(false);
+              setLoader(false);
+              setOpenAlertMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createBatchPriority", error);
+          });
         break;
       case "batch-priority":
         setLoader(true);
@@ -3452,7 +3483,7 @@ const ContentLogic = (props) => {
         };
         handler
           .dataPut(
-            `/v1/admin/candidate-upload-batches/${candidateUploadBatchAdminData.id}/change-pricing-template`,
+            `/v1/admin/candidate-upload-batches/${editId}/change-pricing-template`,
             updateCandidateUploadBatchAdmin,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -4045,6 +4076,29 @@ const ContentLogic = (props) => {
 
   const handleTabOfCndtUpBatch = (event, newValue) => {
     setTabOfCndBatchValue(newValue);
+    // switch (newValue) {
+    //   case "1":
+    //     // console.log("test set name")
+    //     setFilterTableOnTabs("in-progress")
+    //     getAllData('candidate-upload-batch-admin')
+        
+    //     break;
+    //   case "2":
+    //     // console.log("test 2 set name")
+    //     setFilterTableOnTabs("pending-approval")
+    //     getAllData('candidate-upload-batch-admin')
+        
+    //     break;
+    //   case "3":
+    //     // console.log("test 2 set name")
+    //     setFilterTableOnTabs("processed")
+    //     getAllData('candidate-upload-batch-admin')
+        
+    //     break;
+    
+    //   default:
+    //     break;
+    // }
   };
 
 
@@ -4457,19 +4511,26 @@ const ContentLogic = (props) => {
               style={{border:'1px solid gray',borderRadius:'10px'}}
               // aria-label="scrollable prevent tabs example"
             >
-              <Tab label="IN-PROGRESS" value="1" onClick={()=>{
-                // console.log("test set name")
+              <Tab label="IN-PROGRESS" value="1" 
+              onClick={()=>{
                 setFilterTableOnTabs("in-progress")
+                console.log("test set name")
                 getAllData('candidate-upload-batch-admin')
-              }}/>
-              <Tab label="PENDING APPROVAL" value="2" onClick={()=>{
+              }}
+              ></Tab>
+              <Tab label="PENDING APPROVAL" value="2" 
+              onClick={()=>{
                 setFilterTableOnTabs("pending-approval")
+                console.log("test set name")
                 getAllData('candidate-upload-batch-admin')
-              }}/>
-              <Tab label="PROCESSED" value="3" onClick={()=>{
+              }}
+              />
+              <Tab label="PROCESSED" value="3" 
+              onClick={()=>{
                 setFilterTableOnTabs("processed")
                 getAllData('candidate-upload-batch-admin')
-              }}/>
+              }}
+              />
             </TabList>
             </TabContext>
           </Box>
@@ -4509,8 +4570,29 @@ const ContentLogic = (props) => {
     }
   };
   
+  //condition based fields to use while adding,updating and if both address are same
+  const permCurrAddress =()=>{
+    return !editStatus
+    ? candidateMasterData.curr_address
+    : updateCandidateMasterData.currAddress
+  }
+  const permCurrCity =()=>{
+    return  !editStatus
+    ? candidateMasterData.curr_city
+    : updateCandidateMasterData.currCity
+  }
+  const permCurrState =()=>{
+    return !editStatus
+    ? candidateMasterData.curr_state
+    : updateCandidateMasterData.currState
+  }
+  const permCurrZip =()=>{
+    return !editStatus
+    ? candidateMasterData.curr_zip
+    : updateCandidateMasterData.currZip
+  }
 
-
+  
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {
@@ -4760,9 +4842,13 @@ const ContentLogic = (props) => {
                           <FormControlLabel
                             control={
                               <Checkbox
-                                checked={sameAddress}
+                                // checked={sameAddress}
                                 onChange={(e) => {
+                                  if (e.target.checked) {
                                   setSameAddress(true);
+                                  }else{
+                                    setSameAddress(false);
+                                  }
                                 }}
                               />
                             }
@@ -4778,11 +4864,8 @@ const ContentLogic = (props) => {
                             label="Current Address"
                             id="filled-basic"
                             multiline
-                            value={
-                              !editStatus
-                                ? candidateMasterData.curr_address
-                                : updateCandidateMasterData.currAddress
-                            }
+                            disabled={sameAddress}
+                            value={sameAddress?candidateMasterData.perm_address:permCurrAddress()}
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -4803,11 +4886,8 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="City"
                             variant="filled"
-                            value={
-                              !editStatus
-                                ? candidateMasterData.curr_city
-                                : updateCandidateMasterData.currCity
-                            }
+                            disabled={sameAddress}
+                            value={sameAddress?candidateMasterData.perm_city:permCurrCity()}
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -4824,11 +4904,8 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="State"
-                            value={
-                              !editStatus
-                                ? candidateMasterData.curr_state
-                                : updateCandidateMasterData.currState
-                            }
+                            disabled={sameAddress}
+                            value={sameAddress?candidateMasterData.perm_state:permCurrState()}
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -4871,11 +4948,8 @@ const ContentLogic = (props) => {
                           <TextField
                             id="filled-basic"
                             label="Zip Code"
-                            value={
-                              !editStatus
-                                ? candidateMasterData.curr_zip
-                                : updateCandidateMasterData.currZip
-                            }
+                            disabled={sameAddress}
+                            value={sameAddress?candidateMasterData.perm_zip:permCurrZip()}
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -7291,15 +7365,23 @@ const ContentLogic = (props) => {
                       </List>
                       <List sx={{ mb: 5, mt: 5 }}>
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox onChange={(e) => {
+                            if (e.target.checked) {
+                            setSameAddressAgent(true);
+                            }else{
+                              setSameAddressAgent(false);
+                            }
+                          }}/>}
                           label="Same as current address"
+
                         />
                       </List>
                       <List>
                         <TextField
                           id="filled-basic"
+                          disabled={sameAddressAgent}
                           label="Permanent Address"
-                          value={agentMasterData.permAddress}
+                          value={!sameAddressAgent?agentMasterData.permAddress:agentMasterData.currAddress}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7319,7 +7401,8 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Permanent pincode"
                           type="name"
-                          value={agentMasterData.permZip}
+                          disabled={sameAddressAgent}
+                          value={!sameAddressAgent?agentMasterData.permZip:agentMasterData.currZip}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7332,7 +7415,8 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent city"
-                          value={agentMasterData.permCity}
+                          disabled={sameAddressAgent}
+                          value={!sameAddressAgent?agentMasterData.permCity:agentMasterData.currCity}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7346,7 +7430,8 @@ const ContentLogic = (props) => {
                         <TextField
                           id="filled-basic"
                           label="Permanent state"
-                          value={agentMasterData.permState}
+                          disabled={sameAddressAgent}
+                          value={!sameAddressAgent?agentMasterData.permState:agentMasterData.currState}
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -9719,7 +9804,7 @@ const ContentLogic = (props) => {
         
         <DialogActions>
           <Button onClick={handleCloseConfirmation}>No</Button>
-          <Button onClick={handleCloseConfirmation}>Yes</Button>
+          <Button onClick={()=>addAPICalls('candidate-upload-batch-admin')}>Yes</Button>
         </DialogActions>
       </Dialog>
     </div>
@@ -9861,7 +9946,7 @@ const ContentLogic = (props) => {
     getUserAPIcallById,
     filterTableOnTabs,
     setConfirmationData,
-    confirmationData
+    confirmationData,
   };
 
   return StateContainer;

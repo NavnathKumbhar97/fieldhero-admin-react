@@ -90,6 +90,7 @@ export default function ContentDesign(props) {
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
     filterTableOnTabs,
+    setOpenApproval
   } = ContentLogic();
 
   useEffect(() => {
@@ -526,10 +527,10 @@ export default function ContentDesign(props) {
                       color="primary"
                       onChange={(e) => {
                         if (e.target.checked) {
-                          console.log("test 1",tblData[item].id);
+                          console.log("test 1",tblData[item]);
                           setEditId(tblData[item].id);
                           setEditStatus(true);
-                          setCandidateUploadBatchAdminData(tblData[item]);
+                          // setCandidateUploadBatchAdminData(tblData[item]);
                           setCandidateUploadBatchAdminSelect(tblData[item]);
                         } else {
                           setEditStatus(false);
@@ -570,7 +571,8 @@ export default function ContentDesign(props) {
                   <TableCell aria-label="Approval" align="center">
                     {filterTableOnTabs==="pending-approval"?<Button onClick={(e)=>{
                       handleOpenConfirmation()
-                      console.log("testing id",tblData[item])
+                      setOpenApproval(tblData[item].AgentPricingTemplate===null?false:true)
+                      console.log("testing id",tblData[item].AgentPricingTemplate===null?"working":"not working")
                       setConfirmationData(tblData[item])
                       }} title="Approval">
                       <ArticleIcon />

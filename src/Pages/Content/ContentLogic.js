@@ -116,6 +116,7 @@ const ContentLogic = (props) => {
   
   // state for the admin candidate upload batch module
   const [confirmationData,setConfirmationData] = useState([])
+  const [openApproval,setOpenApproval] = useState(true)
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [tabOfCndBatchValue,setTabOfCndBatchValue] = useState("1")
   const [filterTableOnTabs,setFilterTableOnTabs] = useState('in-progress')
@@ -131,7 +132,6 @@ const ContentLogic = (props) => {
 
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
     useState({
-      id: 0,
     });
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
@@ -2949,7 +2949,7 @@ const ContentLogic = (props) => {
     });
   }
 
-  //condition based fields to use while adding,updating and if both address are same
+  //condition based fields to use while adding,updating and if both address are same for the candidate master module
     const permCurrAddress =()=>{
       return !editStatus
       ? candidateMasterData.curr_address
@@ -2970,6 +2970,28 @@ const ContentLogic = (props) => {
       ? candidateMasterData.curr_zip
       : updateCandidateMasterData.currZip
     }
+
+  //condition based fields to use while adding,updating and if both address are same for the user module
+  const permCurrUserAddss =()=>{
+    return !editStatus
+    ? userData.permAddress
+    : updateUserData.permAddress
+  }
+  const permCurrUserZip =()=>{
+    return !editStatus
+    ? userData.permZip
+    : updateUserData.permZip
+  }
+  const permCurrUserCity =()=>{
+    return !editStatus
+    ? userData.permCity
+    : updateUserData.permCity
+  }
+  const permCurrUserState =()=>{
+    return !editStatus
+    ? userData.permState
+    : updateUserData.permState
+  }
 
   // add API calls
   const addAPICalls = (pageName) => {
@@ -3083,7 +3105,7 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch-admin":
         setLoader(true);
         handler
-          .dataPost(`/v1/admin/candidate-upload-batches/${confirmationData.id}/approval`, {
+          .dataPost(`/v1/admin/candidate-upload-batches/${confirmationData.id}/approval`,null, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
@@ -8977,7 +8999,13 @@ const ContentLogic = (props) => {
               <List>
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox />}
+                    control={<Checkbox onChange={(e) => {
+                      if (e.target.checked) {
+                      setSameAddress(true);
+                      }else{
+                        setSameAddress(false);
+                      }
+                    }}/>}
                     label="Same as current address"
                   />
                 </FormGroup>
@@ -8988,11 +9016,8 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent Address"
                   variant="filled"
-                  value={
-                    !editStatus
-                      ? userData.permAddress
-                      : updateUserData.permAddress
-                  }
+                  disabled={sameAddress}
+                  value={sameAddress?userData.currAddress:permCurrUserAddss()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({
@@ -9013,9 +9038,8 @@ const ContentLogic = (props) => {
                 <TextField
                   id="filled-basic"
                   label="Permanent pincode"
-                  value={
-                    !editStatus ? userData.permZip : updateUserData.permZip
-                  }
+                  disabled={sameAddress}
+                  value={sameAddress?userData.currZip:permCurrUserZip()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permZip: e.target.value })
@@ -9031,9 +9055,8 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent city"
                   variant="filled"
-                  value={
-                    !editStatus ? userData.permCity : updateUserData.permCity
-                  }
+                  disabled={sameAddress}
+                  value={sameAddress?userData.currCity:permCurrUserCity()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permCity: e.target.value })
@@ -9050,7 +9073,8 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent State"
                   variant="filled"
-                  value={!editStatus ? userData.permState : updateUserData}
+                  disabled={sameAddress}
+                  value={sameAddress?userData.currState:permCurrUserState()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permState: e.target.value })
@@ -9458,11 +9482,11 @@ const ContentLogic = (props) => {
                         ...candidateUploadBatchAdminData,
                         id: e.target.value,
                       });
-                      console.log("tt1", candidateUploadBatchAdminData.id);
-                      console.log("all data", candidateUploadBatchAdminData);
+                      // console.log("tt1", candidateUploadBatchAdminData.id);
+                      // console.log("all data", candidateUploadBatchAdminData);
                     }}
                     label="New pricing template"
-                    value={candidateUploadBatchAdminData.id}
+                    // value={candidateUploadBatchAdminData.id}
                     required
                     style={{ width: "50ch" }}
                   >
@@ -9471,15 +9495,16 @@ const ContentLogic = (props) => {
                         <MenuItem
                           key={item}
                           value={candidateUploadBatchAdminData[item].id}
-                        >
+                        >                          
                           <ListItemText
                             primary={
+                              // candidateUploadBatchAdminData===null?"null":
                               candidateUploadBatchAdminData[item].templateName
                             }
                           />
                         </MenuItem>
-                      )
-                    )}
+                       )
+                     )}
                   </Select>
                 </List>
                 <tr>
@@ -9693,7 +9718,7 @@ const ContentLogic = (props) => {
         </Dialog>
         {/* dialog for the confirmation page for the admin candidate upload batch module */}
       <div>
-      <Dialog open={openConfirmation} onClose={handleCloseConfirmation} maxWidth='lg'>
+      <Dialog open={openApproval?openConfirmation:false} onClose={handleCloseConfirmation} maxWidth='lg'>
           {console.log("test 1",confirmationData)},
             <DialogTitle sx={{mr:30}}>Confirmation - Batch no - {confirmationData.id}</DialogTitle>
         <DialogContent>
@@ -9747,11 +9772,12 @@ const ContentLogic = (props) => {
             boxShadow: "0 1px 4px 0.25px #b5ddc8"
           }}>
             <p>Pricing Template:</p>
-          {Object.keys(confirmationData).map((item,i)=>(
+          {openApproval?Object.keys(confirmationData).map((item,i)=>(
+            console.log("test temp",confirmationData[item].templateName),
             <>
                 <b>{confirmationData[item].templateName}</b>
                 </>
-          ))}
+          )):null}
           </Card>
           <Card sx={{
             display:'flex',
@@ -9945,6 +9971,7 @@ const ContentLogic = (props) => {
     filterTableOnTabs,
     setConfirmationData,
     confirmationData,
+    setOpenApproval
   };
 
   return StateContainer;

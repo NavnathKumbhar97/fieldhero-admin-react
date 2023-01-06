@@ -4633,12 +4633,20 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <Button
+                         component="span"
+                         variant="contained"
                           style={{
                             backgroundColor: "brown",
                             color: "white",
                             fontSize: "15px bold",
                           }}
                         >
+                        <input
+                        id="upload-photo"
+                        name="upload-photo"
+                        type="file"
+                        style={{ display: "none" }}
+                        />
                           UPLOAD IMAGE
                         </Button>
                         <p style={{ marginLeft: "130px", marginTop: "-30px" }}>

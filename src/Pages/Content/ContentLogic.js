@@ -4612,6 +4612,17 @@ const ContentLogic = (props) => {
         );
     }
   };
+
+  const test1 = () =>{
+    return (
+      <div className="body-content">
+          <div className="add-media">
+              <i className="plus icon"></i>
+              <input type="file" id="file" style={{display: "none"}}/>
+          </div>
+      </div>
+  )
+  }
  
   // its handle the module modal inputs
   const handleModalInput = () => {
@@ -4632,18 +4643,26 @@ const ContentLogic = (props) => {
                           marginTop: "40px",
                         }}
                       >
-                        <Button
-                         component="span"
-                         variant="contained"
-                          style={{
-                            backgroundColor: "brown",
-                            color: "white",
-                            fontSize: "15px bold",
-                          }}
-                        >
-                          UPLOAD IMAGE
-                        </Button>
-                        <p style={{ marginLeft: "130px", marginTop: "-30px" }}>
+                        <label htmlFor="upload-photo">
+                          <Button
+                            component="span"
+                            variant="contained"
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                              fontSize: "15px bold",
+                            }}
+                          >
+                            <input
+                              id="upload-photo"
+                              name="upload-photo"
+                              type="file"
+                              style={{ display: "none" }}
+                            />
+                            UPLOAD IMAGE
+                          </Button>
+                        </label>
+                        <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
                           (png,jpg)
                         </p>
                       </div>

@@ -2522,6 +2522,34 @@ const ContentLogic = (props) => {
         setLoader(false);
       });
   };
+  const [image,setImage] = useState("")
+
+  const addProfileImg = async()=>{
+    const formData = new FormData()
+    formData.append('image',image)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+          .dataPost(`/v1/upload-profile/12155`, formData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 200) {
+              console.log("testing candidate master", response);
+              setOpenAlertMsg(true);
+            } else {
+              setOpenErrtMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- uploadImage", error);
+          });
+  }
 
   const EnhancedTableHead = (props) => {
     const {
@@ -4612,17 +4640,6 @@ const ContentLogic = (props) => {
         );
     }
   };
-
-  const test1 = () =>{
-    return (
-      <div className="body-content">
-          <div className="add-media">
-              <i className="plus icon"></i>
-              <input type="file" id="file" style={{display: "none"}}/>
-          </div>
-      </div>
-  )
-  }
  
   // its handle the module modal inputs
   const handleModalInput = () => {
@@ -4644,7 +4661,7 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <label htmlFor="upload-photo">
-                          <Button
+                          <Button 
                             component="span"
                             variant="contained"
                             style={{
@@ -4653,19 +4670,35 @@ const ContentLogic = (props) => {
                               fontSize: "15px bold",
                             }}
                           >
-                            <input
+                            {/* <input
+                            onChange={(e)=>{
+                              setPImg({...pImg,profile:e.target.files})
+                            }}
                               id="upload-photo"
                               name="upload-photo"
                               type="file"
                               style={{ display: "none" }}
-                            />
+                            /> */}
                             UPLOAD IMAGE
                           </Button>
                         </label>
+                        
                         <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
                           (png,jpg)
                         </p>
-                      </div>
+                      <Button onClick={addProfileImg}>Upload</Button>
+                      <TextField
+                            onChange={(e)=>{
+                              setImage(e.target.files[0])
+                              console.log("on file",e.target.files);
+                            }}
+                            // value={pImg.profile}
+                            id='imagex' 
+                        name="image"
+                            type="file"
+                            // style={{ display: "none" }}
+                            />
+                            </div>
                       <div>
                         <ListItem>
                           <TextField

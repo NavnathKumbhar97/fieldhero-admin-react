@@ -212,6 +212,7 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+  const [image,setImage] = useState("")
   //States for the candidate varification modules
   const [candidateVerificationData, setCandidateVerificationData] = useState(
     {}
@@ -863,8 +864,12 @@ const ContentLogic = (props) => {
     resolver: yupResolver(validationUsers),
   });
 
-  const onSubmit = data => {
+  const onSubmit = async (data) => {
     addAPICalls("candidate-master");
+    // setTimeout(() => {
+    //   addProfileImg()
+    // }, 10000);
+   
   };
 
   const onSubmitExp =data=>{
@@ -2522,28 +2527,31 @@ const ContentLogic = (props) => {
         setLoader(false);
       });
   };
-  const [image,setImage] = useState("")
 
-  const addProfileImg = async()=>{
+  const addProfileImg = async(id)=>{
     const formData = new FormData()
     formData.append('image',image)
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    console.log("candidate id",candidateId);
     handler
-          .dataPost(`/v1/upload-profile/12155`, formData, {
+          .dataPost(`/v1/upload-profile/${id}`, formData, {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
             console.log(response);
             if (response.status == 200) {
               console.log("testing candidate master", response);
-              setOpenAlertMsg(true);
+              setErrMsg(response.data.message);
+              // setOpenAlertMsg(true);
+              setOpenErrtMsg(true);
             } else {
+              setErrMsg(response.data.message);
               setOpenErrtMsg(true);
             }
           })
           .catch((error) => {
-            if (error.status == 400) {
+            if (error.status == 404) {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
@@ -3034,16 +3042,12 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              // console.log("testing candidate master", response.data.data.id);
-              // setOpenCandidateModal(false);
-              setCandidateId(response.data.data.id);
-              console.log("setcandidate id", candidateId);
+              addProfileImg(response.data.data.id);
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
               handleNext()
+              console.log("setcandidate id", candidateId);
             } else {
-              // setErrMsg(response.data.message);
-              setOpenErrtMsg(true);
               setOpenErrtMsg(true);
             }
           })
@@ -4670,15 +4674,16 @@ const ContentLogic = (props) => {
                               fontSize: "15px bold",
                             }}
                           >
-                            {/* <input
-                            onChange={(e)=>{
-                              setPImg({...pImg,profile:e.target.files})
-                            }}
+                            <input
+                              onChange={(e)=>{
+                                  setImage(e.target.files[0])
+                                  console.log("on file",e.target.files);
+                              }}
                               id="upload-photo"
                               name="upload-photo"
                               type="file"
                               style={{ display: "none" }}
-                            /> */}
+                            />
                             UPLOAD IMAGE
                           </Button>
                         </label>
@@ -4686,18 +4691,8 @@ const ContentLogic = (props) => {
                         <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
                           (png,jpg)
                         </p>
-                      <Button onClick={addProfileImg}>Upload</Button>
-                      <TextField
-                            onChange={(e)=>{
-                              setImage(e.target.files[0])
-                              console.log("on file",e.target.files);
-                            }}
-                            // value={pImg.profile}
-                            id='imagex' 
-                        name="image"
-                            type="file"
-                            // style={{ display: "none" }}
-                            />
+                      {/* <Button onClick={addProfileImg}>Upload</Button> */}
+                      
                             </div>
                       <div>
                         <ListItem>

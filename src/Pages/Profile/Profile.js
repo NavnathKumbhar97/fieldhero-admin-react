@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import handler from "../../handlers/generalHandlers";
+import { styled } from '@mui/material/styles';
+
 import KeyIcon from "@mui/icons-material/Key";
 import {
   Alert,
   Avatar,
+  Badge,
   Box,
   Button,
   Dialog,
@@ -135,14 +138,67 @@ export default function Profile() {
   const onSubmit = data => {
     changePasswordAPICall()
   };
+  
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      backgroundColor: '#44b700',
+      color: '#44b700',
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+      '&::after': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        animation: 'ripple 1.2s infinite ease-in-out',
+        border: '1px solid currentColor',
+        content: '""',
+      },
+    },
+    '@keyframes ripple': {
+      '0%': {
+        transform: 'scale(.8)',
+        opacity: 1,
+      },
+      '100%': {
+        transform: 'scale(2.4)',
+        opacity: 0,
+      },
+    },
+  }));
+  
+  const SmallAvatar = styled(Avatar)(({ theme }) => ({
+    width: 22,
+    height: 22,
+    border: `2px solid ${theme.palette.background.paper}`,
+  }));
+  
 
   return (
     <div>
       <Box sx={{ mr: "30px" }}>
-        <Tooltip title="Open settings">
+        <Tooltip title="Profile">
+        
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar style={{color:'white',backgroundColor:'#795548'}} alt={loc.name} src="/static/images/avatar/2.jpg" />
+          <StyledBadge
+        overlap="circular"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        variant="dot"
+      >
+            <Avatar 
+            style={{color:'white',backgroundColor:'#32a88d'}} 
+            // alt={loc.name} 
+            src="../../Images/apexaLogo.png" 
+            />
+            </StyledBadge>
+            <Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+      </Badge>
           </IconButton>
+          
         </Tooltip>
         <Menu
           sx={{ mt: "45px" }}

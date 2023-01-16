@@ -707,6 +707,17 @@ const ContentLogic = (props) => {
     email: Yup.string()
       .required('Email is required')
       .email('Email is invalid'),
+    photo: Yup.mixed()
+      // .test("required", "photo is required", value => value.length > 0)
+      .test("fileSize", "File Size is too large", (value) => 
+      {
+        console.log("value",value);
+        return value.length && value[0].size <= 1024;
+      })
+      // .test("fileType", "Unsupported File Format", (value) =>{
+      //   return value.length && ["image/jpeg", "image/png", "image/jpg"].includes(value[0].type)
+      // }
+      // )
   });
   const validationForWorkExp= Yup.object().shape({
     companyId: Yup.string()
@@ -4644,7 +4655,7 @@ const ContentLogic = (props) => {
         );
     }
   };
- 
+
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {
@@ -4675,10 +4686,12 @@ const ContentLogic = (props) => {
                             }}
                           >
                             <input
+                            {...register('photo')}
                               onChange={(e)=>{
                                   setImage(e.target.files[0])
                                   console.log("on file",e.target.files);
                               }}
+                              accept="image/*"
                               id="upload-photo"
                               name="upload-photo"
                               type="file"
@@ -4691,8 +4704,7 @@ const ContentLogic = (props) => {
                         <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
                           (png,jpg)
                         </p>
-                      {/* <Button onClick={addProfileImg}>Upload</Button> */}
-                      
+                           <p style={{color:'red'}}>{errors.photo?.message}</p>
                             </div>
                       <div>
                         <ListItem>

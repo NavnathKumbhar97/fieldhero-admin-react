@@ -1,4 +1,4 @@
-import { forwardRef, React, useCallback, useState,Fragment } from "react";
+import { forwardRef, React, useCallback, useState, Fragment } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -79,9 +79,10 @@ import { Stack } from "@mui/system";
 import moment from "moment";
 
 // import React, { Fragment } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import FileUpload from "react-mui-fileuploader";
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -112,14 +113,13 @@ const ContentLogic = (props) => {
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
-  
-  
+
   // state for the admin candidate upload batch module
-  const [confirmationData,setConfirmationData] = useState([])
-  const [openApproval,setOpenApproval] = useState(true)
+  const [confirmationData, setConfirmationData] = useState([]);
+  const [openApproval, setOpenApproval] = useState(true);
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
-  const [tabOfCndBatchValue,setTabOfCndBatchValue] = useState("1")
-  const [filterTableOnTabs,setFilterTableOnTabs] = useState('in-progress')
+  const [tabOfCndBatchValue, setTabOfCndBatchValue] = useState("1");
+  const [filterTableOnTabs, setFilterTableOnTabs] = useState("in-progress");
   const [candidateUploadBatchAdminSelect, setCandidateUploadBatchAdminSelect] =
     useState({
       id: 0,
@@ -131,8 +131,7 @@ const ContentLogic = (props) => {
     });
 
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
-    useState({
-    });
+    useState({});
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
@@ -212,20 +211,20 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
-  const [image,setImage] = useState("")
+  const [image, setImage] = useState();
   //States for the candidate varification modules
   const [candidateVerificationData, setCandidateVerificationData] = useState(
     {}
   );
-  
+
   //store to update candidate verification data
-  const [candidateConsentVal,setCandidateConsentVal] = useState('')
-  const [candidateCallStatusVal,setCandidateCallStatusVal] = useState('')
-  const [callCenter,setCallCenter] = useState({
-    id:0,
-    callStatus:'',
-    candidateConsent:candidateConsentVal
-  })
+  const [candidateConsentVal, setCandidateConsentVal] = useState("");
+  const [candidateCallStatusVal, setCandidateCallStatusVal] = useState("");
+  const [callCenter, setCallCenter] = useState({
+    id: 0,
+    callStatus: "",
+    candidateConsent: candidateConsentVal,
+  });
   const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
     useState({
       aadharNo: 0,
@@ -298,13 +297,12 @@ const ContentLogic = (props) => {
       CandidateIndustry: [],
       CandidateWorkHistory: [],
       callCentre: {
-        id:0,
-        callStatus:'',
-        candidateConsent:''
+        id: 0,
+        callStatus: "",
+        candidateConsent: "",
       },
     });
 
-   
   //state for store the input fields value of category
   const [categoryData, setCategoryData] = useState({
     title: "",
@@ -403,7 +401,7 @@ const ContentLogic = (props) => {
     isActive: true,
   });
   //states for the agent master module
-  const [sameAddressAgent,setSameAddressAgent] = useState(false)
+  const [sameAddressAgent, setSameAddressAgent] = useState(false);
   const [agentMasterData, setAgentMasterData] = useState({
     fullName: "",
     dob: "",
@@ -492,29 +490,29 @@ const ContentLogic = (props) => {
   });
 
   // States for the other category module
-  const [categoryFields,setCategoryFields] = useState("")
-  const [otherIndustryC,setOtherIndustryC] = useState({
-    candidateId:20947,
-    description:'',
-    id:20,
-    itemIdtoUpdate:17601,
-    mode:categoryFields,
-    text:'Test 122',
-    type:'INDUSTRY'
-  })
-  const [otherIndCategory,setOtherIndCategory] = useState([])
-  const [otherIndCategoryResult,setOtherIndCategoryResult] = useState([])
-  const [otherIndCategoryStats,setOtherIndCategoryStats] = useState([])
+  const [categoryFields, setCategoryFields] = useState("");
+  const [otherIndustryC, setOtherIndustryC] = useState({
+    candidateId: 20947,
+    description: "",
+    id: 20,
+    itemIdtoUpdate: 17601,
+    mode: categoryFields,
+    text: "Test 122",
+    type: "INDUSTRY",
+  });
+  const [otherIndCategory, setOtherIndCategory] = useState([]);
+  const [otherIndCategoryResult, setOtherIndCategoryResult] = useState([]);
+  const [otherIndCategoryStats, setOtherIndCategoryStats] = useState([]);
 
   const [expanded, setExpanded] = useState(false);
-  const [openOtherIndCategory,setOpenOtherIndCategory] = useState(false)
+  const [openOtherIndCategory, setOpenOtherIndCategory] = useState(false);
 
-  const handleCloseOtherIndCategory=()=>{
-    setOpenOtherIndCategory(false)
-  }
-  const handleOpenOtherIndCategory=()=>{
-    setOpenOtherIndCategory(true)
-  }
+  const handleCloseOtherIndCategory = () => {
+    setOpenOtherIndCategory(false);
+  };
+  const handleOpenOtherIndCategory = () => {
+    setOpenOtherIndCategory(true);
+  };
 
   //State for common modal of the all modules
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
@@ -525,20 +523,20 @@ const ContentLogic = (props) => {
     description: "",
     endDate: "2020-10-11T15:56:28+11:00",
     skillId: [2, 3, 4],
-    startDate: "2020-10-11T15:56:28+11:00",
+    startDate:"",
   });
-  const [expData,setExptData] = useState([])
+  const [expData, setExptData] = useState([]);
   const [candidateId, setCandidateId] = useState("");
 
   //State for the Certificate/training table in candidate master module
-  const [ certificateData,setCertificateData] = useState({
-    title:'',
-    description:'',
-    issueDate:null,
-    issuedBy:'',
-    skillId:'',
-    type:''
-  })
+  const [certificateData, setCertificateData] = useState({
+    title: "",
+    description: "",
+    issueDate: null,
+    issuedBy: "",
+    skillId: "",
+    type: "",
+  });
 
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
@@ -547,25 +545,25 @@ const ContentLogic = (props) => {
     {
       type: "text",
       id: 1,
-      value: ""
-    }
+      value: "",
+    },
   ];
   const [arr, setArr] = useState(inputArr);
   const addInput = () => {
-    setArr(s => {
+    setArr((s) => {
       return [
         ...s,
         {
           type: "text",
-          value: ""
-        }
+          value: "",
+        },
       ];
     });
   };
-  const handleChangea = e => {
+  const handleChangea = (e) => {
     e.preventDefault();
     const index = e.target.id;
-    setArr(s => {
+    setArr((s) => {
       const newArr = s.slice();
       newArr[index].value = e.target.value;
       return newArr;
@@ -575,25 +573,25 @@ const ContentLogic = (props) => {
     {
       type: "text",
       id: 1,
-      value: ""
-    }
+      value: "",
+    },
   ];
   const [arrCurrEmployed, setArrCurrentEmployed] = useState(inputCurrEmployed);
   const addInputCurrEmployed = () => {
-    setArrCurrentEmployed(s => {
+    setArrCurrentEmployed((s) => {
       return [
         ...s,
         {
           type: "text",
-          value: ""
-        }
+          value: "",
+        },
       ];
     });
   };
-  const handleChangeCurrEmployed = e => {
+  const handleChangeCurrEmployed = (e) => {
     e.preventDefault();
     const index = e.target.id;
-    setArrCurrentEmployed(s => {
+    setArrCurrentEmployed((s) => {
       const newArr = s.slice();
       newArr[index].value = e.target.value;
       return newArr;
@@ -604,25 +602,25 @@ const ContentLogic = (props) => {
     {
       type: "text",
       id: 1,
-      value: ""
-    }
+      value: "",
+    },
   ];
   const [arrCategory, setArrCategory] = useState(inputArrCategory);
   const addInputCategory = () => {
-    setArrCategory(s => {
+    setArrCategory((s) => {
       return [
         ...s,
         {
           type: "text",
-          value: ""
-        }
+          value: "",
+        },
       ];
     });
   };
-  const handleChangeCategory = e => {
+  const handleChangeCategory = (e) => {
     e.preventDefault();
     const index = e.target.id;
-    setArrCategory(s => {
+    setArrCategory((s) => {
       const newArr = s.slice();
       newArr[index].value = e.target.value;
       return newArr;
@@ -694,184 +692,202 @@ const ContentLogic = (props) => {
 
   //form validations
 
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
-
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const validationSchemaForCandidateMaster = Yup.object().shape({
-    fullname: Yup.string().required('Full Name is required'),
-    mobileNo: Yup.string().required('Contact number is not valid')
-    .min(10,'Contact number is not valid'),
+    fullname: Yup.string().required("Full Name is required"),
+    mobileNo: Yup.string()
+      .required("Contact number is not valid")
+      .min(10, "Contact number is not valid"),
     aadharNo: Yup.string()
-      .required('Aadhar number is required')
-      .min(12, 'Aadhar number is not valid'),
-    email: Yup.string()
-      .required('Email is required')
-      .email('Email is invalid'),
-    photo: Yup.mixed()
-      // .test("required", "photo is required", value => value.length > 0)
-      .test("fileSize", "File Size is too large", (value) => 
-      {
-        console.log("value",value);
-        return value.length && value[0].size <= 1024;
-      })
-      // .test("fileType", "Unsupported File Format", (value) =>{
-      //   return value.length && ["image/jpeg", "image/png", "image/jpg"].includes(value[0].type)
-      // }
-      // )
+      .required("Aadhar number is required")
+      .min(12, "Aadhar number is not valid"),
+    email: Yup.string().required("Email is required").email("Email is invalid"),
+    // photo: Yup.mixed()
+    // .test("required", "photo is required", value => value.length > 0)
+    // .test("fileSize", "File Size is too large", (value) =>
+    // {
+    //   console.log("value",value);
+    //   return value.length && value[0].size <= 1024;
+    // })
+    // .test("fileType", "Unsupported File Format", (value) =>{
+    //   return value.length && ["image/jpeg", "image/png", "image/jpg"].includes(value[0].type)
+    // }
+    // )
   });
-  const validationForWorkExp= Yup.object().shape({
-    companyId: Yup.string()
-      .required('Company Name is required'),
-    skillId: Yup.string()
-      .required('Skills are required'),
-    startDate: Yup.string()
-      .required('Start date is required')
-  })
-  const validationForCertificate= Yup.object().shape({
-    certificateName: Yup.string()
-      .required('Certificate Name is required'),
-    issuedBy: Yup.string()
-      .required('Issued by is required'),
-
-  })
-  const validationCandidateVfn= Yup.object().shape({
-    candidateConsent: Yup.string()
-      .required('Candidate conset is required'),
-    callStat: Yup.string()
-      .required('Call Status is required'),
-
-  })
-  const validationAgentMstr= Yup.object().shape({
-    agentNo: Yup.string()
-      .required('Agent no is required'),
-    fullName: Yup.string()
-      .required('Full name is required'),
+  const validationForWorkExp = Yup.object().shape({
+    companyId: Yup.string().required("Company Name is required"),
+    skillId: Yup.string().required("Skills are required"),
+    startDate: Yup.date().default(() => new Date())
+   .required("Start date is required"),
+    endDate: Yup.date()
+    .when(
+        "startDate",
+        (startDate, schema) => startDate && schema.min(startDate))
+  });
+  const validationForCertificate = Yup.object().shape({
+    certificateName: Yup.string().required("Certificate Name is required"),
+    issuedBy: Yup.string().required("Issued by is required"),
+  });
+  const validationCandidateVfn = Yup.object().shape({
+    candidateConsent: Yup.string().required("Candidate conset is required"),
+    callStat: Yup.string().required("Call Status is required"),
+  });
+  const validationAgentMstr = Yup.object().shape({
+    agentNo: Yup.string().required("Agent no is required"),
+    fullName: Yup.string().required("Full name is required"),
     email: Yup.string()
-      .required('Email is required')
-      .email('Please enter correct email address'),
-    mobileNo: Yup.string().required('Contact number is not valid')
-      .min(10,'Contact number is not valid'),
-    currAddress:Yup.string()
-      .required('Current address is required'),
-    currPin:Yup.string()
-      .required('Current pincode is required'),
-    currCity:Yup.string()
-      .required('Current city is required'),
-    currState:Yup.string()
-      .required('Current state is required'),
-  })
+      .required("Email is required")
+      .email("Please enter correct email address"),
+    mobileNo: Yup.string()
+      .required("Contact number is not valid")
+      .min(10, "Contact number is not valid"),
+    currAddress: Yup.string().required("Current address is required"),
+    currPin: Yup.string().required("Current pincode is required"),
+    currCity: Yup.string().required("Current city is required"),
+    currState: Yup.string().required("Current state is required"),
+  });
 
-  const validationAgentTmpt= Yup.object().shape({
-    agentTitle: Yup.string()
-      .required('Template name is required'),
-  })
-  const validationBatchPty= Yup.object().shape({
-    batchNum: Yup.string()
-      .required('Batch no is required'),
-    assignedTo: Yup.string()
-      .required('Assigned to is required'),
-  })
-  const validationCategory= Yup.object().shape({
-    title: Yup.string()
-      .required('Title is required'),
-  })
-  const validationCompany= Yup.object().shape({
-    title: Yup.string()
-      .required('Company Name is required'),
-  })
-  const validationIndustry= Yup.object().shape({
-    title: Yup.string()
-      .required('Title is required'),
-  })
-  const validationRole= Yup.object().shape({
-    rName: Yup.string()
-      .required('Name is required'),
-  })
-  const validationSkillset= Yup.object().shape({
-    title: Yup.string()
-      .required('Title is required'),
-  })
-  const validationSubscription= Yup.object().shape({
-    title: Yup.string()
-      .required('Plan name is required'),
-  })
+  const validationAgentTmpt = Yup.object().shape({
+    agentTitle: Yup.string().required("Template name is required"),
+  });
+  const validationBatchPty = Yup.object().shape({
+    batchNum: Yup.string().required("Batch no is required"),
+    assignedTo: Yup.string().required("Assigned to is required"),
+  });
+  const validationCategory = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+  });
+  const validationCompany = Yup.object().shape({
+    title: Yup.string().required("Company Name is required"),
+  });
+  const validationIndustry = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+  });
+  const validationRole = Yup.object().shape({
+    rName: Yup.string().required("Name is required"),
+  });
+  const validationSkillset = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+  });
+  const validationSubscription = Yup.object().shape({
+    title: Yup.string().required("Plan name is required"),
+  });
 
-  const validationUsers= Yup.object().shape({
-    fullName: Yup.string()
-      .required('Full name is required'),
+  const validationUsers = Yup.object().shape({
+    fullName: Yup.string().required("Full name is required"),
     email: Yup.string()
-      .required('Email is required')
-      .email('Please enter correct email address'),
-    mobileNo: Yup.string().required('Contact number is not valid')
-      .min(10,'Contact number is not valid'),
-    role:Yup.string()
-      .required('Role is required'),
-    currAddress:Yup.string()
-      .required('Current Address is required'),
-    currPin:Yup.string()
-      .required('Current pincode is required'),
-    currCity:Yup.string()
-      .required('Current city is required'),
-    currState:Yup.string()
-      .required('Current state is required'),
-  })
+      .required("Email is required")
+      .email("Please enter correct email address"),
+    mobileNo: Yup.string()
+      .required("Contact number is not valid")
+      .min(10, "Contact number is not valid"),
+    role: Yup.string().required("Role is required"),
+    currAddress: Yup.string().required("Current Address is required"),
+    currPin: Yup.string().required("Current pincode is required"),
+    currCity: Yup.string().required("Current city is required"),
+    currState: Yup.string().required("Current state is required"),
+  });
 
-
-  const {register, control, handleSubmit,formState: { errors }
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
   } = useForm({
-      resolver: yupResolver(validationSchemaForCandidateMaster)
+    resolver: yupResolver(validationSchemaForCandidateMaster),
   });
 
-  const {  register: register2, handleSubmit:
-     handleSubmitReset,formState: { errors:errors2 } } = useForm({
+  const {
+    register: register2,
+    handleSubmit: handleSubmitReset,
+    formState: { errors: errors2 },
+  } = useForm({
     resolver: yupResolver(validationForWorkExp),
   });
-  const {  register: register3, handleSubmit:
-     handleSubmitCert,formState: { errors:errors3 } } = useForm({
+  const {
+    register: register3,
+    handleSubmit: handleSubmitCert,
+    formState: { errors: errors3 },
+  } = useForm({
     resolver: yupResolver(validationForCertificate),
   });
-  const {  register: register4, handleSubmit:
-     handleSubmitCndVfn,formState: { errors:errors4 } } = useForm({
+  const {
+    register: register4,
+    handleSubmit: handleSubmitCndVfn,
+    formState: { errors: errors4 },
+  } = useForm({
     resolver: yupResolver(validationCandidateVfn),
   });
-  const {  register: register5, handleSubmit:
-     handleSubmitAgentMstr,formState: { errors:errors5 } } = useForm({
+  const {
+    register: register5,
+    handleSubmit: handleSubmitAgentMstr,
+    formState: { errors: errors5 },
+  } = useForm({
     resolver: yupResolver(validationAgentMstr),
   });
-  const {  register: register6, handleSubmit:
-     handleSubmitAgentTmpt,formState: { errors:errors6 } } = useForm({
+  const {
+    register: register6,
+    handleSubmit: handleSubmitAgentTmpt,
+    formState: { errors: errors6 },
+  } = useForm({
     resolver: yupResolver(validationAgentTmpt),
   });
-  const {  register: register7, handleSubmit:
-     handleSubmitBatchPrty,formState: { errors:errors7 } } = useForm({
+  const {
+    register: register7,
+    handleSubmit: handleSubmitBatchPrty,
+    formState: { errors: errors7 },
+  } = useForm({
     resolver: yupResolver(validationBatchPty),
   });
-  const {  register: register8, handleSubmit:
-     handleSubmitCategory,formState: { errors:errors8 } } = useForm({
+  const {
+    register: register8,
+    handleSubmit: handleSubmitCategory,
+    formState: { errors: errors8 },
+  } = useForm({
     resolver: yupResolver(validationCategory),
   });
-  const {  register: register9, handleSubmit:
-     handleSubmitCompany,formState: { errors:errors9 } } = useForm({
+  const {
+    register: register9,
+    handleSubmit: handleSubmitCompany,
+    formState: { errors: errors9 },
+  } = useForm({
     resolver: yupResolver(validationCompany),
   });
-  const {  register: register10, handleSubmit:
-     handleSubmitIndustry,formState: { errors:errors10 } } = useForm({
+  const {
+    register: register10,
+    handleSubmit: handleSubmitIndustry,
+    formState: { errors: errors10 },
+  } = useForm({
     resolver: yupResolver(validationIndustry),
   });
-  const {  register: register11, handleSubmit:
-     handleSubmitRole,formState: { errors:errors11 } } = useForm({
+  const {
+    register: register11,
+    handleSubmit: handleSubmitRole,
+    formState: { errors: errors11 },
+  } = useForm({
     resolver: yupResolver(validationRole),
   });
-  const {  register: register12, handleSubmit:
-     handleSubmitSkill,formState: { errors:errors12 } } = useForm({
+  const {
+    register: register12,
+    handleSubmit: handleSubmitSkill,
+    formState: { errors: errors12 },
+  } = useForm({
     resolver: yupResolver(validationSkillset),
   });
-  const {  register: register13, handleSubmit:
-     handleSubmitSubscritpion,formState: { errors:errors13 } } = useForm({
+  const {
+    register: register13,
+    handleSubmit: handleSubmitSubscritpion,
+    formState: { errors: errors13 },
+  } = useForm({
     resolver: yupResolver(validationSubscription),
   });
-  const {  register: registerUser, handleSubmit:
-     handleSubmitUsers,formState: { errors:errorsUsers } } = useForm({
+  const {
+    register: registerUser,
+    handleSubmit: handleSubmitUsers,
+    formState: { errors: errorsUsers },
+  } = useForm({
     resolver: yupResolver(validationUsers),
   });
 
@@ -880,52 +896,50 @@ const ContentLogic = (props) => {
     // setTimeout(() => {
     //   addProfileImg()
     // }, 10000);
-   
   };
 
-  const onSubmitExp =data=>{
-    addWorkExperienceAPICall()
-  }
-  const onSubmitCert =data=>{
-    console.log("data onSubmitCert ",data);
-  }
-  const onSubmitCndVfn = data => {
+  const onSubmitExp = (data) => {
+    addWorkExperienceAPICall();
+  };
+  const onSubmitCert = (data) => {
+    console.log("data onSubmitCert ", data);
+  };
+  const onSubmitCndVfn = (data) => {
     updateAPICalls("candidate-verification");
   };
-  const onSubmitAgentMstr = data => {
+  const onSubmitAgentMstr = (data) => {
     addAPICalls("agent-master");
   };
-  const onUpdateAgentMstr = data => {
+  const onUpdateAgentMstr = (data) => {
     updateAPICalls("agent-master");
   };
-  const onSubmitAgentTmpt = data => {
+  const onSubmitAgentTmpt = (data) => {
     addAPICalls("agent-pricing-template");
   };
-  const onSubmitBatchPrty = data => {
+  const onSubmitBatchPrty = (data) => {
     addAPICalls("batch-priority");
   };
-  const onSubmitCategory = data => {
+  const onSubmitCategory = (data) => {
     addAPICalls("category");
   };
-  const onSubmitCompany = data => {
+  const onSubmitCompany = (data) => {
     addAPICalls("company");
   };
-  const onSubmitIndustry = data => {
-    addAPICalls("industry")
+  const onSubmitIndustry = (data) => {
+    addAPICalls("industry");
   };
-  const onSubmitRole = data => {
-    addAPICalls("role")
+  const onSubmitRole = (data) => {
+    addAPICalls("role");
   };
-  const onSubmitSkillset = data => {
+  const onSubmitSkillset = (data) => {
     addAPICalls("skillset");
   };
-  const onSubmitSubscription = data => {
-    addAPICalls("subscription")
+  const onSubmitSubscription = (data) => {
+    addAPICalls("subscription");
   };
-  const onSubmitUser = data => {
-    addAPICalls("user")
+  const onSubmitUser = (data) => {
+    addAPICalls("user");
   };
-
 
   // table headings array for each module
   const canMasterTblHerader = [
@@ -1685,7 +1699,7 @@ const ContentLogic = (props) => {
         );
       });
   };
-  
+
   //fetch the candidate upload batch admin data
   const getCandidateUploadBatchAdminAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2076,24 +2090,20 @@ const ContentLogic = (props) => {
       });
   };
 
-
-  const getOtherIndustryCategoryAPIcall = async() => {
+  const getOtherIndustryCategoryAPIcall = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     await handler
-      .dataGet(
-        `/v1/admin/other-industries-categories`,
-        {
-          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-        }
-      )
+      .dataGet(`/v1/admin/other-industries-categories`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
           setOtherIndCategory(response.data.data.candidates);
-          setOtherIndCategoryResult(response.data.data)
-          setOtherIndCategoryStats(response.data.data.stats)
+          setOtherIndCategoryResult(response.data.data);
+          setOtherIndCategoryStats(response.data.data.stats);
           // setTblDataCount(response.data.data.count);
           // console.log("industry category", otherIndCategory);
         } else if (response.status == 400) {
@@ -2458,7 +2468,7 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     handler
       .dataPost(
-        `/v1/candidates/${!editStatus?candidateId:editId}/work-history`,
+        `/v1/candidates/${!editStatus ? candidateId : editId}/work-history`,
         workExperianceData,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2467,7 +2477,7 @@ const ContentLogic = (props) => {
       .then((response) => {
         console.log(response);
         if (response.status == 201) {
-          handleCloseChildModal()
+          handleCloseChildModal();
           setOpenAlertMsg(true);
         } else {
           // setErrMsg(response.data.message);
@@ -2489,7 +2499,7 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     handler
       .dataPost(
-        `/v1/candidates/${!editStatus?candidateId:editId}/training-cert`,
+        `/v1/candidates/${!editStatus ? candidateId : editId}/training-cert`,
         workExperianceData,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2498,7 +2508,7 @@ const ContentLogic = (props) => {
       .then((response) => {
         console.log(response);
         if (response.status == 201) {
-          handleCloseChildModal()
+          handleCloseChildModal();
           setOpenAlertMsg(true);
         } else {
           // setErrMsg(response.data.message);
@@ -2539,36 +2549,35 @@ const ContentLogic = (props) => {
       });
   };
 
-  const addProfileImg = async(id)=>{
-    const formData = new FormData()
-    formData.append('image',image)
+  const addProfileImg = async (id) => {
+    const formData = new FormData();
+    // console.log(image.forEach((file) =>formData.append("image", file)));
+    image.forEach((file) => formData.append("image", file));
+    // formData.append('image',image)
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    console.log("candidate id",candidateId);
     handler
-          .dataPost(`/v1/upload-profile/${id}`, formData, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            if (response.status == 200) {
-              console.log("testing candidate master", response);
-              setErrMsg(response.data.message);
-              // setOpenAlertMsg(true);
-              setOpenErrtMsg(true);
-            } else {
-              setErrMsg(response.data.message);
-              setOpenErrtMsg(true);
-            }
-          })
-          .catch((error) => {
-            if (error.status == 404) {
-              setErrMsg(error.data.message);
-              setOpenErrtMsg(true);
-            }
-            console.error("There was an error!- uploadImage", error);
-          });
-  }
+      .dataPost(`/v1/upload-profile/${id}`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadImage", error);
+      });
+  };
 
   const EnhancedTableHead = (props) => {
     const {
@@ -2806,7 +2815,7 @@ const ContentLogic = (props) => {
     },
   ];
   const callStatusDeclined = [
-  
+
     {
       value: "NOT_REACHABLE",
       label: "Not Reachable",
@@ -2854,7 +2863,7 @@ const ContentLogic = (props) => {
     },
   ];
 
-  const categoryList =[
+  const categoryList = [
     {
       value: "New",
       label: "New",
@@ -2863,7 +2872,6 @@ const ContentLogic = (props) => {
       value: "Existing",
       label: "Existing",
     },
-    
   ];
 
   const handleChangePage = (event, newPage) => {
@@ -2997,48 +3005,40 @@ const ContentLogic = (props) => {
   }
 
   //condition based fields to use while adding,updating and if both address are same for the candidate master module
-    const permCurrAddress =()=>{
-      return !editStatus
+  const permCurrAddress = () => {
+    return !editStatus
       ? candidateMasterData.curr_address
-      : updateCandidateMasterData.currAddress
-    }
-    const permCurrCity =()=>{
-      return  !editStatus
+      : updateCandidateMasterData.currAddress;
+  };
+  const permCurrCity = () => {
+    return !editStatus
       ? candidateMasterData.curr_city
-      : updateCandidateMasterData.currCity
-    }
-    const permCurrState =()=>{
-      return !editStatus
+      : updateCandidateMasterData.currCity;
+  };
+  const permCurrState = () => {
+    return !editStatus
       ? candidateMasterData.curr_state
-      : updateCandidateMasterData.currState
-    }
-    const permCurrZip =()=>{
-      return !editStatus
+      : updateCandidateMasterData.currState;
+  };
+  const permCurrZip = () => {
+    return !editStatus
       ? candidateMasterData.curr_zip
-      : updateCandidateMasterData.currZip
-    }
+      : updateCandidateMasterData.currZip;
+  };
 
   //condition based fields to use while adding,updating and if both address are same for the user module
-  const permCurrUserAddss =()=>{
-    return !editStatus
-    ? userData.permAddress
-    : updateUserData.permAddress
-  }
-  const permCurrUserZip =()=>{
-    return !editStatus
-    ? userData.permZip
-    : updateUserData.permZip
-  }
-  const permCurrUserCity =()=>{
-    return !editStatus
-    ? userData.permCity
-    : updateUserData.permCity
-  }
-  const permCurrUserState =()=>{
-    return !editStatus
-    ? userData.permState
-    : updateUserData.permState
-  }
+  const permCurrUserAddss = () => {
+    return !editStatus ? userData.permAddress : updateUserData.permAddress;
+  };
+  const permCurrUserZip = () => {
+    return !editStatus ? userData.permZip : updateUserData.permZip;
+  };
+  const permCurrUserCity = () => {
+    return !editStatus ? userData.permCity : updateUserData.permCity;
+  };
+  const permCurrUserState = () => {
+    return !editStatus ? userData.permState : updateUserData.permState;
+  };
 
   // add API calls
   const addAPICalls = (pageName) => {
@@ -3056,7 +3056,7 @@ const ContentLogic = (props) => {
               addProfileImg(response.data.data.id);
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
-              handleNext()
+              handleNext();
               console.log("setcandidate id", candidateId);
             } else {
               setOpenErrtMsg(true);
@@ -3148,9 +3148,13 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch-admin":
         setLoader(true);
         handler
-          .dataPost(`/v1/admin/candidate-upload-batches/${confirmationData.id}/approval`,null, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
+          .dataPost(
+            `/v1/admin/candidate-upload-batches/${confirmationData.id}/approval`,
+            null,
+            {
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }
+          )
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
@@ -3445,6 +3449,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
+              addProfileImg(updateCandidatesMasterData.id)
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
@@ -3830,20 +3835,19 @@ const ContentLogic = (props) => {
       case "candidate-master":
         return (
           <>
-            
-              <Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "0px",
-                  // marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>
+            <Button
+              onClick={handleOpenCandidateModal}
+              style={{
+                marginTop: "0px",
+                // marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
           </>
         );
       case "candidate-upload-batch":
@@ -3887,19 +3891,19 @@ const ContentLogic = (props) => {
       case "agent-master":
         return (
           <>
-              <Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "50px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>
+            <Button
+              onClick={handleOpenCandidateModal}
+              style={{
+                marginTop: "50px",
+                marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
           </>
         );
       case "agent-pricing-template":
@@ -4119,47 +4123,44 @@ const ContentLogic = (props) => {
   };
 
   // its handle the call status when we change the consent of candidate verification
-  const handleCallStatus = ()=>{
+  const handleCallStatus = () => {
     switch (candidateConsentVal) {
       case "RECEIVED":
         return (
           <div>
-          {callStatus.map((option) => (
-            <MenuItem key={option.value} 
-            value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
+            {callStatus.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </div>
-        )
+        );
       case "PENDING":
         return (
           <>
-          {callStatusPending.map((option) => (
-            <MenuItem key={option.value} 
-            value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
+            {callStatusPending.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </>
-        )
+        );
       case "DECLINED":
         return (
           <>
-          {callStatusDeclined.map((option) => (
-            <MenuItem key={option.value} 
-            value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
+            {callStatusDeclined.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </>
-        )
-    
+        );
+
       default:
         break;
     }
-  }
- // handle the tabs value of admin candidate upload batch module
+  };
+  // handle the tabs value of admin candidate upload batch module
 
   const handleTabOfCndtUpBatch = (event, newValue) => {
     setTabOfCndBatchValue(newValue);
@@ -4168,21 +4169,21 @@ const ContentLogic = (props) => {
     //     // console.log("test set name")
     //     setFilterTableOnTabs("in-progress")
     //     getAllData('candidate-upload-batch-admin')
-        
+
     //     break;
     //   case "2":
     //     // console.log("test 2 set name")
     //     setFilterTableOnTabs("pending-approval")
     //     getAllData('candidate-upload-batch-admin')
-        
+
     //     break;
     //   case "3":
     //     // console.log("test 2 set name")
     //     setFilterTableOnTabs("processed")
     //     getAllData('candidate-upload-batch-admin')
-        
+
     //     break;
-    
+
     //   default:
     //     break;
     // }
@@ -4408,222 +4409,273 @@ const ContentLogic = (props) => {
       case "Other Industry Category":
         return (
           <>
-      {Object.keys(otherIndCategory).map((item,i)=>(<>
-          <Box
-            component="div"
-            sx={{
-              display: "flex",
-              flex: "0",
-              fontSize: "15px",
-              marginTop: "-30px",
-              mb: 2,
-            }}
-          >
-            CATEGORY:<b style={{ marginRight: "20px" }}>{otherIndCategory[item].id}</b>
-            INDUSTRY:<b style={{ marginRight: "20px" }}>22</b>
-            WH_CATEGORY:<b style={{ marginRight: "20px" }}>116</b>
-            WH_INDUSTRY:<b>1</b>
-          </Box>
-          </>))}
-          <Box style={{display:'flex'}}>
-            <Box
-              component="form"
-              style={{
-                backgroundColor: "#e6fbf0",
-                marginBottom: "20px",
-                border: "1px solid #b5ddc8",
-                boxShadow: "0 1px 4px 0.25px #b5ddc8",
-                width:'110ch'
-              }}
-              sx={{
-                "& > :not(style)": {
-                  m: 1,
-                  width: "25ch",
-                  mb: 2,
-                  bgcolor: "#e6fbf0",
-                },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              {Object.keys(otherIndCategoryResult).map((item,i)=>(<>
-              {/* <Box> */}
-              <ListItem
-                // component="div"
-                sx={{ display: "flex", flex: "0", fontSize: "15px" }}
+            {Object.keys(otherIndCategory).map((item, i) => (
+              <>
+                <Box
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    flex: "0",
+                    fontSize: "15px",
+                    marginTop: "-30px",
+                    mb: 2,
+                  }}
                 >
-                Title:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].text}</b>
-                Type:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].type}</b>
-                BatchNo:<b style={{ marginRight: "20px" }}>{otherIndCategoryResult[item].batchNo}</b>
-                Count:<b>1</b>
-              </ListItem>
-              {/* </Box> */}
-                </>))}
-              {/* <ListItem style={{display:'flex'}}> */}
-              <TextField
-                select
-                // style={{width:'50px',marginRight:20}}
-                fullWidth
-                id="outlined-basic"
-                label="Choose"
-                variant="outlined"
-              >
-              {categoryList.map((option) => (
-                  <MenuItem key={option.value} value={option.value} onClick={()=>{
-                    setCategoryFields(option.label)
-                  }}>
-                      {option.label}
-                  </MenuItem>
-                    ))}
-              </TextField>
-              {categoryFields==="New"?<TextField 
-              fullWidth 
-              id="outlined-basic" 
-              label="Title" 
-              variant="outlined" 
-              />:null}
-              {categoryFields==="Existing"?<TextField 
-              select 
-              id="outlined-basic" 
-              label="Select" 
-              variant="outlined" 
-              />:null}
-              {categoryFields==="New"?<TextField 
-                id="outlined-basic"
-                label="Description"
-                variant="outlined"
-              />:null}
-              
-              <Button
-              onClick={()=>{
-                addAPICalls('other-industry-category')
-              }}
+                  CATEGORY:
+                  <b style={{ marginRight: "20px" }}>
+                    {otherIndCategory[item].id}
+                  </b>
+                  INDUSTRY:<b style={{ marginRight: "20px" }}>22</b>
+                  WH_CATEGORY:<b style={{ marginRight: "20px" }}>116</b>
+                  WH_INDUSTRY:<b>1</b>
+                </Box>
+              </>
+            ))}
+            <Box style={{ display: "flex" }}>
+              <Box
+                component="form"
                 style={{
-                  background: "brown",
-                  color: "white",
-                  width: "10px",
-                  marginTop: "15px",
-                  marginLeft:'40px'
+                  backgroundColor: "#e6fbf0",
+                  marginBottom: "20px",
+                  border: "1px solid #b5ddc8",
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                  width: "110ch",
                 }}
+                sx={{
+                  "& > :not(style)": {
+                    m: 1,
+                    width: "25ch",
+                    mb: 2,
+                    bgcolor: "#e6fbf0",
+                  },
+                }}
+                noValidate
+                autoComplete="off"
               >
-                Save
-              </Button>
-              <VisibilityIcon onClick={handleOpenOtherIndCategory} style={{marginLeft:'-260px',marginBottom:'-10px',cursor:'pointer'}}/>
-              {/* </ListItem> */}
-            </Box>
-          </Box>
-          <Dialog
-          maxWidth='lg'
-        open={openOtherIndCategory}
-        onClose={handleCloseOtherIndCategory}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        {/* {Object.keys(otherIndCategoryStats).map((item,i)=>( */}
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+                {Object.keys(otherIndCategoryResult).map((item, i) => (
+                  <>
+                    {/* <Box> */}
+                    <ListItem
+                      // component="div"
+                      sx={{ display: "flex", flex: "0", fontSize: "15px" }}
+                    >
+                      Title:
+                      <b style={{ marginRight: "20px" }}>
+                        {otherIndCategoryResult[item].text}
+                      </b>
+                      Type:
+                      <b style={{ marginRight: "20px" }}>
+                        {otherIndCategoryResult[item].type}
+                      </b>
+                      BatchNo:
+                      <b style={{ marginRight: "20px" }}>
+                        {otherIndCategoryResult[item].batchNo}
+                      </b>
+                      Count:<b>1</b>
+                    </ListItem>
+                    {/* </Box> */}
+                  </>
+                ))}
+                {/* <ListItem style={{display:'flex'}}> */}
+                <TextField
+                  select
+                  // style={{width:'50px',marginRight:20}}
+                  fullWidth
+                  id="outlined-basic"
+                  label="Choose"
+                  variant="outlined"
+                >
+                  {categoryList.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      onClick={() => {
+                        setCategoryFields(option.label);
+                      }}
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                {categoryFields === "New" ? (
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    label="Title"
+                    variant="outlined"
+                  />
+                ) : null}
+                {categoryFields === "Existing" ? (
+                  <TextField
+                    select
+                    id="outlined-basic"
+                    label="Select"
+                    variant="outlined"
+                  />
+                ) : null}
+                {categoryFields === "New" ? (
+                  <TextField
+                    id="outlined-basic"
+                    label="Description"
+                    variant="outlined"
+                  />
+                ) : null}
 
-            
-          <table>
-            <tr>
-              <td>ID:</td>
-              {/* <th>{console.log("test 1",otherIndCategoryStats[item])}</th> */}
-             
-            </tr>
-            <tr>
-              <td>Full Name:</td>
-              <th>Company</th>
-              <td>Gender:</td>
-              <th>Male</th>
-            </tr>
-            <tr>
-              <td>Current City:</td>
-              <th>Pune</th>
-              <td>Current State:</td>
-              <th>Maharashtra</th>
-             
-            </tr>
-            
-            <tr>
-              <td>Primary Contact no:</td>
-              <th>8668539767</th>
-              <td>Education:</td>
-              <th>Graduate</th> 
-            </tr>
-            <tr>
-            Industry:
-                  <ul>
-                    <li><b>THEATER</b></li>
-                  </ul>
-            </tr>
-            <tr>
-            Categories:
-                    <ul>
-                      <li><b>THEATER</b></li>
-                    </ul>
-            </tr>
-            <tr>
-            Work history:
-                <ul>Company:<b>PVR</b></ul>
-                <ul>Industry:<b>THEATER</b></ul>
-                <ul>Category:<b>CUSTOMER SERVICE</b></ul>
-            </tr>
-          </table>
-          </DialogContentText>
-        </DialogContent>
-          {/* ))} */}
-        <DialogActions>
-          <Button onClick={handleCloseOtherIndCategory}>Disagree</Button>
-          <Button onClick={handleCloseOtherIndCategory} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-        </>
-        )
-        // <OtherIndCategory />;
+                <Button
+                  onClick={() => {
+                    addAPICalls("other-industry-category");
+                  }}
+                  style={{
+                    background: "brown",
+                    color: "white",
+                    width: "10px",
+                    marginTop: "15px",
+                    marginLeft: "40px",
+                  }}
+                >
+                  Save
+                </Button>
+                <VisibilityIcon
+                  onClick={handleOpenOtherIndCategory}
+                  style={{
+                    marginLeft: "-260px",
+                    marginBottom: "-10px",
+                    cursor: "pointer",
+                  }}
+                />
+                {/* </ListItem> */}
+              </Box>
+            </Box>
+            <Dialog
+              maxWidth="lg"
+              open={openOtherIndCategory}
+              onClose={handleCloseOtherIndCategory}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              {/* {Object.keys(otherIndCategoryStats).map((item,i)=>( */}
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <table>
+                    <tr>
+                      <td>ID:</td>
+                      {/* <th>{console.log("test 1",otherIndCategoryStats[item])}</th> */}
+                    </tr>
+                    <tr>
+                      <td>Full Name:</td>
+                      <th>Company</th>
+                      <td>Gender:</td>
+                      <th>Male</th>
+                    </tr>
+                    <tr>
+                      <td>Current City:</td>
+                      <th>Pune</th>
+                      <td>Current State:</td>
+                      <th>Maharashtra</th>
+                    </tr>
+
+                    <tr>
+                      <td>Primary Contact no:</td>
+                      <th>8668539767</th>
+                      <td>Education:</td>
+                      <th>Graduate</th>
+                    </tr>
+                    <tr>
+                      Industry:
+                      <ul>
+                        <li>
+                          <b>THEATER</b>
+                        </li>
+                      </ul>
+                    </tr>
+                    <tr>
+                      Categories:
+                      <ul>
+                        <li>
+                          <b>THEATER</b>
+                        </li>
+                      </ul>
+                    </tr>
+                    <tr>
+                      Work history:
+                      <ul>
+                        Company:<b>PVR</b>
+                      </ul>
+                      <ul>
+                        Industry:<b>THEATER</b>
+                      </ul>
+                      <ul>
+                        Category:<b>CUSTOMER SERVICE</b>
+                      </ul>
+                    </tr>
+                  </table>
+                </DialogContentText>
+              </DialogContent>
+              {/* ))} */}
+              <DialogActions>
+                <Button onClick={handleCloseOtherIndCategory}>Disagree</Button>
+                <Button onClick={handleCloseOtherIndCategory} autoFocus>
+                  Agree
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        );
+      // <OtherIndCategory />;
 
       case "Admin - Candidate Upload Batch":
         return (
           <>
-          <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper',mb:2,mt:6 }}>
-          <TabContext value={tabOfCndBatchValue}>
-            <TabList
-              aria-label="lab API tabs example"
-              
-              onChange={handleTabOfCndtUpBatch}
-              variant="scrollable"
-              scrollButtons={false}
-              style={{border:'1px solid gray',borderRadius:'10px'}}
-              // aria-label="scrollable prevent tabs example"
+            <Box
+              sx={{
+                maxWidth: { xs: 320, sm: 480 },
+                bgcolor: "background.paper",
+                mb: 2,
+                mt: 6,
+              }}
             >
-              <Tab label="IN-PROGRESS" value="1" 
-              onClick={()=>{
-                setFilterTableOnTabs("in-progress")
-                console.log("test set name")
-                getAllData('candidate-upload-batch-admin')
-              }}
-              ></Tab>
-              <Tab label="PENDING APPROVAL" value="2" 
-              onClick={()=>{
-                setFilterTableOnTabs("pending-approval")
-                console.log("test set name")
-                getAllData('candidate-upload-batch-admin')
-              }}
-              />
-              <Tab label="PROCESSED" value="3" 
-              onClick={()=>{
-                setFilterTableOnTabs("processed")
-                getAllData('candidate-upload-batch-admin')
-              }}
-              />
-            </TabList>
-            </TabContext>
-          </Box>
+              <TabContext value={tabOfCndBatchValue}>
+                <TabList
+                  aria-label="lab API tabs example"
+                  onChange={handleTabOfCndtUpBatch}
+                  variant="scrollable"
+                  scrollButtons={false}
+                  style={{ border: "1px solid gray", borderRadius: "10px" }}
+                  // aria-label="scrollable prevent tabs example"
+                >
+                  <Tab
+                    label="IN-PROGRESS"
+                    value="1"
+                    onClick={() => {
+                      setFilterTableOnTabs("in-progress");
+                      console.log("test set name");
+                      getAllData("candidate-upload-batch-admin");
+                    }}
+                  ></Tab>
+                  <Tab
+                    label="PENDING APPROVAL"
+                    value="2"
+                    onClick={() => {
+                      setFilterTableOnTabs("pending-approval");
+                      console.log("test set name");
+                      getAllData("candidate-upload-batch-admin");
+                    }}
+                  />
+                  <Tab
+                    label="PROCESSED"
+                    value="3"
+                    onClick={() => {
+                      setFilterTableOnTabs("processed");
+                      getAllData("candidate-upload-batch-admin");
+                    }}
+                  />
+                </TabList>
+              </TabContext>
+            </Box>
           </>
-        )
+        );
 
-        // <AdminCanUploadBatch />;
+      // <AdminCanUploadBatch />;
 
       case "Candidate Verification":
         return (
@@ -4670,13 +4722,27 @@ const ContentLogic = (props) => {
                     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                       <div
                         style={{
-                          marginLeft: "200px",
-                          marginBottom: "200px",
-                          marginTop: "40px",
+                          marginLeft: "100px",
+                          marginBottom: "100px",
+                          marginTop: "20px",
                         }}
                       >
                         <label htmlFor="upload-photo">
-                          <Button 
+                          <FileUpload
+                            maxUploadFiles={1}
+                            maxFileSize={0.1}
+                            multiFile={false}
+                            rightLabel="to select files "
+                            buttonRemoveLabel="Remove"
+                            acceptedType="image/*"
+                            title="Upload Profile Image (png,jpg)"
+                            allowedExtensions={["jpg", "jpeg", "png"]}
+                            onFilesChange={(e) => {
+                              // Update chosen files
+                              setImage([...e]);
+                            }}
+                          />
+                          {/* <Button 
                             component="span"
                             variant="contained"
                             style={{
@@ -4684,35 +4750,35 @@ const ContentLogic = (props) => {
                               color: "white",
                               fontSize: "15px bold",
                             }}
-                          >
-                            <input
-                            {...register('photo')}
-                              onChange={(e)=>{
-                                  setImage(e.target.files[0])
-                                  console.log("on file",e.target.files);
-                              }}
-                              accept="image/*"
-                              id="upload-photo"
-                              name="upload-photo"
-                              type="file"
-                              style={{ display: "none" }}
-                            />
-                            UPLOAD IMAGE
-                          </Button>
+                          > */}
+
+                          {/* <input
+                            {...register("photo")}
+                            onChange={(e) => {
+                              setImage(e.target.files[0]);
+                              console.log("on file", e.target.files);
+                            }}
+                            accept="image/*"
+                            id="upload-photo"
+                            name="upload-photo"
+                            type="file"
+                            // style={{ display: "none" }}
+                          /> */}
+                          {/* UPLOAD IMAGE
+                          </Button> */}
                         </label>
-                        
-                        <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
+
+                        {/* <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
                           (png,jpg)
-                        </p>
-                           <p style={{color:'red'}}>{errors.photo?.message}</p>
-                            </div>
+                        </p> */}
+                      </div>
                       <div>
                         <ListItem>
                           <TextField
-                          required
-                          {...register('fullname')}
-                           error={errors.fullname ? true : false}
-                           helperText={errors.fullname?.message}
+                            required
+                            {...register("fullname")}
+                            error={errors.fullname ? true : false}
+                            helperText={errors.fullname?.message}
                             id="filled-basic"
                             label="Full Name"
                             variant="filled"
@@ -4926,8 +4992,8 @@ const ContentLogic = (props) => {
                                 // checked={sameAddress}
                                 onChange={(e) => {
                                   if (e.target.checked) {
-                                  setSameAddress(true);
-                                  }else{
+                                    setSameAddress(true);
+                                  } else {
                                     setSameAddress(false);
                                   }
                                 }}
@@ -4946,7 +5012,11 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             multiline
                             disabled={sameAddress}
-                            value={sameAddress?candidateMasterData.perm_address:permCurrAddress()}
+                            value={
+                              sameAddress
+                                ? candidateMasterData.perm_address
+                                : permCurrAddress()
+                            }
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -4968,7 +5038,11 @@ const ContentLogic = (props) => {
                             label="City"
                             variant="filled"
                             disabled={sameAddress}
-                            value={sameAddress?candidateMasterData.perm_city:permCurrCity()}
+                            value={
+                              sameAddress
+                                ? candidateMasterData.perm_city
+                                : permCurrCity()
+                            }
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -4986,7 +5060,11 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="State"
                             disabled={sameAddress}
-                            value={sameAddress?candidateMasterData.perm_state:permCurrState()}
+                            value={
+                              sameAddress
+                                ? candidateMasterData.perm_state
+                                : permCurrState()
+                            }
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -5030,7 +5108,11 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Zip Code"
                             disabled={sameAddress}
-                            value={sameAddress?candidateMasterData.perm_zip:permCurrZip()}
+                            value={
+                              sameAddress
+                                ? candidateMasterData.perm_zip
+                                : permCurrZip()
+                            }
                             onChange={(e) => {
                               !editStatus
                                 ? setCandidateMasterData({
@@ -5051,7 +5133,7 @@ const ContentLogic = (props) => {
                             id="filled-basic"
                             label="Primary email address"
                             required
-                            {...register('email')}
+                            {...register("email")}
                             error={errors.email ? true : false}
                             helperText={errors.email?.message}
                             variant="filled"
@@ -5099,10 +5181,10 @@ const ContentLogic = (props) => {
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
-                            type='number'
+                            type="number"
                             label="Primary contact no"
                             required
-                            {...register('mobileNo')}
+                            {...register("mobileNo")}
                             error={errors.mobileNo ? true : false}
                             helperText={errors.mobileNo?.message}
                             variant="filled"
@@ -5126,7 +5208,7 @@ const ContentLogic = (props) => {
                           />
                           <TextField
                             id="filled-basic"
-                            type='number'
+                            type="number"
                             label="Secondary contact no"
                             variant="filled"
                             value={
@@ -5151,9 +5233,9 @@ const ContentLogic = (props) => {
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
                             id="filled-basic"
-                            type='number'
+                            type="number"
                             label="Aadhar no"
-                            {...register('aadharNo')}
+                            {...register("aadharNo")}
                             error={errors.aadharNo ? true : false}
                             helperText={errors.aadharNo?.message}
                             required
@@ -5228,8 +5310,7 @@ const ContentLogic = (props) => {
                                 color: "white",
                                 margin: "10px",
                               }}
-                              onClick={
-                                handleSubmit(onSubmit)}
+                              onClick={handleSubmit(onSubmit)}
                             >
                               SAVE AND NEXT
                             </Button>
@@ -5243,7 +5324,7 @@ const ContentLogic = (props) => {
                               onClick={() => {
                                 // onSubmitData()
                                 updateAPICalls("candidate-master");
-                                getExperienceData()
+                                getExperienceData();
                               }}
                             >
                               UPDATE AND NEXT
@@ -5252,7 +5333,7 @@ const ContentLogic = (props) => {
                           <Button
                             onClick={() => {
                               handleNext();
-                              getExperienceData()
+                              getExperienceData();
                             }}
                             style={{
                               backgroundColor: "brown",
@@ -5318,50 +5399,60 @@ const ContentLogic = (props) => {
                         <ListItem>
                           {/* <WorkExperiance /> */}
                           <Box sx={{ width: "100%" }}>
-                            <Paper >
+                            <Paper>
                               <TableContainer>
                                 <Table
                                   sx={{ minWidth: 500 }}
                                   aria-labelledby="tableTitle"
                                   size={dense ? "small" : "medium"}
                                 >
-                                 <TableHead>
+                                  <TableHead>
                                     <TableRow>
-                                      <TableCell padding="checkbox"><Checkbox
-                                      color="primary"
-                                    />
-                                    </TableCell>
-                                      <TableCell align="left">Campany Name</TableCell>
-                                      <TableCell align="left">Start Date</TableCell>
-                                      <TableCell align="left">End Date</TableCell>
-                                      <TableCell align="left">Year Of Experiance</TableCell>
+                                      <TableCell padding="checkbox">
+                                        <Checkbox color="primary" />
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        Campany Name
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        Start Date
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        End Date
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        Year Of Experiance
+                                      </TableCell>
                                     </TableRow>
                                   </TableHead>
 
                                   <TableBody>
-                                  {Object.keys(expData).map((item, i) => (
-                                    <>
-                                    
-                                    <TableRow
-                                      hover
-                                      role="checkbox"
-                                      tabIndex={-1}
-                                    >
-                                      <TableCell padding="checkbox">
-                                        <Checkbox color="primary" />
-                                      </TableCell>
-                                      <TableCell
-                                        align="left"
-                                      >
-                                        {expData[item].company}
-                                      </TableCell>
-                                      <TableCell align="left"> {expData[item].startDate}</TableCell>
-                                      <TableCell align="left"> {expData[item].endDate}</TableCell>
-                                      <TableCell align="left"> 2</TableCell>
-                                      {/* <TableCell align="right"> test1</TableCell> */}
-                                    </TableRow>
-                                    </>
-                                  ))}
+                                    {Object.keys(expData).map((item, i) => (
+                                      <>
+                                        <TableRow
+                                          hover
+                                          role="checkbox"
+                                          tabIndex={-1}
+                                        >
+                                          <TableCell padding="checkbox">
+                                            <Checkbox color="primary" />
+                                          </TableCell>
+                                          <TableCell align="left">
+                                            {expData[item].company}
+                                          </TableCell>
+                                          <TableCell align="left">
+                                            {" "}
+                                            {expData[item].startDate}
+                                          </TableCell>
+                                          <TableCell align="left">
+                                            {" "}
+                                            {expData[item].endDate}
+                                          </TableCell>
+                                          <TableCell align="left"> 2</TableCell>
+                                          {/* <TableCell align="right"> test1</TableCell> */}
+                                        </TableRow>
+                                      </>
+                                    ))}
                                   </TableBody>
                                 </Table>
                               </TableContainer>
@@ -5396,47 +5487,45 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem>
                           {/* <AddCertificates /> */}
-                          <Box sx={{ width: '100%' }}>
+                          <Box sx={{ width: "100%" }}>
                             <Paper>
                               <TableContainer>
                                 <Table
                                   sx={{ minWidth: 500 }}
                                   aria-labelledby="tableTitle"
-                                  size={dense ? 'small' : 'medium'}
+                                  size={dense ? "small" : "medium"}
                                 >
                                   <TableHead>
-                                <TableRow>
-                                  <TableCell padding="checkbox"><Checkbox
-                                  color="primary"
-                                />
-                                </TableCell>
-                                  <TableCell align="left">CertificateName</TableCell>
-                                  <TableCell align="left">Certificate Type</TableCell>
-                                  <TableCell align="left">Issued Date</TableCell>
-                                </TableRow>
-                              </TableHead>
+                                    <TableRow>
+                                      <TableCell padding="checkbox">
+                                        <Checkbox color="primary" />
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        CertificateName
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        Certificate Type
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        Issued Date
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableHead>
                                   <TableBody>
-                                    
-                                          <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                          >
-                                            <TableCell padding="checkbox">
-                                              <Checkbox
-                                                color="primary"
-                                              />
-                                            </TableCell>
-                                            <TableCell
-                                              align="left"
-                                            >
-                                              test
-                                            </TableCell>
-                                            <TableCell align="left">Test</TableCell>
-                                            <TableCell align="left">test</TableCell>
-                                            {/* <TableCell align="right">Test</TableCell> */}
-                                            {/* <TableCell align="right">{row.protein}</TableCell> */}
-                                          </TableRow>
+                                    <TableRow
+                                      hover
+                                      role="checkbox"
+                                      tabIndex={-1}
+                                    >
+                                      <TableCell padding="checkbox">
+                                        <Checkbox color="primary" />
+                                      </TableCell>
+                                      <TableCell align="left">test</TableCell>
+                                      <TableCell align="left">Test</TableCell>
+                                      <TableCell align="left">test</TableCell>
+                                      {/* <TableCell align="right">Test</TableCell> */}
+                                      {/* <TableCell align="right">{row.protein}</TableCell> */}
+                                    </TableRow>
                                   </TableBody>
                                 </Table>
                               </TableContainer>
@@ -5524,7 +5613,7 @@ const ContentLogic = (props) => {
                       id="number"
                       label="Company Name"
                       value={workExperianceData.companyId}
-                      {...register2('companyId')}
+                      {...register2("companyId")}
                       error={errors2.companyId ? true : false}
                       helperText={errors2.companyId?.message}
                       onChange={(e) => {
@@ -5533,7 +5622,7 @@ const ContentLogic = (props) => {
                           companyId: e.target.value,
                         });
                       }}
-                      sx={{ width: "30ch" }}
+                      sx={{ width: "25ch" }}
                       variant="filled"
                       type="name"
                     />
@@ -5541,7 +5630,7 @@ const ContentLogic = (props) => {
                       id="name"
                       label="Skills"
                       value={workExperianceData.skillId}
-                      {...register2('skillId')}
+                      {...register2("skillId")}
                       error={errors2.skillId ? true : false}
                       helperText={errors2.skillId?.message}
                       onChange={(e) => {
@@ -5550,7 +5639,7 @@ const ContentLogic = (props) => {
                           skillId: e.target.value,
                         });
                       }}
-                      sx={{ width: "30ch", ml: 4 }}
+                      sx={{ width: "25ch", ml: 4 }}
                       variant="filled"
                     />
                     <TextField
@@ -5559,7 +5648,7 @@ const ContentLogic = (props) => {
                       InputLabelProps={{ shrink: true }}
                       type="date"
                       value={workExperianceData.startDate}
-                      {...register2('startDate')}
+                      {...register2("startDate")}
                       error={errors2.startDate ? true : false}
                       helperText={errors2.startDate?.message}
                       onChange={(e) => {
@@ -5568,15 +5657,18 @@ const ContentLogic = (props) => {
                           startDate: e.target.value,
                         });
                       }}
-                      sx={{ width: "30ch", ml: 4 }}
+                      sx={{ width: "25ch", ml: 4 }}
                       variant="filled"
                     />
                     <TextField
                       id="date"
                       label="End Date"
+                      {...register2("endDate")}
+                      error={errors2.endDate ? true : false}
+                      helperText={errors2.endDate?.message}
                       InputLabelProps={{ shrink: true }}
                       type="date"
-                      sx={{ width: "30ch", ml: 4 }}
+                      sx={{ width: "25ch", ml: 4 }}
                       variant="filled"
                       value={workExperianceData.endDate}
                       onChange={(e) => {
@@ -5585,6 +5677,21 @@ const ContentLogic = (props) => {
                           endDate: e.target.value,
                         });
                       }}
+                    />
+                    <TextField
+                      id="file"
+                      label="Upload Document"
+                      InputLabelProps={{ shrink: true }}
+                      type="file"
+                      sx={{ width: "25ch", ml: 4 }}
+                      variant="filled"
+                      // value={workExperianceData.endDate}
+                      // onChange={(e) => {
+                      //   setWorkExperianceData({
+                      //     ...workExperianceData,
+                      //     endDate: e.target.value,
+                      //   });
+                      // }}
                     />
                   </ListItem>
                   <ListItem>
@@ -5630,11 +5737,14 @@ const ContentLogic = (props) => {
                       id="name"
                       label="Certificate Name"
                       value={certificateData.title}
-                      {...register3('certificateName')}
+                      {...register3("certificateName")}
                       error={errors3.certificateName ? true : false}
                       helperText={errors3.certificateName?.message}
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,title:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          title: e.target.value,
+                        });
                       }}
                       sx={{ width: "45ch" }}
                       variant="filled"
@@ -5643,9 +5753,11 @@ const ContentLogic = (props) => {
                       id="name"
                       label="Certificate Type"
                       value={certificateData.type}
-                      
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,type:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          type: e.target.value,
+                        });
                       }}
                       sx={{ width: "45ch", ml: 4 }}
                       variant="filled"
@@ -5654,11 +5766,14 @@ const ContentLogic = (props) => {
                       id="name"
                       label="Issued By"
                       value={certificateData.issuedBy}
-                      {...register3('issuedBy')}
+                      {...register3("issuedBy")}
                       error={errors3.issuedBy ? true : false}
                       helperText={errors3.issuedBy?.message}
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,issuedBy:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          issuedBy: e.target.value,
+                        });
                       }}
                       sx={{ width: "45ch", ml: 4 }}
                       variant="filled"
@@ -5670,8 +5785,11 @@ const ContentLogic = (props) => {
                       select
                       children
                       value={certificateData.skillId}
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,skillId:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          skillId: e.target.value,
+                        });
                       }}
                       label="Skills"
                       sx={{ width: "45ch" }}
@@ -5681,8 +5799,11 @@ const ContentLogic = (props) => {
                       id="date"
                       label="Issued Date"
                       value={certificateData.issueDate}
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,issueDate:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          issueDate: e.target.value,
+                        });
                       }}
                       InputLabelProps={{ shrink: true }}
                       type="date"
@@ -5699,8 +5820,11 @@ const ContentLogic = (props) => {
                       multiline
                       rows={5}
                       value={certificateData.description}
-                      onChange={(e)=>{
-                        setCertificateData({...certificateData,description:e.target.value})
+                      onChange={(e) => {
+                        setCertificateData({
+                          ...certificateData,
+                          description: e.target.value,
+                        });
                       }}
                       variant="filled"
                     />
@@ -6045,16 +6169,19 @@ const ContentLogic = (props) => {
                 >
                   Save
                 </Button>
-                {candidateConsentVal==="RECEIVED" && candidateCallStatusVal ==="COMPLETED"?<Button
-                  style={{
-                    backgroundColor: "brown",
-                    color: "white",
-                    marginLeft: "10px",
-                  }}
-                  onClick={handleSubmitCndVfn(onSubmitCndVfn)}
-                >
-                  Submit
-                </Button>:null}
+                {candidateConsentVal === "RECEIVED" &&
+                candidateCallStatusVal === "COMPLETED" ? (
+                  <Button
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginLeft: "10px",
+                    }}
+                    onClick={handleSubmitCndVfn(onSubmitCndVfn)}
+                  >
+                    Submit
+                  </Button>
+                ) : null}
                 <Button
                   style={{
                     backgroundColor: "#f5f5f5",
@@ -6070,7 +6197,7 @@ const ContentLogic = (props) => {
                   display: "flex",
                   flexDirection: "column",
                   flexWrap: "nowrap",
-                  alignItems:'flex-start',
+                  alignItems: "flex-start",
                   justifyContent: "space-between",
                 }}
               >
@@ -6087,29 +6214,31 @@ const ContentLogic = (props) => {
                     boxShadow: "0 1px 4px 0.25px #eecacb",
                   }}
                 >
-                  <CardContent style={{display:'flex',}}>
+                  <CardContent style={{ display: "flex" }}>
                     <TextField
                       select
                       required
                       id="candidateConsent"
                       name="candidateConsent"
                       sx={{ width: "30ch" }}
-                      {...register4('candidateConsent')}
+                      {...register4("candidateConsent")}
                       error={errors4.candidateConsent ? true : false}
                       helperText={errors4.candidateConsent?.message}
                       label="Candidate consent"
-                      onChange={(e)=>{
-                        setUpdateCandidateVerificationData(prevState => (
-                          {
-                            ...prevState, 
-                            callCentre: {...prevState.callCentre, candidateConsent: e.target.value}
-                          }
-                        ))
-                        setCandidateConsentVal(e.target.value)
-                        
+                      onChange={(e) => {
+                        setUpdateCandidateVerificationData((prevState) => ({
+                          ...prevState,
+                          callCentre: {
+                            ...prevState.callCentre,
+                            candidateConsent: e.target.value,
+                          },
+                        }));
+                        setCandidateConsentVal(e.target.value);
+                      }}
+                      value={
+                        updateCandidateVerificationData.callCentre
+                          .candidateConsent
                       }
-                    }
-                    value={updateCandidateVerificationData.callCentre.candidateConsent}
                     >
                       {candidateConsent.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -6124,31 +6253,34 @@ const ContentLogic = (props) => {
                       name="callStat"
                       sx={{ width: "30ch", ml: 2 }}
                       label="Call Status"
-                      {...register4('callStat')}
+                      {...register4("callStat")}
                       error={errors4.callStat ? true : false}
                       helperText={errors4.callStat?.message}
-                      onChange={(e)=>{
-                        setUpdateCandidateVerificationData(prevState => (
-                          {
-                            ...prevState, 
-                            callCentre: {...prevState.callCentre, callStatus: e.target.value}
-                          }
-                        ))
-                        setCandidateCallStatusVal(e.target.value)
-                        console.log("testing",e.target.value);
-                      
+                      onChange={(e) => {
+                        setUpdateCandidateVerificationData((prevState) => ({
+                          ...prevState,
+                          callCentre: {
+                            ...prevState.callCentre,
+                            callStatus: e.target.value,
+                          },
+                        }));
+                        setCandidateCallStatusVal(e.target.value);
+                        console.log("testing", e.target.value);
+                      }}
+                      value={
+                        updateCandidateVerificationData.callCentre.callStatus
                       }
-                    }
-                    value={updateCandidateVerificationData.callCentre.callStatus}
                     >
                       {/* {handleCallStatus()} */}
                       {callStatus.map((option) => (
-                        <MenuItem key={option.value} 
-                        // onClick={()=>{
-                        //   setCandidateConsentVal(option.label)
-                        //   console.log("test 1",candidateConsentVal);
-                        // }} 
-                        value={option.value}>
+                        <MenuItem
+                          key={option.value}
+                          // onClick={()=>{
+                          //   setCandidateConsentVal(option.label)
+                          //   console.log("test 1",candidateConsentVal);
+                          // }}
+                          value={option.value}
+                        >
                           {option.label}
                         </MenuItem>
                       ))}
@@ -6161,49 +6293,57 @@ const ContentLogic = (props) => {
                     />
                   </CardContent>
                 </Card>
-                
-                <ListItem 
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flexWrap: "nowrap",
-                  alignItems:'flex-end',
-                  justifyContent:'flex-end',
-                  // marginTop:'-150px',
 
-                }}
+                <ListItem
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    flexWrap: "nowrap",
+                    alignItems: "flex-end",
+                    justifyContent: "flex-end",
+                    // marginTop:'-150px',
+                  }}
                 >
-                  <h3 >Call Centre History (0)</h3>
-                  <Card 
-                style={{
-                  backgroundColor: "#ffeaeb",
-                  marginBottom: 2,
-                  borderRadius: "3px",
-                  border: "1px solid #eecacb",
-                  boxShadow: "0 1px 4px 0.25px #eecacb",
-                }}>
-                  <CardContent>
-                <p style={{marginBottom:'-12x',marginTop:'-12px'}}>13-12-2022 11:48:01 AM</p>
-                <p style={{marginTop:'-12px'}}>Call back</p>
-                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>Consent Pending</p>
-                </CardContent>
-                </Card>
-                  <Card 
-                style={{
-                  backgroundColor: "#ffeaeb",
-                  marginBottom: 2,
-                  borderRadius: "3px",
-                  border: "1px solid #eecacb",
-                  boxShadow: "0 1px 4px 0.25px #eecacb",
-                }}>
-                  <CardContent>
-                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>13-12-2022 11:48:01 AM</p>
-                <p>Call back</p>
-                <p style={{marginBottom:'-12px',marginTop:'-12px'}}>Consent Pending</p>
-                </CardContent>
-                </Card>
+                  <h3>Call Centre History (0)</h3>
+                  <Card
+                    style={{
+                      backgroundColor: "#ffeaeb",
+                      marginBottom: 2,
+                      borderRadius: "3px",
+                      border: "1px solid #eecacb",
+                      boxShadow: "0 1px 4px 0.25px #eecacb",
+                    }}
+                  >
+                    <CardContent>
+                      <p style={{ marginBottom: "-12x", marginTop: "-12px" }}>
+                        13-12-2022 11:48:01 AM
+                      </p>
+                      <p style={{ marginTop: "-12px" }}>Call back</p>
+                      <p style={{ marginBottom: "-12px", marginTop: "-12px" }}>
+                        Consent Pending
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card
+                    style={{
+                      backgroundColor: "#ffeaeb",
+                      marginBottom: 2,
+                      borderRadius: "3px",
+                      border: "1px solid #eecacb",
+                      boxShadow: "0 1px 4px 0.25px #eecacb",
+                    }}
+                  >
+                    <CardContent>
+                      <p style={{ marginBottom: "-12px", marginTop: "-12px" }}>
+                        13-12-2022 11:48:01 AM
+                      </p>
+                      <p>Call back</p>
+                      <p style={{ marginBottom: "-12px", marginTop: "-12px" }}>
+                        Consent Pending
+                      </p>
+                    </CardContent>
+                  </Card>
                 </ListItem>
-                
               </ListItem>
               <ListItem
                 style={{
@@ -6212,7 +6352,6 @@ const ContentLogic = (props) => {
                   flexWrap: "nowrap",
                 }}
               >
-                
                 <FormControlLabel
                   control={<Checkbox />}
                   label="Old Industry:"
@@ -6253,7 +6392,9 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       required
                       sx={{ width: "30ch" }}
                       size="small"
@@ -6267,7 +6408,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       required
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
@@ -6281,7 +6424,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Secondary Mobile"
@@ -6294,7 +6439,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Primary Email"
@@ -6315,7 +6462,9 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       sx={{ width: "30ch" }}
                       size="small"
                       label="Total Exp years"
@@ -6328,7 +6477,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Education"
@@ -6341,7 +6492,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       sx={{ ml: 3, width: "30ch" }}
                       size="small"
                       label="Birthdate"
@@ -6354,7 +6507,9 @@ const ContentLogic = (props) => {
                       }}
                     />
                     <TextField
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       select
                       value={updateCandidateVerificationData.gender}
                       onSelect={(e) => {
@@ -6369,7 +6524,11 @@ const ContentLogic = (props) => {
                     >
                       {gender.map((option) => (
                         <MenuItem
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           key={option.value}
                           value={option.value}
                         >
@@ -6409,26 +6568,30 @@ const ContentLogic = (props) => {
                             // value={item.value}
                             id={i}
                             type={item.type}
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                        size="small"
-                        sx={{ width: "30ch",marginBottom:3 }}
-                        select
-                        label="Industry"
-                        value={updateCandidateVerificationData.industry}
-                        onChange={(e) => {
-                          handleChangea()
-                          setUpdateCandidateVerificationData({
-                            ...updateCandidateVerificationData,
-                            industry: e.target.value,
-                          });
-                        }}
+                            disabled={
+                              candidateConsentVal === "RECEIVED"
+                                ? false
+                                : editStatus
+                            }
+                            size="small"
+                            sx={{ width: "30ch", marginBottom: 3 }}
+                            select
+                            label="Industry"
+                            value={updateCandidateVerificationData.industry}
+                            onChange={(e) => {
+                              handleChangea();
+                              setUpdateCandidateVerificationData({
+                                ...updateCandidateVerificationData,
+                                industry: e.target.value,
+                              });
+                            }}
                           >
-                          {industrySelectField.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
+                            {industrySelectField.map((option) => (
+                              <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
+                          </TextField>
                         );
                       })}
                       {/* <TextField
@@ -6445,14 +6608,18 @@ const ContentLogic = (props) => {
                           });
                         }}
                       > */}
-                        {/* {industrySelectField.map((option) => (
+                      {/* {industrySelectField.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
                             {option.label}
                           </MenuItem>
                         ))}
                       </TextField> */}
                       <Button
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         style={{
                           backgroundColor: "gray",
@@ -6476,32 +6643,41 @@ const ContentLogic = (props) => {
                       </b>
                       {arrCategory.map((item, i) => {
                         return (
-                      <TextField
-                        id={i}
-                        type={item.type}
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                        size="small"
-                        sx={{ width: "30ch",marginBottom:3 }}
-                        select
-                        label="Category"
-                        value={updateCandidateVerificationData.category}
-                        onChange={(e) => {
-                          handleChangeCategory()
-                          setUpdateCandidateVerificationData({
-                            ...updateCandidateVerificationData,
-                            category: e.target.value,
-                          });
-                        }}
-                      >
-                        {industrySelectField.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                      )})}
+                          <TextField
+                            id={i}
+                            type={item.type}
+                            disabled={
+                              candidateConsentVal === "RECEIVED"
+                                ? false
+                                : editStatus
+                            }
+                            size="small"
+                            sx={{ width: "30ch", marginBottom: 3 }}
+                            select
+                            label="Category"
+                            value={updateCandidateVerificationData.category}
+                            onChange={(e) => {
+                              handleChangeCategory();
+                              setUpdateCandidateVerificationData({
+                                ...updateCandidateVerificationData,
+                                category: e.target.value,
+                              });
+                            }}
+                          >
+                            {industrySelectField.map((option) => (
+                              <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        );
+                      })}
                       <Button
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         style={{
                           backgroundColor: "gray",
@@ -6522,151 +6698,206 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
+                      control={
+                        <Checkbox
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
+                        />
+                      }
                       label="Old Company:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
+                      control={
+                        <Checkbox
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
+                        />
+                      }
                       label="Old Designation:"
                     ></FormControlLabel>
                   </ListItem>
                   {arrCurrEmployed.map((item, i) => {
-                        return (
-                  <Card
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      flexWrap: "nowrap",
-                      // justifyContent:'space-around',
-                      maxWidth: 1170,
-                      backgroundColor: "#e6fbf0",
-                      marginBottom: 2,
-                      border: "1px solid #b5ddc8",
-                      boxShadow: "0 1px 4px 0.25px #b5ddc8",
-                    }}
-                  >
-                    <ListItem
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <FormControlLabel
-                        control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
-                        label="Currently Employed?"
-                      ></FormControlLabel>
-                      <ListItem
+                    return (
+                      <Card
                         style={{
                           display: "flex",
                           flexDirection: "row",
                           flexWrap: "nowrap",
+                          // justifyContent:'space-around',
+                          maxWidth: 1170,
+                          backgroundColor: "#e6fbf0",
+                          marginBottom: 2,
+                          border: "1px solid #b5ddc8",
+                          boxShadow: "0 1px 4px 0.25px #b5ddc8",
                         }}
                       >
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "30ch" }}
-                          label="Company Name"
-                          value={
-                            updateCandidateVerificationData.verification
-                              .lastCompany
-                          }
-                          onChange={(e) => {
-                            setUpdateCandidateVerificationData({
-                              ...updateCandidateVerificationData,
-                              verification:{lastCompany: e.target.value},
-                            });
+                        <ListItem
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
                           }}
-                        />
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "30ch", ml: 2 }}
-                          select
-                          label="Industry"
-                          value={
-                            updateCandidateVerificationData.verification
-                              .industry
-                          }
-                          onChange={(e) => {
-                            setUpdateCandidateVerificationData({
-                              ...updateCandidateVerificationData.verification,
-                              industry: e.target.value,
-                            });
-                          }}
-                        />
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "30ch", ml: 2 }}
-                          select
-                          label="Category(Designation)"
-                          value={
-                            updateCandidateVerificationData.verification
-                              .designation
-                          }
-                          onChange={(e) => {
-                            setUpdateCandidateVerificationData({
-                              ...updateCandidateVerificationData.verification,
-                              designation: e.target.value,
-                            });
-                          }}
-                        />
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "10ch", ml: 2 }}
-                          helperText="Start date"
-                          select
-                          label="MM"
-                        />
-                        <TextField
-                          size="small"
-                          sx={{ width: "20ch", ml: 2 }}
-                          select
-                          label="YYYY"
-                        />
-                      </ListItem>
+                        >
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                disabled={
+                                  candidateConsentVal === "RECEIVED"
+                                    ? false
+                                    : editStatus
+                                }
+                              />
+                            }
+                            label="Currently Employed?"
+                          ></FormControlLabel>
+                          <ListItem
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                            }}
+                          >
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "30ch" }}
+                              label="Company Name"
+                              value={
+                                updateCandidateVerificationData.verification
+                                  .lastCompany
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData,
+                                  verification: { lastCompany: e.target.value },
+                                });
+                              }}
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "30ch", ml: 2 }}
+                              select
+                              label="Industry"
+                              value={
+                                updateCandidateVerificationData.verification
+                                  .industry
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData.verification,
+                                  industry: e.target.value,
+                                });
+                              }}
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "30ch", ml: 2 }}
+                              select
+                              label="Category(Designation)"
+                              value={
+                                updateCandidateVerificationData.verification
+                                  .designation
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData.verification,
+                                  designation: e.target.value,
+                                });
+                              }}
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "10ch", ml: 2 }}
+                              helperText="Start date"
+                              select
+                              label="MM"
+                            />
+                            <TextField
+                              size="small"
+                              sx={{ width: "20ch", ml: 2 }}
+                              select
+                              label="YYYY"
+                            />
+                          </ListItem>
 
-                      <ListItem
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          flexWrap: "nowrap",
-                        }}
-                      >
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "10ch", ml: 2 }}
-                          helperText="End date"
-                          select
-                          label="MM"
-                        />
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "20ch", ml: 2 }}
-                          select
-                          label="YYYY"
-                        />
-                        <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                          size="small"
-                          sx={{ width: "40ch", ml: 2 }}
-                          multiline
-                          rows={2}
-                          label="Job Description"
-                        />
-                      </ListItem>
-                    </ListItem>
-                  </Card>
-                  )})}
+                          <ListItem
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                            }}
+                          >
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "10ch", ml: 2 }}
+                              helperText="End date"
+                              select
+                              label="MM"
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "20ch", ml: 2 }}
+                              select
+                              label="YYYY"
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "40ch", ml: 2 }}
+                              multiline
+                              rows={2}
+                              label="Job Description"
+                            />
+                          </ListItem>
+                        </ListItem>
+                      </Card>
+                    );
+                  })}
                   <ListItem>
                     <Button
-                    onClick={addInputCurrEmployed}
-                      disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                      onClick={addInputCurrEmployed}
+                      disabled={
+                        candidateConsentVal === "RECEIVED" ? false : editStatus
+                      }
                       size="small"
                       style={{ backgroundColor: "gray", color: "white" }}
                     >
@@ -6703,7 +6934,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary skill Name"
@@ -6716,7 +6951,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           select
@@ -6739,7 +6978,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 1"
@@ -6754,7 +6997,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Preffered location 2"
@@ -6777,7 +7024,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Primary Lanugage"
@@ -6792,7 +7043,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Secondary Lanugage"
@@ -6807,7 +7062,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Third Lanugage"
@@ -6831,11 +7090,27 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <FormControlLabel
-                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
+                      control={
+                        <Checkbox
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
+                        />
+                      }
                       label="Old Primary Language:"
                     ></FormControlLabel>
                     <FormControlLabel
-                      control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
+                      control={
+                        <Checkbox
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
+                        />
+                      }
                       label="Old Secondary Language:"
                     ></FormControlLabel>
                   </ListItem>
@@ -6867,7 +7142,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current Pincode"
@@ -6880,7 +7159,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current City"
@@ -6893,7 +7176,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Current State"
@@ -6915,7 +7202,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -6948,7 +7239,15 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <FormControlLabel
-                        control={<Checkbox disabled={candidateConsentVal==="RECEIVED"?false:editStatus} />}
+                        control={
+                          <Checkbox
+                            disabled={
+                              candidateConsentVal === "RECEIVED"
+                                ? false
+                                : editStatus
+                            }
+                          />
+                        }
                         label="Same as current address"
                       ></FormControlLabel>
                       <ListItem
@@ -6959,7 +7258,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent Pincode"
@@ -6972,7 +7275,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent City"
@@ -6985,7 +7292,11 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "30ch", ml: 2 }}
                           label="Permanent State"
@@ -7007,7 +7318,11 @@ const ContentLogic = (props) => {
                         }}
                       >
                         <TextField
-                          disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                          disabled={
+                            candidateConsentVal === "RECEIVED"
+                              ? false
+                              : editStatus
+                          }
                           size="small"
                           sx={{ width: "40ch", ml: 2 }}
                           multiline
@@ -7039,7 +7354,11 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Aadhar No"
@@ -7052,7 +7371,11 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Pan No"
@@ -7065,7 +7388,11 @@ const ContentLogic = (props) => {
                         }}
                       />
                       <TextField
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         sx={{ width: "30ch", ml: 2 }}
                         label="Driving Licence no"
@@ -7087,7 +7414,11 @@ const ContentLogic = (props) => {
                       }}
                     >
                       <TextField
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
+                        disabled={
+                          candidateConsentVal === "RECEIVED"
+                            ? false
+                            : editStatus
+                        }
                         size="small"
                         sx={{ width: "40ch", ml: 2 }}
                         multiline
@@ -7199,7 +7530,7 @@ const ContentLogic = (props) => {
                           label="Agent No"
                           variant="filled"
                           disabled={editStatus}
-                          {...register5('agentNo')}
+                          {...register5("agentNo")}
                           error={errors5.agentNo ? true : false}
                           helperText={errors5.agentNo?.message}
                           sx={{ width: "30ch" }}
@@ -7251,7 +7582,7 @@ const ContentLogic = (props) => {
                           label="Full Name"
                           required
                           value={agentMasterData.fullName}
-                          {...register5('fullName')}
+                          {...register5("fullName")}
                           error={errors5.fullName ? true : false}
                           helperText={errors5.fullName?.message}
                           onChange={(e) => {
@@ -7281,7 +7612,10 @@ const ContentLogic = (props) => {
                         />
                       </List>
                       <List sx={{ mb: 5, mt: 5 }}>
-                        <FormLabel sx={{mr: 3 }} id="demo-row-radio-buttons-group-label">
+                        <FormLabel
+                          sx={{ mr: 3 }}
+                          id="demo-row-radio-buttons-group-label"
+                        >
                           Select
                         </FormLabel>
                         {/* <RadioGroup
@@ -7333,7 +7667,7 @@ const ContentLogic = (props) => {
                           label="Email"
                           required
                           disabled={editStatus}
-                          {...register5('email')}
+                          {...register5("email")}
                           error={errors5.email ? true : false}
                           helperText={errors5.email?.message}
                           type="email"
@@ -7353,7 +7687,7 @@ const ContentLogic = (props) => {
                           required
                           type="number"
                           variant="filled"
-                          {...register5('mobileNo')}
+                          {...register5("mobileNo")}
                           error={errors5.mobileNo ? true : false}
                           helperText={errors5.mobileNo?.message}
                           value={agentMasterData.contactNo}
@@ -7374,7 +7708,7 @@ const ContentLogic = (props) => {
                           rows={3}
                           multiline
                           value={agentMasterData.currAddress}
-                          {...register5('currAddress')}
+                          {...register5("currAddress")}
                           error={errors5.currAddress ? true : false}
                           helperText={errors5.currAddress?.message}
                           onChange={(e) => {
@@ -7394,7 +7728,7 @@ const ContentLogic = (props) => {
                           label="Current pincode"
                           required
                           type="name"
-                          {...register5('currPin')}
+                          {...register5("currPin")}
                           error={errors5.currPin ? true : false}
                           helperText={errors5.currPin?.message}
                           value={agentMasterData.currZip}
@@ -7412,7 +7746,7 @@ const ContentLogic = (props) => {
                           label="Current city"
                           required
                           value={agentMasterData.currCity}
-                          {...register5('currCity')}
+                          {...register5("currCity")}
                           error={errors5.currCity ? true : false}
                           helperText={errors5.currCity?.message}
                           onChange={(e) => {
@@ -7430,7 +7764,7 @@ const ContentLogic = (props) => {
                           label="Current state"
                           required
                           value={agentMasterData.currState}
-                          {...register5('currState')}
+                          {...register5("currState")}
                           error={errors5.currState ? true : false}
                           helperText={errors5.currState?.message}
                           onChange={(e) => {
@@ -7446,15 +7780,18 @@ const ContentLogic = (props) => {
                       </List>
                       <List sx={{ mb: 5, mt: 5 }}>
                         <FormControlLabel
-                          control={<Checkbox onChange={(e) => {
-                            if (e.target.checked) {
-                            setSameAddressAgent(true);
-                            }else{
-                              setSameAddressAgent(false);
-                            }
-                          }}/>}
+                          control={
+                            <Checkbox
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSameAddressAgent(true);
+                                } else {
+                                  setSameAddressAgent(false);
+                                }
+                              }}
+                            />
+                          }
                           label="Same as current address"
-
                         />
                       </List>
                       <List>
@@ -7462,7 +7799,11 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           disabled={sameAddressAgent}
                           label="Permanent Address"
-                          value={!sameAddressAgent?agentMasterData.permAddress:agentMasterData.currAddress}
+                          value={
+                            !sameAddressAgent
+                              ? agentMasterData.permAddress
+                              : agentMasterData.currAddress
+                          }
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7483,7 +7824,11 @@ const ContentLogic = (props) => {
                           label="Permanent pincode"
                           type="name"
                           disabled={sameAddressAgent}
-                          value={!sameAddressAgent?agentMasterData.permZip:agentMasterData.currZip}
+                          value={
+                            !sameAddressAgent
+                              ? agentMasterData.permZip
+                              : agentMasterData.currZip
+                          }
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7497,7 +7842,11 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Permanent city"
                           disabled={sameAddressAgent}
-                          value={!sameAddressAgent?agentMasterData.permCity:agentMasterData.currCity}
+                          value={
+                            !sameAddressAgent
+                              ? agentMasterData.permCity
+                              : agentMasterData.currCity
+                          }
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7512,7 +7861,11 @@ const ContentLogic = (props) => {
                           id="filled-basic"
                           label="Permanent state"
                           disabled={sameAddressAgent}
-                          value={!sameAddressAgent?agentMasterData.permState:agentMasterData.currState}
+                          value={
+                            !sameAddressAgent
+                              ? agentMasterData.permState
+                              : agentMasterData.currState
+                          }
                           onChange={(e) => {
                             setAgentMasterData({
                               ...agentMasterData,
@@ -7829,7 +8182,7 @@ const ContentLogic = (props) => {
                     type="name"
                     variant="filled"
                     value={agentPricingTemplateData.templateName}
-                    {...register6('agentTitle')}
+                    {...register6("agentTitle")}
                     error={errors6.agentTitle ? true : false}
                     helperText={errors6.agentTitle?.message}
                     onChange={(e) => {
@@ -8230,7 +8583,7 @@ const ContentLogic = (props) => {
                   label="Title"
                   name="title"
                   value={categoryData.title}
-                  {...register8('title')}
+                  {...register8("title")}
                   error={errors8.title ? true : false}
                   helperText={errors8.title?.message}
                   type="name"
@@ -8320,7 +8673,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Company Name"
                   value={companyData.companyName}
-                  {...register9('title')}
+                  {...register9("title")}
                   error={errors9.title ? true : false}
                   helperText={errors9.title?.message}
                   variant="filled"
@@ -8423,7 +8776,7 @@ const ContentLogic = (props) => {
                   label="Title"
                   type="name"
                   value={industryData.title}
-                  {...register10('title')}
+                  {...register10("title")}
                   error={errors10.title ? true : false}
                   helperText={errors10.title?.message}
                   onChange={(e) => {
@@ -8498,7 +8851,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Title"
                   type="name"
-                  {...register11('rName')}
+                  {...register11("rName")}
                   error={errors11.rName ? true : false}
                   helperText={errors11.rName?.message}
                   variant="filled"
@@ -8630,7 +8983,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Title"
                   type="name"
-                  {...register12('title')}
+                  {...register12("title")}
                   error={errors12.title ? true : false}
                   helperText={errors12.title?.message}
                   variant="filled"
@@ -8706,7 +9059,7 @@ const ContentLogic = (props) => {
                     label="Plan Name"
                     variant="filled"
                     disabled={editStatus}
-                    {...register13('title')}
+                    {...register13("title")}
                     error={errors13.title ? true : false}
                     helperText={errors13.title?.message}
                     value={subscriptionData.planName}
@@ -8833,7 +9186,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Full Name"
                   variant="filled"
-                  {...registerUser('fullName')}
+                  {...registerUser("fullName")}
                   error={errorsUsers.fullName ? true : false}
                   helperText={errorsUsers.fullName?.message}
                   value={
@@ -8894,7 +9247,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Email"
                   variant="filled"
-                  {...registerUser('email')}
+                  {...registerUser("email")}
                   error={errorsUsers.email ? true : false}
                   helperText={errorsUsers.email?.message}
                   value={!editStatus ? userData.email : updateUserData.email}
@@ -8912,7 +9265,7 @@ const ContentLogic = (props) => {
                   required
                   id="filled-basic"
                   label="Contact no"
-                  {...registerUser('mobileNo')}
+                  {...registerUser("mobileNo")}
                   error={errorsUsers.mobileNo ? true : false}
                   helperText={errorsUsers.mobileNo?.message}
                   value={
@@ -8934,7 +9287,7 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Role"
-                  {...registerUser('role')}
+                  {...registerUser("role")}
                   error={errorsUsers.role ? true : false}
                   helperText={errorsUsers.role?.message}
                   value={!editStatus ? userData.roleId : updateUserData.roleId}
@@ -8964,7 +9317,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current Address"
                   variant="filled"
-                  {...registerUser('currAddress')}
+                  {...registerUser("currAddress")}
                   error={errorsUsers.currAddress ? true : false}
                   helperText={errorsUsers.currAddress?.message}
                   value={
@@ -8993,7 +9346,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current pincode"
                   variant="filled"
-                  {...registerUser('currPin')}
+                  {...registerUser("currPin")}
                   error={errorsUsers.currPin ? true : false}
                   helperText={errorsUsers.currPin?.message}
                   value={
@@ -9013,7 +9366,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Current city"
                   variant="filled"
-                  {...registerUser('currCity')}
+                  {...registerUser("currCity")}
                   error={errorsUsers.currCity ? true : false}
                   helperText={errorsUsers.currCity?.message}
                   value={
@@ -9033,7 +9386,7 @@ const ContentLogic = (props) => {
                   select
                   id="filled-basic"
                   label="Current State"
-                  {...registerUser('currState')}
+                  {...registerUser("currState")}
                   error={errorsUsers.currState ? true : false}
                   helperText={errorsUsers.currState?.message}
                   value={
@@ -9060,13 +9413,17 @@ const ContentLogic = (props) => {
               <List>
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox onChange={(e) => {
-                      if (e.target.checked) {
-                      setSameAddress(true);
-                      }else{
-                        setSameAddress(false);
-                      }
-                    }}/>}
+                    control={
+                      <Checkbox
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSameAddress(true);
+                          } else {
+                            setSameAddress(false);
+                          }
+                        }}
+                      />
+                    }
                     label="Same as current address"
                   />
                 </FormGroup>
@@ -9078,7 +9435,9 @@ const ContentLogic = (props) => {
                   label="Permanent Address"
                   variant="filled"
                   disabled={sameAddress}
-                  value={sameAddress?userData.currAddress:permCurrUserAddss()}
+                  value={
+                    sameAddress ? userData.currAddress : permCurrUserAddss()
+                  }
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({
@@ -9100,7 +9459,7 @@ const ContentLogic = (props) => {
                   id="filled-basic"
                   label="Permanent pincode"
                   disabled={sameAddress}
-                  value={sameAddress?userData.currZip:permCurrUserZip()}
+                  value={sameAddress ? userData.currZip : permCurrUserZip()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permZip: e.target.value })
@@ -9117,7 +9476,7 @@ const ContentLogic = (props) => {
                   label="Permanent city"
                   variant="filled"
                   disabled={sameAddress}
-                  value={sameAddress?userData.currCity:permCurrUserCity()}
+                  value={sameAddress ? userData.currCity : permCurrUserCity()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permCity: e.target.value })
@@ -9135,7 +9494,7 @@ const ContentLogic = (props) => {
                   label="Permanent State"
                   variant="filled"
                   disabled={sameAddress}
-                  value={sameAddress?userData.currState:permCurrUserState()}
+                  value={sameAddress ? userData.currState : permCurrUserState()}
                   onChange={(e) => {
                     !editStatus
                       ? setUserData({ ...userData, permState: e.target.value })
@@ -9358,14 +9717,14 @@ const ContentLogic = (props) => {
   };
 
   // state for open confirmation modal of admin candidate upload batch module
-  const [openConfirmation,setOpenConfirmation] = useState(false)
+  const [openConfirmation, setOpenConfirmation] = useState(false);
 
-  const handleCloseConfirmation = () =>{
-    setOpenConfirmation(false)
-  }
-  const handleOpenConfirmation = () =>{
-    setOpenConfirmation(true)
-  }
+  const handleCloseConfirmation = () => {
+    setOpenConfirmation(false);
+  };
+  const handleOpenConfirmation = () => {
+    setOpenConfirmation(true);
+  };
 
   const handleTableDesign = () => {
     const handleModalsInputs = (
@@ -9556,7 +9915,7 @@ const ContentLogic = (props) => {
                         <MenuItem
                           key={item}
                           value={candidateUploadBatchAdminData[item].id}
-                        >                          
+                        >
                           <ListItemText
                             primary={
                               // candidateUploadBatchAdminData===null?"null":
@@ -9564,8 +9923,8 @@ const ContentLogic = (props) => {
                             }
                           />
                         </MenuItem>
-                       )
-                     )}
+                      )
+                    )}
                   </Select>
                 </List>
                 <tr>
@@ -9605,9 +9964,9 @@ const ContentLogic = (props) => {
                     select
                     fullWidth
                     value={batchNo.batchId}
-                    {...register7('batchNum')}
-                      error={errors7.batchNum ? true : false}
-                      helperText={errors7.batchNum?.message}
+                    {...register7("batchNum")}
+                    error={errors7.batchNum ? true : false}
+                    helperText={errors7.batchNum?.message}
                     variant="outlined"
                     onChange={(e) => {
                       setBatchNo({
@@ -9630,16 +9989,16 @@ const ContentLogic = (props) => {
                     Assigned To
                   </InputLabel>
                   <TextField
-                  select
+                    select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     // multiple
                     fullWidth
                     value={createBatchPriorityData.id}
                     variant="outlined"
-                    {...register7('assignedTo')}
-                      error={errors7.assignedTo ? true : false}
-                      helperText={errors7.assignedTo?.message}
+                    {...register7("assignedTo")}
+                    error={errors7.assignedTo ? true : false}
+                    helperText={errors7.assignedTo?.message}
                     onChange={(e) => {
                       setCreateBatchPriorityData({
                         ...createBatchPriorityData,
@@ -9678,9 +10037,7 @@ const ContentLogic = (props) => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseAddBtchprty}>Close</Button>
-                <Button
-                  onClick={handleSubmitBatchPrty(onSubmitBatchPrty)}
-                >
+                <Button onClick={handleSubmitBatchPrty(onSubmitBatchPrty)}>
                   Save
                 </Button>
               </DialogActions>
@@ -9778,121 +10135,151 @@ const ContentLogic = (props) => {
           )}
         </Dialog>
         {/* dialog for the confirmation page for the admin candidate upload batch module */}
-      <div>
-      <Dialog open={openApproval?openConfirmation:false} onClose={handleCloseConfirmation} maxWidth='lg'>
-          {console.log("test 1",confirmationData)},
-            <DialogTitle sx={{mr:30}}>Confirmation - Batch no - {confirmationData.id}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          Are you sure you want to approve? 
-          </DialogContentText>
-          {/* <ListItem> */}
-          {/* {console.log("confirm data",confirmationData)} */}
-          <b>Batch Details</b>
-          {/* </ListItem> */}
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-            height:'40px',
-            fontSize:'14px',
+        <div>
+          <Dialog
+            open={openApproval ? openConfirmation : false}
+            onClose={handleCloseConfirmation}
+            maxWidth="lg"
+          >
+            {console.log("test 1", confirmationData)},
+            <DialogTitle sx={{ mr: 30 }}>
+              Confirmation - Batch no - {confirmationData.id}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to approve?
+              </DialogContentText>
+              {/* <ListItem> */}
+              {/* {console.log("confirm data",confirmationData)} */}
+              <b>Batch Details</b>
+              {/* </ListItem> */}
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
                   maxWidth: 845,
                   bgcolor: "#e6fbf0",
                   border: "1px solid #b5ddc8",
                   boxShadow: "0 1px 4px 0.25px #b5ddc8",
-                }}>
+                }}
+              >
                 <p>Owner:</p>
                 <b>{confirmationData.createdBy}</b>
-          </Card>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-            height:'40px',
-            fontSize:'14px',
+              </Card>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
                   maxWidth: 845,
                   bgcolor: "#ffeee9",
                   border: "1px solid #e3c5c5",
                   boxShadow: "0 1px 4px 0.25px #e3c5c5",
-                }}>
+                }}
+              >
                 <p>Role:</p>
                 <b>{confirmationData.role}</b>
-          </Card>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-            height:'40px',
-            fontSize:'14px',
-            maxWidth: 845,
-            bgcolor: "#e6fbf0",
-            border: "1px solid #b5ddc8",
-            boxShadow: "0 1px 4px 0.25px #b5ddc8"
-          }}>
-            <p>Pricing Template:</p>
-          {openApproval?Object.keys(confirmationData).map((item,i)=>(
-            console.log("test temp",confirmationData[item].templateName),
-            <>
-                <b>{confirmationData[item].templateName}</b>
-                </>
-          )):null}
-          </Card>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-            height:'40px',
-            fontSize:'14px',
-                  maxWidth: 845,
-                  bgcolor: "#ffeee9",
-                  border: "1px solid #e3c5c5",
-                  boxShadow: "0 1px 4px 0.25px #e3c5c5",
-                }}>
-                <p>Count:</p>
-                <b>{confirmationData.count}</b>
-          </Card>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-            height:'40px',
-            fontSize:'14px',
+              </Card>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
                   maxWidth: 845,
                   bgcolor: "#e6fbf0",
                   border: "1px solid #b5ddc8",
-                  boxShadow: "0 1px 4px 0.25px #b5ddc8"
-                }}>
-                <p>Approved:</p>
-                <b>{confirmationData.approvedCount}</b>
-          </Card>
-          <Card sx={{
-            display:'flex',
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',  
-            height:'40px',
-            fontSize:'14px',
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                }}
+              >
+                <p>Pricing Template:</p>
+                {openApproval
+                  ? Object.keys(confirmationData).map(
+                      (item, i) => (
+                        console.log(
+                          "test temp",
+                          confirmationData[item].templateName
+                        ),
+                        (
+                          <>
+                            <b>{confirmationData[item].templateName}</b>
+                          </>
+                        )
+                      )
+                    )
+                  : null}
+              </Card>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
                   maxWidth: 845,
                   bgcolor: "#ffeee9",
                   border: "1px solid #e3c5c5",
                   boxShadow: "0 1px 4px 0.25px #e3c5c5",
-                }}>
+                }}
+              >
+                <p>Count:</p>
+                <b>{confirmationData.count}</b>
+              </Card>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
+                  maxWidth: 845,
+                  bgcolor: "#e6fbf0",
+                  border: "1px solid #b5ddc8",
+                  boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                }}
+              >
+                <p>Approved:</p>
+                <b>{confirmationData.approvedCount}</b>
+              </Card>
+              <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "40px",
+                  fontSize: "14px",
+                  maxWidth: 845,
+                  bgcolor: "#ffeee9",
+                  border: "1px solid #e3c5c5",
+                  boxShadow: "0 1px 4px 0.25px #e3c5c5",
+                }}
+              >
                 <p>Rejected:</p>
                 <b>{confirmationData.rejectedCount}</b>
-          </Card>
-        </DialogContent>
-        
-        <DialogActions>
-          <Button onClick={handleCloseConfirmation}>No</Button>
-          <Button onClick={()=>addAPICalls('candidate-upload-batch-admin')}>Yes</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+              </Card>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseConfirmation}>No</Button>
+              <Button
+                onClick={() => addAPICalls("candidate-upload-batch-admin")}
+              >
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </Toolbar>
     );
     return handleModalsInputs;
@@ -10032,7 +10419,7 @@ const ContentLogic = (props) => {
     filterTableOnTabs,
     setConfirmationData,
     confirmationData,
-    setOpenApproval
+    setOpenApproval,
   };
 
   return StateContainer;

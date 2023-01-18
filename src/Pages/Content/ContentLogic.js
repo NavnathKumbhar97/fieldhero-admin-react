@@ -521,9 +521,9 @@ const ContentLogic = (props) => {
   const [workExperianceData, setWorkExperianceData] = useState({
     companyId: 5,
     description: "",
-    endDate: "2020-10-11T15:56:28+11:00",
+    endDate: moment("").date(),
     skillId: [2, 3, 4],
-    startDate:"",
+    startDate:null,
   });
   const [expData, setExptData] = useState([]);
   const [candidateId, setCandidateId] = useState("");
@@ -5622,7 +5622,7 @@ const ContentLogic = (props) => {
                           companyId: e.target.value,
                         });
                       }}
-                      sx={{ width: "25ch" }}
+                      sx={{ width: "30ch" }}
                       variant="filled"
                       type="name"
                     />
@@ -5639,7 +5639,7 @@ const ContentLogic = (props) => {
                           skillId: e.target.value,
                         });
                       }}
-                      sx={{ width: "25ch", ml: 4 }}
+                      sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                     />
                     <TextField
@@ -5657,7 +5657,7 @@ const ContentLogic = (props) => {
                           startDate: e.target.value,
                         });
                       }}
-                      sx={{ width: "25ch", ml: 4 }}
+                      sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                     />
                     <TextField
@@ -5668,7 +5668,7 @@ const ContentLogic = (props) => {
                       helperText={errors2.endDate?.message}
                       InputLabelProps={{ shrink: true }}
                       type="date"
-                      sx={{ width: "25ch", ml: 4 }}
+                      sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
                       value={workExperianceData.endDate}
                       onChange={(e) => {
@@ -5678,7 +5678,7 @@ const ContentLogic = (props) => {
                         });
                       }}
                     />
-                    <TextField
+                    {/* <TextField
                       id="file"
                       label="Upload Document"
                       InputLabelProps={{ shrink: true }}
@@ -5692,7 +5692,7 @@ const ContentLogic = (props) => {
                       //     endDate: e.target.value,
                       //   });
                       // }}
-                    />
+                    /> */}
                   </ListItem>
                   <ListItem>
                     <TextField

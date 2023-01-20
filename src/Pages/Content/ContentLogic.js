@@ -4708,6 +4708,79 @@ const ContentLogic = (props) => {
     }
   };
 
+  function WorkExperianceCol(sr, document, value, upload, status, comments) {
+    return { sr, document, value, upload, status, comments };
+  }
+  
+  const rowsAgentMaster = [
+    WorkExperianceCol(
+      1,
+      "Pan card",
+      <p>Pan Card</p>,
+      // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" />,
+      4.0
+    ),
+    WorkExperianceCol(
+      2,
+      "Proof of identity",
+      <TextField sx={{ width: "30ch" }} select label="Select" id="outlined-basic" variant="outlined" />,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" />
+    ),
+    WorkExperianceCol(
+      3,
+      "Proof of address",
+      <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" /> 
+    ),
+    WorkExperianceCol(
+      4,
+      "Bank Document",
+      <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" />
+    ),
+  ];
+  
+  const ProfessionalTab=()=> {
+    return (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Sr</TableCell>
+              <TableCell align="center">Documents</TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center">Value</TableCell>
+              <TableCell align="center">Upload</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Comment</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rowsAgentMaster.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.sr}
+                </TableCell>
+                <TableCell align="center">{row.document}</TableCell>
+                <TableCell align="center">{row.value}</TableCell>
+                <TableCell align="right">{row.upload}</TableCell>
+                <TableCell align="right">{row.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
   // its handle the module modal inputs
   const handleModalInput = () => {
     switch (pageName) {
@@ -8118,7 +8191,7 @@ const ContentLogic = (props) => {
                       />
                     </List>
                     <List>
-                      <ProfessionalTab />
+                      {ProfessionalTab()}
                     </List>
                     <List>
                       <Button

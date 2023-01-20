@@ -461,6 +461,11 @@ const ContentLogic = (props) => {
     lastCompany: 0,
     designation: 0,
   });
+  const [agentMasterPan,setAgentMasterPan] = useState([])
+  const [agentMasterPOI,setAgentMasterPOI] = useState()
+  const [agentMasterPOA,setAgentMasterPOA] = useState()
+  const [agentMasterBankDoc,setAgentMasterBankDoc] = useState()
+  
   // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
@@ -2576,6 +2581,35 @@ const ContentLogic = (props) => {
           setOpenErrtMsg(true);
         }
         console.error("There was an error!- uploadImage", error);
+      });
+  };
+  const addAgentMasterDocs = async (id) => {
+    const formData = new FormData();
+    // console.log(image.forEach((file) =>formData.append("image", file)));
+    agentMasterPan.forEach((files) => formData.append("file", files));
+    // formData.append('file',agentMasterPan)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-agent-master/${14}`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadAgentMasterDoc", error);
       });
   };
 
@@ -4711,6 +4745,7 @@ const ContentLogic = (props) => {
   function WorkExperianceCol(sr, document, value, upload, status, comments) {
     return { sr, document, value, upload, status, comments };
   }
+
   
   const rowsAgentMaster = [
     WorkExperianceCol(
@@ -4719,7 +4754,11 @@ const ContentLogic = (props) => {
       <p>Pan Card</p>,
       // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" />,
+      <input type="file" onChange={(e)=>{
+        let test=e.target.files
+        setAgentMasterPan([...test]);
+        console.log("on file", e.target.files);
+      }}/>,
       4.0
     ),
     WorkExperianceCol(
@@ -4727,7 +4766,11 @@ const ContentLogic = (props) => {
       "Proof of identity",
       <TextField sx={{ width: "30ch" }} select label="Select" id="outlined-basic" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" />
+      <input type="file" onChange={(e)=>{
+        let test=e.target.files
+        setAgentMasterPan([...test]);
+        console.log("on file", e.target.files);
+      }}/>
     ),
     WorkExperianceCol(
       3,
@@ -4741,7 +4784,8 @@ const ContentLogic = (props) => {
       "Bank Document",
       <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" />
+      <input type="file" />,
+      
     ),
   ];
   
@@ -4773,6 +4817,7 @@ const ContentLogic = (props) => {
                 <TableCell align="center">{row.value}</TableCell>
                 <TableCell align="right">{row.upload}</TableCell>
                 <TableCell align="right">{row.status}</TableCell>
+                <Button onClick={addAgentMasterDocs}>Upload</Button>
               </TableRow>
             ))}
           </TableBody>

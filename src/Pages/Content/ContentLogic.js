@@ -461,7 +461,7 @@ const ContentLogic = (props) => {
     lastCompany: 0,
     designation: 0,
   });
-  const [agentMasterPan,setAgentMasterPan] = useState([])
+  const [agentMasterPan,setAgentMasterPan] = useState()
   const [agentMasterPOI,setAgentMasterPOI] = useState()
   const [agentMasterPOA,setAgentMasterPOA] = useState()
   const [agentMasterBankDoc,setAgentMasterBankDoc] = useState()
@@ -794,6 +794,10 @@ const ContentLogic = (props) => {
     currCity: Yup.string().required("Current city is required"),
     currState: Yup.string().required("Current state is required"),
   });
+
+   // state for open confirmation modal of admin candidate upload batch module
+   const [openConfirmation, setOpenConfirmation] = useState(false);
+
 
   const {
     register,
@@ -2585,13 +2589,15 @@ const ContentLogic = (props) => {
   };
   const addAgentMasterDocs = async (id) => {
     const formData = new FormData();
-    // console.log(image.forEach((file) =>formData.append("image", file)));
-    agentMasterPan.forEach((files) => formData.append("file", files));
-    // formData.append('file',agentMasterPan)
+    // agentMasterPan.forEach((files) => formData.append("file", files));
+    formData.append('file',agentMasterPan)
+    formData.append('file',agentMasterPOI)
+    formData.append('file',agentMasterPOA)
+    formData.append('file',agentMasterBankDoc)
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${14}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${id}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3137,7 +3143,8 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              console.log(response.data.message);
+              console.log(response.data.data);
+              addAgentMasterDocs(response.data.data.id)
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
@@ -4746,6 +4753,18 @@ const ContentLogic = (props) => {
     return { sr, document, value, upload, status, comments };
   }
 
+  const handleChangeFileUpload1 = (event) => {
+    setAgentMasterPan(event.target.files[0]);
+  };
+  const handleChangeFileUpload2 = (event) => {
+    setAgentMasterPOI(event.target.files[0]);
+  };
+  const handleChangeFileUpload3 = (event) => {
+    setAgentMasterPOA(event.target.files[0]);
+  };
+  const handleChangeFileUpload4 = (event) => {
+    setAgentMasterBankDoc(event.target.files[0]);
+  };
   
   const rowsAgentMaster = [
     WorkExperianceCol(
@@ -4754,11 +4773,7 @@ const ContentLogic = (props) => {
       <p>Pan Card</p>,
       // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={(e)=>{
-        let test=e.target.files
-        setAgentMasterPan([...test]);
-        console.log("on file", e.target.files);
-      }}/>,
+      <input type="file" onChange={handleChangeFileUpload1}/>,
       4.0
     ),
     WorkExperianceCol(
@@ -4766,25 +4781,21 @@ const ContentLogic = (props) => {
       "Proof of identity",
       <TextField sx={{ width: "30ch" }} select label="Select" id="outlined-basic" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={(e)=>{
-        let test=e.target.files
-        setAgentMasterPan([...test]);
-        console.log("on file", e.target.files);
-      }}/>
+      <input type="file" onChange={handleChangeFileUpload2}/>
     ),
     WorkExperianceCol(
       3,
       "Proof of address",
       <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" /> 
+      <input type="file" onChange={handleChangeFileUpload3}/> 
     ),
     WorkExperianceCol(
       4,
       "Bank Document",
       <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" />,
+      <input type="file" onChange={handleChangeFileUpload4}/>,
       
     ),
   ];
@@ -4817,7 +4828,7 @@ const ContentLogic = (props) => {
                 <TableCell align="center">{row.value}</TableCell>
                 <TableCell align="right">{row.upload}</TableCell>
                 <TableCell align="right">{row.status}</TableCell>
-                <Button onClick={addAgentMasterDocs}>Upload</Button>
+                {/* <Button onClick={addAgentMasterDocs}>Upload</Button> */}
               </TableRow>
             ))}
           </TableBody>
@@ -9833,9 +9844,6 @@ const ContentLogic = (props) => {
     );
     return commonModal;
   };
-
-  // state for open confirmation modal of admin candidate upload batch module
-  const [openConfirmation, setOpenConfirmation] = useState(false);
 
   const handleCloseConfirmation = () => {
     setOpenConfirmation(false);

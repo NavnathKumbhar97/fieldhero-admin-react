@@ -2997,8 +2997,8 @@ const ContentLogic = (props) => {
   // download excel template on candidate upload batch module
   const onDownload = () => {
     const link = document.createElement("a");
-    link.download = `download.xlsx`;
-    link.href = "./download.xlsx";
+    link.download = `bulk-candidate-upload-template.xlsx`;
+    link.href = "../../Images/bulk-candidate-upload-template.xlsx";
     link.click();
   };
 

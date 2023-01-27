@@ -116,6 +116,7 @@ const ContentLogic = (props) => {
 
   // state for the admin candidate upload batch module
   const [confirmationData, setConfirmationData] = useState([]);
+  const [uploadBulkData, setUploadBulkData] = useState();
   const [openApproval, setOpenApproval] = useState(true);
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [tabOfCndBatchValue, setTabOfCndBatchValue] = useState("1");
@@ -2557,7 +2558,7 @@ const ContentLogic = (props) => {
         setLoader(false);
       });
   };
-
+  // upload profile image of candidate master module 
   const addProfileImg = async (id) => {
     const formData = new FormData();
     // console.log(image.forEach((file) =>formData.append("image", file)));
@@ -2587,6 +2588,37 @@ const ContentLogic = (props) => {
         console.error("There was an error!- uploadImage", error);
       });
   };
+
+  const addAdminCndUpl = async (id) => {
+    const formData = new FormData();
+    // uploadBulkData.forEach((file) => formData.append("file", file));
+    formData.append('file',uploadBulkData)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadImage", error);
+      });
+  };
+
+  //upload documents of agent master module
   const addAgentMasterDocs = async (id) => {
     const formData = new FormData();
     // agentMasterPan.forEach((files) => formData.append("file", files));
@@ -9978,6 +10010,10 @@ const ContentLogic = (props) => {
                       id="upload-photo"
                       name="upload-photo"
                       type="file"
+                      onChange={(e)=>{
+                        setUploadBulkData(e.target.files[0])
+                      }}
+                      accept=".xlsx"
                       style={{ display: "none" }}
                     />
                     Select File
@@ -10063,7 +10099,7 @@ const ContentLogic = (props) => {
             <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
             <Button
               onClick={() => {
-                updateAPICalls("candidate-upload-batch-admin");
+               { editStatus? updateAPICalls("candidate-upload-batch-admin"):addAdminCndUpl()}
                 handleCloseAdminCanUplBtch();
               }}
             >

@@ -18,6 +18,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Outlet } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
+import XLSX from 'xlsx';
+import { read,utils } from 'xlsx';
+
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -9884,6 +9887,29 @@ const ContentLogic = (props) => {
     setOpenConfirmation(true);
   };
 
+  const [exData,setExData] = useState([])
+
+  const handleFileUploadEx = (event) => {
+  //   setUploadBulkData(event.target.files[0])
+  // }
+  // const handleFileUploadExp = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const binaryData = e.target.result;
+      const workbook = read(binaryData,{type:'binary'})
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetData = utils.sheet_to_json(sheet);
+      setExData(sheetData);
+      console.log("sheet data : ",workbook);
+    };
+
+    reader.readAsBinaryString(file);
+    console.log("ex data --- ",exData);
+  };
+
+
   const handleTableDesign = () => {
     const handleModalsInputs = (
       <Toolbar
@@ -10010,9 +10036,9 @@ const ContentLogic = (props) => {
                       id="upload-photo"
                       name="upload-photo"
                       type="file"
-                      onChange={(e)=>{
+                      onChange={(e)=>{ 
                         setUploadBulkData(e.target.files[0])
-                      }}
+                        handleFileUploadEx(e)}}
                       accept=".xlsx"
                       style={{ display: "none" }}
                     />

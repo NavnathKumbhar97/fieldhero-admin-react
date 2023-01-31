@@ -18,9 +18,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Outlet } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import { read,utils } from 'xlsx';
-
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -119,6 +118,7 @@ const ContentLogic = (props) => {
 
   // state for the admin candidate upload batch module
   const [confirmationData, setConfirmationData] = useState([]);
+  const [exData,setExData] = useState([])
   const [uploadBulkData, setUploadBulkData] = useState();
   const [openApproval, setOpenApproval] = useState(true);
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
@@ -2599,12 +2599,13 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.status == 200) {
+    .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
+      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+          addBulkDataAdminCnd()
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
         } else {
@@ -2653,6 +2654,34 @@ const ContentLogic = (props) => {
         console.error("There was an error!- uploadAgentMasterDoc", error);
       });
   };
+
+  const addBulkDataAdminCnd = () =>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+          .dataPost(`/v1/admin/candidate-upload-batches`, exData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // addProfileImg(response.data.data.id);
+              // getCandidateMasterAPIcall();
+              setOpenAlertMsg(true);
+              // handleNext();
+              console.log("response of admin candidate upload file :", response.data.data);
+            } else {
+              setOpenErrtMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+  }
 
   const EnhancedTableHead = (props) => {
     const {
@@ -9887,28 +9916,22 @@ const ContentLogic = (props) => {
     setOpenConfirmation(true);
   };
 
-  const [exData,setExData] = useState([])
-
   const handleFileUploadEx = (event) => {
-  //   setUploadBulkData(event.target.files[0])
-  // }
-  // const handleFileUploadExp = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const binaryData = e.target.result;
-      const workbook = read(binaryData,{type:'binary'})
+      const workbook = XLSX.read(binaryData,{type:'binary'})
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const sheetData = utils.sheet_to_json(sheet);
+      const sheetData = XLSX.utils.sheet_to_json(sheet);
       setExData(sheetData);
-      console.log("sheet data : ",workbook);
+      console.log("sheet data : ",sheetData);
     };
 
     reader.readAsBinaryString(file);
     console.log("ex data --- ",exData);
   };
-
 
   const handleTableDesign = () => {
     const handleModalsInputs = (
@@ -10033,6 +10056,7 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <input
+                    required
                       id="upload-photo"
                       name="upload-photo"
                       type="file"

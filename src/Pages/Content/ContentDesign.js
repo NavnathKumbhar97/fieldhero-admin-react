@@ -259,9 +259,8 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].timestamp}</TableCell>
+                  <TableCell align="left">{moment(tblData[item].timestamp).format("DD/MM/YYYY")}</TableCell>
                   <TableCell align="left">{tblData[item].count}</TableCell>
-                  <TableCell align="left">{tblData[item].status}</TableCell>
                   <TableCell align="left">{tblData[item].status}</TableCell>
                   <TableCell align="left">
                     {tblData[item].approvedCount}

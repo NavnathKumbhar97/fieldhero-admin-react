@@ -18,6 +18,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Outlet } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
+import * as XLSX from 'xlsx/xlsx.mjs';
+import { read,utils } from 'xlsx';
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -114,8 +116,15 @@ const ContentLogic = (props) => {
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
+  //state for candidate upload batch moduel
+  const [bulkUpload,setBulkUpload] = useState([])
+  const [uploadBulkCnd, setUploadBulkCnd] = useState();
+
+
   // state for the admin candidate upload batch module
   const [confirmationData, setConfirmationData] = useState([]);
+  const [bulkData,setBulkData] = useState([])
+  const [uploadBulkData, setUploadBulkData] = useState();
   const [openApproval, setOpenApproval] = useState(true);
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
   const [tabOfCndBatchValue, setTabOfCndBatchValue] = useState("1");
@@ -218,6 +227,7 @@ const ContentLogic = (props) => {
   );
 
   //store to update candidate verification data
+  const [searchTerm, setSearchTerm] = useState("");
   const [candidateConsentVal, setCandidateConsentVal] = useState("");
   const [candidateCallStatusVal, setCandidateCallStatusVal] = useState("");
   const [callCenter, setCallCenter] = useState({
@@ -1020,12 +1030,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
-    {
-      id: "inProgress",
-      numeric: true,
-      disablePadding: false,
-      label: "In-Progress",
-    },
+    // {
+    //   id: "inProgress",
+    //   numeric: true,
+    //   disablePadding: false,
+    //   label: "In-Progress",
+    // },
     {
       id: "approved",
       numeric: true,
@@ -1526,7 +1536,7 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/filter-candidate?fullName=${filterData.fullName}`, {
+      .dataGet(`/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -2557,7 +2567,7 @@ const ContentLogic = (props) => {
         setLoader(false);
       });
   };
-
+  // upload profile image of candidate master module 
   const addProfileImg = async (id) => {
     const formData = new FormData();
     // console.log(image.forEach((file) =>formData.append("image", file)));
@@ -2587,6 +2597,10 @@ const ContentLogic = (props) => {
         console.error("There was an error!- uploadImage", error);
       });
   };
+
+  
+
+  //upload documents of agent master module
   const addAgentMasterDocs = async (id) => {
     const formData = new FormData();
     // agentMasterPan.forEach((files) => formData.append("file", files));
@@ -2618,6 +2632,124 @@ const ContentLogic = (props) => {
         console.error("There was an error!- uploadAgentMasterDoc", error);
       });
   };
+
+  //both api for the upload and add data into database of admin candidate upload batch module
+  const addAdminCndUpl = async (id) => {
+    const formData = new FormData();
+    // uploadBulkData.forEach((file) => formData.append("file", file));
+    formData.append('file',uploadBulkData)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+    .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
+      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+          addBulkDataAdminCnd()
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadImage", error);
+      });
+  };
+
+  const addBulkDataAdminCnd = () =>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+          .dataPost(`/v1/admin/candidate-upload-batches`, bulkData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // addProfileImg(response.data.data.id);
+              // getCandidateMasterAPIcall();
+              setOpenAlertMsg(true);
+              // handleNext();
+              console.log("response of admin candidate upload file :", response.data.data);
+            } else {
+              setOpenErrtMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+  }
+
+  //both api for the upload and add data into database of admin candidate upload batch module
+  const addCndUplBatch = async (id) => {
+    const formData = new FormData();
+    // uploadBulkData.forEach((file) => formData.append("file", file));
+    formData.append('file',uploadBulkCnd)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+    .dataPost(`/v1/upload-candidate-uploadBatch`, formData, {
+      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+        addBulkDataCndUpload()
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadImage", error);
+      });
+  };
+
+  const addBulkDataCndUpload = () =>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+          .dataPost(`/v1/candidate-upload-batches`, bulkUpload, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              // addProfileImg(response.data.data.id);
+              // getCandidateMasterAPIcall();
+              setOpenAlertMsg(true);
+              // handleNext();
+              console.log("response of admin candidate upload file :", response.data.data);
+            } else {
+              setOpenErrtMsg(true);
+            }
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createCompany", error);
+          });
+  }
 
   const EnhancedTableHead = (props) => {
     const {
@@ -2997,8 +3129,8 @@ const ContentLogic = (props) => {
   // download excel template on candidate upload batch module
   const onDownload = () => {
     const link = document.createElement("a");
-    link.download = `download.txt`;
-    link.href = "./download.txt";
+    link.download = `bulk-candidate-upload-template.xlsx`;
+    link.href = "../../Images/bulk-candidate-upload-template.xlsx";
     link.click();
   };
 
@@ -4229,6 +4361,31 @@ const ContentLogic = (props) => {
     //     break;
     // }
   };
+  
+  //filter method for candidate verification module
+  let filterCndVerification =(e)=>{
+  let targetValue = e.target.value
+  const filteredData = tblData.filter(item => {
+    return (
+      item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
+      item.contactNo1.toString().includes(targetValue)
+    );
+  });
+  setTblData(filteredData)
+}
+
+  //filter method for agent pricing template module
+  let filterAgenPT =(e)=>{
+  let targetValue = e.target.value
+  const filteredData = tblData.filter(item => {
+    return (
+      // console.log("item",item),
+      item.templateName.toLowerCase().includes(targetValue.toLowerCase())
+      // item.contactNo1.toString().includes(searchTerm)
+    );
+  });
+  setTblData(filteredData)
+}
 
   // shows the content page design
   const renderDesign = () => {
@@ -4730,8 +4887,29 @@ const ContentLogic = (props) => {
                 width: "700px",
                 marginBottom: "20px",
               }}
+              onChange={(e)=>{
+                // setSearchTerm(e.target.value)
+                filterCndVerification(e)
+              }}
             />
           </>
+        );
+
+      case "Agent Pricing Template":
+        return (
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+            // setSearchTerm(e.target.value)
+            filterAgenPT(e)
+          }} 
+          />
         );
 
       default:
@@ -4800,6 +4978,7 @@ const ContentLogic = (props) => {
     ),
   ];
   
+  //professional tabl of agent master module 
   const ProfessionalTab=()=> {
     return (
       <TableContainer component={Paper}>
@@ -4836,6 +5015,25 @@ const ContentLogic = (props) => {
       </TableContainer>
     );
   }
+
+  // read data from excel file and add into the candidate upload batch module table
+  const handleFileUploadCndUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const binaryData = e.target.result;
+      const workbook = XLSX.read(binaryData,{type:'binary'})
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetData = XLSX.utils.sheet_to_json(sheet);
+      setBulkUpload(sheetData);
+      // console.log("sheet data : ",sheetData);
+    };
+
+    reader.readAsBinaryString(file);
+    // console.log("ex data --- ",bulkData);
+    
+  };
 
   // its handle the module modal inputs
   const handleModalInput = () => {
@@ -6010,9 +6208,19 @@ const ContentLogic = (props) => {
                     id="upload-photo"
                     name="upload-photo"
                     type="file"
+                    accept=".xlsx"
+                    onChange={(e)=>{
+                      setUploadBulkCnd(e.target.files[0]);
+                      console.log("testing ");
+                      handleFileUploadCndUpload(e)
+                      
+                    }}
                     style={{ display: "none" }}
                   />
                   Upload
+                </Button>
+                <Button onClick={addCndUplBatch}>
+                  upload
                 </Button>
               </label>
               <p>
@@ -9852,6 +10060,25 @@ const ContentLogic = (props) => {
     setOpenConfirmation(true);
   };
 
+  //read data from excel file and add into the state 
+  const handleFileUploadAdminCnd = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const binaryData = e.target.result;
+      const workbook = XLSX.read(binaryData,{type:'binary'})
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetData = XLSX.utils.sheet_to_json(sheet);
+      setBulkData(sheetData);
+      // console.log("sheet data : ",sheetData);
+    };
+
+    reader.readAsBinaryString(file);
+    // console.log("ex data --- ",bulkData);
+  };
+  
+
   const handleTableDesign = () => {
     const handleModalsInputs = (
       <Toolbar
@@ -9975,9 +10202,14 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <input
+                    required
                       id="upload-photo"
                       name="upload-photo"
                       type="file"
+                      onChange={(e)=>{ 
+                        setUploadBulkData(e.target.files[0])
+                        handleFileUploadAdminCnd(e)}}
+                      accept=".xlsx"
                       style={{ display: "none" }}
                     />
                     Select File
@@ -10063,7 +10295,7 @@ const ContentLogic = (props) => {
             <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
             <Button
               onClick={() => {
-                updateAPICalls("candidate-upload-batch-admin");
+               { editStatus? updateAPICalls("candidate-upload-batch-admin"):addAdminCndUpl()}
                 handleCloseAdminCanUplBtch();
               }}
             >

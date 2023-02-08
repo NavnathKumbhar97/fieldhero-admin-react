@@ -1764,7 +1764,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/categories?all=*`,
+        `/v1/categories?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }

@@ -18,8 +18,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Outlet } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { styled } from "@mui/material/styles";
-import * as XLSX from 'xlsx/xlsx.mjs';
-import { read,utils } from 'xlsx';
+import * as XLSX from "xlsx/xlsx.mjs";
+import { read, utils } from "xlsx";
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -117,13 +117,12 @@ const ContentLogic = (props) => {
   const [errMsg, setErrMsg] = useState("");
 
   //state for candidate upload batch moduel
-  const [bulkUpload,setBulkUpload] = useState([])
+  const [bulkUpload, setBulkUpload] = useState([]);
   const [uploadBulkCnd, setUploadBulkCnd] = useState();
-
 
   // state for the admin candidate upload batch module
   const [confirmationData, setConfirmationData] = useState([]);
-  const [bulkData,setBulkData] = useState([])
+  const [bulkData, setBulkData] = useState([]);
   const [uploadBulkData, setUploadBulkData] = useState();
   const [openApproval, setOpenApproval] = useState(true);
   const [openAdminCanUplBtch, setOpenAdminCanUplBtch] = useState(false);
@@ -471,11 +470,11 @@ const ContentLogic = (props) => {
     lastCompany: 0,
     designation: 0,
   });
-  const [agentMasterPan,setAgentMasterPan] = useState()
-  const [agentMasterPOI,setAgentMasterPOI] = useState()
-  const [agentMasterPOA,setAgentMasterPOA] = useState()
-  const [agentMasterBankDoc,setAgentMasterBankDoc] = useState()
-  
+  const [agentMasterPan, setAgentMasterPan] = useState();
+  const [agentMasterPOI, setAgentMasterPOI] = useState();
+  const [agentMasterPOA, setAgentMasterPOA] = useState();
+  const [agentMasterBankDoc, setAgentMasterBankDoc] = useState();
+
   // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
@@ -538,7 +537,7 @@ const ContentLogic = (props) => {
     description: "",
     endDate: moment("").date(),
     skillId: [2, 3, 4],
-    startDate:null,
+    startDate: null,
   });
   const [expData, setExptData] = useState([]);
   const [candidateId, setCandidateId] = useState("");
@@ -734,12 +733,13 @@ const ContentLogic = (props) => {
   const validationForWorkExp = Yup.object().shape({
     companyId: Yup.string().required("Company Name is required"),
     skillId: Yup.string().required("Skills are required"),
-    startDate: Yup.date().default(() => new Date())
-   .required("Start date is required"),
-    endDate: Yup.date()
-    .when(
-        "startDate",
-        (startDate, schema) => startDate && schema.min(startDate))
+    startDate: Yup.date()
+      .default(() => new Date())
+      .required("Start date is required"),
+    endDate: Yup.date().when(
+      "startDate",
+      (startDate, schema) => startDate && schema.min(startDate)
+    ),
   });
   const validationForCertificate = Yup.object().shape({
     certificateName: Yup.string().required("Certificate Name is required"),
@@ -805,9 +805,8 @@ const ContentLogic = (props) => {
     currState: Yup.string().required("Current state is required"),
   });
 
-   // state for open confirmation modal of admin candidate upload batch module
-   const [openConfirmation, setOpenConfirmation] = useState(false);
-
+  // state for open confirmation modal of admin candidate upload batch module
+  const [openConfirmation, setOpenConfirmation] = useState(false);
 
   const {
     register,
@@ -1536,9 +1535,12 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(`/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
+      .dataGet(
+        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
@@ -1762,7 +1764,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/categories?take=${rowsPerPage}&skip=${page * rowsPerPage}`,
+        `/v1/categories?all=*`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -1771,7 +1773,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setTblData(response.data.data.categories);
-          console.log("category", tblData);
+          // console.log("category", tblData);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -2567,7 +2569,7 @@ const ContentLogic = (props) => {
         setLoader(false);
       });
   };
-  // upload profile image of candidate master module 
+  // upload profile image of candidate master module
   const addProfileImg = async (id) => {
     const formData = new FormData();
     // console.log(image.forEach((file) =>formData.append("image", file)));
@@ -2598,16 +2600,14 @@ const ContentLogic = (props) => {
       });
   };
 
-  
-
   //upload documents of agent master module
   const addAgentMasterDocs = async (id) => {
     const formData = new FormData();
     // agentMasterPan.forEach((files) => formData.append("file", files));
-    formData.append('file',agentMasterPan)
-    formData.append('file',agentMasterPOI)
-    formData.append('file',agentMasterPOA)
-    formData.append('file',agentMasterBankDoc)
+    formData.append("file", agentMasterPan);
+    formData.append("file", agentMasterPOI);
+    formData.append("file", agentMasterPOA);
+    formData.append("file", agentMasterBankDoc);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
@@ -2637,17 +2637,17 @@ const ContentLogic = (props) => {
   const addAdminCndUpl = async (id) => {
     const formData = new FormData();
     // uploadBulkData.forEach((file) => formData.append("file", file));
-    formData.append('file',uploadBulkData)
+    formData.append("file", uploadBulkData);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-    .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
-      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.status == 200) {
-          addBulkDataAdminCnd()
+      .dataPost(`/v1/upload-admin-candidate-uploadBatch`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          addBulkDataAdminCnd();
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
         } else {
@@ -2664,49 +2664,52 @@ const ContentLogic = (props) => {
       });
   };
 
-  const addBulkDataAdminCnd = () =>{
+  const addBulkDataAdminCnd = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-          .dataPost(`/v1/admin/candidate-upload-batches`, bulkData, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            if (response.status == 201) {
-              // addProfileImg(response.data.data.id);
-              // getCandidateMasterAPIcall();
-              setOpenAlertMsg(true);
-              // handleNext();
-              console.log("response of admin candidate upload file :", response.data.data);
-            } else {
-              setOpenErrtMsg(true);
-            }
-          })
-          .catch((error) => {
-            if (error.status == 400) {
-              setErrMsg(error.data.message);
-              setOpenErrtMsg(true);
-            }
-            console.error("There was an error!- createCompany", error);
-          });
-  }
+      .dataPost(`/v1/admin/candidate-upload-batches`, bulkData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 201) {
+          // addProfileImg(response.data.data.id);
+          // getCandidateMasterAPIcall();
+          setOpenAlertMsg(true);
+          // handleNext();
+          console.log(
+            "response of admin candidate upload file :",
+            response.data.data
+          );
+        } else {
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- createCompany", error);
+      });
+  };
 
   //both api for the upload and add data into database of admin candidate upload batch module
   const addCndUplBatch = async (id) => {
     const formData = new FormData();
     // uploadBulkData.forEach((file) => formData.append("file", file));
-    formData.append('file',uploadBulkCnd)
+    formData.append("file", uploadBulkCnd);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-    .dataPost(`/v1/upload-candidate-uploadBatch`, formData, {
-      headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.status == 200) {
-        addBulkDataCndUpload()
+      .dataPost(`/v1/upload-candidate-uploadBatch`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          addBulkDataCndUpload();
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
         } else {
@@ -2723,33 +2726,36 @@ const ContentLogic = (props) => {
       });
   };
 
-  const addBulkDataCndUpload = () =>{
+  const addBulkDataCndUpload = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-          .dataPost(`/v1/candidate-upload-batches`, bulkUpload, {
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            if (response.status == 201) {
-              // addProfileImg(response.data.data.id);
-              // getCandidateMasterAPIcall();
-              setOpenAlertMsg(true);
-              // handleNext();
-              console.log("response of admin candidate upload file :", response.data.data);
-            } else {
-              setOpenErrtMsg(true);
-            }
-          })
-          .catch((error) => {
-            if (error.status == 400) {
-              setErrMsg(error.data.message);
-              setOpenErrtMsg(true);
-            }
-            console.error("There was an error!- createCompany", error);
-          });
-  }
+      .dataPost(`/v1/candidate-upload-batches`, bulkUpload, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 201) {
+          // addProfileImg(response.data.data.id);
+          // getCandidateMasterAPIcall();
+          setOpenAlertMsg(true);
+          // handleNext();
+          console.log(
+            "response of admin candidate upload file :",
+            response.data.data
+          );
+        } else {
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- createCompany", error);
+      });
+  };
 
   const EnhancedTableHead = (props) => {
     const {
@@ -2987,7 +2993,6 @@ const ContentLogic = (props) => {
     },
   ];
   const callStatusDeclined = [
-
     {
       value: "NOT_REACHABLE",
       label: "Not Reachable",
@@ -3276,7 +3281,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.data);
-              addAgentMasterDocs(response.data.data.id)
+              addAgentMasterDocs(response.data.data.id);
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
@@ -3622,7 +3627,7 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 204) {
               console.log(response.data.message);
-              addProfileImg(updateCandidatesMasterData.id)
+              addProfileImg(updateCandidatesMasterData.id);
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
@@ -4361,31 +4366,31 @@ const ContentLogic = (props) => {
     //     break;
     // }
   };
-  
+
   //filter method for candidate verification module
-  let filterCndVerification =(e)=>{
-  let targetValue = e.target.value
-  const filteredData = tblData.filter(item => {
-    return (
-      item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
-      item.contactNo1.toString().includes(targetValue)
-    );
-  });
-  setTblData(filteredData)
-}
+  let filterCndVerification = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = tblData.filter((item) => {
+      return (
+        item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
+        item.contactNo1.toString().includes(targetValue)
+      );
+    });
+    setTblData(filteredData);
+  };
 
   //filter method for agent pricing template module
-  let filterAgenPT =(e)=>{
-  let targetValue = e.target.value
-  const filteredData = tblData.filter(item => {
-    return (
-      // console.log("item",item),
-      item.templateName.toLowerCase().includes(targetValue.toLowerCase())
-      // item.contactNo1.toString().includes(searchTerm)
-    );
-  });
-  setTblData(filteredData)
-}
+  let filterAgenPT = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = tblData.filter((item) => {
+      return (
+        // console.log("item",item),
+        item.templateName.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    setTblData(filteredData);
+  };
 
   // shows the content page design
   const renderDesign = () => {
@@ -4887,9 +4892,9 @@ const ContentLogic = (props) => {
                 width: "700px",
                 marginBottom: "20px",
               }}
-              onChange={(e)=>{
+              onChange={(e) => {
                 // setSearchTerm(e.target.value)
-                filterCndVerification(e)
+                filterCndVerification(e);
               }}
             />
           </>
@@ -4905,10 +4910,10 @@ const ContentLogic = (props) => {
               width: "700px",
               marginBottom: "20px",
             }}
-            onChange={(e)=>{
-            // setSearchTerm(e.target.value)
-            filterAgenPT(e)
-          }} 
+            onChange={(e) => {
+              // setSearchTerm(e.target.value)
+              filterAgenPT(e);
+            }}
           />
         );
 
@@ -4927,6 +4932,7 @@ const ContentLogic = (props) => {
     }
   };
 
+  // function for workExperice table of candidate master module
   function WorkExperianceCol(sr, document, value, upload, status, comments) {
     return { sr, document, value, upload, status, comments };
   }
@@ -4943,7 +4949,7 @@ const ContentLogic = (props) => {
   const handleChangeFileUpload4 = (event) => {
     setAgentMasterBankDoc(event.target.files[0]);
   };
-  
+
   const rowsAgentMaster = [
     WorkExperianceCol(
       1,
@@ -4951,35 +4957,52 @@ const ContentLogic = (props) => {
       <p>Pan Card</p>,
       // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload1}/>,
+      <input type="file" onChange={handleChangeFileUpload1} />,
       4.0
     ),
     WorkExperianceCol(
       2,
       "Proof of identity",
-      <TextField sx={{ width: "30ch" }} select label="Select" id="outlined-basic" variant="outlined" />,
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        label="Select"
+        id="outlined-basic"
+        variant="outlined"
+      />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload2}/>
+      <input type="file" onChange={handleChangeFileUpload2} />
     ),
     WorkExperianceCol(
       3,
       "Proof of address",
-      <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        id="outlined-basic"
+        label="Select"
+        variant="outlined"
+      />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload3}/> 
+      <input type="file" onChange={handleChangeFileUpload3} />
     ),
     WorkExperianceCol(
       4,
       "Bank Document",
-      <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Select" variant="outlined" />,
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        id="outlined-basic"
+        label="Select"
+        variant="outlined"
+      />,
       <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload4}/>,
-      
+      <input type="file" onChange={handleChangeFileUpload4} />
     ),
   ];
-  
-  //professional tabl of agent master module 
-  const ProfessionalTab=()=> {
+
+  //professional tabl of agent master module
+  const ProfessionalTab = () => {
     return (
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -5014,7 +5037,7 @@ const ContentLogic = (props) => {
         </Table>
       </TableContainer>
     );
-  }
+  };
 
   // read data from excel file and add into the candidate upload batch module table
   const handleFileUploadCndUpload = (event) => {
@@ -5023,7 +5046,7 @@ const ContentLogic = (props) => {
 
     reader.onload = (e) => {
       const binaryData = e.target.result;
-      const workbook = XLSX.read(binaryData,{type:'binary'})
+      const workbook = XLSX.read(binaryData, { type: "binary" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const sheetData = XLSX.utils.sheet_to_json(sheet);
       setBulkUpload(sheetData);
@@ -5032,7 +5055,6 @@ const ContentLogic = (props) => {
 
     reader.readAsBinaryString(file);
     // console.log("ex data --- ",bulkData);
-    
   };
 
   // its handle the module modal inputs
@@ -6209,19 +6231,16 @@ const ContentLogic = (props) => {
                     name="upload-photo"
                     type="file"
                     accept=".xlsx"
-                    onChange={(e)=>{
+                    onChange={(e) => {
                       setUploadBulkCnd(e.target.files[0]);
                       console.log("testing ");
-                      handleFileUploadCndUpload(e)
-                      
+                      handleFileUploadCndUpload(e);
                     }}
                     style={{ display: "none" }}
                   />
                   Upload
                 </Button>
-                <Button onClick={addCndUplBatch}>
-                  upload
-                </Button>
+                <Button onClick={addCndUplBatch}>upload</Button>
               </label>
               <p>
                 Total Records: <b>0</b>{" "}
@@ -8454,9 +8473,7 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch", ml: 4 }}
                       />
                     </List>
-                    <List>
-                      {ProfessionalTab()}
-                    </List>
+                    <List>{ProfessionalTab()}</List>
                     <List>
                       <Button
                         onClick={() => addAPICalls("agent-master")}
@@ -10060,14 +10077,14 @@ const ContentLogic = (props) => {
     setOpenConfirmation(true);
   };
 
-  //read data from excel file and add into the state 
+  //read data from excel file and add into the state
   const handleFileUploadAdminCnd = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const binaryData = e.target.result;
-      const workbook = XLSX.read(binaryData,{type:'binary'})
+      const workbook = XLSX.read(binaryData, { type: "binary" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const sheetData = XLSX.utils.sheet_to_json(sheet);
       setBulkData(sheetData);
@@ -10077,7 +10094,6 @@ const ContentLogic = (props) => {
     reader.readAsBinaryString(file);
     // console.log("ex data --- ",bulkData);
   };
-  
 
   const handleTableDesign = () => {
     const handleModalsInputs = (
@@ -10202,13 +10218,14 @@ const ContentLogic = (props) => {
                     }}
                   >
                     <input
-                    required
+                      required
                       id="upload-photo"
                       name="upload-photo"
                       type="file"
-                      onChange={(e)=>{ 
-                        setUploadBulkData(e.target.files[0])
-                        handleFileUploadAdminCnd(e)}}
+                      onChange={(e) => {
+                        setUploadBulkData(e.target.files[0]);
+                        handleFileUploadAdminCnd(e);
+                      }}
                       accept=".xlsx"
                       style={{ display: "none" }}
                     />
@@ -10295,7 +10312,11 @@ const ContentLogic = (props) => {
             <Button onClick={handleCloseAdminCanUplBtch}>Close</Button>
             <Button
               onClick={() => {
-               { editStatus? updateAPICalls("candidate-upload-batch-admin"):addAdminCndUpl()}
+                {
+                  editStatus
+                    ? updateAPICalls("candidate-upload-batch-admin")
+                    : addAdminCndUpl();
+                }
                 handleCloseAdminCanUplBtch();
               }}
             >

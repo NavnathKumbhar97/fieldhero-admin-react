@@ -116,7 +116,10 @@ const ContentLogic = (props) => {
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  //state for candidate upload batch moduel
+  //state for agent pricing template module
+  const [filterForAgentPT,setFilterForAgentPT] = useState()
+
+  //state for candidate upload batch module
   const [bulkUpload, setBulkUpload] = useState([]);
   const [uploadBulkCnd, setUploadBulkCnd] = useState();
 
@@ -311,6 +314,8 @@ const ContentLogic = (props) => {
         candidateConsent: "",
       },
     });
+  const [filterForCndVerifiction,setFilterForCndVerifiction] = useState()
+
 
   //state for store the input fields value of category
   const [categoryData, setCategoryData] = useState({
@@ -327,6 +332,7 @@ const ContentLogic = (props) => {
     industry: "",
     title: "",
   });
+  const [filterDataForCompany,setFilterDataForCompany] = useState([])
 
   //state for store the input fields value of industry
   const [industryData, setIndustryData] = useState({
@@ -334,8 +340,9 @@ const ContentLogic = (props) => {
     description: "",
     isActive: true,
   });
+  const [filterDataForIndustry,setFilterDataForIndustry] = useState([])
   const [checkedp, setCheckedP] = useState([]);
-
+//state for store the input fields value of role
   const [roleData, setRoleData] = useState({
     name: "",
     description: "",
@@ -343,14 +350,21 @@ const ContentLogic = (props) => {
     id: 0,
     permissionId: [],
   });
+  const [filterDataForRole,setFilterDataForRole] = useState([])
+
   const [uroleData, setURoleData] = useState({
     permissions: [],
   });
+
+  //state for store the input fields value of skillset
+  const [filterDataForSkillSets,setFilterDataForSkillSets] = useState([])
   const [skillSetData, setSkillSetData] = useState({
     title: "",
     description: "",
     isActive: true,
   });
+
+  //state for store the input fields value of subscriptions
   const [subscriptionData, setSubscriptionData] = useState({
     planName: "",
     dataCount: 1,
@@ -359,6 +373,8 @@ const ContentLogic = (props) => {
     note: "",
     isActive: true,
   });
+
+  //state for store the input fields value of user
   const [userData, setUserData] = useState({
     fullName: "",
     dob: "",
@@ -514,6 +530,7 @@ const ContentLogic = (props) => {
     text: "Test 122",
     type: "INDUSTRY",
   });
+  const [filterDataForCategory,setFilterDataForCategory] = useState([])
   const [otherIndCategory, setOtherIndCategory] = useState([]);
   const [otherIndCategoryResult, setOtherIndCategoryResult] = useState([]);
   const [otherIndCategoryStats, setOtherIndCategoryStats] = useState([]);
@@ -1788,6 +1805,37 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCategoryAPIcall", error);
       });
   };
+  
+  //fetch for filter the category data
+  const getCategoryAPIcallForFilter = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/all-categories?all=*`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForCategory(response.data.data.categories);
+          setTblDataCount(response.data.data.count);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getCategoryAPIcall", error);
+      });
+  };
+
   //fetch the company data
   const getCompanyAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1812,6 +1860,32 @@ const ContentLogic = (props) => {
         setOpenErrtMsg(true);
         navigate("/login");
         // alert("Timeout - Login Again");
+        setLoader(false);
+        console.error("There was an error!- getCompanyAPIcall", error);
+      });
+  };
+  //fetch for filter the company data
+  const getCompanyForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-companies`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForCompany(response.data.data.result);
+          setTblDataCount(response.data.data.count);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
         setLoader(false);
         console.error("There was an error!- getCompanyAPIcall", error);
       });
@@ -1876,6 +1950,36 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
+  //fetch the industry data for filter
+  const getIndustryForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/all-industries`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForIndustry(response.data.data.industries);
+          setTblDataCount(response.data.data.count);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getIndustryAPIcall", error);
+      });
+  };
   //fetch the roles data
   const getRoleAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1904,6 +2008,34 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getRoleAPIcall", error);
       });
   };
+
+  //fetch the roles data for filter
+  const getRoleForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-roles`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForRole(response.data.data.roles);
+          setTblDataCount(response.data.data.count);
+          console.log("roles", tblData);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getRoleAPIcall", error);
+      });
+  };
   //fetch the skillset data
   const getSkillSetAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1917,6 +2049,35 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setTblData(response.data.data.skills);
+          setTblDataCount(response.data.data.count);
+          console.log("skill set", tblData);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getSkillSetAPIcall", error);
+      });
+  };
+
+  //fetch the skillset data
+  const getSkillSetForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-skills`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForSkillSets(response.data.data.skills);
           setTblDataCount(response.data.data.count);
           console.log("skill set", tblData);
         } else if (response.status == 400) {
@@ -2175,22 +2336,27 @@ const ContentLogic = (props) => {
         break;
       case "category":
         getCategoryAPIcall();
+        getCategoryAPIcallForFilter()
         break;
       case "company":
         getCompanyAPIcall();
+        getCompanyForFilterAPIcall()
         break;
       case "customer":
         getCustomerAPIcall();
         break;
       case "industry":
         getIndustryAPIcall();
+        getIndustryForFilterAPIcall()
         break;
       case "role":
         getRoleAPIcall();
+        getRoleForFilterAPIcall();
         // getPermissionsAPIcall();
         break;
       case "skillset":
         getSkillSetAPIcall();
+        getSkillSetForFilterAPIcall()
         break;
       case "subscription":
         getSubscriptionAPIcall();
@@ -4369,28 +4535,115 @@ const ContentLogic = (props) => {
 
   //filter method for candidate verification module
   let filterCndVerification = (e) => {
+    setFilterForCndVerifiction(tblData)
     let targetValue = e.target.value;
-    const filteredData = tblData.filter((item) => {
+    const filteredData = filterForCndVerifiction.filter((item) => {
       return (
         item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
         item.contactNo1.toString().includes(targetValue)
       );
     });
+    if(targetValue){
+      setTblData(filteredData);
+    }else{
+      getCandidateVerificationAPIcall()
+    }
+  };
+
+  //filter method for category module
+  let filterCategory = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForCategory.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+
     setTblData(filteredData);
+    }else
+    getCategoryAPIcall()
   };
 
   //filter method for agent pricing template module
   let filterAgenPT = (e) => {
+    setFilterForAgentPT(tblData)
     let targetValue = e.target.value;
-    const filteredData = tblData.filter((item) => {
+    const filteredData = filterForAgentPT.filter((item) => {
       return (
         // console.log("item",item),
         item.templateName.toLowerCase().includes(targetValue.toLowerCase())
         // item.contactNo1.toString().includes(searchTerm)
       );
     });
+    if(targetValue){
     setTblData(filteredData);
+    }else{
+      getAgentTemplatePricingAPIcall()
+    }
   };
+
+  //filter method for company module
+  let filterCompany = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForCompany.filter((item) => {
+      return (
+        item.companyName.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getCompanyAPIcall()
+  };
+
+  //filter method for industry module
+  let filterIndustry = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForIndustry.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getIndustryAPIcall()
+  };
+
+  //filter method for role module
+  let filterRole = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForRole.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getRoleAPIcall()
+  };
+  //filter method for skillset module
+  let filterSkillSet = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForSkillSets.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getSkillSetAPIcall()
+  };
+
+
 
   // shows the content page design
   const renderDesign = () => {
@@ -4489,13 +4742,10 @@ const ContentLogic = (props) => {
             <Outlet></Outlet>
           </div>
         );
-
       case "Candidate Upload Batch":
         return null;
-
       case "Agent Master":
         return null;
-
       case "Batch Priority":
         return (
           <>
@@ -4608,7 +4858,6 @@ const ContentLogic = (props) => {
             ))}
           </>
         );
-
       case "Other Industry Category":
         return (
           <>
@@ -4825,7 +5074,6 @@ const ContentLogic = (props) => {
           </>
         );
       // <OtherIndCategory />;
-
       case "Admin - Candidate Upload Batch":
         return (
           <>
@@ -4877,9 +5125,7 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       // <AdminCanUploadBatch />;
-
       case "Candidate Verification":
         return (
           <>
@@ -4899,7 +5145,6 @@ const ContentLogic = (props) => {
             />
           </>
         );
-
       case "Agent Pricing Template":
         return (
           <TextField
@@ -4916,9 +5161,9 @@ const ContentLogic = (props) => {
             }}
           />
         );
-
-      default:
+      case "Category - Master":
         return (
+          <>
           <TextField
             id="filled-basic"
             label="Search"
@@ -4927,7 +5172,97 @@ const ContentLogic = (props) => {
               width: "700px",
               marginBottom: "20px",
             }}
+            onChange={(e)=>{
+              filterCategory(e)
+            }}
           />
+          </>
+        );
+      case "Company - Master":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterCompany(e)
+            }}
+          />
+          </>
+        );
+      case "Industry - Master":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterIndustry(e)
+            }}
+          />
+          </>
+        );
+      case "Role - Master":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterRole(e)
+            }}
+          />
+          </>
+        );
+      case "Skill Set - Master":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterSkillSet(e)
+            }}
+          />
+          </>
+        );
+      default:
+        return (
+          <>
+         
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            // onChange={(e)=>{
+            //   filterCategory(e)
+            // }}
+          />
+          </>
         );
     }
   };
@@ -4950,6 +5285,7 @@ const ContentLogic = (props) => {
     setAgentMasterBankDoc(event.target.files[0]);
   };
 
+  //In professional tab table heading of agent master 
   const rowsAgentMaster = [
     WorkExperianceCol(
       1,
@@ -5057,7 +5393,7 @@ const ContentLogic = (props) => {
     // console.log("ex data --- ",bulkData);
   };
 
-  // its handle the module modal inputs
+  // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
       case "candidate-master":
@@ -6476,7 +6812,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "candidate-verification":
         return (
           <>
@@ -8492,7 +8827,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "agent-pricing-template":
         return (
           <>
@@ -8916,7 +9250,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "candidate-upload-batch-admin":
         return;
       case "category":
@@ -9016,7 +9349,6 @@ const ContentLogic = (props) => {
             </div>
           </>
         );
-
       case "company":
         return (
           <>
@@ -9118,7 +9450,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "industry":
         return (
           <>
@@ -9194,7 +9525,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "role":
         return (
           <>
@@ -9327,7 +9657,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "skillset":
         return (
           <>
@@ -9401,7 +9730,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "subscription":
         return (
           <>
@@ -9521,7 +9849,6 @@ const ContentLogic = (props) => {
             </Box>
           </>
         );
-
       case "user":
         return (
           <>

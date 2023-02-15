@@ -85,6 +85,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import FileUpload from "react-mui-fileuploader";
+import axios from "axios";
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -373,6 +374,8 @@ const ContentLogic = (props) => {
     note: "",
     isActive: true,
   });
+  const [filterDataForSubscription,setFilterDataForSubscription] = useState([])
+
 
   //state for store the input fields value of user
   const [userData, setUserData] = useState({
@@ -425,6 +428,8 @@ const ContentLogic = (props) => {
     roleId: 0,
     isActive: true,
   });
+  const [filterDataForUser,setFilterDataForUser] = useState([])
+
   //states for the agent master module
   const [sameAddressAgent, setSameAddressAgent] = useState(false);
   const [agentMasterData, setAgentMasterData] = useState({
@@ -1553,7 +1558,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`,
+        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}&id=${17562}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -2110,7 +2115,37 @@ const ContentLogic = (props) => {
           setLoader(false);
           setTblData(response.data.data.subscriptions);
           setTblDataCount(response.data.data.count);
-          console.log("subscriptions", tblData);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getSubscriptionAPIcall", error);
+      });
+  };
+
+  //fetch the subscriptions data for filter
+  const getSubscriptionForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(
+        `/v1/all-subscriptions`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForSubscription(response.data.data.subscriptions);
+          setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -2137,6 +2172,34 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setTblData(response.data.data.result);
+          setTblDataCount(response.data.data.count);
+          console.log("users", tblData);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getUserAPIcall", error);
+      });
+  };
+  //fetch the users data for filter
+  const getUserForFilterAPIcall = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-users`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForUser(response.data.data.result);
           setTblDataCount(response.data.data.count);
           console.log("users", tblData);
         } else if (response.status == 400) {
@@ -2306,7 +2369,7 @@ const ContentLogic = (props) => {
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
-    console.log("getallData pagename :", pageName);
+    // console.log("getallData pagename :", pageName);
     switch (pageName) {
       case "candidate-master":
         getCandidateMasterAPIcall();
@@ -2360,9 +2423,11 @@ const ContentLogic = (props) => {
         break;
       case "subscription":
         getSubscriptionAPIcall();
+        getSubscriptionForFilterAPIcall()
         break;
       case "user":
         getUserAPIcall();
+        getUserForFilterAPIcall()
         break;
       default:
         break;
@@ -4643,7 +4708,34 @@ const ContentLogic = (props) => {
     getSkillSetAPIcall()
   };
 
-
+  //filter method for subscription module
+  let filterSubscriptions = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForSubscription.filter((item) => {
+      return (
+        item.planName.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getSubscriptionAPIcall()
+  };
+  //filter method for user module
+  let filterUser = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForUser.filter((item) => {
+      return (
+        item.fullName.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if(targetValue){
+    setTblData(filteredData);
+    }else
+    getUserAPIcall()
+  };
 
   // shows the content page design
   const renderDesign = () => {
@@ -5246,6 +5338,40 @@ const ContentLogic = (props) => {
           />
           </>
         );
+      case "Subscription":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterSubscriptions(e)
+            }}
+          />
+          </>
+        );
+      case "User - Master":
+        return (
+          <>
+          <TextField
+            id="filled-basic"
+            label="Search"
+            variant="filled"
+            style={{
+              width: "700px",
+              marginBottom: "20px",
+            }}
+            onChange={(e)=>{
+              filterUser(e)
+            }}
+          />
+          </>
+        );
       default:
         return (
           <>
@@ -5392,6 +5518,44 @@ const ContentLogic = (props) => {
     reader.readAsBinaryString(file);
     // console.log("ex data --- ",bulkData);
   };
+
+  const [zipAddress,setZipAddress] = useState()
+  const [zipAddress1,setZipAddress1] = useState()
+  //search city and state by zipcode
+  const searchAddByZip=()=>{
+    // let authTok = localStorage.getItem("user"); // string
+    // let convertTokenToObj = JSON.parse(authTok);
+    console.log("called");
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${candidateMasterData.perm_zip || candidateMasterData.curr_zip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setZipAddress(response.data)
+          // 
+            zipAddress.map((i)=>{
+              setZipAddress1(i.PostOffice)
+              console.log("tesst ok",i.PostOffice);
+              i.PostOffice.map((e)=>{
+                console.log("e",e.District);
+                setCandidateMasterData({
+                    ...candidateMasterData,
+                    perm_city:e.District
+                  })
+              })
+            });
+            console.log("zip code by id", response.data);
+          // console.log("getAgentMasterData",agentMasterData);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getCategoryById", error);
+      });
+  }
 
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
@@ -5665,10 +5829,12 @@ const ContentLogic = (props) => {
                                     ...updateCandidateMasterData,
                                     permZip: e.target.value,
                                   });
+                                  
                             }}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
                           />
+                          <Button onClick={searchAddByZip}>search</Button>
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <FormControlLabel

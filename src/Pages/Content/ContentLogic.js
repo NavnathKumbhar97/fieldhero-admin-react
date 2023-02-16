@@ -39,6 +39,7 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
+  InputAdornment,
   InputLabel,
   List,
   ListItem,
@@ -71,7 +72,7 @@ import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
-import { CheckBox, Info, PriorityHigh, ToggleOn } from "@mui/icons-material";
+import { CheckBox, Info, PriorityHigh, Search, ToggleOn } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
@@ -154,7 +155,7 @@ const ContentLogic = (props) => {
     contactNo2: "",
     curr_address: "",
     curr_city: "",
-    curr_country: "",
+    curr_country: "India",
     curr_state: "",
     curr_zip: "",
     email1: "",
@@ -5519,33 +5520,27 @@ const ContentLogic = (props) => {
     // console.log("ex data --- ",bulkData);
   };
 
-  const [zipAddress,setZipAddress] = useState()
-  const [zipAddress1,setZipAddress1] = useState()
   //search city and state by zipcode
   const searchAddByZip=()=>{
-    // let authTok = localStorage.getItem("user"); // string
-    // let convertTokenToObj = JSON.parse(authTok);
-    console.log("called");
     setLoader(true);
-    axios.get(`https://api.postalpincode.in/pincode/${candidateMasterData.perm_zip || candidateMasterData.curr_zip}`)
+    axios.get(`https://api.postalpincode.in/pincode/${!editStatus?
+    candidateMasterData.perm_zip:updateCandidateMasterData.permZip}`)
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setZipAddress(response.data)
-          // 
-            zipAddress.map((i)=>{
-              setZipAddress1(i.PostOffice)
-              console.log("tesst ok",i.PostOffice);
+          response.data.map((i)=>{
               i.PostOffice.map((e)=>{
-                console.log("e",e.District);
                 setCandidateMasterData({
                     ...candidateMasterData,
-                    perm_city:e.District
-                  })
+                    perm_city:e.District,
+                    perm_state:e.State
+                  });
+                setUpdateCandidateMasterData({...updateCandidateMasterData,
+                permCity:e.District,
+              permState:e.State
+            })
               })
             });
-            console.log("zip code by id", response.data);
-          // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -5553,7 +5548,152 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
-        console.error("There was an error!- getCategoryById", error);
+        console.error("There was an error!- getzipcode", error);
+      });
+  }
+  //search city and state by zipcode
+  const searchCurrAddByZip=()=>{
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${!editStatus?candidateMasterData.curr_zip:updateCandidateMasterData.currZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i)=>{
+              i.PostOffice.map((e)=>{
+                setCandidateMasterData({
+                    ...candidateMasterData,
+                    curr_city:e.District,
+                    curr_state:e.State
+                  });
+                  setUpdateCandidateMasterData(
+                    {...updateCandidateMasterData,
+                    currCity:e.District,
+                  currState:e.State
+                })
+              })
+            });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  }
+  //search city and state by zipcode
+  const searchAddByZipForAgent=()=>{
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${agentMasterData.currZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i)=>{
+              i.PostOffice.map((e)=>{
+                setAgentMasterData({
+                    ...agentMasterData,
+                    currCity:e.District,
+                    currState:e.State
+                  });
+              })
+            });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  }
+  //search city and state by zipcode
+  const searchPermAddByZipForAgent=()=>{
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${agentMasterData.permZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i)=>{
+              i.PostOffice.map((e)=>{
+                setAgentMasterData({
+                    ...agentMasterData,
+                    permCity:e.District,
+                    permState:e.State
+                  });
+              })
+            });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  }
+  //search city and state by zipcode
+  const searchAddByZipForUser=()=>{
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${
+      !editStatus?userData.permZip:updateUserData.permZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i)=>{
+              i.PostOffice.map((e)=>{
+                setUserData({
+                    ...userData,
+                    permCity:e.District,
+                    permState:e.State
+                  });
+                setUpdateUserData({...updateUserData,
+                permCity:e.District,
+                permState:e.State
+              })
+              })
+            });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  }
+  //search city and state by zipcode
+  const searchCurrAddByZipForUser=()=>{
+    setLoader(true);
+    axios.get(`https://api.postalpincode.in/pincode/${
+      !editStatus?userData.currZip:updateUserData.currZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i)=>{
+              i.PostOffice.map((e)=>{
+                setUserData({
+                    ...userData,
+                    currCity:e.District,
+                    currState:e.State
+                  });
+                setUpdateUserData({...updateUserData,
+                currCity:e.District,
+                currState:e.State
+              })
+              })
+            });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
       });
   }
 
@@ -5831,10 +5971,19 @@ const ContentLogic = (props) => {
                                   });
                                   
                             }}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Search onClick={searchAddByZip} />
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }}
+                            // onMouseOut={searchAddByZip}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
                           />
-                          <Button onClick={searchAddByZip}>search</Button>
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <FormControlLabel
@@ -5974,6 +6123,15 @@ const ContentLogic = (props) => {
                                     ...updateCandidateMasterData,
                                     currZip: e.target.value,
                                   });
+                            }}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Search onClick={searchCurrAddByZip} />
+                                  </IconButton>
+                                </InputAdornment>
+                              )
                             }}
                             variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
@@ -8595,6 +8753,15 @@ const ContentLogic = (props) => {
                               currZip: e.target.value,
                             });
                           }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment>
+                                <IconButton>
+                                  <Search onClick={searchAddByZipForAgent} />
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
                           variant="filled"
                           sx={{ width: "30ch" }}
                         />
@@ -8691,6 +8858,15 @@ const ContentLogic = (props) => {
                               ...agentMasterData,
                               permZip: e.target.value,
                             });
+                          }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment>
+                                <IconButton>
+                                  <Search onClick={searchPermAddByZipForAgent} />
+                                </IconButton>
+                              </InputAdornment>
+                            )
                           }}
                           variant="filled"
                           sx={{ width: "30ch" }}
@@ -10207,6 +10383,15 @@ const ContentLogic = (props) => {
                           currZip: e.target.value,
                         });
                   }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment>
+                        <IconButton>
+                          <Search onClick={searchCurrAddByZipForUser} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                   sx={{ width: "40ch" }}
                 />
                 <TextField
@@ -10314,6 +10499,15 @@ const ContentLogic = (props) => {
                           ...updateUserData,
                           permZip: e.target.value,
                         });
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment>
+                        <IconButton>
+                          <Search onClick={searchAddByZipForUser} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
                   }}
                   variant="filled"
                   sx={{ width: "40ch" }}

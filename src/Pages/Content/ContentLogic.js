@@ -72,7 +72,7 @@ import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
-import { CheckBox, Info, PriorityHigh, Search, ToggleOn } from "@mui/icons-material";
+import { CheckBox, Close, CropSquareSharp, Info, PriorityHigh, Search, ToggleOn } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
@@ -307,9 +307,39 @@ const ContentLogic = (props) => {
         skill1: "",
         skill2: "",
       },
-      CandidateCategory: [],
-      CandidateIndustry: [],
-      CandidateWorkHistory: [],
+      industries:[{
+        id:0,
+        title:'',
+
+      }],
+      categories:[{
+        id:0,
+        title:''
+      }],
+      CandidateCategory: [
+        {
+          categoryId:0,
+          id:0,
+          title:''
+        }
+      ],
+      CandidateIndustry: [{
+        title:'',
+        industryId:0,
+        id:0
+      }],
+      CandidateWorkHistory: [{
+        industryId:0,
+        id:0,
+        company:'',
+        industryTitle:'',
+        categoryId:0,
+        categoryTitle:'',
+        endDate:'',
+        startDate:'',
+        isEmployed:false,
+        description:''
+      }],
       callCentre: {
         id: 0,
         callStatus: "",
@@ -578,34 +608,70 @@ const ContentLogic = (props) => {
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
   // States for the add multiple industry when we click on add more button in candidate verification module
-  const inputArr = [
-    {
-      type: "text",
-      id: 1,
-      value: "",
-    },
-  ];
-  const [arr, setArr] = useState(inputArr);
-  const addInput = () => {
-    setArr((s) => {
-      return [
-        ...s,
-        {
-          type: "text",
-          value: "",
-        },
-      ];
-    });
-  };
-  const handleChangea = (e) => {
-    e.preventDefault();
-    const index = e.target.id;
-    setArr((s) => {
-      const newArr = s.slice();
-      newArr[index].value = e.target.value;
-      return newArr;
-    });
-  };
+  const [inputFields, setInputFields] = useState([{
+    industries:'',
+} ]);
+  const [inputCategories, setInputCategories] = useState([{
+    categories:''
+  }])
+  const [inputEmployement,setInputEmployement] = useState([{
+    cEmp:''
+  }])
+const addInputField = ()=>{
+  setInputFields([...inputFields, {
+    industries:'',
+  } ])
+}
+const removeInputFields = (index)=>{
+const rows = [...inputFields];
+rows.splice(index, 1);
+setInputFields(rows);
+}
+const handleChangeField = (index, evnt)=>{
+const { name, value } = evnt.target;
+const list = [...inputFields];
+list[index][name] = value;
+setInputFields(list);
+
+}
+
+const addInputFieldForCategory = ()=>{
+  setInputCategories([...inputCategories, {
+    industries:'',
+  } ])
+}
+const removeInputFieldsForCategory = (index)=>{
+  const rows = [...inputCategories];
+  rows.splice(index, 1);
+  setInputCategories(rows);
+}
+const handleChangeFieldForCategory = (index, evnt)=>{
+const { name, value } = evnt.target;
+const list = [...inputCategories];
+list[index][name] = value;
+setInputCategories(list);
+
+}
+
+const addInputFieldForEmployer = ()=>{
+  setInputEmployement([...inputEmployement, {
+    cEmp:'',
+  } ])
+}
+const removeInputFieldsForEmployer = (index)=>{
+  const rows = [...inputEmployement];
+  rows.splice(index, 1);
+  setInputEmployement(rows);
+}
+const handleChangeFieldForEmployer = (index, evnt)=>{
+const { name, value } = evnt.target;
+const list = [...inputEmployement];
+list[index][name] = value;
+setInputEmployement(list);
+
+}
+
+
   const inputCurrEmployed = [
     {
       type: "text",
@@ -663,6 +729,7 @@ const ContentLogic = (props) => {
       return newArr;
     });
   };
+
 
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
@@ -2523,6 +2590,32 @@ const ContentLogic = (props) => {
             "getcandidateVerification",
             updateCandidateVerificationData
           );
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error!- getCandidateVerificationById",
+          error
+        );
+      });
+  };
+  const getCandidateVerificationPassiveUpdate = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/candidate-verifications/passive-update`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setIndustryData(response.data.data.industries);
+          console.log("candidate passivee update by id", response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -7576,13 +7669,15 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Industry
                       </b>
-                      {arr.map((item, i) => {
-                        return (
-                          <TextField
-                            // onChange={handleChangea}
-                            // value={item.value}
-                            id={i}
-                            type={item.type}
+                     
+                      {
+                      inputFields.map((data, index)=>{
+                          const {fullName, emailAddress, salary}= data;
+                          return(
+                            <div className="row my-3" key={index}>
+                    <div className="col">
+                    <div className="form-group">
+                    <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
                                 ? false
@@ -7592,43 +7687,40 @@ const ContentLogic = (props) => {
                             sx={{ width: "30ch", marginBottom: 3 }}
                             select
                             label="Industry"
-                            value={updateCandidateVerificationData.industry}
-                            onChange={(e) => {
-                              handleChangea();
-                              setUpdateCandidateVerificationData({
-                                ...updateCandidateVerificationData,
-                                industry: e.target.value,
-                              });
+                            value={updateCandidateVerificationData.industry.title}
+                            onChange={
+                              (e) => {
+                              handleChangeField(index, e)
+                              setUpdateCandidateVerificationData((prevState) => ({
+                                ...prevState,
+                                industries: {
+                                  ...prevState.industries,
+                                  title: e.target.value,
+                                },
+                              }));
+                              console.log(updateCandidateVerificationData.industries);
                             }}
-                          >
-                            {industrySelectField.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                {option.label}
+                            InputProps={(inputFields.length!==1)?{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Close  onClick={removeInputFields}/>
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }:""}>
+                              {Object.keys(industryData).map((option) => (
+                              <MenuItem value={industryData[option].title}>
+                                {industryData[option].title}
                               </MenuItem>
                             ))}
                           </TextField>
-                        );
-                      })}
-                      {/* <TextField
-                        disabled={candidateConsentVal==="RECEIVED"?false:editStatus}
-                        size="small"
-                        sx={{ width: "30ch" }}
-                        select
-                        label="Industry"
-                        value={updateCandidateVerificationData.industry}
-                        onChange={(e) => {
-                          setUpdateCandidateVerificationData({
-                            ...updateCandidateVerificationData,
-                            industry: e.target.value,
-                          });
-                        }}
-                      > */}
-                      {/* {industrySelectField.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField> */}
+                    </div>
+                    </div>
+                  </div>
+                          )
+                      })
+                  }
                       <Button
                         disabled={
                           candidateConsentVal === "RECEIVED"
@@ -7641,7 +7733,7 @@ const ContentLogic = (props) => {
                           color: "white",
                           marginTop: "20px",
                         }}
-                        onClick={addInput}
+                        onClick={addInputField}
                       >
                         Add More
                       </Button>
@@ -7656,11 +7748,13 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Category
                       </b>
-                      {arrCategory.map((item, i) => {
-                        return (
-                          <TextField
-                            id={i}
-                            type={item.type}
+                      {
+                      inputCategories.map((data, index)=>{
+                          return(
+                            <div className="row my-3" key={index}>
+                    <div className="col">
+                    <div className="form-group">
+                    <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
                                 ? false
@@ -7672,21 +7766,33 @@ const ContentLogic = (props) => {
                             label="Category"
                             value={updateCandidateVerificationData.category}
                             onChange={(e) => {
-                              handleChangeCategory();
+                              handleChangeFieldForCategory();
                               setUpdateCandidateVerificationData({
                                 ...updateCandidateVerificationData,
                                 category: e.target.value,
                               });
                             }}
-                          >
-                            {industrySelectField.map((option) => (
+                            InputProps={(inputCategories.length!==1)?{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Close  onClick={removeInputFieldsForCategory}/>
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }:""}>
+                              {industrySelectField.map((option) => (
                               <MenuItem key={option.value} value={option.value}>
                                 {option.label}
                               </MenuItem>
                             ))}
                           </TextField>
-                        );
-                      })}
+                    </div>
+                    </div>
+                  </div>
+                          )
+                      })
+                  }
                       <Button
                         disabled={
                           candidateConsentVal === "RECEIVED"
@@ -7699,7 +7805,7 @@ const ContentLogic = (props) => {
                           color: "white",
                           marginTop: "20px",
                         }}
-                        onClick={addInputCategory}
+                        onClick={addInputFieldForCategory}
                       >
                         Add More
                       </Button>
@@ -7737,8 +7843,11 @@ const ContentLogic = (props) => {
                       label="Old Designation:"
                     ></FormControlLabel>
                   </ListItem>
-                  {arrCurrEmployed.map((item, i) => {
+                  {inputEmployement.map((item, i) => {
                     return (
+                      <div className="row my-3" key={i}>
+                    <div className="col">
+                    <div className="form-group"></div>
                       <Card
                         style={{
                           display: "flex",
@@ -7752,6 +7861,7 @@ const ContentLogic = (props) => {
                           boxShadow: "0 1px 4px 0.25px #b5ddc8",
                         }}
                       >
+
                         <ListItem
                           style={{
                             display: "flex",
@@ -7759,6 +7869,7 @@ const ContentLogic = (props) => {
                             alignItems: "flex-start",
                           }}
                         >
+                          {(inputEmployement.length!==1)?<Close onClick={removeInputFieldsForEmployer}/>:''}
                           <FormControlLabel
                             control={
                               <Checkbox
@@ -7905,11 +8016,14 @@ const ContentLogic = (props) => {
                           </ListItem>
                         </ListItem>
                       </Card>
+                      </div>
+                    </div>
                     );
+                    
                   })}
                   <ListItem>
                     <Button
-                      onClick={addInputCurrEmployed}
+                      onClick={addInputFieldForEmployer}
                       disabled={
                         candidateConsentVal === "RECEIVED" ? false : editStatus
                       }
@@ -11207,7 +11321,6 @@ const ContentLogic = (props) => {
             onClose={handleCloseConfirmation}
             maxWidth="lg"
           >
-            {console.log("test 1", confirmationData)},
             <DialogTitle sx={{ mr: 30 }}>
               Confirmation - Batch no - {confirmationData.id}
             </DialogTitle>
@@ -11458,6 +11571,7 @@ const ContentLogic = (props) => {
     setCandidateMasterData,
     handleClickOpen,
     getCandidateVerificationById,
+    getCandidateVerificationPassiveUpdate,
     getAgentPricingTemplateById,
     setAgentMasterData,
     setCandidateUploadBatchAdminData,

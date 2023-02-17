@@ -90,7 +90,8 @@ export default function ContentDesign(props) {
     getSubscriptionByIdAPIcall,
     getUserAPIcallById,
     filterTableOnTabs,
-    setOpenApproval
+    setOpenApproval,
+    getCandidateVerificationPassiveUpdate
   } = ContentLogic();
 
   useEffect(() => {
@@ -322,6 +323,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getCandidateVerificationById(tblData[item].id);
+                        getCandidateVerificationPassiveUpdate()
                       }}
                     >
                       <Edit />

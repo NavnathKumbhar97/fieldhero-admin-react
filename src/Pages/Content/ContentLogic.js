@@ -2616,7 +2616,8 @@ setInputEmployement(list);
         if (response.status == 200) {
           setLoader(false);
           setIndustryData(response.data.data.industries);
-          console.log("candidate passivee update by id", response.data.data);
+          setCategoryData(response.data.data.categories)
+          // console.log("candidate passivee update by id", response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -5790,7 +5791,6 @@ setInputEmployement(list);
         console.error("There was an error!- getzipcode", error);
       });
   }
-
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
@@ -7678,7 +7678,9 @@ setInputEmployement(list);
                     <div className="col">
                     <div className="form-group">
                       {/* {updateCandidateVerificationData.CandidateIndustry.flatMap((i,z)=>( */}
-                        
+                      {updateCandidateVerificationData.CandidateIndustry.map((item,i)=>{
+                      return (
+                      <>   
                         
                     <TextField
                             disabled={
@@ -7690,7 +7692,7 @@ setInputEmployement(list);
                             sx={{ width: "30ch", marginBottom: 3 }}
                             select
                             label="Industry"
-                            value={updateCandidateVerificationData.CandidateIndustry.id}
+                            value={item.industryId}
                             onChange={
                               (e) => {
                               handleChangeField(index, e)
@@ -7718,8 +7720,8 @@ setInputEmployement(list);
                               </MenuItem>
                             ))}
                           </TextField>
-                      {/* )) 
-                           }  */}
+                      </>
+                      )})}
                     </div>
                     </div>
                   </div>
@@ -7759,6 +7761,11 @@ setInputEmployement(list);
                             <div className="row my-3" key={index}>
                     <div className="col">
                     <div className="form-group">
+                    {updateCandidateVerificationData.CandidateCategory.map((item,i)=>{
+                      return (
+                      <> 
+
+                        
                     <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
@@ -7769,7 +7776,7 @@ setInputEmployement(list);
                             sx={{ width: "30ch", marginBottom: 3 }}
                             select
                             label="Category"
-                            value={updateCandidateVerificationData.category}
+                            value={item.categoryId}
                             onChange={(e) => {
                               handleChangeFieldForCategory();
                               setUpdateCandidateVerificationData({
@@ -7777,7 +7784,7 @@ setInputEmployement(list);
                                 category: e.target.value,
                               });
                             }}
-                            InputProps={(inputCategories.length!==1)?{
+                            InputProps={(categoryData.length!==1)?{
                               endAdornment: (
                                 <InputAdornment>
                                   <IconButton>
@@ -7786,12 +7793,13 @@ setInputEmployement(list);
                                 </InputAdornment>
                               )
                             }:""}>
-                              {industrySelectField.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                {option.label}
+                              {Object.keys(categoryData).map((option) => (
+                              <MenuItem  value={categoryData[option].id}>
+                                {categoryData[option].title}
                               </MenuItem>
                             ))}
                           </TextField>
+                          </>)})}
                     </div>
                     </div>
                   </div>
@@ -7855,7 +7863,9 @@ setInputEmployement(list);
                       <div className="row my-3" key={i}>
                     <div className="col">
                     <div className="form-group"></div>
-                    
+                    {updateCandidateVerificationData.CandidateWorkHistory.map((item,i)=>{
+                      return (
+                      <>
                       <Card
                         style={{
                           display: "flex",
@@ -7868,8 +7878,7 @@ setInputEmployement(list);
                           border: "1px solid #b5ddc8",
                           boxShadow: "0 1px 4px 0.25px #b5ddc8",
                         }}
-                      >
-
+                      > 
                         <ListItem
                           style={{
                             display: "flex",
@@ -7904,10 +7913,11 @@ setInputEmployement(list);
                                   : editStatus
                               }
                               size="small"
+                              key={i}
                               sx={{ width: "30ch" }}
                               label="Company Name"
                               value={
-                                ""
+                                item.company
                               }
                               onChange={(e) => {
                                 setUpdateCandidateVerificationData({
@@ -7927,8 +7937,7 @@ setInputEmployement(list);
                               select
                               label="Industry"
                               value={
-                                updateCandidateVerificationData.verification
-                                  .industry
+                                item.industryId
                               }
                               onChange={(e) => {
                                 setUpdateCandidateVerificationData({
@@ -7936,7 +7945,13 @@ setInputEmployement(list);
                                   industry: e.target.value,
                                 });
                               }}
-                            />
+                            >
+                              {Object.keys(industryData).map((option) => (
+                              <MenuItem value={industryData[option].id}>
+                                {industryData[option].title}
+                              </MenuItem>
+                            ))}
+                            </TextField>
                             <TextField
                               disabled={
                                 candidateConsentVal === "RECEIVED"
@@ -7948,8 +7963,7 @@ setInputEmployement(list);
                               select
                               label="Category(Designation)"
                               value={
-                                updateCandidateVerificationData.verification
-                                  .designation
+                                item.categoryId
                               }
                               onChange={(e) => {
                                 setUpdateCandidateVerificationData({
@@ -7957,7 +7971,13 @@ setInputEmployement(list);
                                   designation: e.target.value,
                                 });
                               }}
-                            />
+                            >
+                              {Object.keys(categoryData).map((option) => (
+                              <MenuItem  value={categoryData[option].id}>
+                                {categoryData[option].title}
+                              </MenuItem>
+                            ))}
+                            </TextField>
                             <TextField
                               disabled={
                                 candidateConsentVal === "RECEIVED"
@@ -7967,13 +7987,15 @@ setInputEmployement(list);
                               size="small"
                               sx={{ width: "10ch", ml: 2 }}
                               helperText="Start date"
-                              select
+                              // select
+                              value={moment(item.startDate).format("MM")}
                               label="MM"
                             />
                             <TextField
                               size="small"
                               sx={{ width: "20ch", ml: 2 }}
-                              select
+                              // select
+                              value={moment(item.startDate).format("YYYY")}
                               label="YYYY"
                             />
                           </ListItem>
@@ -7994,7 +8016,8 @@ setInputEmployement(list);
                               size="small"
                               sx={{ width: "10ch", ml: 2 }}
                               helperText="End date"
-                              select
+                              // select
+                              value={moment(item.endDate).format("MM")}
                               label="MM"
                             />
                             <TextField
@@ -8005,7 +8028,8 @@ setInputEmployement(list);
                               }
                               size="small"
                               sx={{ width: "20ch", ml: 2 }}
-                              select
+                              // select
+                              value={moment(item.endDate).format("YYYY")}
                               label="YYYY"
                             />
                             <TextField
@@ -8022,8 +8046,9 @@ setInputEmployement(list);
                             />
                           </ListItem>
                         </ListItem>
+
                       </Card>
-                  
+                      </> )})}
                       </div>
                     </div>
                     );

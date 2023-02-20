@@ -49,7 +49,7 @@ function CandidateVerification() {
             // backgroundColor: "#f4f3ef",
             width: "280px",
             marginBottom: "20px",
-            borderRadius:'25px'
+            borderRadius:'5px'
           }}
         >
           <p style={{ marginLeft: "30px" }}>Total Pending Batches</p>
@@ -79,7 +79,7 @@ function CandidateVerification() {
           style={{
             backgroundColor: "#79cbca",
             width: "280px",
-            marginBottom: "20px",borderRadius:'25px'
+            marginBottom: "20px",borderRadius:'5px'
           }}
         >
           <p style={{ marginLeft: "30px" }}>Total Pending Candidates</p>
@@ -109,7 +109,8 @@ function CandidateVerification() {
           style={{
             backgroundColor: "#79cbca",
             width: "280px",
-            marginBottom: "20px",borderRadius:'25px'
+            marginBottom: "20px",
+            borderRadius:'5px'
           }}
         >
           <p style={{ marginLeft: "30px" }}>Your Assigned Candidates</p>

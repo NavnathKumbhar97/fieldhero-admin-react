@@ -307,11 +307,11 @@ const ContentLogic = (props) => {
         skill1: "",
         skill2: "",
       },
-      industries:[{
-        id:0,
-        title:'',
+      // industries:[{
+      //   id:0,
+      //   title:'',
 
-      }],
+      // }],
       categories:[{
         id:0,
         title:''
@@ -367,11 +367,12 @@ const ContentLogic = (props) => {
   const [filterDataForCompany,setFilterDataForCompany] = useState([])
 
   //state for store the input fields value of industry
-  const [industryData, setIndustryData] = useState({
+  const [industryData, setIndustryData] = useState([{
     title: "",
     description: "",
     isActive: true,
-  });
+    id:0
+  }]);
   const [filterDataForIndustry,setFilterDataForIndustry] = useState([])
   const [checkedp, setCheckedP] = useState([]);
 //state for store the input fields value of role
@@ -7242,7 +7243,6 @@ setInputEmployement(list);
               <h3 style={{ color: "red", textAlign: "center" }}>
                 Everything is readonly.
               </h3>
-
               <Card
                 sx={{
                   maxWidth: 1545,
@@ -7677,6 +7677,9 @@ setInputEmployement(list);
                             <div className="row my-3" key={index}>
                     <div className="col">
                     <div className="form-group">
+                      {/* {updateCandidateVerificationData.CandidateIndustry.flatMap((i,z)=>( */}
+                        
+                        
                     <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
@@ -7687,7 +7690,7 @@ setInputEmployement(list);
                             sx={{ width: "30ch", marginBottom: 3 }}
                             select
                             label="Industry"
-                            value={updateCandidateVerificationData.industry.title}
+                            value={updateCandidateVerificationData.CandidateIndustry.id}
                             onChange={
                               (e) => {
                               handleChangeField(index, e)
@@ -7698,7 +7701,7 @@ setInputEmployement(list);
                                   title: e.target.value,
                                 },
                               }));
-                              console.log(updateCandidateVerificationData.industries);
+                              console.log("industry obj",updateCandidateVerificationData.industries);
                             }}
                             InputProps={(inputFields.length!==1)?{
                               endAdornment: (
@@ -7710,11 +7713,13 @@ setInputEmployement(list);
                               )
                             }:""}>
                               {Object.keys(industryData).map((option) => (
-                              <MenuItem value={industryData[option].title}>
+                              <MenuItem value={industryData[option].id}>
                                 {industryData[option].title}
                               </MenuItem>
                             ))}
                           </TextField>
+                      {/* )) 
+                           }  */}
                     </div>
                     </div>
                   </div>
@@ -7830,6 +7835,7 @@ setInputEmployement(list);
                       }
                       label="Old Company:"
                     ></FormControlLabel>
+
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -7843,11 +7849,13 @@ setInputEmployement(list);
                       label="Old Designation:"
                     ></FormControlLabel>
                   </ListItem>
+                  
                   {inputEmployement.map((item, i) => {
                     return (
                       <div className="row my-3" key={i}>
                     <div className="col">
                     <div className="form-group"></div>
+                    
                       <Card
                         style={{
                           display: "flex",
@@ -7899,8 +7907,7 @@ setInputEmployement(list);
                               sx={{ width: "30ch" }}
                               label="Company Name"
                               value={
-                                updateCandidateVerificationData.verification
-                                  .lastCompany
+                                ""
                               }
                               onChange={(e) => {
                                 setUpdateCandidateVerificationData({
@@ -8016,6 +8023,7 @@ setInputEmployement(list);
                           </ListItem>
                         </ListItem>
                       </Card>
+                  
                       </div>
                     </div>
                     );

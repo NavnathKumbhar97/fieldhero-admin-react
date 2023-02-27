@@ -281,6 +281,18 @@ const ContentLogic = (props) => {
       skill2: "",
       status: "",
       thirdLanguage: "",
+      industries:[
+        {
+        id:3,
+        title:'',
+
+      },
+        {
+        id:5,
+        title:'',
+
+      },
+    ],
       verification: {
         candidateId: 0,
         category: "",
@@ -307,11 +319,7 @@ const ContentLogic = (props) => {
         skill1: "",
         skill2: "",
       },
-      // industries:[{
-      //   id:0,
-      //   title:'',
-
-      // }],
+      
       categories:[{
         id:0,
         title:''
@@ -585,7 +593,8 @@ const ContentLogic = (props) => {
   //State for common modal of the all modules
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
-  //State for the Work experience table in candidate master module
+  //State for the Work experience and training/certificate table in candidate master module
+  const [candidateId, setCandidateId] = useState("");
   const [workExperianceData, setWorkExperianceData] = useState({
     companyId: 5,
     description: "",
@@ -593,8 +602,16 @@ const ContentLogic = (props) => {
     skillId: [2, 3, 4],
     startDate: null,
   });
+  const [trainingCertData, setTrainingCertData] = useState({
+    candidateId: !editStatus? candidateId: editId,
+    title: "",
+    type: "",
+    description: "",
+    issuedBy: "",
+    issueDate: moment("").date(),
+    skillId: 189,
+  });
   const [expData, setExptData] = useState([]);
-  const [candidateId, setCandidateId] = useState("");
 
   //State for the Certificate/training table in candidate master module
   const [certificateData, setCertificateData] = useState({
@@ -1011,7 +1028,8 @@ setInputEmployement(list);
     addWorkExperienceAPICall();
   };
   const onSubmitCert = (data) => {
-    console.log("data onSubmitCert ", data);
+    addCertificateAPICalls()
+    // console.log("data onSubmitCert ", data);
   };
   const onSubmitCndVfn = (data) => {
     updateAPICalls("candidate-verification");
@@ -2811,6 +2829,7 @@ setInputEmployement(list);
       });
   };
 
+  //add work experience in candidate master module
   const addWorkExperienceAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2848,7 +2867,7 @@ setInputEmployement(list);
     handler
       .dataPost(
         `/v1/candidates/${!editStatus ? candidateId : editId}/training-cert`,
-        workExperianceData,
+        trainingCertData,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -2856,10 +2875,10 @@ setInputEmployement(list);
       .then((response) => {
         console.log(response);
         if (response.status == 201) {
-          handleCloseChildModal();
+          setErrMsg(response.data.message);
+          handleCloseChildModalCerti();
           setOpenAlertMsg(true);
         } else {
-          // setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           // setOpenErrtMsg(true);
         }
@@ -2870,6 +2889,30 @@ setInputEmployement(list);
           setOpenErrtMsg(true);
         }
         console.error("There was an error!- addCertificateAPICalls", error);
+      });
+  };
+
+  const getTrainingCertData = async () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    await handler
+      .dataGet(`/v1//candidates/${editId}//`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setExptData(response.data.data);
+          setLoader(false);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getExperienceData", error);
+        setLoader(false);
       });
   };
 
@@ -6833,19 +6876,19 @@ setInputEmployement(list);
                 open={openChildModalCerti}
                 onClose={handleCloseChildModalCerti}
               >
-                <DialogTitle>Add Certificate</DialogTitle>
+                <DialogTitle>Add Training/Certificate</DialogTitle>
                 <DialogContent>
                   <ListItem>
                     <TextField
                       id="name"
                       label="Certificate Name"
-                      value={certificateData.title}
+                      value={trainingCertData.title}
                       {...register3("certificateName")}
                       error={errors3.certificateName ? true : false}
                       helperText={errors3.certificateName?.message}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           title: e.target.value,
                         });
                       }}
@@ -6855,10 +6898,10 @@ setInputEmployement(list);
                     <TextField
                       id="name"
                       label="Certificate Type"
-                      value={certificateData.type}
+                      value={trainingCertData.type}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           type: e.target.value,
                         });
                       }}
@@ -6868,13 +6911,13 @@ setInputEmployement(list);
                     <TextField
                       id="name"
                       label="Issued By"
-                      value={certificateData.issuedBy}
+                      value={trainingCertData.issuedBy}
                       {...register3("issuedBy")}
                       error={errors3.issuedBy ? true : false}
                       helperText={errors3.issuedBy?.message}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           issuedBy: e.target.value,
                         });
                       }}
@@ -6887,10 +6930,10 @@ setInputEmployement(list);
                       id="name"
                       select
                       children
-                      value={certificateData.skillId}
+                      value={trainingCertData.skillId}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           skillId: e.target.value,
                         });
                       }}
@@ -6901,10 +6944,10 @@ setInputEmployement(list);
                     <TextField
                       id="date"
                       label="Issued Date"
-                      value={certificateData.issueDate}
+                      value={trainingCertData.issueDate}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           issueDate: e.target.value,
                         });
                       }}
@@ -6922,10 +6965,10 @@ setInputEmployement(list);
                       id="filled-basic"
                       multiline
                       rows={5}
-                      value={certificateData.description}
+                      value={trainingCertData.description}
                       onChange={(e) => {
-                        setCertificateData({
-                          ...certificateData,
+                        setTrainingCertData({
+                          ...trainingCertData,
                           description: e.target.value,
                         });
                       }}
@@ -7678,10 +7721,9 @@ setInputEmployement(list);
                     <div className="col">
                     <div className="form-group">
                       {/* {updateCandidateVerificationData.CandidateIndustry.flatMap((i,z)=>( */}
-                      {updateCandidateVerificationData.CandidateIndustry.map((item,i)=>{
+                      {updateCandidateVerificationData.CandidateIndustry!==""?updateCandidateVerificationData.CandidateIndustry.map((item,i)=>{
                       return (
-                      <>   
-                        
+                      <>     
                     <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
@@ -7693,6 +7735,47 @@ setInputEmployement(list);
                             select
                             label="Industry"
                             value={item.industryId}
+                            onChange={
+                              (e) => {
+                              handleChangeField(index, e)
+                              setUpdateCandidateVerificationData((prevState) => ({
+                                ...prevState,
+                                industries: {
+                                  ...prevState.industries,
+                                  id: industryData.id,
+                                },
+                                
+                              }));
+                              console.log("industry obj",updateCandidateVerificationData.CandidateIndustry);
+                            }}
+                            InputProps={(inputFields.length!==1)?{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Close  onClick={removeInputFields}/>
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }:""}>
+                              {Object.keys(industryData).map((option) => (
+                              <MenuItem value={industryData[option].id}>
+                                {industryData[option].title}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                      </>
+                      )}):
+                      <TextField
+                            disabled={
+                              candidateConsentVal === "RECEIVED"
+                                ? false
+                                : editStatus
+                            }
+                            size="small"
+                            sx={{ width: "30ch", marginBottom: 3 }}
+                            select
+                            label="Industry"
+                            value={""}
                             onChange={
                               (e) => {
                               handleChangeField(index, e)
@@ -7720,8 +7803,7 @@ setInputEmployement(list);
                               </MenuItem>
                             ))}
                           </TextField>
-                      </>
-                      )})}
+                      }
                     </div>
                     </div>
                   </div>
@@ -7761,11 +7843,9 @@ setInputEmployement(list);
                             <div className="row my-3" key={index}>
                     <div className="col">
                     <div className="form-group">
-                    {updateCandidateVerificationData.CandidateCategory.map((item,i)=>{
+                    {updateCandidateVerificationData.CandidateCategory !==""?updateCandidateVerificationData.CandidateCategory.map((item,i)=>{
                       return (
-                      <> 
-
-                        
+                      <>    
                     <TextField
                             disabled={
                               candidateConsentVal === "RECEIVED"
@@ -7799,7 +7879,40 @@ setInputEmployement(list);
                               </MenuItem>
                             ))}
                           </TextField>
-                          </>)})}
+                          </>)}):
+                          <TextField
+                            disabled={
+                              candidateConsentVal === "RECEIVED"
+                                ? false
+                                : editStatus
+                            }
+                            size="small"
+                            sx={{ width: "30ch", marginBottom: 3 }}
+                            select
+                            label="Category"
+                            value={""}
+                            onChange={(e) => {
+                              handleChangeFieldForCategory();
+                              setUpdateCandidateVerificationData({
+                                ...updateCandidateVerificationData,
+                                category: e.target.value,
+                              });
+                            }}
+                            InputProps={(categoryData.length!==1)?{
+                              endAdornment: (
+                                <InputAdornment>
+                                  <IconButton>
+                                    <Close  onClick={removeInputFieldsForCategory}/>
+                                  </IconButton>
+                                </InputAdornment>
+                              )
+                            }:""}>
+                              {Object.keys(categoryData).map((option) => (
+                              <MenuItem  value={categoryData[option].id}>
+                                {categoryData[option].title}
+                              </MenuItem>
+                            ))}
+                          </TextField>}
                     </div>
                     </div>
                   </div>
@@ -7863,7 +7976,7 @@ setInputEmployement(list);
                       <div className="row my-3" key={i}>
                     <div className="col">
                     <div className="form-group"></div>
-                    {updateCandidateVerificationData.CandidateWorkHistory.map((item,i)=>{
+                    {updateCandidateVerificationData.CandidateWorkHistory!==""?updateCandidateVerificationData.CandidateWorkHistory.map((item,i)=>{
                       return (
                       <>
                       <Card
@@ -7986,10 +8099,10 @@ setInputEmployement(list);
                               }
                               size="small"
                               sx={{ width: "10ch", ml: 2 }}
-                              helperText="Start date"
+                              // helperText="Start date"
                               // select
                               value={moment(item.startDate).format("MM")}
-                              label="MM"
+                              label="Start date(MM)"
                             />
                             <TextField
                               size="small"
@@ -8014,11 +8127,11 @@ setInputEmployement(list);
                                   : editStatus
                               }
                               size="small"
-                              sx={{ width: "10ch", ml: 2 }}
-                              helperText="End date"
+                              sx={{ width: "10ch" }}
+                              // helperText="End date"
                               // select
                               value={moment(item.endDate).format("MM")}
-                              label="MM"
+                              label="End date(MM)"
                             />
                             <TextField
                               disabled={
@@ -8048,7 +8161,191 @@ setInputEmployement(list);
                         </ListItem>
 
                       </Card>
-                      </> )})}
+                      </> )}):
+                      <>
+                      <Card
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "nowrap",
+                          // justifyContent:'space-around',
+                          maxWidth: 1170,
+                          backgroundColor: "#e6fbf0",
+                          marginBottom: 2,
+                          border: "1px solid #b5ddc8",
+                          boxShadow: "0 1px 4px 0.25px #b5ddc8",
+                        }}
+                      > 
+                        <ListItem
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          {(inputEmployement.length!==1)?<Close onClick={removeInputFieldsForEmployer}/>:''}
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                disabled={
+                                  candidateConsentVal === "RECEIVED"
+                                    ? false
+                                    : editStatus
+                                }
+                              />
+                            }
+                            label="Currently Employed?"
+                          ></FormControlLabel>
+                          <ListItem
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                            }}
+                          >
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              key={i}
+                              sx={{ width: "30ch" }}
+                              label="Company Name"
+                              value={
+                                item.company
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData,
+                                  verification: { lastCompany: e.target.value },
+                                });
+                              }}
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "30ch", ml: 2 }}
+                              select
+                              label="Industry"
+                              value={
+                                item.industryId
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData.verification,
+                                  industry: e.target.value,
+                                });
+                              }}
+                            >
+                              {Object.keys(industryData).map((option) => (
+                              <MenuItem value={industryData[option].id}>
+                                {industryData[option].title}
+                              </MenuItem>
+                            ))}
+                            </TextField>
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "30ch", ml: 2 }}
+                              select
+                              label="Category(Designation)"
+                              value={
+                                item.categoryId
+                              }
+                              onChange={(e) => {
+                                setUpdateCandidateVerificationData({
+                                  ...updateCandidateVerificationData.verification,
+                                  designation: e.target.value,
+                                });
+                              }}
+                            >
+                              {Object.keys(categoryData).map((option) => (
+                              <MenuItem  value={categoryData[option].id}>
+                                {categoryData[option].title}
+                              </MenuItem>
+                            ))}
+                            </TextField>
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "12ch", ml: 2 }}
+                              // helperText="Start date"
+                              // select
+                              value={moment(item.startDate).format("MM")}
+                              label="Start date(MM)"
+                            />
+                            <TextField
+                              size="small"
+                              sx={{ width: "20ch", ml: 2 }}
+                              // select
+                              value={moment(item.startDate).format("YYYY")}
+                              label="YYYY"
+                            />
+                          </ListItem>
+
+                          <ListItem
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                            }}
+                          >
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "12ch" }}
+                              // helperText="End date"
+                              // select
+                              value={moment(item.endDate).format("MM")}
+                              label="End date(MM)"
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "20ch", ml: 2 }}
+                              // select
+                              value={moment(item.endDate).format("YYYY")}
+                              label="YYYY"
+                            />
+                            <TextField
+                              disabled={
+                                candidateConsentVal === "RECEIVED"
+                                  ? false
+                                  : editStatus
+                              }
+                              size="small"
+                              sx={{ width: "40ch", ml: 2 }}
+                              multiline
+                              rows={2}
+                              label="Job Description"
+                            />
+                          </ListItem>
+                        </ListItem>
+
+                      </Card>
+                      </>}
                       </div>
                     </div>
                     );

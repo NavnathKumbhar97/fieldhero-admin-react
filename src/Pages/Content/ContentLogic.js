@@ -612,6 +612,7 @@ const ContentLogic = (props) => {
     skillId: 189,
   });
   const [expData, setExptData] = useState([]);
+  const [trainCertData, setTrainCertData] = useState([])
 
   //State for the Certificate/training table in candidate master module
   const [certificateData, setCertificateData] = useState({
@@ -2897,12 +2898,13 @@ setInputEmployement(list);
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     await handler
-      .dataGet(`/v1//candidates/${editId}//`, {
+      .dataGet(`/v1/candidates/${editId}/training-history`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         if (response.status == 200) {
-          setExptData(response.data.data);
+          setTrainCertData(response.data.data);
+          console.log("training or certificate :",response.data.data);
           setLoader(false);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -2921,7 +2923,7 @@ setInputEmployement(list);
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     await handler
-      .dataGet(`/v1//candidates/${editId}/work-history/`, {
+      .dataGet(`/v1/candidates/${editId}/work-history/`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -6471,6 +6473,7 @@ setInputEmployement(list);
                                 // onSubmitData()
                                 updateAPICalls("candidate-master");
                                 getExperienceData();
+                                getTrainingCertData()
                               }}
                             >
                               UPDATE AND NEXT
@@ -6480,6 +6483,7 @@ setInputEmployement(list);
                             onClick={() => {
                               handleNext();
                               getExperienceData();
+                              getTrainingCertData()
                             }}
                             style={{
                               backgroundColor: "brown",
@@ -6633,6 +6637,7 @@ setInputEmployement(list);
                         </ListItem>
                         <ListItem>
                           {/* <AddCertificates /> */}
+
                           <Box sx={{ width: "100%" }}>
                             <Paper>
                               <TableContainer>
@@ -6640,7 +6645,7 @@ setInputEmployement(list);
                                   sx={{ minWidth: 500 }}
                                   aria-labelledby="tableTitle"
                                   size={dense ? "small" : "medium"}
-                                >
+                                  >
                                   <TableHead>
                                     <TableRow>
                                       <TableCell padding="checkbox">
@@ -6658,6 +6663,8 @@ setInputEmployement(list);
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
+                                  {Object.keys(trainCertData).map((items)=>(
+                                    <>
                                     <TableRow
                                       hover
                                       role="checkbox"
@@ -6666,12 +6673,13 @@ setInputEmployement(list);
                                       <TableCell padding="checkbox">
                                         <Checkbox color="primary" />
                                       </TableCell>
-                                      <TableCell align="left">test</TableCell>
-                                      <TableCell align="left">Test</TableCell>
-                                      <TableCell align="left">test</TableCell>
+                                      <TableCell align="left">{trainCertData[items].title}</TableCell>
+                                      <TableCell align="left">{trainCertData[items].type}</TableCell>
+                                      <TableCell align="left">{trainCertData[items].issueDate}</TableCell>
                                       {/* <TableCell align="right">Test</TableCell> */}
                                       {/* <TableCell align="right">{row.protein}</TableCell> */}
                                     </TableRow>
+                                    </>))}
                                   </TableBody>
                                 </Table>
                               </TableContainer>
@@ -6685,7 +6693,7 @@ setInputEmployement(list);
                                 onRowsPerPageChange={handleChangeRowsPerPage}
                               />
                             </Paper>
-                          </Box>
+                          </Box> 
                         </ListItem>
                       </div>
                       <div>

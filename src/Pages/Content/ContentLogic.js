@@ -72,7 +72,7 @@ import BatchPriority from "../../Container/Drawer/Batch Priority/BatchPriority";
 import OtherIndCategory from "../../Container/Drawer/Other Industry Category/OtherIndCategory";
 import WorkExperiance from "../../Container/Drawer/Candidate Master/Work Experiance Modal/WorkExperiance";
 import AddCertificates from "../../Container/Drawer/Candidate Master/Certificates/AddCertificates";
-import { CheckBox, Close, CropSquareSharp, Info, PriorityHigh, Search, ToggleOn } from "@mui/icons-material";
+import { CheckBox, Close, CropSquareSharp, Edit, Info, PriorityHigh, Search, ToggleOn } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ProfessionalTab from "../../Container/Drawer/Agent Master/Professional Tab/ProfessionalTab";
 import { Link } from "react-router-dom";
@@ -362,6 +362,12 @@ const ContentLogic = (props) => {
     title: "",
     description: "",
     isActive: false,
+    CreatedBy:"",
+    ModifiedBy:"",
+    createdBy:0,
+    createdOn:"",
+    modifiedBy:0,
+    modifiedOn:""
   });
 
   //state for store the input fields value of company
@@ -530,6 +536,11 @@ const ContentLogic = (props) => {
     skill2: 0,
     lastCompany: 0,
     designation: 0,
+    totalAmount:0,
+    modifiedOn:"",
+    CreatedBy:"",
+    ModifiedBy:"",
+    createdOn:""
   });
   const [agentMasterPan, setAgentMasterPan] = useState();
   const [agentMasterPOI, setAgentMasterPOI] = useState();
@@ -600,8 +611,9 @@ const ContentLogic = (props) => {
     description: "",
     endDate: moment("").date(),
     skillId: [2, 3, 4],
-    startDate: null,
+    startDate: moment("").date(),
   });
+  const [trainingCert,setTrainCert] = useState(false)
   const [trainingCertData, setTrainingCertData] = useState({
     candidateId: !editStatus? candidateId: editId,
     title: "",
@@ -1030,7 +1042,11 @@ setInputEmployement(list);
   };
   const onSubmitCert = (data) => {
     addCertificateAPICalls()
+
     // console.log("data onSubmitCert ", data);
+  };
+  const onUpdateCert = (data) => {
+    updateTrainingCertAPICall()
   };
   const onSubmitCndVfn = (data) => {
     updateAPICalls("candidate-verification");
@@ -2862,9 +2878,11 @@ setInputEmployement(list);
       });
   };
 
+  //add new training or certificate data
   const addCertificateAPICalls = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
     handler
       .dataPost(
         `/v1/candidates/${!editStatus ? candidateId : editId}/training-cert`,
@@ -2879,6 +2897,9 @@ setInputEmployement(list);
           setErrMsg(response.data.message);
           handleCloseChildModalCerti();
           setOpenAlertMsg(true);
+          getTrainingCertData()
+          setLoader(true)
+          setTrainCert(false)
         } else {
           setOpenErrtMsg(true);
           // setOpenErrtMsg(true);
@@ -2893,6 +2914,7 @@ setInputEmployement(list);
       });
   };
 
+  //get training or certificate data
   const getTrainingCertData = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2918,6 +2940,7 @@ setInputEmployement(list);
       });
   };
 
+  //get experience data 
   const getExperienceData = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2941,6 +2964,99 @@ setInputEmployement(list);
         setLoader(false);
       });
   };
+
+  //delete training/certificate data
+  const deleteTrainingCertAPICall=(id)=>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataDelete(
+        `/v1/candidates/${editId}/training-history/${id}`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status == 204) {
+          console.log(response.data.message);
+          getTrainingCertData()
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- updateCategoryAPICall", error);
+      });
+  }
+
+  //get training/certificate data by id
+  const getTrainingCertByIdAPIcall = (trainingCertId) => {
+    handleClickOpenChildModalCerti()
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/candidates/${editId}/training-history/${trainingCertId}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setTrainingCertData(response.data.data);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSkillSetById", error);
+      });
+  };
+  
+  //update training/certificate data
+  const updateTrainingCertAPICall = (trainingCertId) =>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    let updateTrainingCertData = {
+      ...trainingCertData,
+    };
+    handler
+      .dataPut(
+        `/v1/candidates/${editId}/training-history/${trainingCertId}`,
+        updateTrainingCertData,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status == 204) {
+          console.log(response.data.message);
+          getTrainingCertData()
+          setOpenAlertMsg(true);
+          handleClickOpenChildModalCerti()
+          setTrainCert(false)
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 400) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- updateCategoryAPICall", error);
+      });
+  }
+
   // upload profile image of candidate master module
   const addProfileImg = async (id) => {
     const formData = new FormData();
@@ -3473,6 +3589,7 @@ setInputEmployement(list);
 
   const handleCloseChildModalCerti = () => {
     setOpenChilModalCerti(false);
+    setTrainCert(false)
   };
 
   const isStepOptional = (step) => {
@@ -3589,6 +3706,7 @@ setInputEmployement(list);
     return !editStatus ? userData.permState : updateUserData.permState;
   };
 
+  
   // add API calls
   const addAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
@@ -6573,6 +6691,9 @@ setInputEmployement(list);
                                       <TableCell align="left">
                                         Year Of Experiance
                                       </TableCell>
+                                      <TableCell align="left">
+                                        Actions
+                                      </TableCell>
                                     </TableRow>
                                   </TableHead>
 
@@ -6599,8 +6720,14 @@ setInputEmployement(list);
                                             {expData[item].endDate}
                                           </TableCell>
                                           <TableCell align="left"> 2</TableCell>
-                                          {/* <TableCell align="right"> test1</TableCell> */}
-                                        </TableRow>
+                                          <TableCell align="left">
+                                        <Button>
+                                          <EditIcon></EditIcon>
+                                        </Button>
+                                        <Button>
+                                        <DeleteIcon></DeleteIcon>
+                                        </Button>
+                                        </TableCell>                                        </TableRow>
                                       </>
                                     ))}
                                   </TableBody>
@@ -6660,6 +6787,9 @@ setInputEmployement(list);
                                       <TableCell align="left">
                                         Issued Date
                                       </TableCell>
+                                      <TableCell align="left">
+                                        Actions
+                                      </TableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
@@ -6676,7 +6806,22 @@ setInputEmployement(list);
                                       <TableCell align="left">{trainCertData[items].title}</TableCell>
                                       <TableCell align="left">{trainCertData[items].type}</TableCell>
                                       <TableCell align="left">{trainCertData[items].issueDate}</TableCell>
-                                      {/* <TableCell align="right">Test</TableCell> */}
+                                      <TableCell align="left">
+                                        <Button >
+                                          <EditIcon 
+                                          onClick={()=>{
+                                            getTrainingCertByIdAPIcall(trainCertData[items].id)
+                                            setTrainCert(true)
+                                            console.log("training id",trainCertData[items].id)}}></EditIcon>
+                                        </Button>
+                                        <Button>
+                                        <DeleteIcon 
+                                        onClick={()=>{
+                                          deleteTrainingCertAPICall(trainCertData[items].id)
+                                          console.log("training id",trainCertData[items].id)
+                                        }}></DeleteIcon>
+                                        </Button>
+                                        </TableCell>
                                       {/* <TableCell align="right">{row.protein}</TableCell> */}
                                     </TableRow>
                                     </>))}
@@ -6986,12 +7131,18 @@ setInputEmployement(list);
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseChildModalCerti}>Close</Button>
-                  <Button
+                  {!trainingCert?<Button
                     style={{ backgroundColor: "brown", color: "white" }}
                     onClick={handleSubmitCert(onSubmitCert)}
                   >
                     Add
-                  </Button>
+                  </Button>:
+                  <Button
+                    style={{ backgroundColor: "brown", color: "white" }}
+                    onClick={handleSubmitCert(onUpdateCert)}
+                  >
+                    Update
+                  </Button>}
                 </DialogActions>
               </Dialog>
             </div>
@@ -9629,7 +9780,7 @@ setInputEmployement(list);
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                  mr: 20,
+                  // mr: 20,
                   alignItems: "flex-start",
                 }}
               >
@@ -9644,16 +9795,19 @@ setInputEmployement(list);
                   </>
                 ) : null}
 
+                {/* {Object.keys(agentPricingTemplateData).map((item,i)=>( */}
+                {/* <> */}
                 <ul style={{ fontSize: "12px", marginTop: "-10px" }}>
-                  <h2>Total:0</h2>
-                  <li>Last modified by:</li>
-                  <li>Last modified on:</li>
-                  <li>Created by:</li>
-                  <li>Created on:</li>
+                  <h2>Total:{agentPricingTemplateData.totalAmount}</h2>
+                  <li>Last modified by:{agentPricingTemplateData.ModifiedBy}</li>
+                  <li>Last modified on:{agentPricingTemplateData.modifiedOn}</li>
+                  <li>Created by:{agentPricingTemplateData.CreatedBy}</li>
+                  <li>Created on:{agentPricingTemplateData.createdOn}</li>
                 </ul>
+                {/* </> ))} */}
               </List>
               <Box
-                sx={{ width: "100%", typography: "body1", ml: 5, mt: "-80px" }}
+                sx={{ width: "100%", typography: "body1", ml: 3, mt: "-90px" }}
               >
                 <List sx={{ mb: 5 }}>
                   <TextField
@@ -10134,10 +10288,10 @@ setInputEmployement(list);
               </List>
               <List sx={{ fontSize: "13px" }}>
                 <ul>
-                  <li>Last modified by:</li>
-                  <li>Last modified on:</li>
-                  <li>Created by:</li>
-                  <li>Created On:</li>
+                  <li>Last modified by:{categoryData.ModifiedBy}</li>
+                  <li>Last modified on:{categoryData.modifiedOn}</li>
+                  <li>Created by:{categoryData.CreatedBy}</li>
+                  <li>Created On:{categoryData.createdOn}</li>
                 </ul>
               </List>
             </div>

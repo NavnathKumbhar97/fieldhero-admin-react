@@ -4550,7 +4550,6 @@ const ContentLogic = (props) => {
             </Button>
           </>
         );
-
       case "candidate-verification":
         return (
           <>
@@ -4569,7 +4568,6 @@ const ContentLogic = (props) => {
             </Button>
           </>
         );
-
       case "agent-master":
         return (
           <>
@@ -4624,7 +4622,6 @@ const ContentLogic = (props) => {
             )}
           </>
         );
-
       case "candidate-upload-batch-admin":
         return (
           <>
@@ -4662,7 +4659,6 @@ const ContentLogic = (props) => {
             )}
           </>
         );
-
       case "batch-priority":
         return (
           <>
@@ -4683,7 +4679,6 @@ const ContentLogic = (props) => {
         );
       case "other-industry-category":
         return null;
-
       case "customer":
         return null;
       case "role":
@@ -11101,7 +11096,7 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 3 }}
                 >
                   {role.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem key={option.value} value={option.id}>
                       {option.label}
                     </MenuItem>
                   ))}

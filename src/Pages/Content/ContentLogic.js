@@ -387,7 +387,7 @@ const ContentLogic = (props) => {
     companyName: " ",
     description: "",
     isActive: true,
-    industry: "",
+    industryId: 0,
     title: "",
   });
   const [filterDataForCompany, setFilterDataForCompany] = useState([]);
@@ -416,6 +416,7 @@ const ContentLogic = (props) => {
   const [uroleData, setURoleData] = useState({
     permissions: [],
   });
+  const [roleForUser,setRoleForUSer] = useState([])
 
   //state for store the input fields value of skillset
   const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
@@ -439,6 +440,10 @@ const ContentLogic = (props) => {
   );
 
   //state for store the input fields value of user
+  const [industryForCompany, setIndustryForCompany] = useState({
+    id:0,
+    title:""
+  })
   const [userData, setUserData] = useState({
     fullName: "",
     dob: "",
@@ -2083,6 +2088,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
+
   //fetch the industry data for filter
   const getIndustryForFilterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2096,6 +2102,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setFilterDataForIndustry(response.data.data.industries);
+          setIndustryForCompany(response.data.data.industries);
           setTblDataCount(response.data.data.count);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -2110,6 +2117,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
+  
   //fetch the roles data
   const getRoleAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2152,6 +2160,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setFilterDataForRole(response.data.data.roles);
+          setRoleForUSer(response.data.data.roles);
           setTblDataCount(response.data.data.count);
           console.log("roles", tblData);
         } else if (response.status == 400) {
@@ -2526,6 +2535,7 @@ const ContentLogic = (props) => {
       case "company":
         getCompanyAPIcall();
         getCompanyForFilterAPIcall();
+        getIndustryForFilterAPIcall();
         break;
       case "customer":
         getCustomerAPIcall();
@@ -2550,6 +2560,7 @@ const ContentLogic = (props) => {
       case "user":
         getUserAPIcall();
         getUserForFilterAPIcall();
+        getRoleForFilterAPIcall();
         break;
       default:
         break;
@@ -10503,19 +10514,27 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mb: 5 }}>
                 <TextField
+                select
                   id="filled-basic"
                   label="Industry Name"
                   type="name"
-                  value={companyData.industry}
+                  value={companyData.industryId}
                   onChange={(e) => {
                     setCompanyData({
                       ...companyData,
-                      industry: e.target.value,
+                      industryId: e.target.value,
                     });
                   }}
                   variant="filled"
                   sx={{ width: "130ch" }}
-                />
+                >
+                  {Object.keys(industryForCompany).map((option) => (
+                    <MenuItem key={industryForCompany[option].title} 
+                    value={industryForCompany[option].id}>
+                      {industryForCompany[option].title}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </List>
               <List>
                 <FormGroup>

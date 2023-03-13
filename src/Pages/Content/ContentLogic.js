@@ -39,7 +39,6 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
-  Grid,
   InputAdornment,
   InputLabel,
   List,
@@ -6057,37 +6056,7 @@ const ContentLogic = (props) => {
                           />
                         </ListItem>
                         <ListItem>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Grid container justifyContent="space-around">
-            <DatePicker
-                margin="normal"
-                id="date-picker-dialog"
-                // label={label}
-                inputFormat={'MM/dd/yyyy'}
-                // mask={mask ?? "__/__/____"}
-                // onChange={handleDateChange}
-                // value={selectedDate}
-                InputAdornmentProps={{ position: 'start' }}
-                // minDate={minDate}
-                // maxDate={new Date(maxdate)}
-                // shouldDisableDate={disableCustomDate}
-                // disablePast={disablePastDate === "true" ? true : false}
-                views={[ 'year', 'month', 'day' ]}
-                InputProps={{ "data-testid": "datePicker" }}
-                renderInput={(props) => (
-                    <TextField
-                        {...props}
-                        // {...otherProps}
-                        // fullWidth={true}
-                        // placeholder={placeholder}
-                        // error={error ? error : errorTF}
-                        // helperText={error ? helperText : helperTextTF}
-                        type="password"
-                        variant="standard" />
-                )}
-            />
-        </Grid>
-    </LocalizationProvider>
+                          
                           <TextField
                             id="filled-basic"
                             label="Birthdate"
@@ -6112,6 +6081,7 @@ const ContentLogic = (props) => {
                             variant="filled"
                             sx={{ width: "69ch" }}
                           />
+                          
                         </ListItem>
                         <ListItem>
                           <FormControl>

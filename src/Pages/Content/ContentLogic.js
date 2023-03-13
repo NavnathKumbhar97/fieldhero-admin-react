@@ -11095,7 +11095,6 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 3 }}
                 />
                 <TextField
-                  required
                   select
                   id="filled-basic"
                   label="Role"
@@ -11105,18 +11104,19 @@ const ContentLogic = (props) => {
                   value={!editStatus ? userData.roleId : updateUserData.roleId}
                   onChange={(e) => {
                     !editStatus
-                      ? setUserData({ ...userData, roleId: 2 })
+                      ? setUserData({ ...userData, roleId: e.target.value })
                       : setUpdateUserData({
                           ...updateUserData,
-                          roleId: 0,
+                          roleId: e.target.value,
                         });
                   }}
                   variant="filled"
                   sx={{ width: "40ch", ml: 3 }}
                 >
-                  {role.map((option) => (
-                    <MenuItem key={option.value} value={option.id}>
-                      {option.label}
+                  {Object.keys(roleForUser).map((option) => (
+                    <MenuItem key={roleForUser[option].name}
+                     value={roleForUser[option].roleId}>
+                      {roleForUser[option].name}
                     </MenuItem>
                   ))}
                 </TextField>

@@ -96,6 +96,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import FileUpload from "react-mui-fileuploader";
 import axios from "axios";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -153,7 +156,12 @@ const ContentLogic = (props) => {
     });
 
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
-    useState({});
+    useState({
+    });
+  const [ cndUpdBatchAdmin,setCndUpdBatchAdmin] = useState({
+    id:0,
+    templateName:''
+  })
   // state for store the input fields value of candidate master
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
@@ -416,7 +424,10 @@ const ContentLogic = (props) => {
   const [uroleData, setURoleData] = useState({
     permissions: [],
   });
-  const [roleForUser,setRoleForUSer] = useState([])
+  const [roleForUser,setRoleForUSer] = useState({
+    id:0,
+    name:""
+  })
 
   //state for store the input fields value of skillset
   const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
@@ -2857,6 +2868,7 @@ const ContentLogic = (props) => {
           setCandidateUploadBatchAdminData(
             response.data.data.agentPricingTemplates
           );
+          setCndUpdBatchAdmin(response.data.data.agentPricingTemplates)
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -6011,35 +6023,7 @@ const ContentLogic = (props) => {
                               setImage([...e]);
                             }}
                           />
-                          {/* <Button 
-                            component="span"
-                            variant="contained"
-                            style={{
-                              backgroundColor: "brown",
-                              color: "white",
-                              fontSize: "15px bold",
-                            }}
-                          > */}
-
-                          {/* <input
-                            {...register("photo")}
-                            onChange={(e) => {
-                              setImage(e.target.files[0]);
-                              console.log("on file", e.target.files);
-                            }}
-                            accept="image/*"
-                            id="upload-photo"
-                            name="upload-photo"
-                            type="file"
-                            // style={{ display: "none" }}
-                          /> */}
-                          {/* UPLOAD IMAGE
-                          </Button> */}
                         </label>
-
-                        {/* <p style={{ marginLeft: "150px", marginTop: "-30px" }}>
-                          (png,jpg)
-                        </p> */}
                       </div>
                       <div>
                         <ListItem>
@@ -6072,6 +6056,7 @@ const ContentLogic = (props) => {
                           />
                         </ListItem>
                         <ListItem>
+                          
                           <TextField
                             id="filled-basic"
                             label="Birthdate"
@@ -6096,6 +6081,7 @@ const ContentLogic = (props) => {
                             variant="filled"
                             sx={{ width: "69ch" }}
                           />
+                          
                         </ListItem>
                         <ListItem>
                           <FormControl>
@@ -11031,6 +11017,7 @@ const ContentLogic = (props) => {
                   InputLabelProps={{ shrink: true }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
+                
                 <TextField
                   select
                   id="filled-basic"
@@ -11095,6 +11082,7 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 3 }}
                 />
                 <TextField
+                required
                   select
                   id="filled-basic"
                   label="Role"
@@ -11115,7 +11103,7 @@ const ContentLogic = (props) => {
                 >
                   {Object.keys(roleForUser).map((option) => (
                     <MenuItem key={roleForUser[option].name}
-                     value={roleForUser[option].roleId}>
+                     value={roleForUser[option].id}>
                       {roleForUser[option].name}
                     </MenuItem>
                   ))}
@@ -11747,36 +11735,31 @@ const ContentLogic = (props) => {
                   </tr>
                 </List>
                 <List>
-                  <Select
+                  <TextField
+                  select
+                  value={candidateUploadBatchAdminData.templateName}
                     onChange={(e) => {
                       setCandidateUploadBatchAdminData({
                         ...candidateUploadBatchAdminData,
                         id: e.target.value,
                       });
-                      // console.log("tt1", candidateUploadBatchAdminData.id);
-                      // console.log("all data", candidateUploadBatchAdminData);
                     }}
                     label="New pricing template"
                     // value={candidateUploadBatchAdminData.id}
                     required
                     style={{ width: "50ch" }}
                   >
-                    {Object.keys(candidateUploadBatchAdminData).map(
+                    {Object.keys(cndUpdBatchAdmin).map(
                       (item, x) => (
                         <MenuItem
-                          key={item}
-                          value={candidateUploadBatchAdminData[item].id}
+                          key={x}
+                          value={cndUpdBatchAdmin[item].id}
                         >
-                          <ListItemText
-                            primary={
-                              // candidateUploadBatchAdminData===null?"null":
-                              candidateUploadBatchAdminData[item].templateName
-                            }
-                          />
+                          {cndUpdBatchAdmin[item].templateName}
                         </MenuItem>
                       )
                     )}
-                  </Select>
+                  </TextField>
                 </List>
                 <tr>
                   <p>*indicates required field</p>

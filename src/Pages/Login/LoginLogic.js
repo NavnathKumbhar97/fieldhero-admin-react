@@ -100,38 +100,10 @@ const loginAPIcall = async (e) => {
       } 
   } catch (ex) {
       console.error(ex)
+      setOpenErrtMsg(true)
+      setLoader(false)
   }
 }
-
-//login api 
-// const loginAPIcall = () => {
-//   console.log("fun called ");
-//   if (email && password) {
-//     const loginRequest = {
-//       email: email,
-//       password: password,
-//     };
-
-//     // setLoading(true);
-//     console.log("api called ");
-//     axios
-//       .post("/api/v1/users/login", loginRequest)
-      
-//       .then((response) => {
-//         // setLoading(false);
-//         if (response.status == 200) {
-//           localStorage.setItem("token", response.data.token);
-
-//           navigate("/");
-//         } else if (response.status == 400) {
-//           window.alert(response.data.message);
-//         }
-//       })
-//       .catch((error) => {
-//         console.error("There was an error!- loginAPIcall", error);
-//       });
-//   }
-// };
 
 
   return {

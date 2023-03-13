@@ -1220,7 +1220,6 @@ export default function ContentDesign(props) {
                         handleOpenCandidateModal();
                         setEditId(tblData[item].id);
                         setEditStatus(true);
-                        console.log(tblData[item].id);
                         getUserAPIcallById(tblData[item].id);
                       }}
                     >

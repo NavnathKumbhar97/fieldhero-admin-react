@@ -178,7 +178,7 @@ const ContentLogic = (props) => {
     email1: "",
     email2: "",
     fullName: "",
-    gender: "MALE",
+    gender: "",
     perm_address: "",
     perm_city: "",
     perm_country: "India",
@@ -4558,7 +4558,7 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch":
         return (
           <>
-            <Button
+            {!editStatus?(<Button
               onClick={handleOpenCandidateModal}
               style={{
                 marginTop: "60px",
@@ -4570,7 +4570,24 @@ const ContentLogic = (props) => {
             >
               <FileUploadIcon />
               {buttonText}
-            </Button>
+            </Button>): (
+              <Button
+                onClick={() => {
+                  handleClickOpenAdminCanUplBtch();
+                  getAgentPricingForCndUplBatchAPICalls();
+                }}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                {/* <FileUploadIcon /> */}
+                Change Pricing Template
+              </Button>
+            )}
           </>
         );
       case "candidate-verification":
@@ -5989,6 +6006,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getzipcode", error);
       });
   };
+
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
@@ -6084,37 +6102,28 @@ const ContentLogic = (props) => {
                           
                         </ListItem>
                         <ListItem>
-                          <FormControl>
-                            <FormLabel id="demo-row-radio-buttons-group-label">
+                        <FormLabel id="demo-row-radio-buttons-group-label">
                               Gender
                             </FormLabel>
-                            <RadioGroup
-                              row
-                              aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                            >
-                              <FormControlLabel
-                                value={"MALE"}
-                                control={
-                                  <Radio
-                                    value={candidateMasterData.gender}
-                                    onChange={(e) => {
-                                      setCandidateMasterData({
-                                        ...candidateMasterData,
-                                        gender: e.target.checked,
-                                      });
-                                    }}
-                                  />
-                                }
-                                label="Male"
-                              />
-                              <FormControlLabel
-                                value="female"
-                                control={<Radio />}
-                                label="Female"
-                              />
-                            </RadioGroup>
-                          </FormControl>
+                        <FormControl label="Gender" component="fieldset" name="Gender">
+        <RadioGroup row onChange={(e)=>{
+          setCandidateMasterData({...candidateMasterData,gender:e.target.value})
+          console.log("gender",candidateMasterData.gender);
+        }} 
+        value={candidateMasterData.gender}>
+          <FormLabel label="Gender"/>
+          <FormControlLabel
+            value="MALE" 
+            control={<Radio checked={candidateMasterData.gender==="MALE"}/>}
+            label="Male"
+          />
+          <FormControlLabel
+            value="FEMALE" 
+            control={<Radio checked={candidateMasterData.gender==="FEMALE"}/>}
+            label="Female"
+          />
+        </RadioGroup>
+      </FormControl>
                         </ListItem>
 
                         <ListItem sx={{ mb: 5 }}>

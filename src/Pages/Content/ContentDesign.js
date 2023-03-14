@@ -241,7 +241,18 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox color="primary" />
+                    <Checkbox color="primary" onChange={(e) => {
+                        if (e.target.checked) {
+                          console.log("test 1",tblData[item]);
+                          setEditId(tblData[item].id);
+                          setEditStatus(true);
+                          // setCandidateUploadBatchAdminData(tblData[item]);
+                          setCandidateUploadBatchAdminSelect(tblData[item]);
+                        } else {
+                          setEditStatus(false);
+                          setCandidateUploadBatchAdminData([]);
+                        }
+                      }}/>
                   </TableCell>
                   <TableCell
                     component="th"

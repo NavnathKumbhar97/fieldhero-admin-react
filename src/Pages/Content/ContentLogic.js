@@ -99,6 +99,7 @@ import axios from "axios";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import AuditLog from "../../reusable/AuditLog";
 
 const ContentLogic = (props) => {
   const navigate = useNavigate();
@@ -3301,16 +3302,6 @@ const ContentLogic = (props) => {
       <TableHead>
         <TableRow style={{ backgroundColor: "black" }}>
           <TableCell padding="checkbox">
-            {/* <Checkbox
-              style={{ color: "white", paddingRight: "30px" }}
-              label="My checkbox"
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{
-                "aria-label": "select all desserts",
-              }}
-            /> */}
           </TableCell>
           {tblHeader.map((headCell) => (
             <TableCell
@@ -6573,6 +6564,9 @@ const ContentLogic = (props) => {
                           />
                         </ListItem>
                       </div>
+                      <ListItem>
+                      <AuditLog/>
+                      </ListItem>
                       <div>
                         <ListItem>
                           <Button
@@ -6879,6 +6873,8 @@ const ContentLogic = (props) => {
                           </Box>
                         </ListItem>
                       </div>
+
+                      <AuditLog/>
                       <div>
                         <ListItem>
                           <Button
@@ -6936,6 +6932,7 @@ const ContentLogic = (props) => {
                   </List>
                 ) : null}
               </Typography>
+            
             </Box>
             <div>
               <Dialog
@@ -11536,7 +11533,8 @@ const ContentLogic = (props) => {
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
             <Button sx={{ ml: 155, color: "white" }}>Save</Button>
           </Box>
-          <DialogContent>{handleModalInput()}</DialogContent>
+          <DialogContent>{handleModalInput()}
+          </DialogContent>
         </Dialog>
       </div>
     );

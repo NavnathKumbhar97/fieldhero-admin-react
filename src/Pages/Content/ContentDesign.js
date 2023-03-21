@@ -91,7 +91,8 @@ export default function ContentDesign(props) {
     getUserAPIcallById,
     filterTableOnTabs,
     setOpenApproval,
-    getCandidateVerificationPassiveUpdate
+    getCandidateVerificationPassiveUpdate,
+    handleUpdateAuditData
   } = ContentLogic();
 
   useEffect(() => {
@@ -223,6 +224,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         getCandidateMsaterAPIcallById(tblData[item].id);
                         handleOpenCandidateModal();
+                        handleUpdateAuditData(tblData[item].id)
                       }}
                     >
                       <Edit /> Edit

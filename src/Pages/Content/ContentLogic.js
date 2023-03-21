@@ -1,4 +1,4 @@
-import { forwardRef, React, useCallback, useState, Fragment } from "react";
+import { forwardRef, React, useCallback, useState, Fragment, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -99,9 +99,13 @@ import axios from "axios";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-import AuditLog from "../../reusable/AuditLog";
+import AuditLog from "../../reusable/AuditLog/AuditLog";
+import { useDispatch, useSelector } from "react-redux";
+import { auditLogDetails } from "../../store/AuditLog/action";
 
 const ContentLogic = (props) => {
+  const dispatch = useDispatch()
+  // const auditData = useSelector((state) => state.auditLog)
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
@@ -4524,6 +4528,11 @@ const ContentLogic = (props) => {
         break;
     }
   };
+
+  const handleUpdateAuditData =(id)=>{
+    dispatch(auditLogDetails(id))
+    // console.log("count",auditData)
+  }
 
   //it handle the buttons of content page
   const handleButtons = () => {
@@ -11531,7 +11540,7 @@ const ContentLogic = (props) => {
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
-            <Button sx={{ ml: 155, color: "white" }}>Save</Button>
+            {/* <Button sx={{ ml: 155, color: "white" }}>Save</Button> */}
           </Box>
           <DialogContent>{handleModalInput()}
           </DialogContent>
@@ -12265,6 +12274,7 @@ const ContentLogic = (props) => {
     setConfirmationData,
     confirmationData,
     setOpenApproval,
+    handleUpdateAuditData
   };
 
   return StateContainer;

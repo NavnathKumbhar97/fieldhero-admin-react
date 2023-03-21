@@ -45,8 +45,8 @@ function CandidateVerification() {
       >
         <Box
           style={{
-            backgroundColor: "#79cbca",
-            // backgroundColor: "#f4f3ef",
+            // backgroundColor: "#79cbca",
+            backgroundColor: "#f4f3ef",
             width: "280px",
             marginBottom: "20px",
             borderRadius:'5px'
@@ -77,7 +77,7 @@ function CandidateVerification() {
         </Box>
         <Box
           style={{
-            backgroundColor: "#79cbca",
+            backgroundColor: "#f4f3ef",
             width: "280px",
             marginBottom: "20px",borderRadius:'5px'
           }}
@@ -107,7 +107,7 @@ function CandidateVerification() {
         </Box>
         <Box
           style={{
-            backgroundColor: "#79cbca",
+            backgroundColor: "#f4f3ef",
             width: "280px",
             marginBottom: "20px",
             borderRadius:'5px'

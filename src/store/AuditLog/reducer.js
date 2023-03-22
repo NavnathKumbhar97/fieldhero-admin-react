@@ -1,8 +1,10 @@
 import { GET_AUDIT_LOG } from "./actionTypes"
 
 const initialState = {
-    data: 0,
+    dataId: 0,
+    sectionId:0
 }
+
 const auditLog = (state = initialState , action) => {
     // console.log("initialState",initialState);
     console.log("state",state);
@@ -10,7 +12,8 @@ const auditLog = (state = initialState , action) => {
         case GET_AUDIT_LOG:
             state = {
                 ...state,
-                data: action.payload,
+                dataId: action.payload.dataId,
+                sectionId:action.payload.sectionId
             }
             break
         default:

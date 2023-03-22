@@ -1,4 +1,12 @@
-import { forwardRef, React, useCallback, useState, Fragment, useRef, useEffect } from "react";
+import {
+  forwardRef,
+  React,
+  useCallback,
+  useState,
+  Fragment,
+  useRef,
+  useEffect,
+} from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -89,48 +97,50 @@ import Help from "../../Container/Drawer/Help/Help";
 import handler from "../../handlers/generalHandlers";
 import { Stack } from "@mui/system";
 import moment from "moment";
-
-// import React, { Fragment } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import FileUpload from "react-mui-fileuploader";
 import axios from "axios";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+
+// Redux method imports
 import AuditLog from "../../reusable/AuditLog/AuditLog";
 import { useDispatch, useSelector } from "react-redux";
 import { auditLogDetails } from "../../store/AuditLog/action";
+import helpers from "../../helpers";
 
 const ContentLogic = (props) => {
-  const dispatch = useDispatch()
-  // const auditData = useSelector((state) => state.auditLog)
+  //Common States
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [orderBy, setOrderBy] = useState("");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageTitle, setPageTitle] = useState();
   const [buttonText, setButtonText] = useState();
   const [modalTitle, setModalTitle] = useState();
-  const [tblData, setTblData] = useState([]);
-  const [tblDataCount, setTblDataCount] = useState([]);
-  const [permissions, setPermissions] = useState([]);
   const [numSelected] = useState([]);
 
-  const [cndVrfnTabValue, setCndVrfnTabValue] = useState("1");
+  //Table Data for Every Module
+  const [tblData, setTblData] = useState([]);
+  const [tblDataCount, setTblDataCount] = useState([]);
+
+  //To Get The Data As Per Rows on page
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //Unused states
   const [id, setId] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
-  const [openChildModal, setOpenChilModal] = useState(false);
-  const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
-  const [tabValue, setTabValue] = useState("1");
-  const [cmpyvalue, setCmpyValue] = useState("");
-  const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
+
+  //State for common modal of the all modules
+  const [openCandidateModal, setOpenCandidateModal] = useState(false);
+
+  //State for alert msg and err msg
   const [openAlertMsg, setOpenAlertMsg] = useState(false);
   const [openErrMsg, setOpenErrtMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -159,15 +169,22 @@ const ContentLogic = (props) => {
         templateName: "",
       },
     });
-
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
-    useState({
-    });
-  const [ cndUpdBatchAdmin,setCndUpdBatchAdmin] = useState({
-    id:0,
-    templateName:''
-  })
+    useState({});
+  const [cndUpdBatchAdmin, setCndUpdBatchAdmin] = useState({
+    id: 0,
+    templateName: "",
+  });
+
   // state for store the input fields value of candidate master
+
+  //This state used to handle work experience and certificate modal
+  const [openChildModal, setOpenChilModal] = useState(false);
+  const [openChildModalCerti, setOpenChilModalCerti] = useState(false);
+  //This is Used to go to the next page
+  const [skipped, setSkipped] = useState(new Set());
+  //State for the handle tab of candidate master module
+  const [activeStep, setActiveStep] = useState(0);
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
     // gender: "MALE",
@@ -247,12 +264,21 @@ const ContentLogic = (props) => {
     education: ``,
   });
   const [image, setImage] = useState();
+
+  //Filter record based on the page fields
+  const [filterData, setFilterData] = useState({
+    fullName: "",
+    contact: "",
+    id: 0,
+    isActive: true,
+  });
+
   //States for the candidate varification modules
+  const [cndVrfnTabValue, setCndVrfnTabValue] = useState("1");
+
   const [candidateVerificationData, setCandidateVerificationData] = useState(
     {}
   );
-
-  //store to update candidate verification data
   const [searchTerm, setSearchTerm] = useState("");
   const [candidateConsentVal, setCandidateConsentVal] = useState("");
   const [candidateCallStatusVal, setCandidateCallStatusVal] = useState("");
@@ -382,137 +408,9 @@ const ContentLogic = (props) => {
     });
   const [filterForCndVerifiction, setFilterForCndVerifiction] = useState();
 
-  //state for store the input fields value of category
-  const [categoryData, setCategoryData] = useState({
-    title: "",
-    description: "",
-    isActive: false,
-    CreatedBy: "",
-    ModifiedBy: "",
-    createdBy: 0,
-    createdOn: "",
-    modifiedBy: 0,
-    modifiedOn: "",
-  });
-
-  //state for store the input fields value of company
-  const [companyData, setCompanyData] = useState({
-    companyName: " ",
-    description: "",
-    isActive: true,
-    industryId: 0,
-    title: "",
-  });
-  const [filterDataForCompany, setFilterDataForCompany] = useState([]);
-
-  //state for store the input fields value of industry
-  const [industryData, setIndustryData] = useState([
-    {
-      title: "",
-      description: "",
-      isActive: true,
-      id: 0,
-    },
-  ]);
-  const [filterDataForIndustry, setFilterDataForIndustry] = useState([]);
-  const [checkedp, setCheckedP] = useState([]);
-  //state for store the input fields value of role
-  const [roleData, setRoleData] = useState({
-    name: "",
-    description: "",
-    isActive: true,
-    id: 0,
-    permissionId: [],
-  });
-  const [filterDataForRole, setFilterDataForRole] = useState([]);
-
-  const [uroleData, setURoleData] = useState({
-    permissions: [],
-  });
-  const [roleForUser,setRoleForUSer] = useState({
-    id:0,
-    name:""
-  })
-
-  //state for store the input fields value of skillset
-  const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
-  const [skillSetData, setSkillSetData] = useState({
-    title: "",
-    description: "",
-    isActive: true,
-  });
-
-  //state for store the input fields value of subscriptions
-  const [subscriptionData, setSubscriptionData] = useState({
-    planName: "",
-    dataCount: 1,
-    durationMonths: 12,
-    price: 1999,
-    note: "",
-    isActive: true,
-  });
-  const [filterDataForSubscription, setFilterDataForSubscription] = useState(
-    []
-  );
-
-  //state for store the input fields value of user
-  const [industryForCompany, setIndustryForCompany] = useState({
-    id:0,
-    title:""
-  })
-  const [userData, setUserData] = useState({
-    fullName: "",
-    dob: "",
-    gender: "",
-    currAddress: "",
-    currCity: "",
-    currState: "",
-    currCountry: "",
-    currZip: "",
-    permAddress: "",
-    permCity: "",
-    permState: "",
-    permCountry: "",
-    permZip: "",
-    primaryLang: "",
-    secondaryLang: "",
-    thirdLang: "",
-    aadharCard: "",
-    panCard: "",
-    note: "",
-    email: "",
-    contactNo: "",
-    roleId: 0,
-    isActive: true,
-  });
-  const [updateUserData, setUpdateUserData] = useState({
-    fullName: "",
-    dob: "",
-    gender: "",
-    currAddress: "",
-    currCity: "",
-    currState: "",
-    currCountry: "",
-    currZip: "",
-    permAddress: "",
-    permCity: "",
-    permState: "",
-    permCountry: "",
-    permZip: "",
-    primaryLang: "",
-    secondaryLang: "",
-    thirdLang: "",
-    aadharCard: "",
-    panCard: "",
-    note: "",
-    email: "",
-    contactNo: "",
-    roleId: 0,
-    isActive: true,
-  });
-  const [filterDataForUser, setFilterDataForUser] = useState([]);
-
   //states for the agent master module
+  const [cmpyvalue, setCmpyValue] = useState("");
+  const [tabValue, setTabValue] = useState("1");
   const [sameAddressAgent, setSameAddressAgent] = useState(false);
   const [agentMasterData, setAgentMasterData] = useState({
     fullName: "",
@@ -592,24 +490,162 @@ const ContentLogic = (props) => {
   const [batchPriorityAssingend, setBatchPriorityAssingend] = useState([]);
   const [batchPriorityId, setBatchPriorityId] = useState("87");
 
+  // State for page name when user route from one module to another
   const [pageName, setPageName] = useState();
+
+  //State for set the table heading based on the route
   const [tblHeader, setTblHeader] = useState([]);
+
+  //State for loader
   const [loader, setLoader] = useState(false);
+
+  //State for the store the id and handle the status is updating or adding new record
   const [editId, setEditId] = useState("");
   const [editStatus, setEditStatus] = useState(false);
-  const [sameAddress, setSameAddress] = useState(false);
-  const [filterData, setFilterData] = useState({
-    fullName: "",
-    contact: "",
-    id: 0,
-    isActive: true,
-  });
 
-  // used to select multiple value from select field for batch priority module
+  //State used for to set the same address 
+  const [sameAddress, setSameAddress] = useState(false);
+
+  //Used to select multiple value from select field for batch priority module
   const [batchNo, setBatchNo] = useState({
     batchId: 0,
     assignedTo: [createBatchPriorityData.id],
   });
+  const [openAddBtchprty, setOpenAddBtchprty] = useState(false);
+
+  // state for open confirmation modal of admin candidate upload batch module
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+
+  //state for store the input fields value of category
+  const [categoryData, setCategoryData] = useState({
+    title: "",
+    description: "",
+    isActive: false,
+    CreatedBy: "",
+    ModifiedBy: "",
+    createdBy: 0,
+    createdOn: "",
+    modifiedBy: 0,
+    modifiedOn: "",
+  });
+
+  //state for store the input fields value of company
+  const [companyData, setCompanyData] = useState({
+    companyName: " ",
+    description: "",
+    isActive: true,
+    industryId: 0,
+    title: "",
+  });
+  const [filterDataForCompany, setFilterDataForCompany] = useState([]);
+
+  //state for store the input fields value of industry
+  const [industryData, setIndustryData] = useState([
+    {
+      title: "",
+      description: "",
+      isActive: true,
+      id: 0,
+    },
+  ]);
+  const [filterDataForIndustry, setFilterDataForIndustry] = useState([]);
+  const [checkedp, setCheckedP] = useState([]);
+
+  //state for store the input fields value of role
+  const [permissions, setPermissions] = useState([]);
+  const [roleData, setRoleData] = useState({
+    name: "",
+    description: "",
+    isActive: true,
+    id: 0,
+    permissionId: [],
+  });
+  const [filterDataForRole, setFilterDataForRole] = useState([]);
+  const [uroleData, setURoleData] = useState({
+    permissions: [],
+  });
+  const [roleForUser, setRoleForUSer] = useState({
+    id: 0,
+    name: "",
+  });
+
+  //state for store the input fields value of skillset
+  const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
+  const [skillSetData, setSkillSetData] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+  });
+
+  //state for store the input fields value of subscriptions
+  const [subscriptionData, setSubscriptionData] = useState({
+    planName: "",
+    dataCount: 1,
+    durationMonths: 12,
+    price: 1999,
+    note: "",
+    isActive: true,
+  });
+  const [filterDataForSubscription, setFilterDataForSubscription] = useState(
+    []
+  );
+
+  //state for store the input fields value of user
+  const [industryForCompany, setIndustryForCompany] = useState({
+    id: 0,
+    title: "",
+  });
+  const [userData, setUserData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    aadharCard: "",
+    panCard: "",
+    note: "",
+    email: "",
+    contactNo: "",
+    roleId: 0,
+    isActive: true,
+  });
+  const [updateUserData, setUpdateUserData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    aadharCard: "",
+    panCard: "",
+    note: "",
+    email: "",
+    contactNo: "",
+    roleId: 0,
+    isActive: true,
+  });
+  const [filterDataForUser, setFilterDataForUser] = useState([]);
 
   // States for the other category module
   const [categoryFields, setCategoryFields] = useState("");
@@ -626,19 +662,8 @@ const ContentLogic = (props) => {
   const [otherIndCategory, setOtherIndCategory] = useState([]);
   const [otherIndCategoryResult, setOtherIndCategoryResult] = useState([]);
   const [otherIndCategoryStats, setOtherIndCategoryStats] = useState([]);
-
   const [expanded, setExpanded] = useState(false);
   const [openOtherIndCategory, setOpenOtherIndCategory] = useState(false);
-
-  const handleCloseOtherIndCategory = () => {
-    setOpenOtherIndCategory(false);
-  };
-  const handleOpenOtherIndCategory = () => {
-    setOpenOtherIndCategory(true);
-  };
-
-  //State for common modal of the all modules
-  const [openCandidateModal, setOpenCandidateModal] = useState(false);
 
   //State for the Work experience and training/certificate table in candidate master module
   const [candidateId, setCandidateId] = useState("");
@@ -671,7 +696,6 @@ const ContentLogic = (props) => {
     skillId: "",
     type: "",
   });
-
   const [candidateVerDashboard, setCandidateVerDashboard] = useState([]);
 
   // States for the add multiple industry when we click on add more button in candidate verification module
@@ -690,6 +714,16 @@ const ContentLogic = (props) => {
       cEmp: "",
     },
   ]);
+
+  //To handle the other industry category example modal
+  const handleCloseOtherIndCategory = () => {
+    setOpenOtherIndCategory(false);
+  };
+  const handleOpenOtherIndCategory = () => {
+    setOpenOtherIndCategory(true);
+  };
+
+  //Add and remove multiple industries when click on add more btn
   const addInputField = () => {
     setInputFields([
       ...inputFields,
@@ -710,6 +744,7 @@ const ContentLogic = (props) => {
     setInputFields(list);
   };
 
+  //Add and remove multiple categories when click on add more btn
   const addInputFieldForCategory = () => {
     setInputCategories([
       ...inputCategories,
@@ -730,6 +765,7 @@ const ContentLogic = (props) => {
     setInputCategories(list);
   };
 
+  //Add and remove multiple employment details when click on add more btn
   const addInputFieldForEmployer = () => {
     setInputEmployement([
       ...inputEmployement,
@@ -750,6 +786,7 @@ const ContentLogic = (props) => {
     setInputEmployement(list);
   };
 
+  //Unused
   const inputCurrEmployed = [
     {
       type: "text",
@@ -778,7 +815,6 @@ const ContentLogic = (props) => {
       return newArr;
     });
   };
-
   const inputArrCategory = [
     {
       type: "text",
@@ -808,6 +844,7 @@ const ContentLogic = (props) => {
     });
   };
 
+  //Handle Common Modal and edit status
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
     setEditStatus(false);
@@ -816,27 +853,19 @@ const ContentLogic = (props) => {
     setOpenCandidateModal(true);
   };
 
+  //Used to Exapand info about batch priority 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
-
+  //Open and Close Common Modal Effect
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
   const rows = [];
 
+  //Used to Filter records based on descending
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -846,7 +875,6 @@ const ContentLogic = (props) => {
     }
     return 0;
   }
-
   function getComparator(order, orderBy) {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
@@ -867,15 +895,14 @@ const ContentLogic = (props) => {
     return stabilizedThis.map((el) => el[0]);
   }
 
+  //Handle to disable the Loader
   const handleCloseLoader = () => {
     setLoader(false);
   };
 
-  //form validations
-
+  //form validations for each module
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
   const validationSchemaForCandidateMaster = Yup.object().shape({
     fullname: Yup.string().required("Full Name is required"),
     mobileNo: Yup.string()
@@ -930,7 +957,6 @@ const ContentLogic = (props) => {
     currCity: Yup.string().required("Current city is required"),
     currState: Yup.string().required("Current state is required"),
   });
-
   const validationAgentTmpt = Yup.object().shape({
     agentTitle: Yup.string().required("Template name is required"),
   });
@@ -956,7 +982,6 @@ const ContentLogic = (props) => {
   const validationSubscription = Yup.object().shape({
     title: Yup.string().required("Plan name is required"),
   });
-
   const validationUsers = Yup.object().shape({
     fullName: Yup.string().required("Full name is required"),
     email: Yup.string()
@@ -972,9 +997,7 @@ const ContentLogic = (props) => {
     currState: Yup.string().required("Current state is required"),
   });
 
-  // state for open confirmation modal of admin candidate upload batch module
-  const [openConfirmation, setOpenConfirmation] = useState(false);
-
+  //Form validation required method
   const {
     register,
     control,
@@ -983,7 +1006,6 @@ const ContentLogic = (props) => {
   } = useForm({
     resolver: yupResolver(validationSchemaForCandidateMaster),
   });
-
   const {
     register: register2,
     handleSubmit: handleSubmitReset,
@@ -1076,13 +1098,13 @@ const ContentLogic = (props) => {
     resolver: yupResolver(validationUsers),
   });
 
+  //Call Methods With the Validation
   const onSubmit = async (data) => {
     addAPICalls("candidate-master");
     // setTimeout(() => {
     //   addProfileImg()
     // }, 10000);
   };
-
   const onSubmitExp = (data) => {
     addWorkExperienceAPICall();
   };
@@ -1131,7 +1153,7 @@ const ContentLogic = (props) => {
     addAPICalls("user");
   };
 
-  // table headings array for each module
+  //Table heading array for each module
   const canMasterTblHerader = [
     {
       id: "SrNo",
@@ -1668,7 +1690,7 @@ const ContentLogic = (props) => {
     },
   ];
 
-  //candidate master
+  //Candidate Master API Call
   const getCandidateMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -1701,7 +1723,7 @@ const ContentLogic = (props) => {
       });
   };
 
-  //filter records of candidate master module
+  //Filter records of candidate master module
   const filterCandiateMasterAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -1732,6 +1754,34 @@ const ContentLogic = (props) => {
         setLoader(false);
         navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+
+  //Get the Candidate Master data based on id
+  const getCandidateMsaterAPIcallById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/candidates/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setUpdateCandidateMasterData(response.data.data);
+          // setTblDataCount(response.data.data.users);
+          console.log(
+            "candidate Data to update by id",
+            updateCandidateMasterData
+          );
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
 
@@ -1769,6 +1819,7 @@ const ContentLogic = (props) => {
         );
       });
   };
+
   //fetch the agent master data
   const getAgentMasterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1797,6 +1848,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getAgentMasterAPIcall", error);
       });
   };
+
   //fetch the candidate verification data
   const getCandidateVerificationAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -1833,6 +1885,7 @@ const ContentLogic = (props) => {
         );
       });
   };
+
   const getDashboardAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -1862,6 +1915,7 @@ const ContentLogic = (props) => {
         );
       });
   };
+
   //fetch the agent pricing template data
   const getAgentTemplatePricingAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2133,7 +2187,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getIndustryAPIcall", error);
       });
   };
-  
+
   //fetch the roles data
   const getRoleAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2191,6 +2245,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getRoleAPIcall", error);
       });
   };
+
   //fetch the skillset data
   const getSkillSetAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2248,6 +2303,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSkillSetAPIcall", error);
       });
   };
+
   //fetch the subscriptions data
   const getSubscriptionAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2306,6 +2362,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSubscriptionAPIcall", error);
       });
   };
+
   //fetch the users data
   const getUserAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2334,6 +2391,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getUserAPIcall", error);
       });
   };
+
   //fetch the users data for filter
   const getUserForFilterAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -2363,6 +2421,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Fetch the Batch Priority data Passive Create
   const getBatchPriorityAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2389,6 +2448,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
+
+  //Fetch the Batch Priority data
   const getBatchPriorityDataAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2413,6 +2474,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
+
   const getBatchPriorityStatsDataAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2460,6 +2522,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getPermissionsAPIcall", error);
       });
   };
+
+  // Fetch the Role By id
   const getRoleByIdAPIcall = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2482,6 +2546,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Fetch Other Industry Category Data
   const getOtherIndustryCategoryAPIcall = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2514,75 +2579,7 @@ const ContentLogic = (props) => {
       });
   };
 
-  //get all the based on routes with permissions
-  const getAllData = (pageName) => {
-    // console.log("getallData pagename :", pageName);
-    switch (pageName) {
-      case "candidate-master":
-        getCandidateMasterAPIcall();
-        break;
-      case "candidate-upload-batch":
-        getCandidateUploadBatchAPIcall();
-        break;
-      case "candidate-verification":
-        getCandidateVerificationAPIcall();
-        break;
-      case "agent-master":
-        getAgentMasterAPIcall();
-        break;
-      case "agent-pricing-template":
-        getAgentTemplatePricingAPIcall();
-        break;
-      case "candidate-upload-batch-admin":
-        getCandidateUploadBatchAdminAPIcall();
-        break;
-      case "batch-priority":
-        getBatchPriorityAPIcall();
-        getBatchPriorityDataAPIcall();
-        break;
-      case "other-industry-category":
-        getOtherIndustryCategoryAPIcall();
-        // getBatchPriorityDataAPIcall();
-        break;
-      case "category":
-        getCategoryAPIcall();
-        getCategoryAPIcallForFilter();
-        break;
-      case "company":
-        getCompanyAPIcall();
-        getCompanyForFilterAPIcall();
-        getIndustryForFilterAPIcall();
-        break;
-      case "customer":
-        getCustomerAPIcall();
-        break;
-      case "industry":
-        getIndustryAPIcall();
-        getIndustryForFilterAPIcall();
-        break;
-      case "role":
-        getRoleAPIcall();
-        getRoleForFilterAPIcall();
-        // getPermissionsAPIcall();
-        break;
-      case "skillset":
-        getSkillSetAPIcall();
-        getSkillSetForFilterAPIcall();
-        break;
-      case "subscription":
-        getSubscriptionAPIcall();
-        getSubscriptionForFilterAPIcall();
-        break;
-      case "user":
-        getUserAPIcall();
-        getUserForFilterAPIcall();
-        getRoleForFilterAPIcall();
-        break;
-      default:
-        break;
-    }
-  };
-
+  //Fetch the Company Data By id
   const getCompanyAPIcallById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2604,6 +2601,7 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCompanyDataById", error);
       });
   };
+
   //get user details by id of user module modal on click of edit
   const getUserAPIcallById = (id) => {
     let authTok = localStorage.getItem("user"); // string
@@ -2628,32 +2626,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
-  const getCandidateMsaterAPIcallById = (id) => {
-    let authTok = localStorage.getItem("user"); // string
-    let convertTokenToObj = JSON.parse(authTok);
-    setLoader(true);
-    handler
-      .dataGet(`/v1/candidates/${id}`, {
-        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          setUpdateCandidateMasterData(response.data.data);
-          // setTblDataCount(response.data.data.users);
-          console.log(
-            "candidate Data to update by id",
-            updateCandidateMasterData
-          );
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getBatchPriorityAPIcall", error);
-      });
-  };
+
+  //Fetch Candidate Verification Data By Id
   const getCandidateVerificationById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2684,6 +2658,8 @@ const ContentLogic = (props) => {
         );
       });
   };
+
+  //Fetch Candidate verification Passive update
   const getCandidateVerificationPassiveUpdate = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2711,6 +2687,8 @@ const ContentLogic = (props) => {
         );
       });
   };
+
+  //Fetch Agent Pricing Template Data By Id
   const getAgentPricingTemplateById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2738,6 +2716,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Fetch Agent Master Data By Id
   const getAgentMasteById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2762,6 +2741,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getBatchPriorityAPIcall", error);
       });
   };
+
+  //Fetch Category Data By Id
   const getCategoryById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2787,6 +2768,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Fetch Industry Data By Id
   const getIndustryById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2811,6 +2793,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCategoryById", error);
       });
   };
+
+  //Fetch Skillset Data By Id
   const getSkillSetById = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2835,6 +2819,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSkillSetById", error);
       });
   };
+
+  //Fetch Subscription Data By Id
   const getSubscriptionByIdAPIcall = (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2859,6 +2845,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getSkillSetById", error);
       });
   };
+
+  //Fetch Agent Pricing for Candidate Upload Batch Data
   const getAgentPricingForCndUplBatchAPICalls = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -2873,7 +2861,7 @@ const ContentLogic = (props) => {
           setCandidateUploadBatchAdminData(
             response.data.data.agentPricingTemplates
           );
-          setCndUpdBatchAdmin(response.data.data.agentPricingTemplates)
+          setCndUpdBatchAdmin(response.data.data.agentPricingTemplates);
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -2892,7 +2880,7 @@ const ContentLogic = (props) => {
       });
   };
 
-  //add work experience in candidate master module
+  //Add work experience in candidate master module
   const addWorkExperienceAPICall = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -3195,6 +3183,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Add Bulk Data with help of excel file
   const addBulkDataAdminCnd = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -3257,6 +3246,7 @@ const ContentLogic = (props) => {
       });
   };
 
+  //Add Bulk Data with help of excel file
   const addBulkDataCndUpload = () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -3288,6 +3278,76 @@ const ContentLogic = (props) => {
       });
   };
 
+  //get all the based on routes with permissions
+  const getAllData = (pageName) => {
+      // console.log("getallData pagename :", pageName);
+      switch (pageName) {
+        case "candidate-master":
+          getCandidateMasterAPIcall();
+          break;
+        case "candidate-upload-batch":
+          getCandidateUploadBatchAPIcall();
+          break;
+        case "candidate-verification":
+          getCandidateVerificationAPIcall();
+          break;
+        case "agent-master":
+          getAgentMasterAPIcall();
+          break;
+        case "agent-pricing-template":
+          getAgentTemplatePricingAPIcall();
+          break;
+        case "candidate-upload-batch-admin":
+          getCandidateUploadBatchAdminAPIcall();
+          break;
+        case "batch-priority":
+          getBatchPriorityAPIcall();
+          getBatchPriorityDataAPIcall();
+          break;
+        case "other-industry-category":
+          getOtherIndustryCategoryAPIcall();
+          // getBatchPriorityDataAPIcall();
+          break;
+        case "category":
+          getCategoryAPIcall();
+          getCategoryAPIcallForFilter();
+          break;
+        case "company":
+          getCompanyAPIcall();
+          getCompanyForFilterAPIcall();
+          getIndustryForFilterAPIcall();
+          break;
+        case "customer":
+          getCustomerAPIcall();
+          break;
+        case "industry":
+          getIndustryAPIcall();
+          getIndustryForFilterAPIcall();
+          break;
+        case "role":
+          getRoleAPIcall();
+          getRoleForFilterAPIcall();
+          // getPermissionsAPIcall();
+          break;
+        case "skillset":
+          getSkillSetAPIcall();
+          getSkillSetForFilterAPIcall();
+          break;
+        case "subscription":
+          getSubscriptionAPIcall();
+          getSubscriptionForFilterAPIcall();
+          break;
+        case "user":
+          getUserAPIcall();
+          getUserForFilterAPIcall();
+          getRoleForFilterAPIcall();
+          break;
+        default:
+          break;
+      }
+    };
+
+  //Method for Table Heading 
   const EnhancedTableHead = (props) => {
     const {
       onSelectAllClick,
@@ -3305,8 +3365,7 @@ const ContentLogic = (props) => {
     return (
       <TableHead>
         <TableRow style={{ backgroundColor: "black" }}>
-          <TableCell padding="checkbox">
-          </TableCell>
+          <TableCell padding="checkbox"></TableCell>
           {tblHeader.map((headCell) => (
             <TableCell
               style={{ color: "white" }}
@@ -3344,12 +3403,8 @@ const ContentLogic = (props) => {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  const steps = [
-    "Select campaign settings",
-    "Create an ad group",
-    "Create an ad",
-  ];
 
+  //Styles
   const tblStyl = {
     border: "1px solid black",
     borderCollapse: "collapse",
@@ -3375,6 +3430,8 @@ const ContentLogic = (props) => {
     color: "green",
     border: "1px solid black",
   };
+
+  //Array to use in select field
   const gender = [
     {
       value: "MALE",
@@ -3553,14 +3610,12 @@ const ContentLogic = (props) => {
       label: "Switch Off",
     },
   ];
-
   const industrySelectField = [
     {
       label: industryData.title,
       value: industryData.title,
     },
   ];
-
   const categoryList = [
     {
       value: "New",
@@ -3572,6 +3627,7 @@ const ContentLogic = (props) => {
     },
   ];
 
+  //Used in Pagination to get the new page data
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     getAllData(pageName);
@@ -3583,26 +3639,29 @@ const ContentLogic = (props) => {
     setRowsPerPage(row.props.value);
   };
 
+  //Open And Close Batch Priority Modal
   const handleClickOpenAddBtchprty = () => {
     setOpenAddBtchprty(true);
   };
-
   const handleCloseAddBtchprty = () => {
     setEditStatus(false);
     setOpenAddBtchprty(false);
   };
 
+  //Open And Close Admin Candidate Upload Batch Modal
   const handleClickOpenAdminCanUplBtch = () => {
     setOpenAdminCanUplBtch(true);
   };
-
   const handleCloseAdminCanUplBtch = () => {
     setOpenAdminCanUplBtch(false);
   };
 
+  //Handle the tabs of Agent Master module
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  //Handle the tabs of Candidate Verification module
   const handleChangeCndVrfnTab = (event, newValue) => {
     setCndVrfnTabValue(newValue);
   };
@@ -3611,15 +3670,12 @@ const ContentLogic = (props) => {
   const handleClickOpenChildModal = () => {
     setOpenChilModal(true);
   };
-
   const handleClickOpenChildModalCerti = () => {
     setOpenChilModalCerti(true);
   };
-
   const handleCloseChildModal = () => {
     setOpenChilModal(false);
   };
-
   const handleCloseChildModalCerti = () => {
     setOpenChilModalCerti(false);
     setTrainCert(false);
@@ -3737,6 +3793,525 @@ const ContentLogic = (props) => {
   };
   const permCurrUserState = () => {
     return !editStatus ? userData.permState : updateUserData.permState;
+  };
+
+    // its handle the call status when we change the consent of candidate verification
+    const handleCallStatus = () => {
+      switch (candidateConsentVal) {
+        case "RECEIVED":
+          return (
+            <div>
+              {callStatus.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </div>
+          );
+        case "PENDING":
+          return (
+            <>
+              {callStatusPending.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </>
+          );
+        case "DECLINED":
+          return (
+            <>
+              {callStatusDeclined.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </>
+          );
+  
+        default:
+          break;
+      }
+    };
+    // handle the tabs value of admin candidate upload batch module
+    const handleTabOfCndtUpBatch = (event, newValue) => {
+      setTabOfCndBatchValue(newValue);
+      // switch (newValue) {
+      //   case "1":
+      //     // console.log("test set name")
+      //     setFilterTableOnTabs("in-progress")
+      //     getAllData('candidate-upload-batch-admin')
+  
+      //     break;
+      //   case "2":
+      //     // console.log("test 2 set name")
+      //     setFilterTableOnTabs("pending-approval")
+      //     getAllData('candidate-upload-batch-admin')
+  
+      //     break;
+      //   case "3":
+      //     // console.log("test 2 set name")
+      //     setFilterTableOnTabs("processed")
+      //     getAllData('candidate-upload-batch-admin')
+  
+      //     break;
+  
+      //   default:
+      //     break;
+      // }
+    };
+  
+    //filter method for candidate verification module
+    let filterCndVerification = (e) => {
+      setFilterForCndVerifiction(tblData);
+      let targetValue = e.target.value;
+      const filteredData = filterForCndVerifiction.filter((item) => {
+        return (
+          item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
+          item.contactNo1.toString().includes(targetValue)
+        );
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else {
+        getCandidateVerificationAPIcall();
+      }
+    };
+  
+    //filter method for category module
+    let filterCategory = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForCategory.filter((item) => {
+        return item.title.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getCategoryAPIcall();
+    };
+  
+    //filter method for agent pricing template module
+    let filterAgenPT = (e) => {
+      setFilterForAgentPT(tblData);
+      let targetValue = e.target.value;
+      const filteredData = filterForAgentPT.filter((item) => {
+        return (
+          // console.log("item",item),
+          item.templateName.toLowerCase().includes(targetValue.toLowerCase())
+          // item.contactNo1.toString().includes(searchTerm)
+        );
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else {
+        getAgentTemplatePricingAPIcall();
+      }
+    };
+  
+    //filter method for company module
+    let filterCompany = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForCompany.filter((item) => {
+        return item.companyName.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getCompanyAPIcall();
+    };
+  
+    //filter method for industry module
+    let filterIndustry = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForIndustry.filter((item) => {
+        return item.title.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getIndustryAPIcall();
+    };
+  
+    //filter method for role module
+    let filterRole = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForRole.filter((item) => {
+        return item.name.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getRoleAPIcall();
+    };
+    //filter method for skillset module
+    let filterSkillSet = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForSkillSets.filter((item) => {
+        return item.title.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getSkillSetAPIcall();
+    };
+  
+    //filter method for subscription module
+    let filterSubscriptions = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForSubscription.filter((item) => {
+        return item.planName.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getSubscriptionAPIcall();
+    };
+    //filter method for user module
+    let filterUser = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForUser.filter((item) => {
+        return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
+        // item.contactNo1.toString().includes(searchTerm)
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getUserAPIcall();
+    };
+
+    // function for workExperice table of candidate master module
+    function WorkExperianceCol(sr, document, value, upload, status, comments) {
+      return { sr, document, value, upload, status, comments };
+    }
+  
+    // To Upload Documents
+    const handleChangeFileUpload1 = (event) => {
+      setAgentMasterPan(event.target.files[0]);
+    };
+    const handleChangeFileUpload2 = (event) => {
+      setAgentMasterPOI(event.target.files[0]);
+    };
+    const handleChangeFileUpload3 = (event) => {
+      setAgentMasterPOA(event.target.files[0]);
+    };
+    const handleChangeFileUpload4 = (event) => {
+      setAgentMasterBankDoc(event.target.files[0]);
+    };
+  
+    //In professional tab table heading of agent master
+    const rowsAgentMaster = [
+      WorkExperianceCol(
+        1,
+        "Pan card",
+        <p>Pan Card</p>,
+        // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
+        <TextField id="outlined-basic" variant="outlined" />,
+        <input type="file" onChange={handleChangeFileUpload1} />,
+        4.0
+      ),
+      WorkExperianceCol(
+        2,
+        "Proof of identity",
+        <TextField
+          sx={{ width: "30ch" }}
+          select
+          label="Select"
+          id="outlined-basic"
+          variant="outlined"
+        />,
+        <TextField id="outlined-basic" variant="outlined" />,
+        <input type="file" onChange={handleChangeFileUpload2} />
+      ),
+      WorkExperianceCol(
+        3,
+        "Proof of address",
+        <TextField
+          sx={{ width: "30ch" }}
+          select
+          id="outlined-basic"
+          label="Select"
+          variant="outlined"
+        />,
+        <TextField id="outlined-basic" variant="outlined" />,
+        <input type="file" onChange={handleChangeFileUpload3} />
+      ),
+      WorkExperianceCol(
+        4,
+        "Bank Document",
+        <TextField
+          sx={{ width: "30ch" }}
+          select
+          id="outlined-basic"
+          label="Select"
+          variant="outlined"
+        />,
+        <TextField id="outlined-basic" variant="outlined" />,
+        <input type="file" onChange={handleChangeFileUpload4} />
+      ),
+    ];
+  
+    //professional tabl of agent master module
+    const ProfessionalTab = () => {
+      return (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Sr</TableCell>
+                <TableCell align="center">Documents</TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center">Value</TableCell>
+                <TableCell align="center">Upload</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Comment</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowsAgentMaster.map((row) => (
+                <TableRow
+                  key={row.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.sr}
+                  </TableCell>
+                  <TableCell align="center">{row.document}</TableCell>
+                  <TableCell align="center">{row.value}</TableCell>
+                  <TableCell align="right">{row.upload}</TableCell>
+                  <TableCell align="right">{row.status}</TableCell>
+                  {/* <Button onClick={addAgentMasterDocs}>Upload</Button> */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    };
+  
+    // read data from excel file and add into the candidate upload batch module table
+    const handleFileUploadCndUpload = (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+  
+      reader.onload = (e) => {
+        const binaryData = e.target.result;
+        const workbook = XLSX.read(binaryData, { type: "binary" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const sheetData = XLSX.utils.sheet_to_json(sheet);
+        setBulkUpload(sheetData);
+        // console.log("sheet data : ",sheetData);
+      };
+  
+      reader.readAsBinaryString(file);
+      // console.log("ex data --- ",bulkData);
+    };
+  
+    //search city and state by zipcode
+    const searchAddByZip = () => {
+      setLoader(true);
+      axios
+        .get(
+          `https://api.postalpincode.in/pincode/${
+            !editStatus
+              ? candidateMasterData.perm_zip
+              : updateCandidateMasterData.permZip
+          }`
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setCandidateMasterData({
+                  ...candidateMasterData,
+                  perm_city: e.District,
+                  perm_state: e.State,
+                });
+                setUpdateCandidateMasterData({
+                  ...updateCandidateMasterData,
+                  permCity: e.District,
+                  permState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+    //search city and state by zipcode
+    const searchCurrAddByZip = () => {
+      setLoader(true);
+      axios
+        .get(
+          `https://api.postalpincode.in/pincode/${
+            !editStatus
+              ? candidateMasterData.curr_zip
+              : updateCandidateMasterData.currZip
+          }`
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setCandidateMasterData({
+                  ...candidateMasterData,
+                  curr_city: e.District,
+                  curr_state: e.State,
+                });
+                setUpdateCandidateMasterData({
+                  ...updateCandidateMasterData,
+                  currCity: e.District,
+                  currState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+    //search city and state by zipcode
+    const searchAddByZipForAgent = () => {
+      setLoader(true);
+      axios
+        .get(`https://api.postalpincode.in/pincode/${agentMasterData.currZip}`)
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setAgentMasterData({
+                  ...agentMasterData,
+                  currCity: e.District,
+                  currState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+    //search city and state by zipcode
+    const searchPermAddByZipForAgent = () => {
+      setLoader(true);
+      axios
+        .get(`https://api.postalpincode.in/pincode/${agentMasterData.permZip}`)
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setAgentMasterData({
+                  ...agentMasterData,
+                  permCity: e.District,
+                  permState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+    //search city and state by zipcode
+    const searchAddByZipForUser = () => {
+      setLoader(true);
+      axios
+        .get(
+          `https://api.postalpincode.in/pincode/${
+            !editStatus ? userData.permZip : updateUserData.permZip
+          }`
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setUserData({
+                  ...userData,
+                  permCity: e.District,
+                  permState: e.State,
+                });
+                setUpdateUserData({
+                  ...updateUserData,
+                  permCity: e.District,
+                  permState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+    //search city and state by zipcode
+    const searchCurrAddByZipForUser = () => {
+      setLoader(true);
+      axios
+        .get(
+          `https://api.postalpincode.in/pincode/${
+            !editStatus ? userData.currZip : updateUserData.currZip
+          }`
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            setLoader(false);
+            response.data.map((i) => {
+              i.PostOffice.map((e) => {
+                setUserData({
+                  ...userData,
+                  currCity: e.District,
+                  currState: e.State,
+                });
+                setUpdateUserData({
+                  ...updateUserData,
+                  currCity: e.District,
+                  currState: e.State,
+                });
+              });
+            });
+          } else if (response.status == 400) {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          console.error("There was an error!- getzipcode", error);
+        });
+    };
+
+  //update the redux state for audit log 
+  const handleUpdateAuditData = (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.candidateMaster));
+    // console.log("count",auditData)
   };
 
   // add API calls
@@ -4529,11 +5104,6 @@ const ContentLogic = (props) => {
     }
   };
 
-  const handleUpdateAuditData =(id)=>{
-    dispatch(auditLogDetails(id))
-    // console.log("count",auditData)
-  }
-
   //it handle the buttons of content page
   const handleButtons = () => {
     switch (pageName) {
@@ -4558,19 +5128,21 @@ const ContentLogic = (props) => {
       case "candidate-upload-batch":
         return (
           <>
-            {!editStatus?(<Button
-              onClick={handleOpenCandidateModal}
-              style={{
-                marginTop: "60px",
-                marginBottom: "6px",
-                backgroundColor: "brown",
-                color: "white",
-              }}
-              variant="outlined"
-            >
-              <FileUploadIcon />
-              {buttonText}
-            </Button>): (
+            {!editStatus ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "60px",
+                  marginBottom: "6px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <FileUploadIcon />
+                {buttonText}
+              </Button>
+            ) : (
               <Button
                 onClick={() => {
                   handleClickOpenAdminCanUplBtch();
@@ -4837,190 +5409,6 @@ const ContentLogic = (props) => {
           </>
         );
     }
-  };
-
-  // its handle the call status when we change the consent of candidate verification
-  const handleCallStatus = () => {
-    switch (candidateConsentVal) {
-      case "RECEIVED":
-        return (
-          <div>
-            {callStatus.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </div>
-        );
-      case "PENDING":
-        return (
-          <>
-            {callStatusPending.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </>
-        );
-      case "DECLINED":
-        return (
-          <>
-            {callStatusDeclined.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </>
-        );
-
-      default:
-        break;
-    }
-  };
-  // handle the tabs value of admin candidate upload batch module
-
-  const handleTabOfCndtUpBatch = (event, newValue) => {
-    setTabOfCndBatchValue(newValue);
-    // switch (newValue) {
-    //   case "1":
-    //     // console.log("test set name")
-    //     setFilterTableOnTabs("in-progress")
-    //     getAllData('candidate-upload-batch-admin')
-
-    //     break;
-    //   case "2":
-    //     // console.log("test 2 set name")
-    //     setFilterTableOnTabs("pending-approval")
-    //     getAllData('candidate-upload-batch-admin')
-
-    //     break;
-    //   case "3":
-    //     // console.log("test 2 set name")
-    //     setFilterTableOnTabs("processed")
-    //     getAllData('candidate-upload-batch-admin')
-
-    //     break;
-
-    //   default:
-    //     break;
-    // }
-  };
-
-  //filter method for candidate verification module
-  let filterCndVerification = (e) => {
-    setFilterForCndVerifiction(tblData);
-    let targetValue = e.target.value;
-    const filteredData = filterForCndVerifiction.filter((item) => {
-      return (
-        item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
-        item.contactNo1.toString().includes(targetValue)
-      );
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else {
-      getCandidateVerificationAPIcall();
-    }
-  };
-
-  //filter method for category module
-  let filterCategory = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForCategory.filter((item) => {
-      return item.title.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getCategoryAPIcall();
-  };
-
-  //filter method for agent pricing template module
-  let filterAgenPT = (e) => {
-    setFilterForAgentPT(tblData);
-    let targetValue = e.target.value;
-    const filteredData = filterForAgentPT.filter((item) => {
-      return (
-        // console.log("item",item),
-        item.templateName.toLowerCase().includes(targetValue.toLowerCase())
-        // item.contactNo1.toString().includes(searchTerm)
-      );
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else {
-      getAgentTemplatePricingAPIcall();
-    }
-  };
-
-  //filter method for company module
-  let filterCompany = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForCompany.filter((item) => {
-      return item.companyName.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getCompanyAPIcall();
-  };
-
-  //filter method for industry module
-  let filterIndustry = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForIndustry.filter((item) => {
-      return item.title.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getIndustryAPIcall();
-  };
-
-  //filter method for role module
-  let filterRole = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForRole.filter((item) => {
-      return item.name.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getRoleAPIcall();
-  };
-  //filter method for skillset module
-  let filterSkillSet = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForSkillSets.filter((item) => {
-      return item.title.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getSkillSetAPIcall();
-  };
-
-  //filter method for subscription module
-  let filterSubscriptions = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForSubscription.filter((item) => {
-      return item.planName.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getSubscriptionAPIcall();
-  };
-  //filter method for user module
-  let filterUser = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = filterDataForUser.filter((item) => {
-      return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setTblData(filteredData);
-    } else getUserAPIcall();
   };
 
   // shows the content page design
@@ -5678,335 +6066,6 @@ const ContentLogic = (props) => {
     }
   };
 
-  // function for workExperice table of candidate master module
-  function WorkExperianceCol(sr, document, value, upload, status, comments) {
-    return { sr, document, value, upload, status, comments };
-  }
-
-  const handleChangeFileUpload1 = (event) => {
-    setAgentMasterPan(event.target.files[0]);
-  };
-  const handleChangeFileUpload2 = (event) => {
-    setAgentMasterPOI(event.target.files[0]);
-  };
-  const handleChangeFileUpload3 = (event) => {
-    setAgentMasterPOA(event.target.files[0]);
-  };
-  const handleChangeFileUpload4 = (event) => {
-    setAgentMasterBankDoc(event.target.files[0]);
-  };
-
-  //In professional tab table heading of agent master
-  const rowsAgentMaster = [
-    WorkExperianceCol(
-      1,
-      "Pan card",
-      <p>Pan Card</p>,
-      // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
-      <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload1} />,
-      4.0
-    ),
-    WorkExperianceCol(
-      2,
-      "Proof of identity",
-      <TextField
-        sx={{ width: "30ch" }}
-        select
-        label="Select"
-        id="outlined-basic"
-        variant="outlined"
-      />,
-      <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload2} />
-    ),
-    WorkExperianceCol(
-      3,
-      "Proof of address",
-      <TextField
-        sx={{ width: "30ch" }}
-        select
-        id="outlined-basic"
-        label="Select"
-        variant="outlined"
-      />,
-      <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload3} />
-    ),
-    WorkExperianceCol(
-      4,
-      "Bank Document",
-      <TextField
-        sx={{ width: "30ch" }}
-        select
-        id="outlined-basic"
-        label="Select"
-        variant="outlined"
-      />,
-      <TextField id="outlined-basic" variant="outlined" />,
-      <input type="file" onChange={handleChangeFileUpload4} />
-    ),
-  ];
-
-  //professional tabl of agent master module
-  const ProfessionalTab = () => {
-    return (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Sr</TableCell>
-              <TableCell align="center">Documents</TableCell>
-              <TableCell align="center"></TableCell>
-              <TableCell align="center">Value</TableCell>
-              <TableCell align="center">Upload</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Comment</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rowsAgentMaster.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.sr}
-                </TableCell>
-                <TableCell align="center">{row.document}</TableCell>
-                <TableCell align="center">{row.value}</TableCell>
-                <TableCell align="right">{row.upload}</TableCell>
-                <TableCell align="right">{row.status}</TableCell>
-                {/* <Button onClick={addAgentMasterDocs}>Upload</Button> */}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
-  // read data from excel file and add into the candidate upload batch module table
-  const handleFileUploadCndUpload = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const binaryData = e.target.result;
-      const workbook = XLSX.read(binaryData, { type: "binary" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const sheetData = XLSX.utils.sheet_to_json(sheet);
-      setBulkUpload(sheetData);
-      // console.log("sheet data : ",sheetData);
-    };
-
-    reader.readAsBinaryString(file);
-    // console.log("ex data --- ",bulkData);
-  };
-
-  //search city and state by zipcode
-  const searchAddByZip = () => {
-    setLoader(true);
-    axios
-      .get(
-        `https://api.postalpincode.in/pincode/${
-          !editStatus
-            ? candidateMasterData.perm_zip
-            : updateCandidateMasterData.permZip
-        }`
-      )
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setCandidateMasterData({
-                ...candidateMasterData,
-                perm_city: e.District,
-                perm_state: e.State,
-              });
-              setUpdateCandidateMasterData({
-                ...updateCandidateMasterData,
-                permCity: e.District,
-                permState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-  //search city and state by zipcode
-  const searchCurrAddByZip = () => {
-    setLoader(true);
-    axios
-      .get(
-        `https://api.postalpincode.in/pincode/${
-          !editStatus
-            ? candidateMasterData.curr_zip
-            : updateCandidateMasterData.currZip
-        }`
-      )
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setCandidateMasterData({
-                ...candidateMasterData,
-                curr_city: e.District,
-                curr_state: e.State,
-              });
-              setUpdateCandidateMasterData({
-                ...updateCandidateMasterData,
-                currCity: e.District,
-                currState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-  //search city and state by zipcode
-  const searchAddByZipForAgent = () => {
-    setLoader(true);
-    axios
-      .get(`https://api.postalpincode.in/pincode/${agentMasterData.currZip}`)
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setAgentMasterData({
-                ...agentMasterData,
-                currCity: e.District,
-                currState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-  //search city and state by zipcode
-  const searchPermAddByZipForAgent = () => {
-    setLoader(true);
-    axios
-      .get(`https://api.postalpincode.in/pincode/${agentMasterData.permZip}`)
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setAgentMasterData({
-                ...agentMasterData,
-                permCity: e.District,
-                permState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-  //search city and state by zipcode
-  const searchAddByZipForUser = () => {
-    setLoader(true);
-    axios
-      .get(
-        `https://api.postalpincode.in/pincode/${
-          !editStatus ? userData.permZip : updateUserData.permZip
-        }`
-      )
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setUserData({
-                ...userData,
-                permCity: e.District,
-                permState: e.State,
-              });
-              setUpdateUserData({
-                ...updateUserData,
-                permCity: e.District,
-                permState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-  //search city and state by zipcode
-  const searchCurrAddByZipForUser = () => {
-    setLoader(true);
-    axios
-      .get(
-        `https://api.postalpincode.in/pincode/${
-          !editStatus ? userData.currZip : updateUserData.currZip
-        }`
-      )
-      .then((response) => {
-        if (response.status == 200) {
-          setLoader(false);
-          response.data.map((i) => {
-            i.PostOffice.map((e) => {
-              setUserData({
-                ...userData,
-                currCity: e.District,
-                currState: e.State,
-              });
-              setUpdateUserData({
-                ...updateUserData,
-                currCity: e.District,
-                currState: e.State,
-              });
-            });
-          });
-        } else if (response.status == 400) {
-          setErrMsg(response.data.message);
-          setOpenErrtMsg(true);
-          setLoader(false);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!- getzipcode", error);
-      });
-  };
-
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
@@ -6074,7 +6133,6 @@ const ContentLogic = (props) => {
                           />
                         </ListItem>
                         <ListItem>
-                          
                           <TextField
                             id="filled-basic"
                             label="Birthdate"
@@ -6099,31 +6157,55 @@ const ContentLogic = (props) => {
                             variant="filled"
                             sx={{ width: "69ch" }}
                           />
-                          
                         </ListItem>
                         <ListItem>
-                        <FormLabel id="demo-row-radio-buttons-group-label">
-                              Gender
-                            </FormLabel>
-                        <FormControl label="Gender" component="fieldset" name="Gender">
-        <RadioGroup row onChange={(e)=>{
-          setCandidateMasterData({...candidateMasterData,gender:e.target.value})
-          console.log("gender",candidateMasterData.gender);
-        }} 
-        value={candidateMasterData.gender}>
-          <FormLabel label="Gender"/>
-          <FormControlLabel
-            value="MALE" 
-            control={<Radio checked={candidateMasterData.gender==="MALE"}/>}
-            label="Male"
-          />
-          <FormControlLabel
-            value="FEMALE" 
-            control={<Radio checked={candidateMasterData.gender==="FEMALE"}/>}
-            label="Female"
-          />
-        </RadioGroup>
-      </FormControl>
+                          <FormLabel id="demo-row-radio-buttons-group-label">
+                            Gender
+                          </FormLabel>
+                          <FormControl
+                            label="Gender"
+                            component="fieldset"
+                            name="Gender"
+                          >
+                            <RadioGroup
+                              row
+                              onChange={(e) => {
+                                setCandidateMasterData({
+                                  ...candidateMasterData,
+                                  gender: e.target.value,
+                                });
+                                console.log(
+                                  "gender",
+                                  candidateMasterData.gender
+                                );
+                              }}
+                              value={candidateMasterData.gender}
+                            >
+                              <FormLabel label="Gender" />
+                              <FormControlLabel
+                                value="MALE"
+                                control={
+                                  <Radio
+                                    checked={
+                                      candidateMasterData.gender === "MALE"
+                                    }
+                                  />
+                                }
+                                label="Male"
+                              />
+                              <FormControlLabel
+                                value="FEMALE"
+                                control={
+                                  <Radio
+                                    checked={
+                                      candidateMasterData.gender === "FEMALE"
+                                    }
+                                  />
+                                }
+                                label="Female"
+                              />
+                            </RadioGroup>
+                          </FormControl>
                         </ListItem>
 
                         <ListItem sx={{ mb: 5 }}>
@@ -6574,7 +6656,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
                       <ListItem>
-                      <AuditLog/>
+                        <AuditLog />
                       </ListItem>
                       <div>
                         <ListItem>
@@ -6883,7 +6965,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
 
-                      <AuditLog/>
+                      <AuditLog />
                       <div>
                         <ListItem>
                           <Button
@@ -6941,7 +7023,6 @@ const ContentLogic = (props) => {
                   </List>
                 ) : null}
               </Typography>
-            
             </Box>
             <div>
               <Dialog
@@ -7073,7 +7154,11 @@ const ContentLogic = (props) => {
                 open={openChildModalCerti}
                 onClose={handleCloseChildModalCerti}
               >
-                <DialogTitle>{!trainingCert?"Add Training/Certificate":"Update Training/Certificate"}</DialogTitle>
+                <DialogTitle>
+                  {!trainingCert
+                    ? "Add Training/Certificate"
+                    : "Update Training/Certificate"}
+                </DialogTitle>
                 <DialogContent>
                   <ListItem>
                     <TextField
@@ -10515,7 +10600,7 @@ const ContentLogic = (props) => {
               </List>
               <List sx={{ mb: 5 }}>
                 <TextField
-                select
+                  select
                   id="filled-basic"
                   label="Industry Name"
                   type="name"
@@ -10530,8 +10615,10 @@ const ContentLogic = (props) => {
                   sx={{ width: "130ch" }}
                 >
                   {Object.keys(industryForCompany).map((option) => (
-                    <MenuItem key={industryForCompany[option].title} 
-                    value={industryForCompany[option].id}>
+                    <MenuItem
+                      key={industryForCompany[option].title}
+                      value={industryForCompany[option].id}
+                    >
                       {industryForCompany[option].title}
                     </MenuItem>
                   ))}
@@ -11032,7 +11119,7 @@ const ContentLogic = (props) => {
                   InputLabelProps={{ shrink: true }}
                   sx={{ width: "40ch", ml: 3 }}
                 />
-                
+
                 <TextField
                   select
                   id="filled-basic"
@@ -11097,7 +11184,7 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 3 }}
                 />
                 <TextField
-                required
+                  required
                   select
                   id="filled-basic"
                   label="Role"
@@ -11117,8 +11204,10 @@ const ContentLogic = (props) => {
                   sx={{ width: "40ch", ml: 3 }}
                 >
                   {Object.keys(roleForUser).map((option) => (
-                    <MenuItem key={roleForUser[option].name}
-                     value={roleForUser[option].id}>
+                    <MenuItem
+                      key={roleForUser[option].name}
+                      value={roleForUser[option].id}
+                    >
                       {roleForUser[option].name}
                     </MenuItem>
                   ))}
@@ -11513,6 +11602,7 @@ const ContentLogic = (props) => {
     }
   };
 
+  //Common Modal For evey Module
   const handleCommonModal = () => {
     const commonModal = (
       <div>
@@ -11542,14 +11632,14 @@ const ContentLogic = (props) => {
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
             {/* <Button sx={{ ml: 155, color: "white" }}>Save</Button> */}
           </Box>
-          <DialogContent>{handleModalInput()}
-          </DialogContent>
+          <DialogContent>{handleModalInput()}</DialogContent>
         </Dialog>
       </div>
     );
     return commonModal;
   };
 
+  //Approve And Deny Modal For Admin Cadidate upload Batch module
   const handleCloseConfirmation = () => {
     setOpenConfirmation(false);
   };
@@ -11575,6 +11665,7 @@ const ContentLogic = (props) => {
     // console.log("ex data --- ",bulkData);
   };
 
+  //Complete Table Design for every module
   const handleTableDesign = () => {
     const handleModalsInputs = (
       <Toolbar
@@ -11752,8 +11843,8 @@ const ContentLogic = (props) => {
                 </List>
                 <List>
                   <TextField
-                  select
-                  value={candidateUploadBatchAdminData.templateName}
+                    select
+                    value={candidateUploadBatchAdminData.templateName}
                     onChange={(e) => {
                       setCandidateUploadBatchAdminData({
                         ...candidateUploadBatchAdminData,
@@ -11765,16 +11856,11 @@ const ContentLogic = (props) => {
                     required
                     style={{ width: "50ch" }}
                   >
-                    {Object.keys(cndUpdBatchAdmin).map(
-                      (item, x) => (
-                        <MenuItem
-                          key={x}
-                          value={cndUpdBatchAdmin[item].id}
-                        >
-                          {cndUpdBatchAdmin[item].templateName}
-                        </MenuItem>
-                      )
-                    )}
+                    {Object.keys(cndUpdBatchAdmin).map((item, x) => (
+                      <MenuItem key={x} value={cndUpdBatchAdmin[item].id}>
+                        {cndUpdBatchAdmin[item].templateName}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 </List>
                 <tr>
@@ -12174,6 +12260,7 @@ const ContentLogic = (props) => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tblData.length) : 0;
 
+  //State and Method Container to export
   const StateContainer = {
     order,
     orderBy,
@@ -12274,7 +12361,7 @@ const ContentLogic = (props) => {
     setConfirmationData,
     confirmationData,
     setOpenApproval,
-    handleUpdateAuditData
+    handleUpdateAuditData,
   };
 
   return StateContainer;

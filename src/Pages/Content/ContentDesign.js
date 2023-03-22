@@ -16,6 +16,7 @@ import moment from "moment";
 export default function ContentDesign(props) {
   const { data } = props;
 
+  //State And Method Import from Content Login
   let {
     order,
     orderBy,
@@ -95,6 +96,7 @@ export default function ContentDesign(props) {
     handleUpdateAuditData
   } = ContentLogic();
 
+  //UseEffect For Page
   useEffect(() => {
     setPageName(data.page);
     setPageTitle(data.pageTitle);

@@ -20,8 +20,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+
+//Import redux method and Handlers
 import handlers from "../../handlers";
 import { useSelector } from "react-redux";
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -75,15 +78,16 @@ const AuditLog = forwardRef((props, ref) => {
   const [searchInput, setSearchInput] = useState("");
   const [tblLogData, setTblLogData] = useState([]);
   const [logChageData, setLogChageData] = useState([]);
+  //State For pagination 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  //State For Open and Close the Modal
   const [open, setOpen] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const AuditLogDataId = useSelector((state) => state.auditLog.data)
+  //Get the State Data From redux
+  const AuditLogDataId = useSelector((state) => state.auditLog)
 
   const tblLogHeader = [
     // {
@@ -124,6 +128,11 @@ const AuditLog = forwardRef((props, ref) => {
     },
   ];
 
+  //Handle the Audit log Modal
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
   //Fetch All Log Details
   //   fetchLogDetails = async () => {
   //     try {
@@ -156,7 +165,7 @@ const AuditLog = forwardRef((props, ref) => {
     }
   }));
 
-
+  //Pagination
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -167,7 +176,8 @@ const AuditLog = forwardRef((props, ref) => {
 
   return (
     <>
-    <h2>data id:{AuditLogDataId}</h2>
+    <h2>data id:{AuditLogDataId.dataId}</h2>
+    <h2>section id:{AuditLogDataId.sectionId}</h2>
       <ListItem>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">

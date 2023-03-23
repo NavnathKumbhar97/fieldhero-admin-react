@@ -1,4 +1,4 @@
-import React, { useState,useEffect, forwardRef, useImperativeHandle } from "react";
+import React, { useState,useEffect, forwardRef } from "react";
 import {
   Button,
   ListItem,
@@ -24,8 +24,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 //Import redux method and Handlers
 import handlers from "../../handlers";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
-
+//Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -133,37 +134,73 @@ const AuditLog = forwardRef((props, ref) => {
   const handleClose = () => setOpen(false);
 
 
-  //Fetch All Log Details
-  //   fetchLogDetails = async () => {
+  // Fetch All Log Details
+   const fetchLogDetails = async () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+      try {
+        let response = await handlers.auditLog.fetchAllAuditLog(
+          AuditLogDataId.sectionId,
+          AuditLogDataId.dataId,
+          {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }
+        );
+        let refineData = response
+          ? response.map((item, index) => {
+              return {
+                PersonName: item.userName,
+                OperationName: item.operationName,
+                Date: moment(item.createdOn, "YYYY-MM-DD").format("MM/DD/YYYY"),
+                UpdateFile: item.updatedFiled
+                  ? Object.entries(JSON.parse(item.updatedFiled))
+                  : [],
+                id: item.id,
+              };
+            })
+          : [];
+        setTblLogData(refineData);
+      } catch (err) {
+        console.error("fetchLogDetails", err);
+      }
+    };
+    
+  //Fetch Log Details By Id
+  // const fetchAuditLogDetailsById = async(id)=>{
+  //   let authTok = localStorage.getItem("user"); // string
+  //   let convertTokenToObj = JSON.parse(authTok);
   //     try {
-  //       let response = await handlers.auditLog.fetchAllAuditLog(
-  //         sectionId,
-  //         dataId
+  //       let response = await handlers.auditLog.fetchAuditLogById(
+  //         id,
+  //         {
+  //           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+  //         }
   //       );
   //       let refineData = response
-  //         ? response.map((item, index) => {
-  //             return {
-  //               PersonName: item.userName,
-  //               OperationName: item.operationName,
-  //               Date: moment(item.createdOn, "YYYY-MM-DD").format("MM/DD/YYYY"),
-  //               UpdateFile: item.updatedFiled
-  //                 ? Object.entries(JSON.parse(item.updatedFiled))
-  //                 : [],
-  //               id: item.id,
-  //             };
-  //           })
-  //         : [];
-  //       setTblLogData(refineData);
+  //         // ? response.map((item, index) => {
+  //         //     return {
+  //         //       PersonName: item.userName,
+  //         //       OperationName: item.operationName,
+  //         //       Date: moment(item.createdOn, "YYYY-MM-DD").format("MM/DD/YYYY"),
+  //         //       UpdateFile: item.updatedFiled
+  //         //         ? Object.entries(JSON.parse(item.updatedFiled))
+  //         //         : [],
+  //         //       id: item.id,
+  //         //       UpdateFile:item.updatedFiled
+  //         //     };
+  //         //   })
+  //         // : [];
+  //       setLogChageData(refineData);
+  //       // let test =JSON.parse(response.updatedFiled);
+  //       // console.log("refine data",test);
   //     } catch (err) {
   //       console.error("fetchLogDetails", err);
   //     }
-  //   };
+  // }
 
-  useImperativeHandle(ref, () => ({
-    test() {
-      console.log("parent function");
-    }
-  }));
+  useEffect(()=>{
+    fetchLogDetails()
+  },[AuditLogDataId.sectionId])
 
   //Pagination
   const handleChangePage = (event, newPage) => {
@@ -176,8 +213,6 @@ const AuditLog = forwardRef((props, ref) => {
 
   return (
     <>
-    <h2>data id:{AuditLogDataId.dataId}</h2>
-    <h2>section id:{AuditLogDataId.sectionId}</h2>
       <ListItem>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -189,17 +224,21 @@ const AuditLog = forwardRef((props, ref) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.name}>
+              {tblLogData.map((row) => (
+                <StyledTableRow key={row.id}>
                   <StyledTableCell component="th" scope="row">
-                    {row.name}
+                    {row.PersonName}
                   </StyledTableCell>
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
-                  <StyledTableCell align="left">{row.fat}</StyledTableCell>
-                  <StyledTableCell align="left">{row.carbs}</StyledTableCell>
-                  <StyledTableCell align="left">{row.protein}</StyledTableCell>
+                  <StyledTableCell align="left">{row.OperationName}</StyledTableCell>
+                  <StyledTableCell align="left">{row.id}</StyledTableCell>
+                  <StyledTableCell align="left">{row.Date}</StyledTableCell>
                   <StyledTableCell align="left">
-                    <Button onClick={handleOpen}>
+                    <Button onClick={()=>{
+                      handleOpen()
+                      setIsAuditLogEditId(row.id)
+                      setLogChageData(row.UpdateFile)
+                    }}>
                       <ViewHeadlineIcon></ViewHeadlineIcon>
                     </Button>
                   </StyledTableCell>
@@ -210,7 +249,7 @@ const AuditLog = forwardRef((props, ref) => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={tblLogData.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -233,20 +272,20 @@ const AuditLog = forwardRef((props, ref) => {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Dessert (100g serving)</TableCell>
-                    <TableCell align="left">Calories</TableCell>
+                    <TableCell><b>Field</b></TableCell>
+                    <TableCell align="left"><b>Value</b></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {logChageData.map((row) => (
                     <TableRow
-                      key={row.name}
+                      // key={row}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {row[0]}
                       </TableCell>
-                      <TableCell align="left">{row.calories}</TableCell>
+                      <TableCell align="left">{row[1]}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

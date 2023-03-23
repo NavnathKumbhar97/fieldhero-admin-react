@@ -111,10 +111,12 @@ import AuditLog from "../../reusable/AuditLog/AuditLog";
 import { useDispatch, useSelector } from "react-redux";
 import { auditLogDetails } from "../../store/AuditLog/action";
 import helpers from "../../helpers";
+import handlers from "../../handlers";
 
 const ContentLogic = (props) => {
   //Common States
   const dispatch = useDispatch();
+  const auditLogData = useSelector((state)=>state.user)
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
@@ -188,7 +190,7 @@ const ContentLogic = (props) => {
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
     // gender: "MALE",
-    dob: "12-12-12",
+    dob: null,
     permAddress: "",
     contactNo1: "",
     contactNo2: "",
@@ -4331,7 +4333,118 @@ const ContentLogic = (props) => {
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
               handleNext();
-              console.log("setcandidate id", candidateId);
+              const logData = {}
+                    if (candidateMasterData.fullName) {
+                        Object.assign(logData, {
+                            "Full Name": candidateMasterData.fullName,
+                        })
+                    }
+                    if (candidateMasterData.dob) {
+                      Object.assign(logData, {
+                        "BirthDate": candidateMasterData.dob,
+                      })
+                  }
+                    if (candidateMasterData.gender) {
+                      Object.assign(logData, {
+                        "Gender": candidateMasterData.gender,
+                      })
+                  }
+                    if (candidateMasterData.perm_address) {
+                      Object.assign(logData, {
+                        "Permanent address": candidateMasterData.perm_address,
+                      })
+                  }
+                    if (candidateMasterData.perm_city) {
+                      Object.assign(logData, {
+                        "Permanant City": candidateMasterData.perm_city,
+                      })
+                  }
+                    if (candidateMasterData.perm_state) {
+                      Object.assign(logData, {
+                        "Permanent State": candidateMasterData.perm_state,
+                      })
+                  }
+                    if (candidateMasterData.perm_country) {
+                      Object.assign(logData, {
+                        "Permanent Country": candidateMasterData.perm_country,
+                      })
+                  }
+                    if (candidateMasterData.perm_zip) {
+                      Object.assign(logData, {
+                        "Permanent Zip": candidateMasterData.perm_zip,
+                      })
+                  }
+                    if (candidateMasterData.curr_address) {
+                      Object.assign(logData, {
+                        "Current Address": candidateMasterData.curr_address,
+                      })
+                  }
+                    if (candidateMasterData.curr_city) {
+                      Object.assign(logData, {
+                        "Current City": candidateMasterData.curr_city,
+                      })
+                  }
+                    if (candidateMasterData.curr_country) {
+                      Object.assign(logData, {
+                        "Current Country": candidateMasterData.curr_country,
+                      })
+                  }
+                    if (candidateMasterData.curr_zip) {
+                      Object.assign(logData, {
+                        "Current Zip": candidateMasterData.curr_zip,
+                      })
+                  }
+                    if (candidateMasterData.email1) {
+                      Object.assign(logData, {
+                        "Primary Email Address": candidateMasterData.email1,
+                      })
+                  }
+                    if (candidateMasterData.email2) {
+                      Object.assign(logData, {
+                        "Secondary Email Address": candidateMasterData.email2,
+                      })
+                  }
+                    if (candidateMasterData.contactNo1) {
+                      Object.assign(logData, {
+                        "Primary Contact Number": candidateMasterData.contactNo1,
+                      })
+                  }
+                    if (candidateMasterData.contactNo2) {
+                      Object.assign(logData, {
+                        "Secondary Contact Number": candidateMasterData.contactNo2,
+                      })
+                  }
+                    if (candidateMasterData.aadharNo) {
+                      Object.assign(logData, {
+                        "Aadhar Number": candidateMasterData.aadharNo,
+                      })
+                  }
+                    if (candidateMasterData.registrationStatus) {
+                      Object.assign(logData, {
+                        "Registration Status": candidateMasterData.registrationStatus,
+                      })
+                  }
+                  let logDataString = JSON.stringify(logData)
+                  let fullName = convertTokenToObj.name
+                  let Email = convertTokenToObj.userEmail
+                  let auditlog = {
+                    userName: fullName
+                        ? fullName:"",
+                    email: Email
+                        ? Email
+                        : "",
+                    contactNumber: auditLogData
+                        ? auditLogData.contactNo
+                        : "",
+                    updatedFiled: logDataString,
+                    operationName: "Candidate Master added successfully."
+                }
+                handlers.auditLog.addAuditLog(auditlog,
+                  helpers.auditLog.candidateMaster,response.data.data.id,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("Audit log added")
+                })
             } else {
               setOpenErrtMsg(true);
             }
@@ -4382,6 +4495,33 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
+
+            //   if (agentMasterData.agentNo) {
+            //     Object.assign(logData, {
+            //       "Agent Number": agentMasterData.agentNo,
+            //     })
+            //   }
+            // let logDataString = JSON.stringify(logData)
+            // let fullName = convertTokenToObj.name
+            // let Email = convertTokenToObj.userEmail
+            // let auditlog = {
+            //   userName: fullName
+            //       ? fullName:"",
+            //   email: Email
+            //       ? Email
+            //       : "",
+            //   contactNumber: auditLogData
+            //       ? auditLogData.contactNo
+            //       : "",
+            //   updatedFiled: logDataString,
+            //   operationName: "Candidate Master added successfully."
+            //   }
+            //   handlers.auditLog.addAuditLog(auditlog,
+            //     helpers.auditLog.candidateMaster,response.data.data.id,{
+            //     headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            //   }).then(()=>{
+            //     console.log("Audit log added")
+            //   })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);

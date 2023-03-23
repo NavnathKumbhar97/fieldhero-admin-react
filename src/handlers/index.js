@@ -1,3 +1,4 @@
 import user from "./user";
+import {auditLog} from "./auditLog"
 
-export default { user}
+export default { user,auditLog}

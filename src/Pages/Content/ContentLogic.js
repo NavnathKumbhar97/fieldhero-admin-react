@@ -4496,32 +4496,33 @@ const ContentLogic = (props) => {
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
 
-            //   if (agentMasterData.agentNo) {
-            //     Object.assign(logData, {
-            //       "Agent Number": agentMasterData.agentNo,
-            //     })
-            //   }
-            // let logDataString = JSON.stringify(logData)
-            // let fullName = convertTokenToObj.name
-            // let Email = convertTokenToObj.userEmail
-            // let auditlog = {
-            //   userName: fullName
-            //       ? fullName:"",
-            //   email: Email
-            //       ? Email
-            //       : "",
-            //   contactNumber: auditLogData
-            //       ? auditLogData.contactNo
-            //       : "",
-            //   updatedFiled: logDataString,
-            //   operationName: "Candidate Master added successfully."
-            //   }
-            //   handlers.auditLog.addAuditLog(auditlog,
-            //     helpers.auditLog.candidateMaster,response.data.data.id,{
-            //     headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            //   }).then(()=>{
-            //     console.log("Audit log added")
-            //   })
+              let logData ={}
+              if (agentMasterData.agentNo) {
+                Object.assign(logData, {
+                  "Agent Number": agentMasterData.agentNo,
+                })
+              }
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Candidate Master added successfully."
+              }
+              handlers.auditLog.addAuditLog(auditlog,
+                helpers.auditLog.candidateMaster,response.data.data.id,{
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }).then(()=>{
+                console.log("Audit log added")
+              })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);

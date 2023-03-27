@@ -93,7 +93,8 @@ export default function ContentDesign(props) {
     filterTableOnTabs,
     setOpenApproval,
     getCandidateVerificationPassiveUpdate,
-    handleUpdateAuditData
+    handleUpdateAuditData,
+    handleUpdateAuditDataAgentM
   } = ContentLogic();
 
   //UseEffect For Page
@@ -428,6 +429,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getAgentMasteById(tblData[item].id);
+                        handleUpdateAuditDataAgentM(tblData[item].id)
                       }}
                     >
                       <Edit />

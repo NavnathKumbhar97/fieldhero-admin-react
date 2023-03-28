@@ -265,6 +265,46 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+  const [updateCandidateMasterDataAudit, setUpdateCandidateMasterDataAudit] = useState({
+    aadharNo: "",
+    dob: "",
+    gender: "MALE",
+    permAddress: "",
+    contactNo1: "",
+    contactNo2: "",
+    currAddress: "",
+    currCity: "",
+    currCountry: "India",
+    currState: "",
+    currZip: "",
+    email1: "",
+    email2: "",
+    fullName: "",
+    gender: "",
+    permAddress: "",
+    permCity: "",
+    permCountry: "India",
+    permState: "",
+    permZip: "",
+    registrationStatus: "",
+    totalExpMonths: "",
+    totalExpYears: "",
+    birthDate: "",
+    isActive: true,
+    industry: ``,
+    category: ``,
+    expYears: ``,
+    prefLocation1: ``,
+    prefLocation2: ``,
+    skill1: ``,
+    skill2: ``,
+    primaryLang: ``,
+    secondaryLang: ``,
+    lastCompany: ``,
+    designation: ``,
+    education: ``,
+  });
+
   const [image, setImage] = useState();
 
   //Filter record based on the page fields
@@ -1772,7 +1812,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setUpdateCandidateMasterData(response.data.data);
-          // setTblDataCount(response.data.data.users);
+          setUpdateCandidateMasterDataAudit(response.data.data);
           console.log(
             "candidate Data to update by id",
             updateCandidateMasterData
@@ -5011,102 +5051,102 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
               const logData = {}
-              if (updateCandidatesMasterData.fullName !== updateCandidateMasterData.fullName) {
+              if (updateCandidatesMasterData.fullName !== updateCandidateMasterDataAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": updateCandidatesMasterData.fullName,
                 })
               }
-              if (updateCandidatesMasterData.dob) {
+              if (updateCandidatesMasterData.dob !== updateCandidateMasterDataAudit.dob) {
                 Object.assign(logData, {
                   "BirthDate": updateCandidatesMasterData.dob,
                 })
               }
-              if (updateCandidatesMasterData.gender) {
+              if (updateCandidatesMasterData.gender !== updateCandidateMasterDataAudit.gender) {
                 Object.assign(logData, {
                   "Gender": updateCandidatesMasterData.gender,
                 })
               }
-              if (updateCandidatesMasterData.permAddress) {
+              if (updateCandidatesMasterData.permAddress !== updateCandidateMasterDataAudit.permAddress) {
                 Object.assign(logData, {
                   "Permanent Address": updateCandidatesMasterData.permAddress,
                 })
               }
-              if (updateCandidatesMasterData.permCity) {
+              if (updateCandidatesMasterData.permCity !== updateCandidateMasterDataAudit.permCity) {
                 Object.assign(logData, {
                   "Permanent City": updateCandidatesMasterData.permCity,
                 })
               }
-              if (updateCandidatesMasterData.permState) {
+              if (updateCandidatesMasterData.permState !== updateCandidateMasterDataAudit.permState) {
                 Object.assign(logData, {
                   "Permanent State": updateCandidatesMasterData.permState,
                 })
               }
-              if (updateCandidatesMasterData.permCountry) {
+              if (updateCandidatesMasterData.permCountry !== updateCandidateMasterDataAudit.permCountry) {
                 Object.assign(logData, {
                   "Permanent Country": updateCandidatesMasterData.permCountry,
                 })
               }
-              if (updateCandidatesMasterData.permZip) {
+              if (updateCandidatesMasterData.permZip !== updateCandidateMasterDataAudit.permZip) {
                 Object.assign(logData, {
                   "Permanent Zip": updateCandidatesMasterData.permZip,
                 })
               }
-              if (updateCandidatesMasterData.currAddress) {
+              if (updateCandidatesMasterData.currAddress !== updateCandidateMasterDataAudit.currAddress) {
                 Object.assign(logData, {
                   "Current Address": updateCandidatesMasterData.currAddress,
                 })
               }
-              if (updateCandidatesMasterData.currCity) {
+              if (updateCandidatesMasterData.currCity !== updateCandidateMasterDataAudit.currCity) {
                 Object.assign(logData, {
                   "Current Address": updateCandidatesMasterData.currCity,
                 })
               }
-              if (updateCandidatesMasterData.currCountry) {
+              if (updateCandidatesMasterData.currCountry !== updateCandidateMasterDataAudit.currCountry) {
                 Object.assign(logData, {
                   "Current Country": updateCandidatesMasterData.currCountry,
                 })
               }
-              if (updateCandidatesMasterData.currState) {
+              if (updateCandidatesMasterData.currState !== updateCandidateMasterDataAudit.currState) {
                 Object.assign(logData, {
                   "Current State": updateCandidatesMasterData.currState,
                 })
               }
-              if (updateCandidatesMasterData.currZip) {
+              if (updateCandidatesMasterData.currZip !== updateCandidateMasterDataAudit.currZip) {
                 Object.assign(logData, {
                   "Gender": updateCandidatesMasterData.currZip,
                 })
               }
-              if (updateCandidatesMasterData.email1) {
+              if (updateCandidatesMasterData.email1 !== updateCandidateMasterDataAudit.email1) {
                 Object.assign(logData, {
                   "Primary Email": updateCandidatesMasterData.email1,
                 })
               }
-              if (updateCandidatesMasterData.email2) {
+              if (updateCandidatesMasterData.email2 !== updateCandidateMasterDataAudit.email2) {
                 Object.assign(logData, {
                   "Secondary Email": updateCandidatesMasterData.email2,
                 })
               }
-              if (updateCandidatesMasterData.contactNo1) {
+              if (updateCandidatesMasterData.contactNo1 !== updateCandidateMasterDataAudit.contactNo1) {
                 Object.assign(logData, {
                   "Primary Contact": updateCandidatesMasterData.contactNo1,
                 })
               }
-              if (updateCandidatesMasterData.contactNo2) {
+              if (updateCandidatesMasterData.contactNo2 !== updateCandidateMasterDataAudit.contactNo2) {
                 Object.assign(logData, {
                   "Secondary Contact": updateCandidatesMasterData.contactNo2,
                 })
               }
-              if (updateCandidatesMasterData.aadharNo) {
+              if (updateCandidatesMasterData.aadharNo !== updateCandidateMasterDataAudit.aadharNo) {
                 Object.assign(logData, {
                   "Aadhar Number": updateCandidatesMasterData.aadharNo,
                 })
               }
-              if (updateCandidatesMasterData.registrationStatus) {
+              if (updateCandidatesMasterData.registrationStatus !== updateCandidateMasterDataAudit.registrationStatus) {
                 Object.assign(logData, {
                   "Registration Status": updateCandidatesMasterData.registrationStatus,
                 })
               }
-              if (updateCandidatesMasterData.isActive) {
+              if (updateCandidatesMasterData.isActive !== updateCandidateMasterDataAudit.isActive) {
                 Object.assign(logData, {
                   "Is Active": updateCandidatesMasterData.isActive,
                 })

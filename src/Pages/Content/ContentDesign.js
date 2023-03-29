@@ -94,7 +94,9 @@ export default function ContentDesign(props) {
     setOpenApproval,
     getCandidateVerificationPassiveUpdate,
     handleUpdateAuditData,
-    handleUpdateAuditDataAgentM
+    handleUpdateAuditDataAgentM,
+    handleUpdateAuditDataAgentPricing,
+    handleUpdateAuditDataCandidateVerification
   } = ContentLogic();
 
   //UseEffect For Page
@@ -340,6 +342,7 @@ export default function ContentDesign(props) {
                         console.log(tblData[item].id);
                         getCandidateVerificationById(tblData[item].id);
                         getCandidateVerificationPassiveUpdate()
+                        handleUpdateAuditDataCandidateVerification(tblData[item].id)
                       }}
                     >
                       <Edit />
@@ -521,6 +524,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getAgentPricingTemplateById(tblData[item].id);
+                        handleUpdateAuditDataAgentPricing(tblData[item].id)
                       }}
                     >
                       <Visibility />

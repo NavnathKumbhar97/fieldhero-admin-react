@@ -265,6 +265,7 @@ const ContentLogic = (props) => {
     designation: ``,
     education: ``,
   });
+  //audit log state
   const [updateCandidateMasterDataAudit, setUpdateCandidateMasterDataAudit] = useState({
     aadharNo: "",
     dob: "",
@@ -330,6 +331,125 @@ const ContentLogic = (props) => {
     candidateConsent: candidateConsentVal,
   });
   const [updateCandidateVerificationData, setUpdateCandidateVerificationData] =
+    useState({
+      aadharNo: 0,
+      batchNo: 0,
+      callCentre: "",
+      category: "",
+      contactNo1: "",
+      contactNo2: "",
+      createdBy: "",
+      currAddress: "",
+      currCity: "",
+      currState: "",
+      currZip: "",
+      designation: "",
+      dlNo: "",
+      dob: "",
+      education: "",
+      educationRaw: "",
+      email1: "",
+      expYears: "",
+      fullName: "",
+      gender: "",
+      industry: "",
+      lastCompany: "",
+      note: "",
+      panNo: "",
+      permAddress: "",
+      permCity: "",
+      permState: "",
+      permZip: "",
+      preferLocation1: "",
+      preferLocation2: "",
+      primaryLanguage: "",
+      primaryLanguageRaw: "",
+      role: "",
+      rowNo: 0,
+      secondaryLanguage: "",
+      secondaryLanguageRaw: "",
+      skill1: "",
+      skill2: "",
+      status: "",
+      thirdLanguage: "",
+      industries: [
+        {
+          id: 3,
+          title: "",
+        },
+        {
+          id: 5,
+          title: "",
+        },
+      ],
+      verification: {
+        candidateId: 0,
+        category: "",
+        contactNo1: "",
+        createdBy: "",
+        createdOn: "",
+        currCity: "",
+        currZip: "",
+        designation: "",
+        dob: "",
+        education: "",
+        email1: "",
+        expYears: "",
+        fullName: "",
+        id: 0,
+        industry: "",
+        lastCompany: "",
+        modifiedBy: 0,
+        modifiedOn: "",
+        preferLocation1: "",
+        preferLocation2: "",
+        primaryLanguage: "",
+        secondaryLanguage: "",
+        skill1: "",
+        skill2: "",
+      },
+
+      categories: [
+        {
+          id: 0,
+          title: "",
+        },
+      ],
+      CandidateCategory: [
+        {
+          categoryId: 0,
+          id: 0,
+          title: "",
+        },
+      ],
+      CandidateIndustry: [
+        {
+          title: "",
+          industryId: 0,
+          id: 0,
+        },
+      ],
+      CandidateWorkHistory: [
+        {
+          industryId: 0,
+          id: 0,
+          company: "",
+          industryTitle: "",
+          categoryId: 0,
+          categoryTitle: "",
+          endDate: "",
+          startDate: "",
+          isEmployed: false,
+          description: "",
+        },
+      ],
+      callCentre: {
+        id: 0,
+        callStatus: "",
+        candidateConsent: "",
+      },
+    });
+    const [updateCandidateVerificationDataAuditLog, setUpdateCandidateVerificationDataAuditLog] =
     useState({
       aadharNo: 0,
       batchNo: 0,
@@ -2682,11 +2802,8 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setUpdateCandidateVerificationData(response.data.data);
-          console.log("candidate verification by id", response.data.data);
-          console.log(
-            "getcandidateVerification",
-            updateCandidateVerificationData
-          );
+          setUpdateCandidateVerificationDataAuditLog(response.data.data)
+
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -4361,6 +4478,16 @@ const ContentLogic = (props) => {
     // console.log("count",auditData)
   };
 
+  //update the redux state for audit log 
+  const handleUpdateAuditDataAgentPricing= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.agentPricingTemplate));
+    // console.log("count",auditData)
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataCandidateVerification= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.candidateVerification));
+    // console.log("count",auditData)
+  };
   // add API calls
   const addAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
@@ -4729,6 +4856,139 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
+              const logData = {}
+              if (agentPricingTemplateData.templateName) {
+                Object.assign(logData, {
+                  "Template Name": agentPricingTemplateData.templateName,
+                })
+            }
+            if (agentPricingTemplateData.description) {
+              Object.assign(logData, {
+                "Description": agentPricingTemplateData.description,
+              })
+            }
+              if (agentPricingTemplateData.approvalRemarks) {
+                Object.assign(logData, {
+                  "Approval Remark": agentPricingTemplateData.approvalRemarks,
+                })
+            }
+            if (agentPricingTemplateData.industry) {
+              Object.assign(logData, {
+                "Industry": agentPricingTemplateData.industry,
+              })
+            }
+            if (agentPricingTemplateData.category) {
+              Object.assign(logData, {
+                "Industry": agentPricingTemplateData.category,
+              })
+            }
+            if (agentPricingTemplateData.education) {
+              Object.assign(logData, {
+                "Education": agentPricingTemplateData.education,
+              })
+            }
+            if (agentPricingTemplateData.fullName) {
+              Object.assign(logData, {
+                "Full Name": agentPricingTemplateData.fullName,
+              })
+            }
+            if (agentPricingTemplateData.dob) {
+              Object.assign(logData, {
+                "BirthDate": agentPricingTemplateData.dob,
+              })
+            }
+            if (agentPricingTemplateData.primaryLanguage) {
+              Object.assign(logData, {
+                "Primary Language": agentPricingTemplateData.primaryLanguage,
+              })
+            }
+            if (agentPricingTemplateData.secondaryLanguage) {
+              Object.assign(logData, {
+                "Secondary Language": agentPricingTemplateData.secondaryLanguage,
+              })
+            }
+            if (agentPricingTemplateData.contactNo1) {
+              Object.assign(logData, {
+                "Mobile No": agentPricingTemplateData.contactNo1,
+              })
+            }
+            if (agentPricingTemplateData.currCity) {
+              Object.assign(logData, {
+                "Current City": agentPricingTemplateData.currCity,
+              })
+            }
+            if (agentPricingTemplateData.currZip) {
+              Object.assign(logData, {
+                "Current Zip": agentPricingTemplateData.currZip,
+              })
+            }
+            if (agentPricingTemplateData.email1) {
+              Object.assign(logData, {
+                "Primary Email": agentPricingTemplateData.email1,
+              })
+            }
+            if (agentPricingTemplateData.preferLocation1) {
+              Object.assign(logData, {
+                "Prefered Location 1": agentPricingTemplateData.preferLocation1,
+              })
+            }
+            if (agentPricingTemplateData.preferLocation2) {
+              Object.assign(logData, {
+                "Prefered Location 2": agentPricingTemplateData.preferLocation2,
+              })
+            }
+            if (agentPricingTemplateData.expYears) {
+              Object.assign(logData, {
+                "Work Exp Yrs": agentPricingTemplateData.expYears,
+              })
+            }
+            if (agentPricingTemplateData.lastCompany) {
+              Object.assign(logData, {
+                "Last Company Name": agentPricingTemplateData.lastCompany,
+              })
+            }
+            if (agentPricingTemplateData.designation) {
+              Object.assign(logData, {
+                "Designation": agentPricingTemplateData.designation,
+              })
+            }
+            if (agentPricingTemplateData.skill1) {
+              Object.assign(logData, {
+                "Skill 1": agentPricingTemplateData.skill1,
+              })
+            }
+            if (agentPricingTemplateData.skill2) {
+              Object.assign(logData, {
+                "Skill 2": agentPricingTemplateData.skill2,
+              })
+            }
+            if (agentPricingTemplateData.isActive) {
+              Object.assign(logData, {
+                "Is Active": agentPricingTemplateData.isActive,
+              })
+            }
+
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Agent Pricing Template added successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.agentPricingTemplate,response.data.data.id,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -4739,7 +4999,7 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- createCompany", error);
+            console.error("There was an error!- createAgentPricingTemplate", error);
           });
         break;
       case "candidate-upload-batch-admin":
@@ -5208,6 +5468,203 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateVerificationAPIcall();
+              const logData = {}
+              if (updateCandidateVerificationData.callCentre
+                .candidateConsent  !== updateCandidateVerificationDataAuditLog.callCentre
+                .candidateConsent) {
+                Object.assign(logData, {
+                  "Candidate Consent": updateCandidateVerificationData.callCentre
+                  .candidateConsent,
+                })
+              }
+              if (updateCandidateVerificationData.callCentre.callStatus 
+                !== updateCandidateVerificationDataAuditLog.callCentre.callStatus) {
+                Object.assign(logData, {
+                  "Call Status": updateCandidateVerificationData.callCentre.callStatus
+                })
+              }
+              if (updateCandidateVerificationData.industry !== updateCandidateVerificationDataAuditLog.industry) {
+                Object.assign(logData, {
+                  "Old Industry": updateCandidateVerificationData.industry
+                })
+              }
+              if (updateCandidateVerificationData.category !== updateCandidateVerificationDataAuditLog.category) {
+                Object.assign(logData, {
+                  "Old Category": updateCandidateVerificationData.category
+                })
+              }
+              if (updateCandidateVerificationData.education !== updateCandidateVerificationDataAuditLog.education) {
+                Object.assign(logData, {
+                  "Old Education": updateCandidateVerificationData.education
+                })
+              }
+              if (updateCandidateVerificationData.fullName !== updateCandidateVerificationDataAuditLog.fullName) {
+                Object.assign(logData, {
+                  "Full Name": updateCandidateVerificationData.fullName
+                })
+              }
+              if (updateCandidateVerificationData.contactNo1 !== updateCandidateVerificationDataAuditLog.contactNo1) {
+                Object.assign(logData, {
+                  "Primary Mobile No": updateCandidateVerificationData.contactNo1
+                })
+              }
+              if (updateCandidateVerificationData.contactNo2 !== updateCandidateVerificationDataAuditLog.contactNo2) {
+                Object.assign(logData, {
+                  "secondary Mobile No": updateCandidateVerificationData.contactNo2
+                })
+              }
+              if (updateCandidateVerificationData.email1 !== updateCandidateVerificationDataAuditLog.email1) {
+                Object.assign(logData, {
+                  "Primary Email": updateCandidateVerificationData.email1
+                })
+              }
+              if (updateCandidateVerificationData.expYears !== updateCandidateVerificationDataAuditLog.expYears) {
+                Object.assign(logData, {
+                  "Total Exp Years": updateCandidateVerificationData.expYears
+                })
+              }
+              if (updateCandidateVerificationData.education !== updateCandidateVerificationDataAuditLog.education) {
+                Object.assign(logData, {
+                  "Education": updateCandidateVerificationData.education
+                })
+              }
+              if (updateCandidateVerificationData.dob !== updateCandidateVerificationDataAuditLog.dob) {
+                Object.assign(logData, {
+                  "BirthDate": updateCandidateVerificationData.dob
+                })
+              }
+              if (updateCandidateVerificationData.gender !== updateCandidateVerificationDataAuditLog.gender) {
+                Object.assign(logData, {
+                  "Gender": updateCandidateVerificationData.gender
+                })
+              }
+              if (updateCandidateVerificationData.industries !== updateCandidateVerificationDataAuditLog.industries) {
+                Object.assign(logData, {
+                  "Industry": updateCandidateVerificationData.industries
+                })
+              }
+              if (updateCandidateVerificationData.categories !== updateCandidateVerificationDataAuditLog.categories) {
+                Object.assign(logData, {
+                  "Category": updateCandidateVerificationData.categories
+                })
+              }
+              if (updateCandidateVerificationData.skill1 !== updateCandidateVerificationDataAuditLog.skill1) {
+                Object.assign(logData, {
+                  "Primary Skill Name": updateCandidateVerificationData.skill1
+                })
+              }
+              if (updateCandidateVerificationData.skill2 !== updateCandidateVerificationDataAuditLog.skill2) {
+                Object.assign(logData, {
+                  "Secondary Skill Name": updateCandidateVerificationData.skill2
+                })
+              }
+              if (updateCandidateVerificationData.preferLocation1 !== updateCandidateVerificationDataAuditLog.preferLocation1) {
+                Object.assign(logData, {
+                  "Prefered Location 1": updateCandidateVerificationData.preferLocation1
+                })
+              }
+              if (updateCandidateVerificationData.preferLocation2 !== updateCandidateVerificationDataAuditLog.preferLocation2) {
+                Object.assign(logData, {
+                  "Prefered Location 2": updateCandidateVerificationData.preferLocation2
+                })
+              }
+              if (updateCandidateVerificationData.primaryLanguage !== updateCandidateVerificationDataAuditLog.primaryLanguage) {
+                Object.assign(logData, {
+                  "Primary Language": updateCandidateVerificationData.primaryLanguage
+                })
+              }
+              if (updateCandidateVerificationData.secondaryLanguage !== updateCandidateVerificationDataAuditLog.secondaryLanguage) {
+                Object.assign(logData, {
+                  "Secondary Language": updateCandidateVerificationData.secondaryLanguage
+                })
+              }
+              if (updateCandidateVerificationData.thirdLanguag !== updateCandidateVerificationDataAuditLog.thirdLanguage) {
+                Object.assign(logData, {
+                  "Third Language": updateCandidateVerificationData.thirdLanguage
+                })
+              }
+              if (updateCandidateVerificationData.currZip !== updateCandidateVerificationDataAuditLog.currZip) {
+                Object.assign(logData, {
+                  "Current Pincode": updateCandidateVerificationData.currZip
+                })
+              }
+              if (updateCandidateVerificationData.currCity !== updateCandidateVerificationDataAuditLog.currCity) {
+                Object.assign(logData, {
+                  "Current City": updateCandidateVerificationData.currCity
+                })
+              }
+              if (updateCandidateVerificationData.currState !== updateCandidateVerificationDataAuditLog.currState) {
+                Object.assign(logData, {
+                  "Current State": updateCandidateVerificationData.currState
+                })
+              }
+              if (updateCandidateVerificationData.currAddress !== updateCandidateVerificationDataAuditLog.currAddress) {
+                Object.assign(logData, {
+                  "Current Address": updateCandidateVerificationData.currAddress
+                })
+              }
+              if (updateCandidateVerificationData.permZip !== updateCandidateVerificationDataAuditLog.permZip) {
+                Object.assign(logData, {
+                  "Permanent Pincode": updateCandidateVerificationData.permZip
+                })
+              }
+              if (updateCandidateVerificationData.permCity !== updateCandidateVerificationDataAuditLog.permCity) {
+                Object.assign(logData, {
+                  "Permanent City": updateCandidateVerificationData.permCity
+                })
+              }
+              if (updateCandidateVerificationData.permState !== updateCandidateVerificationDataAuditLog.permState) {
+                Object.assign(logData, {
+                  "Permanent State": updateCandidateVerificationData.permState
+                })
+              }
+              if (updateCandidateVerificationData.permAddress !== updateCandidateVerificationDataAuditLog.permAddress) {
+                Object.assign(logData, {
+                  "Permanent Address": updateCandidateVerificationData.permAddress
+                })
+              }
+              if (updateCandidateVerificationData.aadharNo !== updateCandidateVerificationDataAuditLog.aadharNo) {
+                Object.assign(logData, {
+                  "Aadhar Number": updateCandidateVerificationData.aadharNo
+                })
+              }
+              if (updateCandidateVerificationData.panNo !== updateCandidateVerificationDataAuditLog.panNo) {
+                Object.assign(logData, {
+                  "Pan Card": updateCandidateVerificationData.panNo
+                })
+              }
+              if (updateCandidateVerificationData.dlNo !== updateCandidateVerificationDataAuditLog.dlNo) {
+                Object.assign(logData, {
+                  "Driving Licence no": updateCandidateVerificationData.dlNo
+                })
+              }
+              if (updateCandidateVerificationData.note !== updateCandidateVerificationDataAuditLog.note) {
+                Object.assign(logData, {
+                  "Note": updateCandidateVerificationData.note
+                })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Candidate Verification Updated successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.candidateVerification,updateCandidateVerifnData.id,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5218,7 +5675,7 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- updateCategoryAPICall", error);
+            console.error("There was an error!- updateCandidateVerification", error);
           });
         break;
       case "agent-master":
@@ -9795,6 +10252,7 @@ const ContentLogic = (props) => {
                 </Box>
               </TabContext>
             </Box>
+            <AuditLog/>
           </>
         );
       case "agent-master":
@@ -10902,6 +11360,7 @@ const ContentLogic = (props) => {
                   </List>
                 ) : null}
               </Box>
+              <AuditLog/>
             </Box>
           </>
         );
@@ -12808,7 +13267,9 @@ const ContentLogic = (props) => {
     confirmationData,
     setOpenApproval,
     handleUpdateAuditData,
-    handleUpdateAuditDataAgentM
+    handleUpdateAuditDataAgentM,
+    handleUpdateAuditDataAgentPricing,
+    handleUpdateAuditDataCandidateVerification
   };
 
   return StateContainer;

@@ -173,6 +173,11 @@ const ContentLogic = (props) => {
     });
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
     useState({});
+  const [candidateUploadBatchAdminDataAudit, setCandidateUploadBatchAdminDataAudit] =
+    useState({
+      id:0,
+      templateName:''
+    });
   const [cndUpdBatchAdmin, setCndUpdBatchAdmin] = useState({
     id: 0,
     templateName: "",
@@ -662,7 +667,7 @@ const ContentLogic = (props) => {
   const [loader, setLoader] = useState(false);
 
   //State for the store the id and handle the status is updating or adding new record
-  const [editId, setEditId] = useState("");
+  const [editId, setEditId] = useState();
   const [editStatus, setEditStatus] = useState(false);
 
   //State used for to set the same address 
@@ -690,6 +695,18 @@ const ContentLogic = (props) => {
     modifiedBy: 0,
     modifiedOn: "",
   });
+  //state for handle audit 
+  const [categoryDataAudit, setCategoryDataAudit] = useState({
+    title: "",
+    description: "",
+    isActive: false,
+    CreatedBy: "",
+    ModifiedBy: "",
+    createdBy: 0,
+    createdOn: "",
+    modifiedBy: 0,
+    modifiedOn: "",
+  });
 
   //state for store the input fields value of company
   const [companyData, setCompanyData] = useState({
@@ -699,17 +716,33 @@ const ContentLogic = (props) => {
     industryId: 0,
     title: "",
   });
+  //state for audit log while updating
+  const [companyDataAudit, setCompanyDataAudit] = useState({
+    companyName: " ",
+    description: "",
+    isActive: true,
+    industryId: 0,
+    title: "",
+  });
   const [filterDataForCompany, setFilterDataForCompany] = useState([]);
 
   //state for store the input fields value of industry
-  const [industryData, setIndustryData] = useState([
+  const [industryData, setIndustryData] = useState(
     {
       title: "",
       description: "",
       isActive: true,
       id: 0,
     },
-  ]);
+  );
+  const [industryDataAudit, setIndustryDataAudit] = useState(
+    {
+      title: "",
+      description: "",
+      isActive: true,
+      id: 0,
+    },
+  );
   const [filterDataForIndustry, setFilterDataForIndustry] = useState([]);
   const [checkedp, setCheckedP] = useState([]);
 
@@ -2754,6 +2787,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setCompanyData(response.data.data);
+          setCompanyDataAudit(response.data.data)
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -2914,6 +2948,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setCategoryData(response.data.data);
+          setCategoryDataAudit(response.data.data);
           console.log("agent by id", response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
@@ -2940,6 +2975,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setIndustryData(response.data.data);
+          setIndustryDataAudit(response.data.data)
           // console.log("industy by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
@@ -3020,6 +3056,7 @@ const ContentLogic = (props) => {
           setCandidateUploadBatchAdminData(
             response.data.data.agentPricingTemplates
           );
+          setCandidateUploadBatchAdminDataAudit(response.data.data.agentPricingTemplates)
           setCndUpdBatchAdmin(response.data.data.agentPricingTemplates);
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
@@ -4470,24 +4507,41 @@ const ContentLogic = (props) => {
   //update the redux state for audit log 
   const handleUpdateAuditData = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.candidateMaster));
-    // console.log("count",auditData)
   };
   //update the redux state for audit log 
   const handleUpdateAuditDataAgentM= (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.agentMaster));
-    // console.log("count",auditData)
   };
 
   //update the redux state for audit log 
   const handleUpdateAuditDataAgentPricing= (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.agentPricingTemplate));
-    // console.log("count",auditData)
   };
   //update the redux state for audit log 
   const handleUpdateAuditDataCandidateVerification= (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.candidateVerification));
-    // console.log("count",auditData)
   };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataAdminCndUpBatch= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.adminCandidateUploadBatch));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMCategory= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMasterCategory));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMCompany= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMasterCompany));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMIndustry= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMasterIndustry));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMRole= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMastersRole));
+  };
+
   // add API calls
   const addAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
@@ -5014,12 +5068,13 @@ const ContentLogic = (props) => {
           )
           .then((response) => {
             console.log(response);
-            if (response.status == 201) {
+            if (response.status == 200) {
               // console.log(response.data.message);
               getCandidateUploadBatchAdminAPIcall();
               setOpenAlertMsg(true);
+              setOpenConfirmation(false)
               // setOpenAddBtchprty(false);
-              setLoader(true);
+              setLoader(false);
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -5043,7 +5098,6 @@ const ContentLogic = (props) => {
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           })
           .then((response) => {
-            console.log(response);
             if (response.status == 201) {
               console.log(response.data.message);
               getBatchPriorityAPIcall();
@@ -5080,6 +5134,34 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenOtherIndCategory(false);
               setLoader(true);
+              const logData = {}
+              if (otherIndustryC.candidateId) {
+                Object.assign(logData, {
+                  "CandidateId": otherIndustryC.candidateId,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Agent Pricing Template added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.agentPricingTemplate,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -5104,10 +5186,48 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              console.log(response.data.message);
               setOpenCandidateModal(false);
               getCategoryAPIcall();
               setOpenAlertMsg(true);
+
+              const logData = {}
+              if (categoryData.title) {
+                Object.assign(logData, {
+                  "Title": categoryData.title,
+                })
+              }
+              if (categoryData.description) {
+                Object.assign(logData, {
+                  "Description": categoryData.description,
+                })
+              }
+              if (categoryData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": categoryData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Category added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMasterCategory,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5118,7 +5238,7 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- getCategoryAPIcall", error);
+            console.error("There was an error!- createCategory", error);
           });
         break;
       case "company":
@@ -5133,6 +5253,55 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCompanyAPIcall();
               setOpenAlertMsg(true);
+
+              const logData = {}
+              if (companyData.companyName) {
+                Object.assign(logData, {
+                  "Company Name": companyData.companyName,
+                })
+              }
+              if (companyData.description) {
+                Object.assign(logData, {
+                  "Description": companyData.description,
+                })
+              }
+              if (companyData.industryId) {
+                Object.assign(logData, {
+                  "Industry Id": companyData.industryId,
+                })
+              }
+              if (companyData.title) {
+                Object.assign(logData, {
+                  "Industry Title": companyData.title,
+                })
+              }
+              if (companyData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": companyData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Company added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMasterCompany,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5159,6 +5328,45 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getIndustryAPIcall();
               setOpenAlertMsg(true);
+
+              const logData = {}
+              if (industryData.title) {
+                Object.assign(logData, {
+                  "Title": industryData.title,
+                })
+              }
+              if (industryData.description) {
+                Object.assign(logData, {
+                  "Description": industryData.description,
+                })
+              }
+              if (industryData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": industryData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Industry added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMasterIndustry,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5170,7 +5378,7 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- createCompany", error);
+            console.error("There was an error!- createIndustry", error);
           });
         break;
       case "role":
@@ -5185,6 +5393,50 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getRoleAPIcall();
               setOpenAlertMsg(true);
+
+              const logData = {}
+              if (roleData.title) {
+                Object.assign(logData, {
+                  "Title": roleData.title,
+                })
+              }
+              if (roleData.description) {
+                Object.assign(logData, {
+                  "Description": roleData.description,
+                })
+              }
+              if (roleData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": roleData.isActive,
+                })
+              }
+              if (roleData.permissionId) {
+                Object.assign(logData, {
+                  "Permission Id": roleData.permissionId,
+                })
+              }
+              
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Role added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersRole,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5287,7 +5539,6 @@ const ContentLogic = (props) => {
   const updateAPICalls = (pageName) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    console.log(editId);
     switch (pageName) {
       case "candidate-master":
         const updateCandidatesMasterData = {
@@ -5746,7 +5997,7 @@ const ContentLogic = (props) => {
           });
         break;
       case "candidate-upload-batch-admin":
-        let updateCandidateUploadBatchAdmin = {
+        const updateCandidateUploadBatchAdmin = {
           // ...candidateUploadBatchAdminData,
           templateId: candidateUploadBatchAdminData.id,
         };
@@ -5765,6 +6016,36 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateUploadBatchAdminAPIcall();
+              //add logData 
+              const logData = {}
+              if (updateCandidateUploadBatchAdmin.templateId 
+                !== candidateUploadBatchAdminDataAudit.id) {
+                Object.assign(logData, {
+                  "Agent Pricing Template Id":updateCandidateUploadBatchAdmin.templateId,
+                  })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Pricing template changed successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.adminCandidateUploadBatch,editId,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5798,6 +6079,45 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCategoryAPIcall();
+
+              const logData = {}
+              if (updateCategoryData.title !== categoryDataAudit.title) {
+                Object.assign(logData, {
+                  "Title":updateCategoryData.title,
+                  })
+              }
+              if (updateCategoryData.description !== categoryDataAudit.description) {
+                Object.assign(logData, {
+                  "Description":updateCategoryData.description,
+                  })
+              }
+              if (updateCategoryData.isActive !== categoryDataAudit.isActive) {
+                Object.assign(logData, {
+                  "Is Active":updateCategoryData.isActive,
+                  })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Category changed successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.otherMasterCategory,editId,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5831,6 +6151,55 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getCompanyAPIcall();
+
+              const logData = {}
+              if (companyData.companyName !== companyDataAudit.companyName) {
+                Object.assign(logData, {
+                  "Title":companyData.companyName,
+                  })
+              }
+              if (companyData.description !== companyDataAudit.description) {
+                Object.assign(logData, {
+                  "Description":companyData.description,
+                  })
+              }
+              if (companyData.title !== companyDataAudit.description) {
+                Object.assign(logData, {
+                  "Industry Title":companyData.title,
+                  })
+              }
+              if (companyData.industryId !== companyDataAudit.industryId) {
+                Object.assign(logData, {
+                  "Industry Id":companyData.industryId,
+                  })
+              }
+              if (companyData.isActive !== companyDataAudit.isActive) {
+                Object.assign(logData, {
+                  "Is Active":companyData.isActive,
+                  })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Company changed successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.otherMasterCompany,editId,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5864,6 +6233,50 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getIndustryAPIcall();
+
+              const logData = {}
+              if (industryData.title !== industryDataAudit.title) {
+                Object.assign(logData, {
+                  "Title":industryData.title,
+                  })
+              }
+              if (industryData.description !== industryDataAudit.description) {
+                Object.assign(logData, {
+                  "Description":industryData.description,
+                  })
+              }
+              if (industryData.id !== industryDataAudit.id) {
+                Object.assign(logData, {
+                  "Id":industryData.id,
+                  })
+              }
+              if (industryData.isActive !== industryDataAudit.isActive) {
+                Object.assign(logData, {
+                  "Is Active":industryData.isActive,
+                  })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Industry changed successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.otherMasterIndustry,editId,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5893,6 +6306,49 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getRoleAPIcall();
+              const logData = {}
+              if (roleData.name !== roleData.name) {
+                Object.assign(logData, {
+                  "Title":roleData.name,
+                  })
+              }
+              if (roleData.description !== roleData.description) {
+                Object.assign(logData, {
+                  "Description":roleData.description,
+                  })
+              }
+              if (roleData.isActive !== roleData.isActive) {
+                Object.assign(logData, {
+                  "Is Active":roleData.isActive,
+                  })
+              }
+              if (roleData.permissionId !== roleData.permissionId) {
+                Object.assign(logData, {
+                  "Permission Id":roleData.permissionId,
+                  })
+              }
+              
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Role changed successfully."
+          }
+          handlers.auditLog.addAuditLog(auditlog,
+            helpers.auditLog.otherMastersRole,editId,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("Audit log added")
+          })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6158,6 +6614,7 @@ const ContentLogic = (props) => {
                 onClick={() => {
                   handleClickOpenAdminCanUplBtch();
                   getAgentPricingForCndUplBatchAPICalls();
+                  handleUpdateAuditDataAdminCndUpBatch(editId)
                 }}
                 style={{
                   marginTop: "80px",
@@ -6204,6 +6661,7 @@ const ContentLogic = (props) => {
                   handleOpenCandidateModal();
                   getRoleByIdAPIcall();
                   getPermissionsAPIcall();
+                  handleUpdateAuditDataOtherMRole(editId)
                 }}
                 style={{
                   marginTop: "80px",
@@ -6591,7 +7049,7 @@ const ContentLogic = (props) => {
                       <b style={{ marginRight: "20px" }}>
                         {otherIndCategoryResult[item].batchNo}
                       </b>
-                      Count:<b>1</b>
+                      {/* Count:<b>1</b> */}
                     </ListItem>
                     {/* </Box> */}
                   </>
@@ -6967,6 +7425,7 @@ const ContentLogic = (props) => {
         );
     }
   };
+
 
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
@@ -7558,7 +8017,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
                       <ListItem>
-                        <AuditLog />
+                        {editStatus?(<AuditLog />):""}
                       </ListItem>
                       <div>
                         <ListItem>
@@ -7867,7 +8326,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
 
-                      <AuditLog />
+                     {editStatus? (<AuditLog />):""}
                       <div>
                         <ListItem>
                           <Button
@@ -10252,7 +10711,7 @@ const ContentLogic = (props) => {
                 </Box>
               </TabContext>
             </Box>
-            <AuditLog/>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "agent-master":
@@ -10929,7 +11388,7 @@ const ContentLogic = (props) => {
                   </FormControl>
                 </TabPanel>
               </TabContext>
-              <AuditLog/>
+              {editStatus?(<AuditLog/>):""}
             </Box>
           </>
         );
@@ -11360,7 +11819,7 @@ const ContentLogic = (props) => {
                   </List>
                 ) : null}
               </Box>
-              <AuditLog/>
+              {editStatus?(<AuditLog/>):""}
             </Box>
           </>
         );
@@ -11392,7 +11851,6 @@ const ContentLogic = (props) => {
                   style={{ width: "130ch" }}
                   onChange={(e) => {
                     setCategoryData({ ...categoryData, title: e.target.value });
-                    console.log(categoryData);
                   }}
                 />
               </List>
@@ -11461,6 +11919,7 @@ const ContentLogic = (props) => {
                 </ul>
               </List>
             </div>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "company":
@@ -11572,6 +12031,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "industry":
@@ -11647,6 +12107,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "role":
@@ -11779,6 +12240,7 @@ const ContentLogic = (props) => {
                 </Button>
               </List>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "skillset":
@@ -12772,6 +13234,7 @@ const ContentLogic = (props) => {
                   <p>*indicates required field</p>
                 </tr>
               </DialogContent>
+              {editStatus?(<AuditLog/>):""}
             </>
           )}
           <DialogActions>
@@ -13269,7 +13732,11 @@ const ContentLogic = (props) => {
     handleUpdateAuditData,
     handleUpdateAuditDataAgentM,
     handleUpdateAuditDataAgentPricing,
-    handleUpdateAuditDataCandidateVerification
+    handleUpdateAuditDataCandidateVerification,
+    handleUpdateAuditDataOtherMCategory,
+    handleUpdateAuditDataOtherMCompany,
+    handleUpdateAuditDataOtherMIndustry,
+    handleUpdateAuditDataOtherMRole
   };
 
   return StateContainer;

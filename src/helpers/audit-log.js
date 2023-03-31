@@ -4,8 +4,14 @@ const auditLog = {
     "candidateVerification":3,
     "agentMaster":4,
     "agentPricingTemplate":5,
-    "admin":6,
-    "otherMaster":7
+    "adminCandidateUploadBatch":6,
+    "otherMasterCategory":7,
+    "otherMasterCompany":8,
+    "otherMasterIndustry":9,
+    "otherMastersRole":10,
+    "otherMastersSkillSet":10,
+    "otherMastersSubscription":10,
+    "otherMastersUsers":10,
 }
 
 export default auditLog

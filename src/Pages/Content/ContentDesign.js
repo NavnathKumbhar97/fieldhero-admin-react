@@ -96,7 +96,10 @@ export default function ContentDesign(props) {
     handleUpdateAuditData,
     handleUpdateAuditDataAgentM,
     handleUpdateAuditDataAgentPricing,
-    handleUpdateAuditDataCandidateVerification
+    handleUpdateAuditDataCandidateVerification,
+    handleUpdateAuditDataOtherMCategory,
+    handleUpdateAuditDataOtherMCompany,
+    handleUpdateAuditDataOtherMIndustry
   } = ContentLogic();
 
   //UseEffect For Page
@@ -673,9 +676,9 @@ export default function ContentDesign(props) {
                       onClick={() => {
                         handleOpenCandidateModal();
                         setEditId(tblData[item].id);
-                        setEditStatus(true);
-                        console.log(tblData[item].id);
+                        setEditStatus(true)
                         getCategoryById(tblData[item].id);
+                        handleUpdateAuditDataOtherMCategory(tblData[item].id)
                       }}
                     >
                       <Edit />
@@ -763,6 +766,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getCompanyAPIcallById(tblData[item].id);
+                        handleUpdateAuditDataOtherMCompany(tblData[item].id)
                       }}
                     >
                       <Edit />
@@ -911,6 +915,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getIndustryById(tblData[item].id);
+                        handleUpdateAuditDataOtherMIndustry(tblData[item].id)
                       }}
                     >
                       <Edit />

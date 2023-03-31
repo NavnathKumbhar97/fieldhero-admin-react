@@ -71,8 +71,8 @@ const style = {
   p: 4,
 };
 
-const AuditLog = forwardRef((props, ref) => {
-  const { sectionId, dataId } = props;
+const AuditLog = (props) => {
+  // const { sectionId, dataId } = props;
   const [isAuditLogModal, setIsAuditLogModal] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isAuditLogEditId, setIsAuditLogEditId] = useState("");
@@ -89,7 +89,6 @@ const AuditLog = forwardRef((props, ref) => {
 
   //Get the State Data From redux
   const AuditLogDataId = useSelector((state) => state.auditLog)
-
   const tblLogHeader = [
     // {
     //   id: "SrNo",
@@ -200,7 +199,7 @@ const AuditLog = forwardRef((props, ref) => {
 
   useEffect(()=>{
     fetchLogDetails()
-  },[AuditLogDataId.sectionId])
+  },[])
 
   //Pagination
   const handleChangePage = (event, newPage) => {
@@ -285,7 +284,7 @@ const AuditLog = forwardRef((props, ref) => {
                       <TableCell component="th" scope="row">
                         {row[0]}
                       </TableCell>
-                      <TableCell align="left">{row[1]}</TableCell>
+                      <TableCell align="left">{row[0]==="Is Active"&&row[1]===true?"Active":row[1]}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -301,7 +300,7 @@ const AuditLog = forwardRef((props, ref) => {
       </div>
     </>
   );
-});
+};
 
 
 

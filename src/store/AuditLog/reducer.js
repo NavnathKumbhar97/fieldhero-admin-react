@@ -6,8 +6,7 @@ const initialState = {
 }
 
 const auditLog = (state = initialState , action) => {
-    // console.log("initialState",initialState);
-    console.log("state",state);
+
     switch (action.type) {
         case GET_AUDIT_LOG:
             state = {

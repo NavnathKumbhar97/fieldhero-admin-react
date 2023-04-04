@@ -99,7 +99,10 @@ export default function ContentDesign(props) {
     handleUpdateAuditDataCandidateVerification,
     handleUpdateAuditDataOtherMCategory,
     handleUpdateAuditDataOtherMCompany,
-    handleUpdateAuditDataOtherMIndustry
+    handleUpdateAuditDataOtherMIndustry,
+    handleUpdateAuditDataOtherMSkillSet,
+    handleUpdateAuditDataOtherMSubscription,
+    handleUpdateAuditDataOtherMUser
   } = ContentLogic();
 
   //UseEffect For Page
@@ -1073,6 +1076,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getSkillSetById(tblData[item].id);
+                        handleUpdateAuditDataOtherMSkillSet(tblData[item].id)
                       }}
                     >
                       <Edit />
@@ -1160,6 +1164,7 @@ export default function ContentDesign(props) {
                         setEditStatus(true);
                         console.log(tblData[item].id);
                         getSubscriptionByIdAPIcall(tblData[item].id);
+                        handleUpdateAuditDataOtherMSubscription(tblData[item].id)
                       }}
                     >
                       <Edit />
@@ -1247,6 +1252,7 @@ export default function ContentDesign(props) {
                         setEditId(tblData[item].id);
                         setEditStatus(true);
                         getUserAPIcallById(tblData[item].id);
+                        handleUpdateAuditDataOtherMUser(tblData[item].id)
                       }}
                     >
                       <Edit />

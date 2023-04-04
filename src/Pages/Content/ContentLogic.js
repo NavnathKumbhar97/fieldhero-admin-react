@@ -771,9 +771,23 @@ const ContentLogic = (props) => {
     description: "",
     isActive: true,
   });
+  const [skillSetDataForAuditLog, setSkillSetDataForAuditLog] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+  });
 
   //state for store the input fields value of subscriptions
   const [subscriptionData, setSubscriptionData] = useState({
+    planName: "",
+    dataCount: 1,
+    durationMonths: 12,
+    price: 1999,
+    note: "",
+    isActive: true,
+  });
+  // For Audit Log 
+  const [subscriptionDataForAudit, setSubscriptionDataForAudit] = useState({
     planName: "",
     dataCount: 1,
     durationMonths: 12,
@@ -816,6 +830,31 @@ const ContentLogic = (props) => {
     isActive: true,
   });
   const [updateUserData, setUpdateUserData] = useState({
+    fullName: "",
+    dob: "",
+    gender: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    aadharCard: "",
+    panCard: "",
+    note: "",
+    email: "",
+    contactNo: "",
+    roleId: 0,
+    isActive: true,
+  });
+  const [updateUserDataForAudit, setUpdateUserDataForAudit] = useState({
     fullName: "",
     dob: "",
     gender: "",
@@ -2811,6 +2850,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setUpdateUserData(response.data.data);
+          setUpdateUserDataForAudit(response.data.data)
           // setTblDataCount(response.data.data.users);
           console.log("user Data to update by id", updateUserData);
         } else if (response.status == 400) {
@@ -3002,8 +3042,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setSkillSetData(response.data.data);
-          // console.log("agent by id",response.data.data);
-          // console.log("getAgentMasterData",agentMasterData);
+          setSkillSetDataForAuditLog(response.data.data)
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3028,6 +3067,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setSubscriptionData(response.data.data);
+          setSubscriptionDataForAudit(response.data.data)
           // console.log("agent by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
@@ -4541,6 +4581,18 @@ const ContentLogic = (props) => {
   const handleUpdateAuditDataOtherMRole= (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersRole));
   };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMSkillSet= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMastersSkillSet));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMSubscription= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMastersSubscription));
+  };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMUser= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMastersUsers));
+  };
 
   // add API calls
   const addAPICalls = (pageName) => {
@@ -5463,6 +5515,45 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getSkillSetAPIcall();
               setOpenAlertMsg(true);
+
+              const logData = {}
+              if (skillSetData.title) {
+                Object.assign(logData, {
+                  "Title": skillSetData.title,
+                })
+              }
+              if (skillSetData.description) {
+                Object.assign(logData, {
+                  "Description": skillSetData.description,
+                })
+              }
+              if (skillSetData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": skillSetData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "SkillSet added successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersSkillSet,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5489,6 +5580,60 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getSubscriptionAPIcall();
               setOpenAlertMsg(true);
+               //For Audit Log
+               const logData = {}
+               if (subscriptionData.planName) {
+                 Object.assign(logData, {
+                   "Plan Name": subscriptionData.planName,
+                 })
+               }
+               if (subscriptionData.dataCount) {
+                 Object.assign(logData, {
+                   "Data Count": subscriptionData.description,
+                 })
+               }
+               if (subscriptionData.durationMonths ) {
+                 Object.assign(logData, {
+                   "Duration in Month": subscriptionData.durationMonths,
+                 })
+               }
+               if (subscriptionData.price) {
+                 Object.assign(logData, {
+                   "Price": subscriptionData.price,
+                 })
+               }
+               if (subscriptionData.note) {
+                 Object.assign(logData, {
+                   "Note": subscriptionData.note,
+                 })
+               }
+               if (subscriptionData.isActive) {
+                 Object.assign(logData, {
+                   "Is Active": subscriptionData.isActive,
+                 })
+               }
+   
+               let logDataString = JSON.stringify(logData)
+               let fullName = convertTokenToObj.name
+               let Email = convertTokenToObj.userEmail
+               let auditlog = {
+                 userName: fullName
+                     ? fullName:"",
+                 email: Email
+                     ? Email
+                     : "",
+                 contactNumber: auditLogData
+                     ? auditLogData.contactNo
+                     : "",
+                 updatedFiled: logDataString,
+                 operationName: "Subscription Added successfully."
+             }
+             handlers.auditLog.addAuditLog(auditlog,
+               helpers.auditLog.otherMastersSubscription,response.data.data.id,{
+               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+             }).then(()=>{
+               console.log("Audit log added")
+             })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5515,6 +5660,140 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getUserAPIcall();
               setOpenAlertMsg(true);
+               //For Audit Log
+               const logData = {}
+               if (userData.fullName) {
+                 Object.assign(logData, {
+                   "Full Name": userData.fullName,
+                 })
+               }
+               if (userData.dob) {
+                 Object.assign(logData, {
+                   "BirthDate": userData.dob,
+                 })
+               }
+               if (userData.gender ) {
+                 Object.assign(logData, {
+                   "Gender": userData.gender,
+                 })
+               }
+               if (userData.email) {
+                 Object.assign(logData, {
+                   "Email": userData.email,
+                 })
+               }
+               if (userData.contactNo) {
+                 Object.assign(logData, {
+                   "Contact No": userData.contactNo,
+                 })
+               }
+               if (userData.roleId) {
+                 Object.assign(logData, {
+                   "Role Id": userData.roleId,
+                 })
+               }
+               if (userData.currAddress) {
+                 Object.assign(logData, {
+                   "Current Address": userData.currAddress,
+                 })
+               }
+               if (userData.currCity) {
+                 Object.assign(logData, {
+                   "Current City": userData.currCity,
+                 })
+               }
+               if (userData.currState) {
+                 Object.assign(logData, {
+                   "Current State": userData.currState,
+                 })
+               }
+               if (userData.currCountry) {
+                 Object.assign(logData, {
+                   "Current Country": userData.currCountry,
+                 })
+               }
+               if (userData.currZip) {
+                 Object.assign(logData, {
+                   "Current Zip": userData.currZip,
+                 })
+               }
+               if (userData.permAddress) {
+                 Object.assign(logData, {
+                   "Permanent Address": userData.permAddress,
+                 })
+               }
+               if (userData.permCity) {
+                 Object.assign(logData, {
+                   "Permanent City": userData.permCity,
+                 })
+               }
+               if (userData.permState) {
+                 Object.assign(logData, {
+                   "Permanent State": userData.permState,
+                 })
+               }
+               if (userData.permZip) {
+                 Object.assign(logData, {
+                   "Permanent Zip": userData.permZip,
+                 })
+               }
+               if (userData.panCard) {
+                 Object.assign(logData, {
+                   "Pan Card": userData.panCard,
+                 })
+               }
+               if (userData.aadharCard) {
+                 Object.assign(logData, {
+                   "Aadhar Card": userData.aadharCard,
+                 })
+               }
+               if (userData.primaryLang) {
+                 Object.assign(logData, {
+                   "Primary Language": userData.primaryLang,
+                 })
+               }
+               if (userData.secondaryLang) {
+                 Object.assign(logData, {
+                   "Secondary Language": userData.secondaryLang,
+                 })
+               }
+               if (userData.thirdLang) {
+                 Object.assign(logData, {
+                   "Third Language": userData.thirdLang,
+                 })
+               }
+               if (userData.note) {
+                 Object.assign(logData, {
+                   "Note": userData.note,
+                 })
+               }
+               if (userData.isActive) {
+                 Object.assign(logData, {
+                   "Is Active": userData.isActive,
+                 })
+               }
+   
+               let logDataString = JSON.stringify(logData)
+               let fullName = convertTokenToObj.name
+               let Email = convertTokenToObj.userEmail
+               let auditlog = {
+                 userName: fullName
+                     ? fullName:"",
+                 email: Email
+                     ? Email
+                     : "",
+                 contactNumber: auditLogData
+                     ? auditLogData.contactNo
+                     : "",
+                 updatedFiled: logDataString,
+                 operationName: "User Added successfully."
+             }
+             handlers.auditLog.addAuditLog(auditlog,
+               helpers.auditLog.otherMastersUsers,response.data.data.id,{
+               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+             }).then(()=>{
+               console.log("Audit log added")
+             })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5526,7 +5805,7 @@ const ContentLogic = (props) => {
               // window.alert(error.data.message);
               setErrMsg(true);
             }
-            console.error("There was an error!- createCompany", error);
+            console.error("There was an error!- createUser", error);
           });
         break;
 
@@ -6306,23 +6585,25 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getRoleAPIcall();
+
+              //audit log
               const logData = {}
-              if (roleData.name !== roleData.name) {
+              if (roleData.name) {
                 Object.assign(logData, {
                   "Title":roleData.name,
                   })
               }
-              if (roleData.description !== roleData.description) {
+              if (roleData.description) {
                 Object.assign(logData, {
                   "Description":roleData.description,
                   })
               }
-              if (roleData.isActive !== roleData.isActive) {
+              if (roleData.isActive) {
                 Object.assign(logData, {
                   "Is Active":roleData.isActive,
                   })
               }
-              if (roleData.permissionId !== roleData.permissionId) {
+              if (roleData.permissionId) {
                 Object.assign(logData, {
                   "Permission Id":roleData.permissionId,
                   })
@@ -6341,7 +6622,7 @@ const ContentLogic = (props) => {
                   ? auditLogData.contactNo
                   : "",
               updatedFiled: logDataString,
-              operationName: "Role changed successfully."
+              operationName: "Role Updated successfully."
           }
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.otherMastersRole,editId,{
@@ -6378,6 +6659,45 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSkillSetAPIcall();
+
+              const logData = {}
+              if (skillSetData.title !== skillSetDataForAuditLog.title) {
+                Object.assign(logData, {
+                  "Title": skillSetData.title,
+                })
+              }
+              if (skillSetData.description!== skillSetDataForAuditLog.description) {
+                Object.assign(logData, {
+                  "Description": skillSetData.description,
+                })
+              }
+              if (skillSetData.isActive !== skillSetDataForAuditLog.isActive) {
+                Object.assign(logData, {
+                  "Is Active": skillSetData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "SkillSet Updated successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersSkillSet,editId,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6411,6 +6731,60 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSubscriptionAPIcall();
+              //For Audit Log
+              const logData = {}
+              if (subscriptionData.planName !== subscriptionDataForAudit.planName) {
+                Object.assign(logData, {
+                  "Plan Name": subscriptionData.title,
+                })
+              }
+              if (subscriptionData.dataCount!== subscriptionDataForAudit.dataCount) {
+                Object.assign(logData, {
+                  "Data Count": subscriptionData.description,
+                })
+              }
+              if (subscriptionData.durationMonths !== subscriptionDataForAudit.durationMonths) {
+                Object.assign(logData, {
+                  "Duration in Month": subscriptionData.durationMonths,
+                })
+              }
+              if (subscriptionData.price !== subscriptionDataForAudit.price) {
+                Object.assign(logData, {
+                  "Price": subscriptionData.price,
+                })
+              }
+              if (subscriptionData.note !== subscriptionDataForAudit.note) {
+                Object.assign(logData, {
+                  "Note": subscriptionData.note,
+                })
+              }
+              if (subscriptionData.isActive !== subscriptionDataForAudit.isActive) {
+                Object.assign(logData, {
+                  "Is Active": subscriptionData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Subscription Updated successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersSubscription,editId,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6443,6 +6817,136 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getUserAPIcall();
+              //For Audit Log
+              const logData = {}
+              if (updateUserData.fullName !== updateUserDataForAudit.fullName) {
+                Object.assign(logData, {
+                  "Full Name": updateUserData.fullName,
+                })
+              }
+              if (updateUserData.dob!== updateUserDataForAudit.dob) {
+                Object.assign(logData, {
+                  "BirthDate": updateUserData.dob,
+                })
+              }
+              if (updateUserData.gender!== updateUserDataForAudit.gender ) {
+                Object.assign(logData, {
+                  "Gender": updateUserData.gender,
+                })
+              }
+              if (updateUserData.email!== updateUserDataForAudit.email) {
+                Object.assign(logData, {
+                  "Email": updateUserData.email,
+                })
+              }
+              if (updateUserData.contactNo!== updateUserDataForAudit.contactNo) {
+                Object.assign(logData, {
+                  "Contact No": updateUserData.contactNo,
+                })
+              }
+              if (updateUserData.roleId!== updateUserDataForAudit.roleId) {
+                Object.assign(logData, {
+                  "Role Id": updateUserData.roleId,
+                })
+              }
+              if (updateUserData.currAddress!== updateUserDataForAudit.currAddress) {
+                Object.assign(logData, {
+                  "Current Address": updateUserData.currAddress,
+                })
+              }
+              if (updateUserData.currCity!== updateUserDataForAudit.currCity) {
+                Object.assign(logData, {
+                  "Current City": updateUserData.currCity,
+                })
+              }
+              if (updateUserData.currState!== updateUserDataForAudit.currState) {
+                Object.assign(logData, {
+                  "Current State": updateUserData.currState,
+                })
+              }
+              
+              if (updateUserData.currZip!== updateUserDataForAudit.currZip) {
+                Object.assign(logData, {
+                  "Current Zip": updateUserData.currZip,
+                })
+              }
+              if (updateUserData.permAddress!== updateUserDataForAudit.permAddress) {
+                Object.assign(logData, {
+                  "Permanent Address": updateUserData.permAddress,
+                })
+              }
+              if (updateUserData.permCity !== updateUserDataForAudit.permCity) {
+                Object.assign(logData, {
+                  "Permanent City": updateUserData.permCity,
+                })
+              }
+              if (updateUserData.permState !== updateUserDataForAudit.permState) {
+                Object.assign(logData, {
+                  "Permanent State": updateUserData.permState,
+                })
+              }
+              if (updateUserData.permZip !== updateUserDataForAudit.permZip) {
+                Object.assign(logData, {
+                  "Permanent Zip": updateUserData.permZip,
+                })
+              }
+              if (updateUserData.panCard !== updateUserDataForAudit.panCard) {
+                Object.assign(logData, {
+                  "Pan Card": updateUserData.panCard,
+                })
+              }
+              if (updateUserData.aadharCard !== updateUserDataForAudit.aadharCard) {
+                Object.assign(logData, {
+                  "Aadhar Card": updateUserData.aadharCard,
+                })
+              }
+              if (updateUserData.primaryLang !== updateUserDataForAudit.primaryLang) {
+                Object.assign(logData, {
+                  "Primary Language": updateUserData.primaryLang,
+                })
+              }
+              if (updateUserData.secondaryLang !== updateUserDataForAudit.secondaryLang) {
+                Object.assign(logData, {
+                  "Secondary Language": updateUserData.secondaryLang,
+                })
+              }
+              if (updateUserData.thirdLang !== updateUserDataForAudit.thirdLang) {
+                Object.assign(logData, {
+                  "Third Language": updateUserData.thirdLang,
+                })
+              }
+              if (updateUserData.note !== updateUserDataForAudit.note) {
+                Object.assign(logData, {
+                  "Note": updateUserData.note,
+                })
+              }
+              if (updateUserData.isActive !== updateUserDataForAudit.isActive) {
+                Object.assign(logData, {
+                  "Is Active": updateUserData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "User Updated successfully."
+            }
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersUsers,editId,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -12314,6 +12818,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "subscription":
@@ -12433,6 +12938,7 @@ const ContentLogic = (props) => {
                 </List>
               </Box>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       case "user":
@@ -12962,6 +13468,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
+            {editStatus?(<AuditLog/>):""}
           </>
         );
       default:
@@ -13736,7 +14243,10 @@ const ContentLogic = (props) => {
     handleUpdateAuditDataOtherMCategory,
     handleUpdateAuditDataOtherMCompany,
     handleUpdateAuditDataOtherMIndustry,
-    handleUpdateAuditDataOtherMRole
+    handleUpdateAuditDataOtherMRole,
+    handleUpdateAuditDataOtherMSkillSet,
+    handleUpdateAuditDataOtherMSubscription,
+    handleUpdateAuditDataOtherMUser
   };
 
   return StateContainer;

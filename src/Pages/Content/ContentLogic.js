@@ -655,6 +655,7 @@ const ContentLogic = (props) => {
   });
   const [updateBatchPriority, setUpdateBatchPriority] = useState([]);
   const [batchPriorityAssingend, setBatchPriorityAssingend] = useState([]);
+  const [batchPriority, setBatchPriority] = useState([]);
   const [batchPriorityId, setBatchPriorityId] = useState("87");
 
   // State for page name when user route from one module to another
@@ -888,14 +889,16 @@ const ContentLogic = (props) => {
     description: "",
     id: 20,
     itemIdtoUpdate: 17601,
-    mode: categoryFields,
-    text: "Test 122",
+    mode: '',
+    text: "",
     type: "INDUSTRY",
   });
   const [filterDataForCategory, setFilterDataForCategory] = useState([]);
+ 
   const [otherIndCategory, setOtherIndCategory] = useState([]);
   const [otherIndCategoryResult, setOtherIndCategoryResult] = useState([]);
   const [otherIndCategoryStats, setOtherIndCategoryStats] = useState([]);
+  const [otherIndCategoryPassive, setOtherIndCategoryPassive] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [openOtherIndCategory, setOpenOtherIndCategory] = useState(false);
 
@@ -2722,7 +2725,7 @@ const ContentLogic = (props) => {
           setLoader(false);
           // setUpdateBatchPriority(response.data.data);
           setBatchPriorityAssingend(response.data.data.assignedTo);
-          // setTblDataCount(response.data.data.users);
+          setBatchPriority(response.data.data);
           console.log("batch priority stats ", response.data.data.assignedTo);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
@@ -2793,7 +2796,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setOtherIndCategory(response.data.data.candidates);
-          setOtherIndCategoryResult(response.data.data);
+          setOtherIndCategoryResult(response.data.data.result);
           setOtherIndCategoryStats(response.data.data.stats);
           // setTblDataCount(response.data.data.count);
           // console.log("industry category", otherIndCategory);
@@ -3514,6 +3517,31 @@ const ContentLogic = (props) => {
       });
   };
 
+  //get passive data for existing other industry category module
+  const getPassiveForOtherIndustry = async () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    await handler
+      .dataGet(`/v1/admin/other-industries-categories/passive`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setOtherIndCategoryPassive(response.data.data.categories);
+          setLoader(false);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getPassiveData", error);
+        setLoader(false);
+      });
+  };
+
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
       // console.log("getallData pagename :", pageName);
@@ -3542,7 +3570,7 @@ const ContentLogic = (props) => {
           break;
         case "other-industry-category":
           getOtherIndustryCategoryAPIcall();
-          // getBatchPriorityDataAPIcall();
+          getPassiveForOtherIndustry()
           break;
         case "category":
           getCategoryAPIcall();
@@ -5180,16 +5208,40 @@ const ContentLogic = (props) => {
           })
           .then((response) => {
             console.log(response);
-            if (response.status == 201) {
-              // console.log(response.data.message);
-              // getBatchPriorityAPIcall();
+            if (response.status == 200) {
               setOpenAlertMsg(true);
               setOpenOtherIndCategory(false);
-              setLoader(true);
+              setLoader(false);
+
               const logData = {}
               if (otherIndustryC.candidateId) {
                 Object.assign(logData, {
                   "CandidateId": otherIndustryC.candidateId,
+                })
+              }
+              if (otherIndustryC.description) {
+                Object.assign(logData, {
+                  "Description": otherIndustryC.description,
+                })
+              }
+              if (otherIndustryC.id) {
+                Object.assign(logData, {
+                  "Id": otherIndustryC.id,
+                })
+              }
+              if (otherIndustryC.mode) {
+                Object.assign(logData, {
+                  "Mode": otherIndustryC.mode,
+                })
+              }
+              if (otherIndustryC.text) {
+                Object.assign(logData, {
+                  "Text": otherIndustryC.text,
+                })
+              }
+              if (otherIndustryC.type) {
+                Object.assign(logData, {
+                  "Type": otherIndustryC.type,
                 })
               }
   
@@ -5206,17 +5258,15 @@ const ContentLogic = (props) => {
                     ? auditLogData.contactNo
                     : "",
                 updatedFiled: logDataString,
-                operationName: "Agent Pricing Template added successfully."
+                operationName: "Other Industry Category Added Successfully."
             }
             handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.agentPricingTemplate,response.data.data.id,{
+              helpers.auditLog.adminOtherIndustryCategory,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
             }).then(()=>{
               console.log("Audit log added")
             })
             } else {
-              // setErrMsg(response.data.message);
-              // setOpenErrtMsg(true);
               setOpenAddBtchprty(false);
               setLoader(false);
               setOpenAlertMsg(true);
@@ -7441,11 +7491,11 @@ const ContentLogic = (props) => {
                 <CardActions disableSpacing>
                   <p
                     expand={expanded}
-                    onClick={
-                      handleExpandClick
+                    onClick={()=>{
+                      handleExpandClick()
                       // setBatchPriorityId(updateBatchPriority[item].batchId);
                       // console.log(batchPriorityId);
-                      // getBatchPriorityStatsDataAPIcall();
+                      getBatchPriorityStatsDataAPIcall();}
                     }
                     aria-expanded={expanded}
                     aria-label="SHOW STATS"
@@ -7461,13 +7511,14 @@ const ContentLogic = (props) => {
                   </p>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  {/* {Object.keys(batchPriorityAssingend).map((stats, i) => { */}
-                  <CardContent>
+                  <CardContent style={{fontSize:'15px'}}>
                     <List>
+                  {Object.keys(batchPriorityAssingend).map((stats, i) => (
                       <tr>
                         <td>Owner:</td>
-                        {/* <td>{batchPriorityAssingend[stats].name}</td> */}
+                        <td>{batchPriorityAssingend[stats].name}</td>
                       </tr>
+                        ))} 
                       <tr>
                         <td>Uploaded by:</td>
                         <td>Navnath</td>
@@ -7482,7 +7533,6 @@ const ContentLogic = (props) => {
                       </tr>
                     </List>
                   </CardContent>
-                  {/* })} */}
                 </Collapse>
               </Card>
             ))}
@@ -7534,31 +7584,23 @@ const ContentLogic = (props) => {
                 noValidate
                 autoComplete="off"
               >
-                {Object.keys(otherIndCategoryResult).map((item, i) => (
-                  <>
-                    {/* <Box> */}
                     <ListItem
-                      // component="div"
                       sx={{ display: "flex", flex: "0", fontSize: "15px" }}
                     >
                       Title:
-                      <b style={{ marginRight: "20px" }}>
-                        {otherIndCategoryResult[item].text}
+                      <b style={{ marginRight: "20px",fontSize:"13px"}}>
+                        {otherIndCategoryResult.text}
                       </b>
                       Type:
-                      <b style={{ marginRight: "20px" }}>
-                        {otherIndCategoryResult[item].type}
+                      <b style={{ marginRight: "20px",fontSize:"13px" }}>
+                        {otherIndCategoryResult.type}
                       </b>
                       BatchNo:
-                      <b style={{ marginRight: "20px" }}>
-                        {otherIndCategoryResult[item].batchNo}
+                      <b style={{ marginRight: "20px" ,fontSize:"13px"}}>
+                        {otherIndCategoryResult.batchNo}
                       </b>
-                      {/* Count:<b>1</b> */}
                     </ListItem>
-                    {/* </Box> */}
-                  </>
-                ))}
-                {/* <ListItem style={{display:'flex'}}> */}
+                   
                 <TextField
                   select
                   // style={{width:'50px',marginRight:20}}
@@ -7566,6 +7608,9 @@ const ContentLogic = (props) => {
                   id="outlined-basic"
                   label="Choose"
                   variant="outlined"
+                  onChange={(e)=>{
+                    setOtherIndustryC({...otherIndustryC,mode:e.target.value})
+                  }}
                 >
                   {categoryList.map((option) => (
                     <MenuItem
@@ -7585,6 +7630,9 @@ const ContentLogic = (props) => {
                     id="outlined-basic"
                     label="Title"
                     variant="outlined"
+                    onChange={(e)=>{
+                      setOtherIndustryC({...otherIndustryC,text:e.target.value})
+                    }}
                   />
                 ) : null}
                 {categoryFields === "Existing" ? (
@@ -7593,13 +7641,27 @@ const ContentLogic = (props) => {
                     id="outlined-basic"
                     label="Select"
                     variant="outlined"
-                  />
+                    onChange={(e)=>{
+                      setOtherIndustryC({...otherIndustryC,text:e.target.value})
+                    }}
+                  >
+                    {
+                      otherIndCategoryPassive.map((data,i)=>(
+                        <MenuItem key={data.id} value={data.title}>
+                        {data.title}
+                        </MenuItem>
+                      ))
+                    }
+                  </TextField>
                 ) : null}
                 {categoryFields === "New" ? (
                   <TextField
                     id="outlined-basic"
                     label="Description"
                     variant="outlined"
+                    onChange={(e)=>{
+                      setOtherIndustryC({...otherIndustryC,description:e.target.value})
+                    }}
                   />
                 ) : null}
 

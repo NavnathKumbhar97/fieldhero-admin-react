@@ -55,7 +55,7 @@ return result.test(String(email).toLowerCase());
 
 /**
      * This method responsible for login authentication.
-     */
+**/
 const loginAPIcall = async (e) => {
   setLoader(true)
   try {

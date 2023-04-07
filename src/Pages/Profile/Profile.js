@@ -3,7 +3,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import handler from "../../handlers/generalHandlers";
 import { styled } from '@mui/material/styles';
-
+import HistoryIcon from '@mui/icons-material/History';
 import KeyIcon from "@mui/icons-material/Key";
 import {
   Alert,
@@ -30,7 +30,7 @@ import {
   VisibilityOffOutlined,
   VisibilityOutlined,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -228,10 +228,17 @@ export default function Profile() {
           </p>
           <Divider></Divider>
           <MenuItem onClick={handleOpenChangePassModal}>
-            <KeyIcon />
+            <KeyIcon style={{ color: "orange" }}/>
             <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
               {" "}
               Change Password
+            </Typography>
+          </MenuItem>
+          <Divider></Divider>
+          <MenuItem component={Link} to={"/login-history"}>
+            <HistoryIcon style={{ color: "blue" }}></HistoryIcon>
+            <Typography textAlign="center" style={{ paddingLeft: "50px" }}>
+              Login History
             </Typography>
           </MenuItem>
           <Divider></Divider>

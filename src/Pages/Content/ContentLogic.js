@@ -112,6 +112,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { auditLogDetails } from "../../store/AuditLog/action";
 import helpers from "../../helpers";
 import handlers from "../../handlers";
+import LoginHistoryDesign from "../LoginHistory/LoginHistoryDesign";
 
 const ContentLogic = (props) => {
   //Common States
@@ -1926,6 +1927,32 @@ const ContentLogic = (props) => {
       label: "Actions",
     },
   ];
+  const loginHistory =[
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
+    {
+      id: "userName",
+      numeric: false,
+      disablePadding: true,
+      label: "User Name",
+    },
+    {
+      id: "email",
+      numeric: false,
+      disablePadding: true,
+      label: "Email",
+    },
+    {
+      id: "Logged In Date And Time",
+      numeric: false,
+      disablePadding: true,
+      label: "Logged In Date And Time",
+    },
+  ]
 
   //Candidate Master API Call
   const getCandidateMasterAPIcall = () => {
@@ -7285,6 +7312,8 @@ const ContentLogic = (props) => {
             )}
           </>
         );
+      case "login-history":
+        return null;
 
       default:
         return (
@@ -7972,6 +8001,10 @@ const ContentLogic = (props) => {
             />
           </>
         );
+      case "Login-History":
+        return (
+          <LoginHistoryDesign/>
+        )
       default:
         return (
           <>
@@ -14252,6 +14285,7 @@ const ContentLogic = (props) => {
     skillSetMaster,
     subscriptionMaster,
     userMaster,
+    loginHistory,
     getAllData,
     tblDataCount,
     loader,

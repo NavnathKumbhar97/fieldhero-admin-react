@@ -8,6 +8,7 @@ import TheContent from "../Pages/TheContent/TheContent";
 import { pageData } from '../Pages/PageData/PageData'
 import Help from "../Container/Drawer/Help/Help";
 import ForgotPassDesign from "../Pages/ForgotPassword/ForgotPassDesign";
+import LoginHistoryDesign from "../Pages/LoginHistory/LoginHistoryDesign";
 
 export default function () {
 
@@ -23,7 +24,7 @@ export default function () {
     customerMaster,
     industyMaster,roleMaster,
     skillsetMaster,
-    subscriptionMaster,userMaster,batchPriority,otherIndustyCategory
+    subscriptionMaster,userMaster,batchPriority,otherIndustyCategory,userLoginHistory
   } = pageData()
   return (
     <Router>
@@ -54,6 +55,7 @@ export default function () {
           <Route path="skillset" element={<ContentDesign data={skillsetMaster} />} />
           <Route path="subscription" element={<ContentDesign data={subscriptionMaster} />} />
           <Route path="user" element={<ContentDesign data={userMaster} />} />
+          <Route path="login-history" element={<ContentDesign data={userLoginHistory}/>} />
           <Route path="help" element={<Help/>} />
           <Route path="about" element={<TheContent />} />
 

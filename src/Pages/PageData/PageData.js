@@ -98,6 +98,12 @@ const pageData = () => {
       pageTitle:"User - Master",
       modalTitle:'Add User'
     },
+    userLoginHistory: {
+      page: "login-history",
+      // buttonText: "New",
+      pageTitle:"Login-History",
+      // modalTitle:'Add User'
+    },
     
   };
 

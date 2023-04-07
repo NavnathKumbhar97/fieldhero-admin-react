@@ -1264,6 +1264,7 @@ export default function ContentDesign(props) {
             ))}
           </>
         );
+      
     
       default:
         break;
@@ -1277,7 +1278,8 @@ export default function ContentDesign(props) {
         return null;
       case "other-industry-category":
         return null;
-
+      case "login-history":
+          return null;
       default:
         return (
           <>

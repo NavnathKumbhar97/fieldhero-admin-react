@@ -9,6 +9,7 @@ import helpers from "../../helpers";
  * 
  *  */
  import { loginSuccessful } from "../../store/Login/action"
+import generalHandlers from "../../handlers/generalHandlers";
 // const emailRegex =
 //   /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
 
@@ -75,8 +76,34 @@ const loginAPIcall = async (e) => {
                   let { token,permissions } = response
                   // Redux Method call for store all the user data into redux state.
                   loginSuccessful(response)
+
+                  generalHandlers
+                  .dataPost(`/v1/user-history`,
+                  {userName:response.name,email:response.userEmail},{
+                    headers: { Authorization: `Bearer ${response.token}` },
+                  })
+                  .then((resp) => {
+                    if (resp.status == 201) {
+                      console.log(resp);
+                      // setOpenCandidateModal(false);
+                      // getSkillSetAPIcall();
+                      // setOpenAlertMsg(true);
+      
+                    } else {
+                      // setErrMsg(response.data.message);
+                      // setOpenErrtMsg(true);
+                    }
+                  })
+                  .catch((error) => {
+                    if (error.status == 400) {
+                      // window.alert(error.data.message);
+                      // setErrMsg(error.data.message);
+                      // setOpenErrtMsg(true);
+                    }
+                    console.error("There was an error!- createCompany", error);
+                  });
                   // setPermission(permissions)
-                  // console.log(response);
+                  // console.log("response",response);
                   //storing user permission in local and session storage
 
                   //store userPermission on local storage and session storage

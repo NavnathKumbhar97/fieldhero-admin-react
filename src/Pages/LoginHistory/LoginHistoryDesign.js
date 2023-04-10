@@ -1,5 +1,5 @@
 
-import * as React from 'react';
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Card, TablePagination } from '@mui/material';
+import LoginHistoryLogic from './LoginHistoryLogic';
+import moment from 'moment';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,6 +44,15 @@ const rows = [
 
 export default function LoginHistoryDesign() {
 
+  let {
+    getLoginHistoryAPICall,
+    loginHistory,
+  }= LoginHistoryLogic()
+
+  useEffect(()=>{
+    getLoginHistoryAPICall()
+  },[])
+
   return (
 <>
 
@@ -56,13 +67,13 @@ export default function LoginHistoryDesign() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {loginHistory.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {row.userName}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.calories}</StyledTableCell>
-              <StyledTableCell align="center">{row.fat}</StyledTableCell>
+              <StyledTableCell align="center">{row.email}</StyledTableCell>
+              <StyledTableCell align="center">{moment(row.loggedInTime).format('DD/MM/YYYY HH:mm:ss')}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

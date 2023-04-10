@@ -8003,7 +8003,9 @@ const ContentLogic = (props) => {
         );
       case "Login-History":
         return (
-          <LoginHistoryDesign/>
+          <>
+           <LoginHistoryDesign setLoader={setLoader}/>
+          </>
         )
       default:
         return (

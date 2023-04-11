@@ -4,6 +4,7 @@ import generalHandlers from '../../handlers/generalHandlers';
 const LoginHistoryLogic = (props) => {
   // const {setLoader} = props
   const [loginHistory, setLoginHistory] = useState([])
+  const [rowsPerPage, setRowsPerPage] = useState([])
 
   //get login history data for the login history module
   const getLoginHistoryAPICall = async() =>{
@@ -30,9 +31,22 @@ const LoginHistoryLogic = (props) => {
       });
   }
 
+  let filterHistory = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = loginHistory.filter((item) => {
+      return item.loggedInTime.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setLoginHistory(filteredData);
+    } else getLoginHistoryAPICall();
+  };
+
   const StateContainer ={
     getLoginHistoryAPICall,
     loginHistory,
+    filterHistory,
+    rowsPerPage
 
   }
   return StateContainer

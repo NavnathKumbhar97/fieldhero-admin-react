@@ -3,8 +3,37 @@ import generalHandlers from '../../handlers/generalHandlers';
 
 const LoginHistoryLogic = (props) => {
   // const {setLoader} = props
+  //State for store the all data
   const [loginHistory, setLoginHistory] = useState([])
-  const [rowsPerPage, setRowsPerPage] = useState([])
+  const [filteredData,setFilteredData] = useState([])
+  //State for pagination
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [page, setPage] = useState([])
+  //State for hide and show filter functionality
+  const [isFilter,setIsFilter] = useState(false)
+  //State for store the handled start date and end date
+  const [startDate,setStartDate]= useState(new Date());
+  const [endDate,setEndDate]= useState(new Date());
+
+  //Handle and filter the data based on date range
+  const handleSelect = (date) =>{
+    let filtered = filteredData.filter((product)=>{
+      let productDate = new Date(product["loggedInTime"]);
+      return(productDate>= date.selection.startDate &&
+        productDate<= date.selection.endDate);
+    })
+    console.log("filtered",filtered);
+    setStartDate(date.selection.startDate);
+    setEndDate(date.selection.endDate);
+    setLoginHistory(filtered);
+  };
+
+  //To store the start date and end date
+  const selectionRange = {
+    startDate: startDate,
+    endDate: endDate,
+    key: 'selection',
+  }
 
   //get login history data for the login history module
   const getLoginHistoryAPICall = async() =>{
@@ -18,6 +47,7 @@ const LoginHistoryLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoginHistory(response.data.data);
+          setFilteredData(response.data.data);
           // setLoader(false);
         } else if (response.status == 400) {
           // setErrMsg(response.data.message);
@@ -31,22 +61,24 @@ const LoginHistoryLogic = (props) => {
       });
   }
 
-  let filterHistory = (e) => {
-    let targetValue = e.target.value;
-    const filteredData = loginHistory.filter((item) => {
-      return item.loggedInTime.toLowerCase().includes(targetValue.toLowerCase());
-      // item.contactNo1.toString().includes(searchTerm)
-    });
-    if (targetValue) {
-      setLoginHistory(filteredData);
-    } else getLoginHistoryAPICall();
+  //Pagination
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event, row) => {
+    setPage(0);
+    setRowsPerPage(row.props.value);
   };
 
   const StateContainer ={
     getLoginHistoryAPICall,
     loginHistory,
-    filterHistory,
-    rowsPerPage
+    isFilter,setIsFilter,
+    rowsPerPage,
+    handleSelect,
+    selectionRange,
+    page,setPage,handleChangePage,
+    handleChangeRowsPerPage
 
   }
   return StateContainer

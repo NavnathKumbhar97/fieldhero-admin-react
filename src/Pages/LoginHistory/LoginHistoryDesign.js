@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Card, TablePagination } from '@mui/material';
+import { Card, TablePagination, TextField } from '@mui/material';
 import LoginHistoryLogic from './LoginHistoryLogic';
 import moment from 'moment';
 
@@ -47,6 +47,8 @@ export default function LoginHistoryDesign() {
   let {
     getLoginHistoryAPICall,
     loginHistory,
+    filterHistory,
+    rowsPerPage
   }= LoginHistoryLogic()
 
   useEffect(()=>{
@@ -55,6 +57,19 @@ export default function LoginHistoryDesign() {
 
   return (
 <>
+<TextField
+              id="filled-basic"
+              // label="Search"
+              variant="filled"
+              style={{
+                width: "200px",
+                marginBottom: "20px",
+              }}
+              onChange={(e)=>{
+                filterHistory(e)
+              }}
+              type='date'
+            />
 
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -79,7 +94,16 @@ export default function LoginHistoryDesign() {
         </TableBody>
       </Table>
     </TableContainer>
-    <TablePagination></TablePagination>
+    <TablePagination 
+    rowsPerPageOptions={[5, 10, 25]}
+    defaultPageSize={10}
+    component="div"
+    count={loginHistory.length}
+    rowsPerPage={rowsPerPage}
+    // page={page}
+    >
+
+    </TablePagination>
     </>
   );
 }

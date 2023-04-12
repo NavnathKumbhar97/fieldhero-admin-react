@@ -11,6 +11,11 @@ import Paper from '@mui/material/Paper';
 import { Card, TablePagination, TextField } from '@mui/material';
 import LoginHistoryLogic from './LoginHistoryLogic';
 import moment from 'moment';
+import Button from '@mui/material/Button';
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,8 +52,11 @@ export default function LoginHistoryDesign() {
   let {
     getLoginHistoryAPICall,
     loginHistory,
-    filterHistory,
-    rowsPerPage
+    isFilter,setIsFilter,
+    rowsPerPage,
+    selectionRange,handleSelect,
+    page,setPage,handleChangePage,
+    handleChangeRowsPerPage
   }= LoginHistoryLogic()
 
   useEffect(()=>{
@@ -57,19 +65,13 @@ export default function LoginHistoryDesign() {
 
   return (
 <>
-<TextField
-              id="filled-basic"
-              // label="Search"
-              variant="filled"
-              style={{
-                width: "200px",
-                marginBottom: "20px",
-              }}
-              onChange={(e)=>{
-                filterHistory(e)
-              }}
-              type='date'
-            />
+{!isFilter?<Button style={{width:'20px',marginBottom:'5px'}} variant="contained" onClick={()=>setIsFilter(true)}>Filter</Button>
+:<Button style={{width:'20px',marginBottom:'5px'}} variant="contained" onClick={()=>setIsFilter(false)}>Hide</Button>
+}
+{isFilter?<DateRangePicker ranges={[selectionRange]}
+        onChange={handleSelect}>
+
+</DateRangePicker>:""}
 
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -100,7 +102,7 @@ export default function LoginHistoryDesign() {
     component="div"
     count={loginHistory.length}
     rowsPerPage={rowsPerPage}
-    // page={page}
+    page={page}
     >
 
     </TablePagination>

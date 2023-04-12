@@ -2367,7 +2367,6 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
-
     handler
       .dataGet(`/v1/customers?take=${rowsPerPage}&skip=${page * rowsPerPage}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -2375,7 +2374,7 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setTblData(response.data.data.result);
+          setTblData(response.data.data.customers);
           setTblDataCount(response.data.data.count);
           console.log("customer", tblData);
         } else if (response.status == 400) {

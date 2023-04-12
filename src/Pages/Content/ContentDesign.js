@@ -805,12 +805,10 @@ export default function ContentDesign(props) {
                     scope="row"
                     padding="none"
                   >
-                    {tblData[item].id}
+                    {tblData[item].fullName}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].agentNo}</TableCell>
-                  <TableCell align="left">{tblData[item].fullName}</TableCell>
-                  <TableCell align="left">{tblData[item].contactNo}</TableCell>
-                  <TableCell align="left">{tblData[item].email}</TableCell>
+                  {/* <TableCell align="left">{tblData[item].fullName}</TableCell> */}
+                  <TableCell align="left">{tblData[item].companyName}</TableCell>
                   <TableCell align="left">
                     {tblData[item].isActive === true ? (
                       <p

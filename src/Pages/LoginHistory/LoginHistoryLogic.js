@@ -22,7 +22,6 @@ const LoginHistoryLogic = (props) => {
       return(productDate>= date.selection.startDate &&
         productDate<= date.selection.endDate);
     })
-    console.log("filtered",filtered);
     setStartDate(date.selection.startDate);
     setEndDate(date.selection.endDate);
     setLoginHistory(filtered);

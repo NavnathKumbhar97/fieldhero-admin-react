@@ -728,6 +728,17 @@ const ContentLogic = (props) => {
   });
   const [filterDataForCompany, setFilterDataForCompany] = useState([]);
 
+  //state for store the input fields value of customer
+  const [customerData, setCustomerData] = useState({
+    fullName:'',
+    companyName: " ",
+    dob:null,
+    gender:'',
+    state:'',
+    country:'INDIA',
+    profileImage:'',
+    isActive: true,
+  });
   //state for store the input fields value of industry
   const [industryData, setIndustryData] = useState(
     {
@@ -3354,7 +3365,7 @@ const ContentLogic = (props) => {
   };
 
   // upload profile image of candidate master module
-  const addProfileImg = async (id) => {
+  const addProfileImg = async () => {
     const formData = new FormData();
     // console.log(image.forEach((file) =>formData.append("image", file)));
     image.forEach((file) => formData.append("image", file));
@@ -3362,7 +3373,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-profile/${id}`, formData, {
+      .dataPost(`/v1/upload-profile`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3370,6 +3381,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
+          console.log("response",response.data.path);
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -4661,7 +4673,6 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 201) {
-              addProfileImg(response.data.data.id);
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
               handleNext();
@@ -5444,6 +5455,32 @@ const ContentLogic = (props) => {
             console.error("There was an error!- createCompany", error);
           });
         break;
+      case "customer":
+        handler
+        .dataPost(`/v1/customer`, customerData, {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status == 201) {
+            console.log(response.data.message);
+            setOpenCandidateModal(false);
+            getCustomerAPIcall();
+            setOpenAlertMsg(true);
+          } else {
+            setErrMsg(response.data.message);
+            setOpenErrtMsg(true);
+          }
+        })
+        .catch((error) => {
+          if (error.status == 400) {
+            // window.alert(error.data.message);
+            setErrMsg(error.data.message);
+            setOpenErrtMsg(true);
+          }
+          console.error("There was an error!- createCustomer", error);
+        });
+      break;
       case "industry":
         handler
           .dataPost(`/v1/industries`, industryData, {
@@ -7230,8 +7267,6 @@ const ContentLogic = (props) => {
         );
       case "other-industry-category":
         return null;
-      case "customer":
-        return null;
       case "role":
         return (
           <>
@@ -8062,6 +8097,7 @@ const ContentLogic = (props) => {
                             }}
                           />
                         </label>
+                        <Button onClick={addProfileImg}>Upload</Button>
                       </div>
                       <div>
                         <ListItem>
@@ -12634,6 +12670,150 @@ const ContentLogic = (props) => {
             {editStatus?(<AuditLog/>):""}
           </>
         );
+        case "customer":
+          return (
+            <>
+              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+                {/* <List> */}
+                <TextField
+                    required
+                    id="filled-basic"
+                    label="Full Name"
+                    value={customerData.fullName}
+                    variant="filled"
+                    onChange={(e) => {
+                      setCustomerData({
+                        ...customerData,
+                        fullName: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "130ch",mb:4 }}
+                  />
+                  <TextField
+                    required
+                    id="filled-basic"
+                    label="Company Name"
+                    value={customerData.companyName}
+                    variant="filled"
+                    onChange={(e) => {
+                      setCustomerData({
+                        ...customerData,
+                        companyName: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "130ch",mb:4}}
+                  />
+                  <TextField
+                    required
+                    id="filled-basic"
+                    type="date"
+                    label="BirthDate"
+                    value={customerData.dob}
+                    variant="filled"
+                    onChange={(e) => {
+                      setCustomerData({
+                        ...customerData,
+                        dob: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "130ch",mb:4 }}
+                  />
+                {/* </List> */}
+                <TextField
+                  select
+                  id="filled-basic"
+                  label="Gender"
+                  value={customerData.gender}
+                  onChange={(e) => {
+                     setCustomerData({
+                          ...customerData,
+                          gender: e.target.value,
+                        });
+                  }}
+                  variant="filled"
+                  sx={{ width: "130ch", mb: 4 }}
+                >
+                  {gender.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                    required
+                    id="filled-basic"
+                    label="State"
+                    value={customerData.state}
+                    variant="filled"
+                    onChange={(e) => {
+                      setCustomerData({
+                        ...customerData,
+                        state: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "130ch",mb:4 }}
+                  />
+                  <TextField
+                  disabled
+                    required
+                    id="filled-basic"
+                    label="Country"
+                    value={customerData.country}
+                    variant="filled"
+                    onChange={(e) => {
+                      setCustomerData({
+                        ...customerData,
+                        country: e.target.value,
+                      });
+                    }}
+                    sx={{ width: "130ch",mb:4 }}
+                  />
+                <List>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Is Active"
+                      value={customerData.isActive}
+                      onChange={(e) => {
+                        setCustomerData({
+                          ...customerData,
+                          isActive: e.target.checked,
+                        });
+                      }}
+                    />
+                  </FormGroup>
+                </List>
+                <List>
+                  {editStatus === false ? (
+                    <Button
+                      onClick={()=>addAPICalls("customer")}
+                      style={{
+                        backgroundColor: "brown",
+                        color: "white",
+                        marginTop: "12px",
+                      }}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        updateAPICalls("customer");
+                      }}
+                      style={{
+                        backgroundColor: "brown",
+                        color: "white",
+                        marginTop: "12px",
+                      }}
+                    >
+                      Update
+                    </Button>
+                  )}
+                </List>
+              </Box>
+              {editStatus?(<AuditLog/>):""}
+            </>
+          );
       case "industry":
         return (
           <>

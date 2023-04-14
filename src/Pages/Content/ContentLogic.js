@@ -1795,6 +1795,12 @@ const ContentLogic = (props) => {
       disablePadding: false,
       label: "Status",
     },
+    {
+      id: "action",
+      numeric: true,
+      disablePadding: false,
+      label: "Action",
+    },
   ];
   const industryMaster = [
     {
@@ -3066,6 +3072,31 @@ const ContentLogic = (props) => {
       })
       .catch((error) => {
         console.error("There was an error!- getCategoryById", error);
+      });
+  };
+
+  //Fetch Skillset Data By Id
+  const getCustomerById = (id) => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/customers/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCustomerData(response.data.data)
+          console.log("data",response.data);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getSkillSetById", error);
       });
   };
 
@@ -6605,6 +6636,34 @@ const ContentLogic = (props) => {
             console.error("There was an error!- updateCompanyAPICall", error);
           });
         break;
+      case "customer":
+          handler
+            .dataPut(
+              `/v1/customers/:${editId}`,
+              customerData,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              if (response.status == 204) {
+                setOpenCandidateModal(false);
+                setOpenAlertMsg(true);
+                getCustomerAPIcall();
+              } else {
+                setErrMsg(response.data.message);
+                setOpenErrtMsg(true);
+              }
+            })
+            .catch((error) => {
+              if (error.status == 400) {
+                setErrMsg(error.data.message);
+                setOpenErrtMsg(true);
+              }
+              console.error("There was an error!- updateCustomerAPICall", error);
+            });
+          break;
       case "industry":
         let updateIndustryData = {
           ...industryData,
@@ -7352,23 +7411,7 @@ const ContentLogic = (props) => {
       default:
         return (
           <>
-            {editStatus ? (
-              <Button
-                onClick={() => {
-                  handleOpenCandidateModal();
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <EditIcon />
-                Edit
-              </Button>
-            ) : (
+            
               <Button
                 onClick={handleOpenCandidateModal}
                 style={{
@@ -7382,7 +7425,6 @@ const ContentLogic = (props) => {
                 <AddIcon />
                 {buttonText}
               </Button>
-            )}
           </>
         );
     }
@@ -12670,7 +12712,7 @@ const ContentLogic = (props) => {
             {editStatus?(<AuditLog/>):""}
           </>
         );
-        case "customer":
+      case "customer":
           return (
             <>
               <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
@@ -14523,7 +14565,8 @@ const ContentLogic = (props) => {
     handleUpdateAuditDataOtherMRole,
     handleUpdateAuditDataOtherMSkillSet,
     handleUpdateAuditDataOtherMSubscription,
-    handleUpdateAuditDataOtherMUser
+    handleUpdateAuditDataOtherMUser,
+    getCustomerById
   };
 
   return StateContainer;

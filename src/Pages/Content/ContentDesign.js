@@ -102,7 +102,8 @@ export default function ContentDesign(props) {
     handleUpdateAuditDataOtherMIndustry,
     handleUpdateAuditDataOtherMSkillSet,
     handleUpdateAuditDataOtherMSubscription,
-    handleUpdateAuditDataOtherMUser
+    handleUpdateAuditDataOtherMUser,
+    getCustomerById
   } = ContentLogic();
 
   //UseEffect For Page
@@ -836,6 +837,21 @@ export default function ContentDesign(props) {
                       </p>
                     )}
                   </TableCell>
+                  <TableCell align="left">
+                    <Button
+                      style={{ color: "brown" }}
+                      onClick={() => {
+                        handleOpenCandidateModal();
+                        setEditId(tblData[item].id);
+                        setEditStatus(true);
+                        console.log(tblData[item].id);
+                        getCustomerById(tblData[item].id);
+                      }}
+                    >
+                      <Edit />
+                      Edit
+                    </Button>
+                  </TableCell>
                 </TableRow>
               </>
             ))}
@@ -849,19 +865,7 @@ export default function ContentDesign(props) {
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setEditId(tblData[item].id);
-                          setEditStatus(true);
-                          setIndustryData(tblData[item]);
-                        } else {
-                          setEditStatus(false);
-                          setIndustryData([]);
-                        }
-                      }}
-                    />
+                    <Checkbox/>
                   </TableCell>
                   <TableCell
                     component="th"

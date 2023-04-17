@@ -102,7 +102,7 @@ const pageData = () => {
       page: "login-history",
       // buttonText: "New",
       pageTitle:"Login-History",
-      // modalTitle:'Add User'
+      modalTitle:'Add Customer'
     },
     
   };

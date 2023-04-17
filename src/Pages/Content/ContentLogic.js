@@ -739,6 +739,8 @@ const ContentLogic = (props) => {
     profileImage:'',
     isActive: true,
   });
+  const [filterDataForCustomer, setFilterDataForCustomer] = useState([]);
+
   //state for store the input fields value of industry
   const [industryData, setIndustryData] = useState(
     {
@@ -2407,6 +2409,32 @@ const ContentLogic = (props) => {
         console.error("There was an error!- getCustomerAPIcall", error);
       });
   };
+  //fetch the customer data
+  const getCustomerAPIcallFilter = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-customers`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setFilterDataForCustomer(response.data.data.customers);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        navigate("/login");
+        setErrMsg("Timeout - Login Again");
+        setOpenErrtMsg(true);
+        setLoader(false);
+        console.error("There was an error!- getCustomerAPIcall", error);
+      });
+  };
   //fetch the industry data
   const getIndustryAPIcall = () => {
     let authTok = localStorage.getItem("user"); // string
@@ -3427,6 +3455,38 @@ const ContentLogic = (props) => {
       });
   };
 
+  // upload profile image of candidate master module
+  const addCustomerProfileImg = async () => {
+    const formData = new FormData();
+    // console.log(image.forEach((file) =>formData.append("image", file)));
+    // image.forEach((file) => formData.append("image", file));
+    formData.append('image',image)
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-customer-profile`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setCustomerData({...customerData,profileImage:response.data.path})
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadImage", error);
+      });
+  };
+
   //upload documents of agent master module
   const addAgentMasterDocs = async (id) => {
     const formData = new FormData();
@@ -3652,6 +3712,7 @@ const ContentLogic = (props) => {
           break;
         case "customer":
           getCustomerAPIcall();
+          getCustomerAPIcallFilter();
           break;
         case "industry":
           getIndustryAPIcall();
@@ -4286,6 +4347,19 @@ const ContentLogic = (props) => {
       if (targetValue) {
         setTblData(filteredData);
       } else getSkillSetAPIcall();
+    };
+
+    //filter method for customer module
+    let filterCustomer = (e) => {
+      let targetValue = e.target.value;
+      const filteredData = filterDataForCustomer.filter((item) => {
+        return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
+        // item.companyName.toString().includes(searchTerm)
+        console.log(filteredData);
+      });
+      if (targetValue) {
+        setTblData(filteredData);
+      } else getCustomerAPIcall();
     };
   
     //filter method for subscription module
@@ -8079,8 +8153,25 @@ const ContentLogic = (props) => {
         );
       case "Login-History":
         return (
+                <>
+                <LoginHistoryDesign setLoader={setLoader}/>
+                </>
+              )
+      case "Customer - Master":
+        return (
           <>
-           <LoginHistoryDesign setLoader={setLoader}/>
+            <TextField
+              id="filled-basic"
+              label="Search"
+              variant="filled"
+              style={{
+                width: "700px",
+                marginBottom: "20px",
+              }}
+              onChange={(e)=>{
+                filterCustomer(e)
+              }}
+            />
           </>
         )
       default:
@@ -12717,6 +12808,11 @@ const ContentLogic = (props) => {
             <>
               <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
                 {/* <List> */}
+                <p sx={{mb:4}}>Select Profile Image</p>
+                <TextField type="file" sx={{mb:4}} onChange={(e)=>{
+                  setImage(e.target.files[0])
+                }}/>
+                <Button onClick={()=>addCustomerProfileImg()}>upload</Button>
                 <TextField
                     required
                     id="filled-basic"

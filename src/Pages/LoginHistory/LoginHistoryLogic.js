@@ -40,7 +40,7 @@ const LoginHistoryLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     // setLoader(true);
     await generalHandlers
-      .dataGet(`/v1/user-history/${convertTokenToObj.id}`, {
+      .dataGet(`/v1/user-history/${convertTokenToObj.id}?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {

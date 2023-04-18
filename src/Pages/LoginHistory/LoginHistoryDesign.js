@@ -61,7 +61,7 @@ export default function LoginHistoryDesign() {
 
   useEffect(()=>{
     getLoginHistoryAPICall()
-  },[])
+  },[rowsPerPage])
 
   return (
 <>
@@ -103,6 +103,8 @@ export default function LoginHistoryDesign() {
     count={loginHistory.length}
     rowsPerPage={rowsPerPage}
     page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
     >
 
     </TablePagination>

@@ -59,6 +59,7 @@ const LoginHistoryLogic = (props) => {
         // setLoader(false);
       });
   }
+  
 
   //Pagination
   const handleChangePage = (event, newPage) => {

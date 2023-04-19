@@ -9,6 +9,7 @@ import { pageData } from '../Pages/PageData/PageData'
 import Help from "../Container/Drawer/Help/Help";
 import ForgotPassDesign from "../Pages/ForgotPassword/ForgotPassDesign";
 import LoginHistoryDesign from "../Pages/LoginHistory/LoginHistoryDesign";
+import UserActivityDesign from "../reusable/UserActivity/UserActivityDesign";
 
 export default function () {
 
@@ -56,6 +57,7 @@ export default function () {
           <Route path="subscription" element={<ContentDesign data={subscriptionMaster} />} />
           <Route path="user" element={<ContentDesign data={userMaster} />} />
           <Route path="login-history" element={<ContentDesign data={userLoginHistory}/>} />
+          <Route path="user-activity" element={<UserActivityDesign/>} />
           <Route path="help" element={<Help/>} />
           <Route path="about" element={<TheContent />} />
 

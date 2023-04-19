@@ -31,7 +31,7 @@ import {
   VisibilityOutlined,
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -211,7 +211,7 @@ export default function Profile() {
           keepMounted
           transformOrigin={{
             vertical: "top",
-            horizontal: "right",
+            // horizontal: "right",
           }}
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
@@ -222,7 +222,7 @@ export default function Profile() {
             </Typography>
           </MenuItem>
           <p
-            style={{ marginLeft: "70px", marginTop: "-30px", fontSize: "14px" }}
+            style={{ textAlign:'center', marginTop: "-30px", fontSize: "14px" }}
           >
             {loc.userEmail}
           </p>
@@ -237,14 +237,21 @@ export default function Profile() {
           <Divider></Divider>
           <MenuItem component={Link} to={"/login-history"}>
             <HistoryIcon style={{ color: "blue" }}></HistoryIcon>
-            <Typography textAlign="center" style={{ paddingLeft: "50px" }}>
+            <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
               Login History
+            </Typography>
+          </MenuItem>
+          <Divider></Divider>
+          <MenuItem component={Link} to={"/user-activity"}>
+            <RecentActorsIcon style={{ color: "green" }}></RecentActorsIcon>
+            <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
+              Activity
             </Typography>
           </MenuItem>
           <Divider></Divider>
           <MenuItem onClick={handleLogout}>
             <Logout style={{ color: "red" }}></Logout>
-            <Typography textAlign="center" style={{ paddingLeft: "50px" }}>
+            <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
               SIGN OUT
             </Typography>
           </MenuItem>

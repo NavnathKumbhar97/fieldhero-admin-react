@@ -4881,18 +4881,32 @@ const ContentLogic = (props) => {
                     email: Email
                         ? Email
                         : "",
-                    contactNumber: auditLogData
-                        ? auditLogData.contactNo
-                        : "",
                     updatedFiled: logDataString,
                     operationName: "Candidate Master added successfully."
                 }
+                let userActivities = {
+                  userName: fullName
+                      ? fullName:"",
+                  email: Email
+                      ? Email
+                      : "",
+                  dataId:response.data.data.id,
+                  userLoginId:convertTokenToObj.id,
+                  userActivity: logDataString,
+                  operationName: "Candidate Master added successfully."
+              }
+                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("user activity added")
+                })
                 handlers.auditLog.addAuditLog(auditlog,
                   helpers.auditLog.candidateMaster,response.data.data.id,{
                   headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
                 }).then(()=>{
                   console.log("Audit log added")
                 })
+                
             } else {
               setOpenErrtMsg(true);
             }
@@ -6053,7 +6067,7 @@ const ContentLogic = (props) => {
           .then((response) => {
             console.log(response);
             if (response.status == 204) {
-              console.log(response.data.message);
+              console.log("response.data.message",response.data.message);
               addProfileImg(updateCandidatesMasterData.id);
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
@@ -6159,7 +6173,7 @@ const ContentLogic = (props) => {
                   "Is Active": updateCandidatesMasterData.isActive,
                 })
               }
-              
+              console.log("test 1");
             let logDataString = JSON.stringify(logData)
             let fullName = convertTokenToObj.name
             let Email = convertTokenToObj.userEmail
@@ -6175,6 +6189,24 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Candidate Master Updated successfully."
           }
+          console.log("test 2");
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName: "Candidate Master updated successfully."
+        }
+        console.log("test 3");
+          handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.candidateMaster,updateCandidatesMasterData.id,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

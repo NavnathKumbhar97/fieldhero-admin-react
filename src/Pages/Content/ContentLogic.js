@@ -3597,9 +3597,10 @@ const ContentLogic = (props) => {
       .then((response) => {
         console.log(response);
         if (response.status == 200) {
-          addBulkDataCndUpload();
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
+          addBulkDataCndUpload(response.data.path);
+          
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3615,7 +3616,7 @@ const ContentLogic = (props) => {
   };
 
   //Add Bulk Data with help of excel file
-  const addBulkDataCndUpload = () => {
+  const addBulkDataCndUpload = (path) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
@@ -3633,6 +3634,49 @@ const ContentLogic = (props) => {
             "response of admin candidate upload file :",
             response.data.data
           );
+          const logData = {}
+          console.log("upload 1",path);
+
+          if (uploadBulkCnd) {
+            console.log("upload",path);
+            Object.assign(logData, {
+                "Uploaded File": path,
+            })
+        }
+              let logDataString = JSON.stringify(logData)
+                  let fullName = convertTokenToObj.name
+                  let Email = convertTokenToObj.userEmail
+                  let auditlog = {
+                    userName: fullName
+                        ? fullName:"",
+                    email: Email
+                        ? Email
+                        : "",
+                    updatedFiled: logDataString,
+                    operationName: "Candidate upload batch file uploaded sucessfully"
+                }
+                let userActivities = {
+                  userName: fullName
+                      ? fullName:"",
+                  email: Email
+                      ? Email
+                      : "",
+                  dataId:response.data.data.id,
+                  userLoginId:convertTokenToObj.id,
+                  userActivity: logDataString,
+                  operationName: "Candidate upload batch file uploaded sucessfully"
+              }
+                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("user activity added")
+                })
+                handlers.auditLog.addAuditLog(auditlog,
+                  helpers.auditLog.candidateUploadBatch,response.data.data.id,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("Audit log added")
+                })
         } else {
           setOpenErrtMsg(true);
         }
@@ -4931,6 +4975,41 @@ const ContentLogic = (props) => {
               getCandidateVerificationAPIcall();
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
+              const logData = {}
+              let logDataString = JSON.stringify(logData)
+                  let fullName = convertTokenToObj.name
+                  let Email = convertTokenToObj.userEmail
+                  let auditlog = {
+                    userName: fullName
+                        ? fullName:"",
+                    email: Email
+                        ? Email
+                        : "",
+                    updatedFiled: logDataString,
+                    operationName: "Candidate verification new data assigned successfully."
+                }
+                let userActivities = {
+                  userName: fullName
+                      ? fullName:"",
+                  email: Email
+                      ? Email
+                      : "",
+                  dataId:response.data.data.id,
+                  userLoginId:convertTokenToObj.id,
+                  userActivity: logDataString,
+                  operationName: "Candidate verification new data assigned successfully."
+              }
+                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("user activity added")
+                })
+                handlers.auditLog.addAuditLog(auditlog,
+                  helpers.auditLog.candidateVerification,response.data.data.id,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("Audit log added")
+                })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6065,9 +6144,7 @@ const ContentLogic = (props) => {
             }
           )
           .then((response) => {
-            console.log(response);
             if (response.status == 204) {
-              console.log("response.data.message",response.data.message);
               addProfileImg(updateCandidatesMasterData.id);
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
@@ -6173,7 +6250,6 @@ const ContentLogic = (props) => {
                   "Is Active": updateCandidatesMasterData.isActive,
                 })
               }
-              console.log("test 1");
             let logDataString = JSON.stringify(logData)
             let fullName = convertTokenToObj.name
             let Email = convertTokenToObj.userEmail
@@ -6189,7 +6265,6 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Candidate Master Updated successfully."
           }
-          console.log("test 2");
           let userActivities = {
             userName: fullName
                 ? fullName:"",
@@ -6201,7 +6276,6 @@ const ContentLogic = (props) => {
             userActivity: logDataString,
             operationName: "Candidate Master updated successfully."
         }
-        console.log("test 3");
           handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           }).then(()=>{
@@ -6439,6 +6513,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Candidate Verification Updated successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName: "Candidate Verification Updated successfully."
+        }
+          handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.candidateVerification,updateCandidateVerifnData.id,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

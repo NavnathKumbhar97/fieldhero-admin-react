@@ -70,7 +70,8 @@ const UserActivityLogic = () => {
         }
         );
         if(response){
-          setTblLogData(response.data)
+          setTblLogData(response.data.data)
+          console.log("response.data",response.data.data);
         }
       } catch (err) {
         console.error("fetchLogDetails", err);

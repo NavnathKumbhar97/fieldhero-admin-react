@@ -100,8 +100,8 @@ const UserActivityDesign = (props) => {
                   </StyledTableCell>
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.operationName}</StyledTableCell>
+                  <StyledTableCell align="left">{moment(row.createdOn).format('DD/MM/YYYY  HH:mm:ss')}</StyledTableCell>
                   <StyledTableCell align="left">{row.id}</StyledTableCell>
-                  <StyledTableCell align="left">{row.createdOn}</StyledTableCell>
                   {/* <StyledTableCell align="left">
                     <Button onClick={()=>{
                     //   handleOpen()

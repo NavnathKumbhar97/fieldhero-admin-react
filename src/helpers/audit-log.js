@@ -13,7 +13,7 @@ const auditLog = {
     "otherMastersSubscription":12,
     "otherMastersUsers":13,
     "adminOtherIndustryCategory":14,
-    "adminBatchPriority":15
+    "adminBatchPriority":15,
 }
 
 export default auditLog

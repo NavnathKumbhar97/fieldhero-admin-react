@@ -615,6 +615,41 @@ const ContentLogic = (props) => {
     workLocation2: "",
     status: "",
   });
+  const [agentMasterDataAudit, setAgentMasterDataAudit] = useState({
+    fullName: "",
+    dob: "",
+    gender: "MALE",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permCountry: "",
+    permZip: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currCountry: "",
+    currZip: "",
+    panCard: "",
+    aadharCard: "",
+    primaryLang: "",
+    secondaryLang: "",
+    thirdLang: "",
+    note: "",
+    isActive: true,
+    email: "",
+    contactNo: "",
+    agentNo: "",
+    professionalStatus: "",
+    gstin: "",
+    companyName: "",
+    bankName: "",
+    bankAc: "",
+    bankIfsc: "",
+    bankAcType: "",
+    workLocation1: "",
+    workLocation2: "",
+    status: "",
+  });
   const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
     templateName: "",
     description: "",
@@ -3036,8 +3071,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setAgentMasterData(response.data.data);
-          // console.log("agent by id",response.data.data);
-          // console.log("getAgentMasterData",agentMasterData);
+          setAgentMasterDataAudit(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3666,7 +3700,7 @@ const ContentLogic = (props) => {
                   userActivity: logDataString,
                   operationName: "Candidate upload batch file uploaded sucessfully"
               }
-                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
+                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
                   headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
                 }).then(()=>{
                   console.log("user activity added")
@@ -4939,7 +4973,7 @@ const ContentLogic = (props) => {
                   userActivity: logDataString,
                   operationName: "Candidate Master added successfully."
               }
-                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
+                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
                   headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
                 }).then(()=>{
                   console.log("user activity added")
@@ -4999,7 +5033,7 @@ const ContentLogic = (props) => {
                   userActivity: logDataString,
                   operationName: "Candidate verification new data assigned successfully."
               }
-                handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
+                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
                   headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
                 }).then(()=>{
                   console.log("user activity added")
@@ -5194,6 +5228,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Agent Master added successfully."
               }
+              let userActivities = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                dataId:response.data.data.id,
+                userLoginId:convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Agent Master added successfully."
+            }
+              handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentMaster}`,userActivities,{
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }).then(()=>{
+                console.log("user activity added")
+              })
               handlers.auditLog.addAuditLog(auditlog,
                 helpers.auditLog.agentMaster,response.data.data.id,{
                 headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -5352,6 +5402,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Agent Pricing Template added successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:response.data.data.id,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName: "Agent Pricing Template added successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentPricingTemplate}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.agentPricingTemplate,response.data.data.id,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -5390,6 +5456,26 @@ const ContentLogic = (props) => {
               setOpenConfirmation(false)
               // setOpenAddBtchprty(false);
               setLoader(false);
+              const logData ={}
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+                let userActivities = {
+                  userName: fullName
+                      ? fullName:"",
+                  email: Email
+                      ? Email
+                      : "",
+                  dataId:helpers.auditLog.adminCandidateUploadBatch,
+                  userLoginId:convertTokenToObj.id,
+                  userActivity: logDataString,
+                  operationName: "Batch approval done successful."
+              }
+                handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,userActivities,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("user activity added")
+                })
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -6276,7 +6362,7 @@ const ContentLogic = (props) => {
             userActivity: logDataString,
             operationName: "Candidate Master updated successfully."
         }
-          handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           }).then(()=>{
             console.log("user activity added")
@@ -6524,7 +6610,7 @@ const ContentLogic = (props) => {
             userActivity: logDataString,
             operationName: "Candidate Verification Updated successfully."
         }
-          handler.dataPost(`/v1/1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
           }).then(()=>{
             console.log("user activity added")
@@ -6565,6 +6651,185 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
+              const logData = {}
+              if (agentMasterData.professionalStatus !==agentMasterDataAudit.professionalStatus) {
+                Object.assign(logData, {
+                  "Professional Status": agentMasterData.professionalStatus,
+                })
+              }
+              if (agentMasterData.note!==agentMasterDataAudit.note) {
+                Object.assign(logData, {
+                  "Note": agentMasterData.note,
+                })
+              }
+              if (agentMasterData.agentNo !==agentMasterDataAudit.agentNo) {
+                Object.assign(logData, {
+                  "Agent Number": agentMasterData.agentNo,
+                })
+              }
+              if (agentMasterData.fullName!==agentMasterDataAudit.fullName) {
+                Object.assign(logData, {
+                  "Full Name": agentMasterData.fullName,
+                })
+              }
+              if (agentMasterData.dob !==agentMasterDataAudit.dob) {
+                Object.assign(logData, {
+                  "BirthDate": agentMasterData.dob,
+                })
+              }
+              if (agentMasterData.gender !==agentMasterDataAudit.gender) {
+                Object.assign(logData, {
+                  "Gender": agentMasterData.gender,
+                })
+              }
+              if (agentMasterData.email !==agentMasterDataAudit.email) {
+                Object.assign(logData, {
+                  "Email": agentMasterData.email,
+                })
+              }
+              if (agentMasterData.contactNo !==agentMasterDataAudit.contactNo) {
+                Object.assign(logData, {
+                  "Contact Number": agentMasterData.contactNo,
+                })
+              }
+              if (agentMasterData.currAddress !==agentMasterDataAudit.currAddress) {
+                Object.assign(logData, {
+                  "Current Address": agentMasterData.currAddress,
+                })
+              }
+              if (agentMasterData.currZip !==agentMasterDataAudit.currZip) {
+                Object.assign(logData, {
+                  "Current Zip": agentMasterData.currZip,
+                })
+              }
+              if (agentMasterData.currCity !==agentMasterDataAudit.currCity) {
+                Object.assign(logData, {
+                  "Current City": agentMasterData.currCity,
+                })
+              }
+              if (agentMasterData.currState !==agentMasterDataAudit.currState) {
+                Object.assign(logData, {
+                  "Current State": agentMasterData.currState,
+                })
+              }
+              if (agentMasterData.permAddress !==agentMasterDataAudit.permAddress) {
+                Object.assign(logData, {
+                  "Permanent Address": agentMasterData.permAddress,
+                })
+              }
+              if (agentMasterData.permZip !==agentMasterDataAudit.permZip) {
+                Object.assign(logData, {
+                  "Permanent Zip": agentMasterData.permZip,
+                })
+              }
+              if (agentMasterData.permCity!==agentMasterDataAudit.permCity) {
+                Object.assign(logData, {
+                  "Permanent City": agentMasterData.permCity,
+                })
+              }
+              if (agentMasterData.permState !==agentMasterDataAudit.permState) {
+                Object.assign(logData, {
+                  "Permanent State": agentMasterData.permState,
+                })
+              }
+              if (agentMasterData.panCard !==agentMasterDataAudit.panCard) {
+                Object.assign(logData, {
+                  "Pan Card": agentMasterData.panCard,
+                })
+              }
+              if (agentMasterData.aadharCard !==agentMasterDataAudit.aadharCard) {
+                Object.assign(logData, {
+                  "Aadhar Card ": agentMasterData.aadharCard,
+                })
+              }
+              if (agentMasterData.primaryLang !==agentMasterDataAudit.primaryLang) {
+                Object.assign(logData, {
+                  "Primary Language": agentMasterData.primaryLang,
+                })
+              }
+              if (agentMasterData.secondaryLang !==agentMasterDataAudit.secondaryLang) {
+                Object.assign(logData, {
+                  "Secondary Language": agentMasterData.secondaryLang,
+                })
+              }
+              if (agentMasterData.thirdLang !==agentMasterDataAudit.thirdLang) {
+                Object.assign(logData, {
+                  "Third Language": agentMasterData.thirdLang,
+                })
+              }
+              if (agentMasterData.isActive !==agentMasterDataAudit.isActive) {
+                Object.assign(logData, {
+                  "Status": agentMasterData.isActive,
+                })
+              }
+              if (agentMasterData.bankAc !==agentMasterDataAudit.bankAc) {
+                Object.assign(logData, {
+                  "Bank Account": agentMasterData.bankAc,
+                })
+              }
+              if (agentMasterData.bankAcType !==agentMasterDataAudit.bankAcType) {
+                Object.assign(logData, {
+                  "Bank Account Type": agentMasterData.bankAcType,
+                })
+              }
+              if (agentMasterData.bankIfsc !==agentMasterDataAudit.bankIfsc) {
+                Object.assign(logData, {
+                  "Bank IFSC": agentMasterData.bankIfsc,
+                })
+              }
+              if (agentMasterData.bankName!==agentMasterDataAudit.bankName) {
+                Object.assign(logData, {
+                  "Bank Account": agentMasterData.bankName,
+                })
+              }
+              if (agentMasterData.workLocation1 !==agentMasterDataAudit.workLocation1) {
+                Object.assign(logData, {
+                  "Work Location 1": agentMasterData.workLocation1,
+                })
+              }
+              if (agentMasterData.workLocation2 !==agentMasterDataAudit.workLocation2) {
+                Object.assign(logData, {
+                  "Work Location 2": agentMasterData.workLocation2,
+                })
+              }
+
+            let logDataString = JSON.stringify(logData)
+            let fullName = convertTokenToObj.name
+            let Email = convertTokenToObj.userEmail
+            let auditlog = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              contactNumber: auditLogData
+                  ? auditLogData.contactNo
+                  : "",
+              updatedFiled: logDataString,
+              operationName: "Agent Master updated successfully."
+              }
+              let userActivities = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                dataId:editId,
+                userLoginId:convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Agent Master updated successfully."
+            }
+              handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentMaster}`,userActivities,{
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }).then(()=>{
+                console.log("user activity added")
+              })
+              handlers.auditLog.addAuditLog(auditlog,
+                helpers.auditLog.agentMaster,editId,{
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }).then(()=>{
+                console.log("Audit log added")
+              })
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6659,6 +6924,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Pricing template changed successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName: "Pricing template changed successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.adminCandidateUploadBatch,editId,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

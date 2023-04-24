@@ -82,6 +82,7 @@ const UserActivityDesign = (props) => {
   
   return (
     <>
+    
       <ListItem>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -101,8 +102,8 @@ const UserActivityDesign = (props) => {
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.operationName}</StyledTableCell>
                   <StyledTableCell align="left">{moment(row.createdOn).format('DD/MM/YYYY  HH:mm:ss')}</StyledTableCell>
-                  <StyledTableCell align="left">{row.id}</StyledTableCell>
-                  {/* <StyledTableCell align="left">
+                  {/* <StyledTableCell align="left">{row.id}</StyledTableCell> */}
+                  <StyledTableCell align="left">
                     <Button onClick={()=>{
                     //   handleOpen()
                     //   setIsAuditLogEditId(row.id)
@@ -110,7 +111,7 @@ const UserActivityDesign = (props) => {
                     }}>
                       <ViewHeadlineIcon></ViewHeadlineIcon>
                     </Button> 
-                  </StyledTableCell>*/}
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>

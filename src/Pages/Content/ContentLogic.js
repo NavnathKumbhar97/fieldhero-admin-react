@@ -5579,8 +5579,28 @@ const ContentLogic = (props) => {
                     ? auditLogData.contactNo
                     : "",
                 updatedFiled: logDataString,
-                operationName: "Other Industry Category Added Successfully."
+                operationName: (otherIndustryC.mode === "New"?
+              "Other Industry Category Added Successfully.":
+              "Other Industry Category Updated Successfully.")
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName: (otherIndustryC.mode === "New"?
+              "Other Industry Category Added Successfully.":
+              "Other Industry Category Updated Successfully.")
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminOtherIndustryCategory}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.adminOtherIndustryCategory,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -5645,6 +5665,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "Category added successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Category added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMasterCategory,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -5719,6 +5755,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "Company added successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Company added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMasterCompany,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7010,8 +7062,24 @@ const ContentLogic = (props) => {
                   ? auditLogData.contactNo
                   : "",
               updatedFiled: logDataString,
-              operationName: "Category changed successfully."
+              operationName: "Category Data Updated Successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName:"Category Data Updated Successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.otherMasterCategory,editId,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7092,8 +7160,24 @@ const ContentLogic = (props) => {
                   ? auditLogData.contactNo
                   : "",
               updatedFiled: logDataString,
-              operationName: "Company changed successfully."
+              operationName: "Company Data Updated successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName:"Company Data Updated successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.otherMasterCompany,editId,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

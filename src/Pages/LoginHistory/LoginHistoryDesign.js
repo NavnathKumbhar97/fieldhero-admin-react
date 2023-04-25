@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import { Card, TablePagination, TextField } from '@mui/material';
 import LoginHistoryLogic from './LoginHistoryLogic';
 import moment from 'moment';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import Button from '@mui/material/Button';
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -65,8 +66,9 @@ export default function LoginHistoryDesign() {
 
   return (
 <>
-{!isFilter?<Button style={{width:'20px',marginBottom:'5px'}} variant="contained" onClick={()=>setIsFilter(true)}>Filter</Button>
-:<Button style={{width:'20px',marginBottom:'5px'}} variant="contained" onClick={()=>setIsFilter(false)}>Hide</Button>
+{!isFilter?<Button style={{width:'20px',marginBottom:'5px',backgroundColor:"brown"}} variant="contained" onClick={()=>setIsFilter(true)}>
+  <FilterListIcon></FilterListIcon></Button>
+:<Button style={{width:'20px',marginBottom:'5px',backgroundColor:"brown"}} variant="contained" onClick={()=>setIsFilter(false)}>Hide</Button>
 }
 {isFilter?<DateRangePicker ranges={[selectionRange]}
         onChange={handleSelect}>

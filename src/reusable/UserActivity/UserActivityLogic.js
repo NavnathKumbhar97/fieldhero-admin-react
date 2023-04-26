@@ -32,13 +32,13 @@ const UserActivityLogic = () => {
       id: "PersonName",
       numeric: false,
       disablePadding: true,
-      label: "PersonName",
+      label: "Person Name",
     },
     {
       id: "OperationName",
       numeric: true,
       disablePadding: false,
-      label: "OperationName",
+      label: "Operation Name",
     },
     {
       id: "Date",

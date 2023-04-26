@@ -103,7 +103,7 @@ export default function ContentDesign(props) {
     handleUpdateAuditDataOtherMSkillSet,
     handleUpdateAuditDataOtherMSubscription,
     handleUpdateAuditDataOtherMUser,
-    getCustomerById
+    getCustomerById,handleUpdateAuditDataOtherMCustomer
   } = ContentLogic();
 
   //UseEffect For Page
@@ -844,8 +844,8 @@ export default function ContentDesign(props) {
                         handleOpenCandidateModal();
                         setEditId(tblData[item].id);
                         setEditStatus(true);
-                        console.log(tblData[item].id);
                         getCustomerById(tblData[item].id);
+                        handleUpdateAuditDataOtherMCustomer(tblData[item].id)
                       }}
                     >
                       <Edit />

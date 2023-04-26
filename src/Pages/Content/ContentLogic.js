@@ -774,6 +774,16 @@ const ContentLogic = (props) => {
     profileImage:'',
     isActive: true,
   });
+  const [customerDataAudit, setCustomerDataAudit] = useState({
+    fullName:'',
+    companyName: " ",
+    dob:null,
+    gender:'',
+    state:'',
+    country:'INDIA',
+    profileImage:'',
+    isActive: true,
+  });
   const [filterDataForCustomer, setFilterDataForCustomer] = useState([]);
 
   //state for store the input fields value of industry
@@ -3150,7 +3160,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setCustomerData(response.data.data)
-          console.log("data",response.data);
+          setCustomerDataAudit(response.data.data)          
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -4842,6 +4852,10 @@ const ContentLogic = (props) => {
   const handleUpdateAuditDataOtherMUser= (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersUsers));
   };
+  //update the redux state for audit log 
+  const handleUpdateAuditDataOtherMCustomer= (id) => {
+    dispatch(auditLogDetails(id, helpers.auditLog.otherMastersCustomer));
+  };
 
   // add API calls
   const addAPICalls = (pageName) => {
@@ -5803,6 +5817,85 @@ const ContentLogic = (props) => {
             setOpenCandidateModal(false);
             getCustomerAPIcall();
             setOpenAlertMsg(true);
+            const logData = {}
+              if (customerData.fullName) {
+                Object.assign(logData, {
+                  "Full Name": customerData.fullName,
+                })
+              }
+              if (customerData.country) {
+                Object.assign(logData, {
+                  "Country": customerData.country,
+                })
+              }
+              if (customerData.companyName) {
+                Object.assign(logData, {
+                  "Company Name": customerData.companyName,
+                })
+              }
+              if (customerData.dob) {
+                Object.assign(logData, {
+                  "BirthDate": customerData.dob,
+                })
+              }
+              if (customerData.gender) {
+                Object.assign(logData, {
+                  "Gender": customerData.gender,
+                })
+              }
+              if (customerData.profileImage) {
+                Object.assign(logData, {
+                  "Profile Image": customerData.profileImage,
+                })
+              }
+              if (customerData.state) {
+                Object.assign(logData, {
+                  "State": customerData.state,
+                })
+              }
+              if (customerData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": customerData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Customer added successfully."
+            }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Customer added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersCustomer,response.data.data.id,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
           } else {
             setErrMsg(response.data.message);
             setOpenErrtMsg(true);
@@ -5862,6 +5955,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "Industry added successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Industry added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMasterIndustry,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -5932,6 +6041,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "Role added successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Role added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersRole}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMastersRole,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7212,6 +7337,85 @@ const ContentLogic = (props) => {
                 setOpenCandidateModal(false);
                 setOpenAlertMsg(true);
                 getCustomerAPIcall();
+                const logData = {}
+              if (customerData.fullName !== customerDataAudit.fullName) {
+                Object.assign(logData, {
+                  "Full Name": customerData.fullName,
+                })
+              }
+              if (customerData.country!== customerDataAudit.country) {
+                Object.assign(logData, {
+                  "Country": customerData.country,
+                })
+              }
+              if (customerData.companyName!== customerDataAudit.companyName) {
+                Object.assign(logData, {
+                  "Company Name": customerData.companyName,
+                })
+              }
+              if (customerData.dob!== customerDataAudit.dob) {
+                Object.assign(logData, {
+                  "BirthDate": customerData.dob,
+                })
+              }
+              if (customerData.gender!== customerDataAudit.gender) {
+                Object.assign(logData, {
+                  "Gender": customerData.gender,
+                })
+              }
+              if (customerData.profileImage !== customerDataAudit.profileImage) {
+                Object.assign(logData, {
+                  "Profile Image": customerData.profileImage,
+                })
+              }
+              if (customerData.state !== customerDataAudit.state) {
+                Object.assign(logData, {
+                  "State": customerData.state,
+                })
+              }
+              if (customerData.isActive!== customerDataAudit.state) {
+                Object.assign(logData, {
+                  "Is Active": customerData.isActive,
+                })
+              }
+  
+              let logDataString = JSON.stringify(logData)
+              let fullName = convertTokenToObj.name
+              let Email = convertTokenToObj.userEmail
+              let auditlog = {
+                userName: fullName
+                    ? fullName:"",
+                email: Email
+                    ? Email
+                    : "",
+                contactNumber: auditLogData
+                    ? auditLogData.contactNo
+                    : "",
+                updatedFiled: logDataString,
+                operationName: "Customer Data Updated successfully."
+            }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:editId,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Customer Data Updated successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
+            handlers.auditLog.addAuditLog(auditlog,
+              helpers.auditLog.otherMastersCustomer,editId,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("Audit log added")
+            })
               } else {
                 setErrMsg(response.data.message);
                 setOpenErrtMsg(true);
@@ -7283,6 +7487,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Industry changed successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName:"Industry Data Updated Successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.otherMasterIndustry,editId,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7357,6 +7577,22 @@ const ContentLogic = (props) => {
               updatedFiled: logDataString,
               operationName: "Role Updated successfully."
           }
+          let userActivities = {
+            userName: fullName
+                ? fullName:"",
+            email: Email
+                ? Email
+                : "",
+            dataId:editId,
+            userLoginId:convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName:"Role Updated successfully."
+        }
+          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersRole}`,userActivities,{
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          }).then(()=>{
+            console.log("user activity added")
+          })
           handlers.auditLog.addAuditLog(auditlog,
             helpers.auditLog.otherMastersRole,editId,{
             headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -15149,7 +15385,8 @@ const ContentLogic = (props) => {
     handleUpdateAuditDataOtherMSkillSet,
     handleUpdateAuditDataOtherMSubscription,
     handleUpdateAuditDataOtherMUser,
-    getCustomerById
+    getCustomerById,
+    handleUpdateAuditDataOtherMCustomer
   };
 
   return StateContainer;

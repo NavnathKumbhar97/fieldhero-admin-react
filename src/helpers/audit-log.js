@@ -14,6 +14,7 @@ const auditLog = {
     "otherMastersUsers":13,
     "adminOtherIndustryCategory":14,
     "adminBatchPriority":15,
+    "otherMastersCustomer":16,
 }
 
 export default auditLog

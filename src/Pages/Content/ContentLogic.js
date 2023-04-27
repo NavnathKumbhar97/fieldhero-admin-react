@@ -6122,6 +6122,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "SkillSet added successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"SkillSet added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMastersSkillSet,response.data.data.id,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -6202,6 +6218,22 @@ const ContentLogic = (props) => {
                  updatedFiled: logDataString,
                  operationName: "Subscription Added successfully."
              }
+             let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Subscription Added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
              handlers.auditLog.addAuditLog(auditlog,
                helpers.auditLog.otherMastersSubscription,response.data.data.id,{
                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7659,8 +7691,24 @@ const ContentLogic = (props) => {
                     ? auditLogData.contactNo
                     : "",
                 updatedFiled: logDataString,
-                operationName: "SkillSet Updated successfully."
+                operationName: "Skill Set Data Updated successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:editId,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Skill Set Data Updated successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMastersSkillSet,editId,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7746,8 +7794,24 @@ const ContentLogic = (props) => {
                     ? auditLogData.contactNo
                     : "",
                 updatedFiled: logDataString,
-                operationName: "Subscription Updated successfully."
+                operationName: "Subscription Data Updated successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:editId,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"Subscription Data Updated successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMastersSubscription,editId,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

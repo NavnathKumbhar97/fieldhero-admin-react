@@ -6394,6 +6394,22 @@ const ContentLogic = (props) => {
                  updatedFiled: logDataString,
                  operationName: "User Added successfully."
              }
+             let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:response.data.data.id,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"User Added successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
              handlers.auditLog.addAuditLog(auditlog,
                helpers.auditLog.otherMastersUsers,response.data.data.id,{
                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -7974,6 +7990,22 @@ const ContentLogic = (props) => {
                 updatedFiled: logDataString,
                 operationName: "User Updated successfully."
             }
+            let userActivities = {
+              userName: fullName
+                  ? fullName:"",
+              email: Email
+                  ? Email
+                  : "",
+              dataId:editId,
+              userLoginId:convertTokenToObj.id,
+              userActivity: logDataString,
+              operationName:"User Updated successfully."
+          }
+            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,userActivities,{
+              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+            }).then(()=>{
+              console.log("user activity added")
+            })
             handlers.auditLog.addAuditLog(auditlog,
               helpers.auditLog.otherMastersUsers,editId,{
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },

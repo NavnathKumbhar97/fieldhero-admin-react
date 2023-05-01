@@ -77,7 +77,9 @@ const UserActivityDesign = (props) => {
   // const { sectionId, dataId } = props;
   let {
     tblLogData,
-    tblLogHeader
+    tblLogHeader,
+    logChageData,open,setIsAuditLogEditId,
+    handleClose,handleOpen,setLogChageData
   } = UserActivityLogic()
   
   return (
@@ -101,13 +103,13 @@ const UserActivityDesign = (props) => {
                   </StyledTableCell>
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.operationName}</StyledTableCell>
-                  <StyledTableCell align="left">{moment(row.createdOn).format('DD/MM/YYYY  HH:mm:ss')}</StyledTableCell>
+                  <StyledTableCell align="left">{row.createdOn}</StyledTableCell>
                   {/* <StyledTableCell align="left">{row.id}</StyledTableCell> */}
                   <StyledTableCell align="left">
                     <Button onClick={()=>{
-                    //   handleOpen()
-                    //   setIsAuditLogEditId(row.id)
-                    //   setLogChageData(row.UpdateFile)
+                      handleOpen()
+                      setIsAuditLogEditId(row.id)
+                      setLogChageData(row.userActivity)
                     }}>
                       <ViewHeadlineIcon></ViewHeadlineIcon>
                     </Button> 
@@ -127,6 +129,48 @@ const UserActivityDesign = (props) => {
           />
         </TableContainer>
       </ListItem>
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Recent updated fields?"}
+          </DialogTitle>
+          <DialogContent>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell><b>Field</b></TableCell>
+                    <TableCell align="left"><b>Value</b></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {logChageData.map((row) => (
+                    <TableRow
+                      // key={row}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row[0]}
+                      </TableCell>
+                      <TableCell align="left">{row[0]==="Is Active"&&row[1]===true?"Active":row[1]}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} autoFocus>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 };

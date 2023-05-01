@@ -69,9 +69,22 @@ const UserActivityLogic = () => {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
         );
-        if(response){
-          setTblLogData(response.data.data)
-          console.log("response.data",response.data.data);
+        let refineData = response
+          ? response.data.data.map((item, index) => {
+              return {
+                userName: item.userName,
+                operationName: item.operationName,
+                createdOn: moment(item.createdOn, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
+                userActivity: item.userActivity
+                  ? Object.entries(JSON.parse(item.userActivity))
+                  : [],
+                id: item.id,
+              };
+            })
+          : [];
+        setTblLogData(refineData);
+        if(refineData){
+          setTblLogData(refineData)
         }
       } catch (err) {
         console.error("fetchLogDetails", err);
@@ -94,7 +107,9 @@ const UserActivityLogic = () => {
 
   return {
     tblLogHeader,
-    tblLogData
+    tblLogData,logChageData,handleClose,handleOpen,
+    open,setLogChageData,setIsAuditLogEditId
+
   }
 }
 

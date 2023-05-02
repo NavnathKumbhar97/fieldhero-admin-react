@@ -16,6 +16,7 @@ const UserActivityLogic = () => {
 
   //State For Open and Close the Modal
   const [open, setOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
 
   //tbl heading
@@ -61,6 +62,7 @@ const UserActivityLogic = () => {
    const fetchUserActivity = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
       try {
         let response = await generalHandlers.dataGet(`/v1/userActivity/${convertTokenToObj.id}`,
         {
@@ -82,9 +84,11 @@ const UserActivityLogic = () => {
           : [];
           setTblUserData(refineData);
         if(refineData){
+          setLoader(false)
           setTblUserData(refineData)
         }
       } catch (err) {
+        setLoader(false)
         console.error("fetchLogDetails", err);
       }
     };
@@ -110,9 +114,8 @@ const UserActivityLogic = () => {
     handleChangePage,
     handleChangeRowsPerPage,
     page,
-    rowsPerPage
-
-
+    rowsPerPage,
+    loader, setLoader
   }
 }
 

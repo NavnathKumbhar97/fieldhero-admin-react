@@ -14,6 +14,7 @@ const AdminUserActivityLogic = () => {
 
   //State For Open and Close the Modal
   const [open, setOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
 
   //tbl heading
@@ -53,6 +54,7 @@ const AdminUserActivityLogic = () => {
    const fetchUserActivity = async (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
       try {
         let response = await generalHandlers.dataGet(`/v1/userActivity/${id}`,
         {
@@ -78,8 +80,10 @@ const AdminUserActivityLogic = () => {
         if(refineData){
             setTblUserData(refineData)
             console.log("refinedata",refineData);
+            setLoader(false)
         }
       } catch (err) {
+        setLoader(false)
         console.error("fetchLogDetails", err);
       }
     };
@@ -128,8 +132,8 @@ const AdminUserActivityLogic = () => {
     rowsPerPage,
     getById,
     setEditIdForData,
-    fetchUserActivity
-
+    fetchUserActivity,
+    loader, setLoader
   }
 }
 

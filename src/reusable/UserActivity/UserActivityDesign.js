@@ -1,7 +1,9 @@
 
 import React from "react";
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   ListItem,
   Table,
   TableBody,
@@ -54,14 +56,20 @@ const UserActivityDesign = (props) => {
     handleChangeRowsPerPage,
     setUserChangeData,
     page,
-    rowsPerPage
+    rowsPerPage,
+    loader,
   } = UserActivityLogic()
   
   return (
     <>
     
-      <ListItem>
         <TableContainer component={Paper}>
+        <Backdrop
+        sx={{ color: "#7d1810", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+      >
+        <CircularProgress size={130} thickness={2} color="inherit" />
+      </Backdrop>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
@@ -102,7 +110,6 @@ const UserActivityDesign = (props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-      </ListItem>
       <div>
         <Dialog
           open={open}

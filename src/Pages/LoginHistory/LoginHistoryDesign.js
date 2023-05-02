@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Card, TablePagination, TextField } from '@mui/material';
+import { Backdrop, Card, CircularProgress, TablePagination, TextField } from '@mui/material';
 import LoginHistoryLogic from './LoginHistoryLogic';
 import moment from 'moment';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -57,7 +57,8 @@ export default function LoginHistoryDesign() {
     rowsPerPage,
     selectionRange,handleSelect,
     page,setPage,handleChangePage,
-    handleChangeRowsPerPage
+    handleChangeRowsPerPage,
+    loader,
   }= LoginHistoryLogic()
 
   useEffect(()=>{
@@ -76,6 +77,12 @@ export default function LoginHistoryDesign() {
 </DateRangePicker>:""}
 
     <TableContainer component={Paper}>
+    <Backdrop
+        sx={{ color: "#7d1810", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+      >
+        <CircularProgress size={130} thickness={2} color="inherit" />
+      </Backdrop>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>

@@ -15,6 +15,9 @@ const LoginHistoryLogic = (props) => {
   const [startDate,setStartDate]= useState(new Date());
   const [endDate,setEndDate]= useState(new Date());
 
+  //State for the loader
+  const [loader,setLoader] = useState(false)
+
   //Handle and filter the data based on date range
   const handleSelect = (date) =>{
     let filtered = filteredData.filter((product)=>{
@@ -38,7 +41,7 @@ const LoginHistoryLogic = (props) => {
   const getLoginHistoryAPICall = async() =>{
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
-    // setLoader(true);
+    setLoader(true);
     await generalHandlers
       .dataGet(`/v1/user-history/${convertTokenToObj.id}?take=${rowsPerPage}&skip=${page}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
@@ -47,16 +50,16 @@ const LoginHistoryLogic = (props) => {
         if (response.status == 200) {
           setLoginHistory(response.data.data);
           setFilteredData(response.data.data);
-          // setLoader(false);
+          setLoader(false);
         } else if (response.status == 400) {
           // setErrMsg(response.data.message);
           // setOpenErrtMsg(true);
-          // setLoader(false);
+          setLoader(false);
         }
       })
       .catch((error) => {
         console.error("There was an error!- getLoginHistory", error);
-        // setLoader(false);
+        setLoader(false);
       });
   }
   
@@ -78,7 +81,8 @@ const LoginHistoryLogic = (props) => {
     handleSelect,
     selectionRange,
     page,setPage,handleChangePage,
-    handleChangeRowsPerPage
+    handleChangeRowsPerPage,
+    loader,setLoader
 
   }
   return StateContainer

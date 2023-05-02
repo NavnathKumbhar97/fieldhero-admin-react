@@ -1,7 +1,9 @@
 
 import React from "react";
 import {
+    Backdrop,
   Button,
+  CircularProgress,
   FormControl,
   InputLabel,
   ListItem,
@@ -69,12 +71,13 @@ const AdminUserActivityDesign = (props) => {
     rowsPerPage,
     getById,
     setEditIdForData,
-    fetchUserActivity
+    fetchUserActivity,
+    loader, setLoader
   } = AdminUserActivityLogic()
   
   return (
     <>
-            <FormControl sx={{mb:2, width: 200 }}>
+            <FormControl sx={{mb:2, width: 250 }}>
               {/* <InputLabel id="demo-simple-select-label">Select User To View</InputLabel> */}
               <TextField
               select
@@ -100,6 +103,12 @@ const AdminUserActivityDesign = (props) => {
             </FormControl>
 
         <TableContainer component={Paper}>
+        <Backdrop
+        sx={{ color: "#7d1810", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+      >
+        <CircularProgress size={130} thickness={2} color="inherit" />
+      </Backdrop>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>

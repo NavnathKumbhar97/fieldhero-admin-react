@@ -2,25 +2,36 @@
 import React from "react";
 import {
   Button,
+  FormControl,
+  InputLabel,
   ListItem,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableContainer,
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline";
+import CloseIcon from "@mui/icons-material/Close";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 //Import redux method and Handlers
-import UserActivityLogic from "./UserActivityLogic";
+import handlers from "../../handlers";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import AdminUserActivityLogic from "./AdminUserActivityLogic";
 
 //Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,24 +54,51 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const UserActivityDesign = (props) => {
+
+const AdminUserActivityDesign = (props) => {
   let {
     tblUserData,
     tblUserHeader,
     userChangeData
     ,open,
-    handleClose,handleOpen,
+    handleClose,handleOpen,setLogChageData,
     handleChangePage,
     handleChangeRowsPerPage,
     setUserChangeData,
     page,
-    rowsPerPage
-  } = UserActivityLogic()
+    rowsPerPage,
+    getById,
+    setEditIdForData,
+    fetchUserActivity
+  } = AdminUserActivityLogic()
   
   return (
     <>
-    
-      <ListItem>
+            <FormControl sx={{mb:2, width: 200 }}>
+              {/* <InputLabel id="demo-simple-select-label">Select User To View</InputLabel> */}
+              <TextField
+              select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                // value={}
+                label="Select User To View"
+                onChange={(e)=>{
+                    setEditIdForData(e.target.value)
+                    console.log("target",e.target.value);
+                    fetchUserActivity(e.target.value)
+                }}
+              >
+                {Object.keys(getById).map((option) => (
+                    <MenuItem
+                      key={getById[option].fullName}
+                      value={getById[option].id}
+                    >
+                      {getById[option].fullName}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </FormControl>
+
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -102,7 +140,7 @@ const UserActivityDesign = (props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
-      </ListItem>
+     
       <div>
         <Dialog
           open={open}
@@ -152,4 +190,4 @@ const UserActivityDesign = (props) => {
 
 
 
-export default UserActivityDesign;
+export default AdminUserActivityDesign;

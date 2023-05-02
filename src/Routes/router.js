@@ -8,8 +8,6 @@ import TheContent from "../Pages/TheContent/TheContent";
 import { pageData } from '../Pages/PageData/PageData'
 import Help from "../Container/Drawer/Help/Help";
 import ForgotPassDesign from "../Pages/ForgotPassword/ForgotPassDesign";
-import LoginHistoryDesign from "../Pages/LoginHistory/LoginHistoryDesign";
-import UserActivityDesign from "../reusable/UserActivity/UserActivityDesign";
 
 export default function () {
 
@@ -25,7 +23,12 @@ export default function () {
     customerMaster,
     industyMaster,roleMaster,
     skillsetMaster,
-    subscriptionMaster,userMaster,batchPriority,otherIndustyCategory,userLoginHistory
+    subscriptionMaster,userMaster,
+    batchPriority,
+    otherIndustyCategory,
+    userLoginHistory,
+    userActivity,
+    userActivityAdmin
   } = pageData()
   return (
     <Router>
@@ -57,7 +60,8 @@ export default function () {
           <Route path="subscription" element={<ContentDesign data={subscriptionMaster} />} />
           <Route path="user" element={<ContentDesign data={userMaster} />} />
           <Route path="login-history" element={<ContentDesign data={userLoginHistory}/>} />
-          <Route path="user-activity" element={<UserActivityDesign/>} />
+          <Route path="user-activity" element={<ContentDesign data={userActivity}/>} />
+          <Route path="admin-user-activity" element={<ContentDesign data={userActivityAdmin}/>} />
           <Route path="help" element={<Help/>} />
           <Route path="about" element={<TheContent />} />
 

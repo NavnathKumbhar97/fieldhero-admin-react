@@ -113,6 +113,8 @@ import { auditLogDetails } from "../../store/AuditLog/action";
 import helpers from "../../helpers";
 import handlers from "../../handlers";
 import LoginHistoryDesign from "../LoginHistory/LoginHistoryDesign";
+import UserActivityDesign from "../../reusable/UserActivity/UserActivityDesign";
+import AdminUserActivityDesign from "../AdminUserActivity/AdminUserActivityDesign";
 
 const ContentLogic = (props) => {
   //Common States
@@ -8300,6 +8302,10 @@ const ContentLogic = (props) => {
         );
       case "login-history":
         return null;
+      case "user-activity":
+        return null;
+      case "admin-user-activity":
+        return null;
 
       default:
         return (
@@ -8991,6 +8997,16 @@ const ContentLogic = (props) => {
                 filterCustomer(e)
               }}
             />
+          </>
+        )
+      case "User - Activity":
+        return (
+          <UserActivityDesign/>
+        )
+      case "Admin - User Activity":
+        return (
+          <>
+          <AdminUserActivityDesign/>
           </>
         )
       default:

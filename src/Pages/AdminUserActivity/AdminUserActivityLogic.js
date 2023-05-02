@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import handlers from '../../handlers';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
 import generalHandlers from '../../handlers/generalHandlers';
 
-const UserActivityLogic = () => {
-  const [searchInput, setSearchInput] = useState("");
+const AdminUserActivityLogic = () => {
+  const [getById,setGetById] = useState([]);
 
   //State for the set and get the data
   const [tblUserData, setTblUserData] = useState([]);
@@ -20,12 +18,6 @@ const UserActivityLogic = () => {
 
   //tbl heading
   const tblUserHeader = [
-    // {
-    //   id: "SrNo",
-    //   numeric: false,
-    //   disablePadding: true,
-    //   label: "Sr.No",
-    // },
     {
       id: "PersonName",
       numeric: false,
@@ -58,15 +50,17 @@ const UserActivityLogic = () => {
 
 
   // Fetch All user activity Details
-   const fetchUserActivity = async () => {
+   const fetchUserActivity = async (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
       try {
-        let response = await generalHandlers.dataGet(`/v1/userActivity/${convertTokenToObj.id}`,
+        let response = await generalHandlers.dataGet(`/v1/userActivity/${id}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
         );
+        console.log("response",
+        response);
         let refineData = response
           ? response.data.data.map((item, index) => {
               return {
@@ -80,9 +74,29 @@ const UserActivityLogic = () => {
               };
             })
           : [];
-          setTblUserData(refineData);
+        //   setTblUserData(refineData);
         if(refineData){
-          setTblUserData(refineData)
+            setTblUserData(refineData)
+            console.log("refinedata",refineData);
+        }
+      } catch (err) {
+        console.error("fetchLogDetails", err);
+      }
+    };
+   const fetchAllUser = async () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+      try {
+        let response = await generalHandlers.dataGet(`/v1/all-users`,
+        {
+          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+        }
+        );
+        console.log("users ",response);
+        if(response.status == 200){
+            setGetById(response.data.data.result)
+            console.log("response data",response.data.data.result);
+
         }
       } catch (err) {
         console.error("fetchLogDetails", err);
@@ -91,7 +105,8 @@ const UserActivityLogic = () => {
     
 
   useEffect(()=>{
-    fetchUserActivity()
+    // fetchUserActivity()
+    fetchAllUser()
   },[])
 
   //Pagination
@@ -110,10 +125,12 @@ const UserActivityLogic = () => {
     handleChangePage,
     handleChangeRowsPerPage,
     page,
-    rowsPerPage
-
+    rowsPerPage,
+    getById,
+    setEditIdForData,
+    fetchUserActivity
 
   }
 }
 
-export default UserActivityLogic
+export default AdminUserActivityLogic

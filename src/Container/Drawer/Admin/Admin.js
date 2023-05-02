@@ -41,6 +41,9 @@ export default function Admin() {
           <ListItemButton component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
             <ListItemText primary="Other Industry Category" />
           </ListItemButton>
+          <ListItemButton component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
+            <ListItemText primary="User Activity"/>
+          </ListItemButton>
         </List>
       </Collapse>
     </List>

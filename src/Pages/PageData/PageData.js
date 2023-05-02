@@ -104,6 +104,18 @@ const pageData = () => {
       pageTitle:"Login-History",
       modalTitle:'Add Customer'
     },
+    userActivity: {
+      page: "user-activity",
+      // buttonText: "New",
+      pageTitle:"User - Activity",
+      // modalTitle:'Add Customer'
+    },
+    userActivityAdmin: {
+      page: "admin-user-activity",
+      // buttonText: "New",
+      pageTitle:"Admin - User Activity",
+      // modalTitle:'Add Customer'
+    },
     
   };
 

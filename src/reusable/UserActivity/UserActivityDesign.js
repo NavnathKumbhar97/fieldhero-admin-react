@@ -20,8 +20,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { DateRangePicker } from 'react-date-range';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
-//Import redux method and Handlers
 import UserActivityLogic from "./UserActivityLogic";
 
 //Style
@@ -58,10 +61,21 @@ const UserActivityDesign = (props) => {
     page,
     rowsPerPage,
     loader,
+    isFilter,setIsFilter,
+    selectionRange,handleSelect,
   } = UserActivityLogic()
   
   return (
     <>
+    {!isFilter?<Button style={{width:'20px',marginBottom:'5px',backgroundColor:"brown"}} variant="contained" onClick={()=>setIsFilter(true)}>
+  <FilterListIcon></FilterListIcon></Button>
+:<Button style={{width:'20px',marginBottom:'5px',backgroundColor:"brown"}} variant="contained" onClick={()=>setIsFilter(false)}>Hide</Button>
+}
+{isFilter?<DateRangePicker ranges={[selectionRange]}
+        onChange={handleSelect}>
+
+</DateRangePicker>:""}
+
     
         <TableContainer component={Paper}>
         <Backdrop

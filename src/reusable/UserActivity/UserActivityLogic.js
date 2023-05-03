@@ -16,8 +16,13 @@ const UserActivityLogic = () => {
 
   //State For Open and Close the Modal
   const [open, setOpen] = useState(false);
+  const [isFilter,setIsFilter,] = useState(false);
   const [loader, setLoader] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
+  //State for store the handled start date and end date
+  const [startDate,setStartDate]= useState(new Date());
+  const [endDate,setEndDate]= useState(new Date());
+  const [filteredData,setFilteredData] = useState([])
 
   //tbl heading
   const tblUserHeader = [
@@ -58,6 +63,25 @@ const UserActivityLogic = () => {
   const handleClose = () => setOpen(false);
 
 
+   //Handle and filter the data based on date range
+   const handleSelect = (date) =>{
+    let filtered = filteredData.filter((product)=>{
+      let productDate = new Date(product["createdOn"]);
+      return(productDate>= date.selection.startDate &&
+        productDate<= date.selection.endDate);
+    })
+    setStartDate(date.selection.startDate);
+    setEndDate(date.selection.endDate);
+    setTblUserData(filtered);
+  };
+
+  //To store the start date and end date
+  const selectionRange = {
+    startDate: startDate,
+    endDate: endDate,
+    key: 'selection',
+  }
+
   // Fetch All user activity Details
    const fetchUserActivity = async () => {
     let authTok = localStorage.getItem("user"); // string
@@ -82,10 +106,10 @@ const UserActivityLogic = () => {
               };
             })
           : [];
-          setTblUserData(refineData);
         if(refineData){
           setLoader(false)
           setTblUserData(refineData)
+          setFilteredData(refineData);
         }
       } catch (err) {
         setLoader(false)
@@ -115,7 +139,9 @@ const UserActivityLogic = () => {
     handleChangeRowsPerPage,
     page,
     rowsPerPage,
-    loader, setLoader
+    loader, setLoader,
+    isFilter,setIsFilter,
+    selectionRange,handleSelect,
   }
 }
 

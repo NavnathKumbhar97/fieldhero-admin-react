@@ -9620,9 +9620,7 @@ const ContentLogic = (props) => {
                           />
                         </ListItem>
                       </div>
-                      <ListItem>
-                        {editStatus?(<AuditLog />):""}
-                      </ListItem>
+                      
                       <div>
                         <ListItem>
                           <Button
@@ -9691,6 +9689,9 @@ const ContentLogic = (props) => {
                           </Button>
                         </ListItem>
                       </div>
+                        <ListItem>
+                        {editStatus?(<AuditLog />):""}
+                      </ListItem>
                     </Box>
                   </List>
                 ) : activeStep === 1 ? (
@@ -9930,7 +9931,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
 
-                     {editStatus? (<AuditLog />):""}
+                    
                       <div>
                         <ListItem>
                           <Button
@@ -9983,6 +9984,7 @@ const ContentLogic = (props) => {
                             EXIT
                           </Button>
                         </ListItem>
+                        {editStatus? (<AuditLog />):""}
                       </div>
                     </Box>
                   </List>

@@ -197,7 +197,7 @@ const ContentLogic = (props) => {
   const [activeStep, setActiveStep] = useState(0);
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
-    // gender: "MALE",
+    profImgPath:"",
     dob: null,
     permAddress: "",
     contactNo1: "",
@@ -237,6 +237,7 @@ const ContentLogic = (props) => {
   const [updateCandidateMasterData, setUpdateCandidateMasterData] = useState({
     aadharNo: "",
     dob: "",
+    profImgPath:"",
     gender: "MALE",
     permAddress: "",
     contactNo1: "",
@@ -277,6 +278,7 @@ const ContentLogic = (props) => {
   const [updateCandidateMasterDataAudit, setUpdateCandidateMasterDataAudit] = useState({
     aadharNo: "",
     dob: "",
+    profImgPath:"",
     gender: "MALE",
     permAddress: "",
     contactNo1: "",
@@ -3485,8 +3487,11 @@ const ContentLogic = (props) => {
         console.log(response);
         if (response.status == 200) {
           setErrMsg(response.data.message);
+          setCandidateMasterData({...candidateMasterData,
+            profImgPath:response.data.path})
+          setUpdateCandidateMasterData({...updateCandidateMasterData,
+            profImgPath:response.data.path})
           setOpenErrtMsg(true);
-          console.log("response",response.data.path);
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -4876,6 +4881,12 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               handleNext();
               const logData = {}
+              
+                    if (candidateMasterData.profImgPath) {
+                        Object.assign(logData, {
+                            "Profile Image": candidateMasterData.profImgPath,
+                        })
+                    }
                     if (candidateMasterData.fullName) {
                         Object.assign(logData, {
                             "Full Name": candidateMasterData.fullName,
@@ -6463,6 +6474,13 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
               const logData = {}
+              if (updateCandidatesMasterData.profImgPath !== 
+                updateCandidateMasterDataAudit.profImgPath) 
+                {
+                Object.assign(logData, {
+                  "Profile Image": `/Users/navnath/Desktop/Apexa/Projects/fieldhero-admin-server/${updateCandidatesMasterData.profImgPath}`,
+                })
+              }
               if (updateCandidatesMasterData.fullName !== updateCandidateMasterDataAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": updateCandidatesMasterData.fullName,

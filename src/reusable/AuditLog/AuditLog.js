@@ -74,7 +74,7 @@ const style = {
 const AuditLog = (props) => {
   // const { sectionId, dataId } = props;
   const [isAuditLogModal, setIsAuditLogModal] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isFile, setIsFile] = useState("");
   const [isAuditLogEditId, setIsAuditLogEditId] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [tblLogData, setTblLogData] = useState([]);
@@ -150,7 +150,7 @@ const AuditLog = (props) => {
               return {
                 PersonName: item.userName,
                 OperationName: item.operationName,
-                Date: moment(item.createdOn, "YYYY-MM-DD").format("MM/DD/YYYY"),
+                Date: moment(item.createdOn, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
                 UpdateFile: item.updatedFiled
                   ? Object.entries(JSON.parse(item.updatedFiled))
                   : [],
@@ -159,6 +159,9 @@ const AuditLog = (props) => {
             })
           : [];
         setTblLogData(refineData);
+        Object.keys(tblLogData).map((i,z)=>{
+          console.log("file name",tblLogData[i].UpdateFile);
+        });
       } catch (err) {
         console.error("fetchLogDetails", err);
       }
@@ -199,6 +202,7 @@ const AuditLog = (props) => {
 
   useEffect(()=>{
     fetchLogDetails()
+    
   },[])
 
   //Pagination
@@ -230,7 +234,9 @@ const AuditLog = (props) => {
                   </StyledTableCell>
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.OperationName}</StyledTableCell>
-                  <StyledTableCell align="left">{row.id}</StyledTableCell>
+                  <StyledTableCell align="left">{row.UpdateFile.map((i,z)=>(
+                    i[0]==="Profile Image"?i[0]:""
+                  ))}</StyledTableCell>
                   <StyledTableCell align="left">{row.Date}</StyledTableCell>
                   <StyledTableCell align="left">
                     <Button onClick={()=>{

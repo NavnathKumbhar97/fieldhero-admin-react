@@ -179,12 +179,12 @@ export default function ForgotPassDesign() {
       >
         <Alert
           onClose={() => setOpenErrtMsg2(false)}
-          severity="warning"
-          sx={{
-            width: "100%",
-            backgroundColor: "brown",
-            color: "yellow",
-          }}
+          severity="success"
+          // sx={{
+          //   width: "100%",
+          //   backgroundColor: "green",
+          //   color: "brown",
+          // }}
         >
           Password reset request has been sent on your email
         </Alert>

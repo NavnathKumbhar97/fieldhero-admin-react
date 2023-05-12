@@ -619,6 +619,16 @@ const ContentLogic = (props) => {
     workLocation1: "",
     workLocation2: "",
     status: "",
+    panCardPath:"",
+    docPoiPath:"",
+    docPoitype:"",
+    docPoiValue:"",
+    docBankPath:"",
+    docBanktype:"",
+    docBankValue:"",
+    docPoaPath:"",
+    docPoaValue:"",
+    docPoatype:""
   });
   const [agentMasterDataAudit, setAgentMasterDataAudit] = useState({
     fullName: "",
@@ -654,6 +664,16 @@ const ContentLogic = (props) => {
     workLocation1: "",
     workLocation2: "",
     status: "",
+    panCardPath:"",
+    docPoiPath:"",
+    docPoitype:"",
+    docPoiValue:"",
+    docBankPath:"",
+    docBanktype:"",
+    docBankValue:"",
+    docPoaPath:"",
+    docPoaValue:"",
+    docPoatype:""
   });
   const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
     templateName: "",
@@ -3564,10 +3584,11 @@ const ContentLogic = (props) => {
       .then((response) => {
         console.log(response);
         if (response.status == 200) {
+          setAgentMasterData({...agentMasterData,
+            panCardPath:response.data.path})
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           setPanUploadDone(true)
-
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3596,7 +3617,8 @@ const ContentLogic = (props) => {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           setIdUploadDone(true)
-
+          setAgentMasterData({...agentMasterData,
+            docPoiPath:response.data.path})
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3626,7 +3648,8 @@ const ContentLogic = (props) => {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           setPOfAddUploadDone(true)
-
+          setAgentMasterData({...agentMasterData,
+            docPoaPath:response.data.path})
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3656,7 +3679,8 @@ const ContentLogic = (props) => {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           setBankDocUploadDone(true)
-
+          setAgentMasterData({...agentMasterData,
+            docBankPath:response.data.path})
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -5275,13 +5299,18 @@ const ContentLogic = (props) => {
             console.log(response);
             if (response.status == 201) {
               console.log(response.data.data);
-              addAgentMasterDocs(response.data.data.id);
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
               setShowAudit(false)
               const logData = {}
+
+              if (agentMasterData.panCardPath) {
+                Object.assign(logData, {
+                  "Pan Card Path": agentMasterData.panCardPath,
+                })
+              }
               if (agentMasterData.professionalStatus) {
                 Object.assign(logData, {
                   "Professional Status": agentMasterData.professionalStatus,
@@ -7104,6 +7133,16 @@ const ContentLogic = (props) => {
               setEditStatus(false);
     setShowAudit(false)
               const logData = {}
+              if (agentMasterData.panCardPath !==agentMasterDataAudit.panCardPath) {
+                Object.assign(logData, {
+                  "Pan Card": agentMasterData.panCardPath,
+                })
+              }
+              if (agentMasterData.docPoiPath !==agentMasterDataAudit.docPoiPath) {
+                Object.assign(logData, {
+                  "Proof Of Identity": agentMasterData.docPoiPath,
+                })
+              }
               if (agentMasterData.professionalStatus !==agentMasterDataAudit.professionalStatus) {
                 Object.assign(logData, {
                   "Professional Status": agentMasterData.professionalStatus,

@@ -68,6 +68,7 @@ import {
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import EditIcon from "@mui/icons-material/Edit";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -688,6 +689,11 @@ const ContentLogic = (props) => {
   const [agentMasterPOA, setAgentMasterPOA] = useState();
   const [agentMasterBankDoc, setAgentMasterBankDoc] = useState();
 
+  const [panUploadDone,setPanUploadDone] = useState(false)
+  const [IdUploadDone,setIdUploadDone] = useState(false)
+  const [pOfAddUploadDone,setPOfAddUploadDone] = useState(false)
+  const [bankDocUploadDone,setBankDocUploadDone] = useState(false)
+
   // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
@@ -710,6 +716,8 @@ const ContentLogic = (props) => {
   //State for the store the id and handle the status is updating or adding new record
   const [editId, setEditId] = useState();
   const [editStatus, setEditStatus] = useState(false);
+
+  const [showAudit,setShowAudit] = useState(false)
 
   //State used for to set the same address 
   const [sameAddress, setSameAddress] = useState(false);
@@ -1148,6 +1156,7 @@ const ContentLogic = (props) => {
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
     setEditStatus(false);
+    setShowAudit(false)
   };
   const handleOpenCandidateModal = () => {
     setOpenCandidateModal(true);
@@ -3543,13 +3552,13 @@ const ContentLogic = (props) => {
     const formData = new FormData();
     // agentMasterPan.forEach((files) => formData.append("file", files));
     formData.append("file", agentMasterPan);
-    formData.append("file", agentMasterPOI);
-    formData.append("file", agentMasterPOA);
-    formData.append("file", agentMasterBankDoc);
+    // formData.append("file", agentMasterPOI);
+    // formData.append("file", agentMasterPOA);
+    // formData.append("file", agentMasterBankDoc);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${id}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3557,6 +3566,97 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
+          setPanUploadDone(true)
+
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadAgentMasterDoc", error);
+      });
+  };
+  const addIdPrfAgentMasterDocs = async (id) => {
+    const formData = new FormData();
+    formData.append("file", agentMasterPOI);
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setIdUploadDone(true)
+
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadAgentMasterDoc", error);
+      });
+  };
+
+  const addPOfAddAgentMasterDocs = async (id) => {
+    const formData = new FormData();   
+    formData.append("file", agentMasterPOA);
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setPOfAddUploadDone(true)
+
+        } else {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          setErrMsg(error.data.message);
+          setOpenErrtMsg(true);
+        }
+        console.error("There was an error!- uploadAgentMasterDoc", error);
+      });
+  };
+
+  const addBankDocAgentMasterDocs = async (id) => {
+    const formData = new FormData();
+    formData.append("file", agentMasterBankDoc);
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    handler
+      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setBankDocUploadDone(true)
+
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3585,9 +3685,10 @@ const ContentLogic = (props) => {
       .then((response) => {
         console.log(response);
         if (response.status == 200) {
-          addBulkDataAdminCnd();
+          addBulkDataAdminCnd(response.data.path);
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
+
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3603,7 +3704,7 @@ const ContentLogic = (props) => {
   };
 
   //Add Bulk Data with help of excel file
-  const addBulkDataAdminCnd = () => {
+  const addBulkDataAdminCnd = (path) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
@@ -3617,10 +3718,49 @@ const ContentLogic = (props) => {
           // getCandidateMasterAPIcall();
           setOpenAlertMsg(true);
           // handleNext();
-          console.log(
-            "response of admin candidate upload file :",
-            response.data.data
-          );
+          const logData = {}
+          console.log("upload 1",path);
+
+          if (bulkData) {
+            console.log("upload",path);
+            Object.assign(logData, {
+                "Uploaded File": path,
+            })
+        }
+              let logDataString = JSON.stringify(logData)
+                  let fullName = convertTokenToObj.name
+                  let Email = convertTokenToObj.userEmail
+                  let auditlog = {
+                    userName: fullName
+                        ? fullName:"",
+                    email: Email
+                        ? Email
+                        : "",
+                    updatedFiled: logDataString,
+                    operationName: "Admin Candidate upload batch file uploaded sucessfully"
+                }
+                let userActivities = {
+                  userName: fullName
+                      ? fullName:"",
+                  email: Email
+                      ? Email
+                      : "",
+                  dataId:response.data.data.id,
+                  userLoginId:convertTokenToObj.id,
+                  userActivity: logDataString,
+                  operationName: "Admin Candidate upload batch file uploaded sucessfully"
+              }
+                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("user activity added")
+                })
+                handlers.auditLog.addAuditLog(auditlog,
+                  helpers.auditLog.candidateUploadBatch,response.data.data.id,{
+                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+                }).then(()=>{
+                  console.log("Audit log added")
+                })
         } else {
           setOpenErrtMsg(true);
         }
@@ -3651,6 +3791,7 @@ const ContentLogic = (props) => {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           addBulkDataCndUpload(response.data.path);
+          
           
         } else {
           setErrMsg(response.data.message);
@@ -4498,7 +4639,8 @@ const ContentLogic = (props) => {
     const handleChangeFileUpload4 = (event) => {
       setAgentMasterBankDoc(event.target.files[0]);
     };
-  
+
+
     //In professional tab table heading of agent master
     const rowsAgentMaster = [
       WorkExperianceCol(
@@ -4508,6 +4650,11 @@ const ContentLogic = (props) => {
         // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
         <TextField id="outlined-basic" variant="outlined" />,
         <input type="file" onChange={handleChangeFileUpload1} />,
+        panUploadDone?(<Button>
+          <CloudDoneIcon></CloudDoneIcon></Button>):
+          (<Button onClick={()=>addAgentMasterDocs()}>
+          <FileUploadIcon></FileUploadIcon></Button>)
+        ,
         4.0
       ),
       WorkExperianceCol(
@@ -4519,9 +4666,19 @@ const ContentLogic = (props) => {
           label="Select"
           id="outlined-basic"
           variant="outlined"
-        />,
+        >
+           <MenuItem >Pan Card</MenuItem>
+            <MenuItem >Passport</MenuItem>
+            <MenuItem >Driving Licence</MenuItem>
+            <MenuItem >Aadhar Card</MenuItem>
+            <MenuItem >Voter Id</MenuItem>
+        </TextField>,
         <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload2} />
+        <input type="file" onChange={handleChangeFileUpload2} />,
+        IdUploadDone?(<Button>
+          <CloudDoneIcon></CloudDoneIcon></Button>):
+          (<Button onClick={(e)=>addIdPrfAgentMasterDocs()}>
+          <FileUploadIcon></FileUploadIcon></Button>)
       ),
       WorkExperianceCol(
         3,
@@ -4532,9 +4689,20 @@ const ContentLogic = (props) => {
           id="outlined-basic"
           label="Select"
           variant="outlined"
-        />,
+        >
+    <MenuItem >Electricity Bill</MenuItem>
+    <MenuItem >Passport</MenuItem>
+    <MenuItem >Driving Licence</MenuItem>
+    <MenuItem >Aadhar Card</MenuItem>
+    <MenuItem >Voter Id</MenuItem>
+    <MenuItem >House sale deed or rent agreement</MenuItem>
+        </TextField>,
         <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload3} />
+        <input type="file" onChange={handleChangeFileUpload3} />,
+        pOfAddUploadDone?(<Button>
+          <CloudDoneIcon></CloudDoneIcon></Button>):
+          (<Button onClick={addPOfAddAgentMasterDocs}>
+          <FileUploadIcon></FileUploadIcon></Button>)
       ),
       WorkExperianceCol(
         4,
@@ -4545,9 +4713,18 @@ const ContentLogic = (props) => {
           id="outlined-basic"
           label="Select"
           variant="outlined"
-        />,
+        >
+          <MenuItem >Bank Statement</MenuItem>
+            <MenuItem >Cancelled Cheque</MenuItem>
+            <MenuItem >Passbook First Page</MenuItem>
+        </TextField>,
         <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload4} />
+        <input type="file" onChange={handleChangeFileUpload4} />,
+        bankDocUploadDone?(<Button>
+          <CloudDoneIcon></CloudDoneIcon></Button>):
+          (<Button onClick={addBankDocAgentMasterDocs}>
+          <FileUploadIcon></FileUploadIcon></Button>)
+
       ),
     ];
   
@@ -4580,7 +4757,8 @@ const ContentLogic = (props) => {
                   <TableCell align="center">{row.value}</TableCell>
                   <TableCell align="right">{row.upload}</TableCell>
                   <TableCell align="right">{row.status}</TableCell>
-                  {/* <Button onClick={addAgentMasterDocs}>Upload</Button> */}
+                  <TableCell align="right">{row.comments}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -4880,6 +5058,8 @@ const ContentLogic = (props) => {
               getCandidateMasterAPIcall();
               setOpenAlertMsg(true);
               handleNext();
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               
                     if (candidateMasterData.profImgPath) {
@@ -5036,6 +5216,8 @@ const ContentLogic = (props) => {
               getCandidateVerificationAPIcall();
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               let logDataString = JSON.stringify(logData)
                   let fullName = convertTokenToObj.name
@@ -5097,7 +5279,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (agentMasterData.professionalStatus) {
                 Object.assign(logData, {
@@ -5302,6 +5485,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
+              setEditStatus(false);
+    setShowAudit(false)
               const logData = {}
               if (agentPricingTemplateData.templateName) {
                 Object.assign(logData, {
@@ -5483,6 +5668,8 @@ const ContentLogic = (props) => {
               setOpenConfirmation(false)
               // setOpenAddBtchprty(false);
               setLoader(false);
+              setEditStatus(false);
+    setShowAudit(false)
               const logData ={}
               let logDataString = JSON.stringify(logData)
               let fullName = convertTokenToObj.name
@@ -5532,6 +5719,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenAddBtchprty(false);
               setLoader(true);
+              setEditStatus(false);
+    setShowAudit(false)
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -5560,7 +5749,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenOtherIndCategory(false);
               setLoader(false);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (otherIndustryC.candidateId) {
                 Object.assign(logData, {
@@ -5659,7 +5849,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCategoryAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (categoryData.title) {
                 Object.assign(logData, {
@@ -5739,7 +5930,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCompanyAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (companyData.companyName) {
                 Object.assign(logData, {
@@ -5830,6 +6022,8 @@ const ContentLogic = (props) => {
             setOpenCandidateModal(false);
             getCustomerAPIcall();
             setOpenAlertMsg(true);
+            setEditStatus(false);
+    setShowAudit(false)
             const logData = {}
               if (customerData.fullName) {
                 Object.assign(logData, {
@@ -5935,7 +6129,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getIndustryAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (industryData.title) {
                 Object.assign(logData, {
@@ -6016,7 +6211,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getRoleAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (roleData.title) {
                 Object.assign(logData, {
@@ -6102,7 +6298,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getSkillSetAPIcall();
               setOpenAlertMsg(true);
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (skillSetData.title) {
                 Object.assign(logData, {
@@ -6183,6 +6380,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getSubscriptionAPIcall();
               setOpenAlertMsg(true);
+              setEditStatus(false);
+    setShowAudit(false)
                //For Audit Log
                const logData = {}
                if (subscriptionData.planName) {
@@ -6279,6 +6478,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getUserAPIcall();
               setOpenAlertMsg(true);
+              setEditStatus(false);
+    setShowAudit(false)
                //For Audit Log
                const logData = {}
                if (userData.fullName) {
@@ -6473,12 +6674,14 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
+              setEditStatus(false);
+    setShowAudit(false)
               const logData = {}
               if (updateCandidatesMasterData.profImgPath !== 
                 updateCandidateMasterDataAudit.profImgPath) 
                 {
                 Object.assign(logData, {
-                  "Profile Image": `/Users/navnath/Desktop/Apexa/Projects/fieldhero-admin-server/${updateCandidatesMasterData.profImgPath}`,
+                  "Profile Image": `${updateCandidatesMasterData.profImgPath}`,
                 })
               }
               if (updateCandidatesMasterData.fullName !== updateCandidateMasterDataAudit.fullName) {
@@ -6653,6 +6856,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateVerificationAPIcall();
+              setEditStatus(false);
+    setShowAudit(false)
               const logData = {}
               if (updateCandidateVerificationData.callCentre
                 .candidateConsent  !== updateCandidateVerificationDataAuditLog.callCentre
@@ -6896,6 +7101,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
+              setEditStatus(false);
+    setShowAudit(false)
               const logData = {}
               if (agentMasterData.professionalStatus !==agentMasterDataAudit.professionalStatus) {
                 Object.assign(logData, {
@@ -7109,6 +7316,7 @@ const ContentLogic = (props) => {
               // setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
+              
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7145,6 +7353,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCandidateUploadBatchAdminAPIcall();
+              setEditStatus(false);
+    setShowAudit(false)
               //add logData 
               const logData = {}
               if (updateCandidateUploadBatchAdmin.templateId 
@@ -7224,7 +7434,8 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getCategoryAPIcall();
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (updateCategoryData.title !== categoryDataAudit.title) {
                 Object.assign(logData, {
@@ -7312,7 +7523,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getCompanyAPIcall();
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (companyData.companyName !== companyDataAudit.companyName) {
                 Object.assign(logData, {
@@ -7405,7 +7617,11 @@ const ContentLogic = (props) => {
                 setOpenCandidateModal(false);
                 setOpenAlertMsg(true);
                 getCustomerAPIcall();
+                setEditStatus(false);
+                setShowAudit(false)
                 const logData = {}
+
+                
               if (customerData.fullName !== customerDataAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": customerData.fullName,
@@ -7517,7 +7733,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getIndustryAPIcall();
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (industryData.title !== industryDataAudit.title) {
                 Object.assign(logData, {
@@ -7606,7 +7823,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getRoleAPIcall();
-
+              setEditStatus(false);
+              setShowAudit(false)
               //audit log
               const logData = {}
               if (roleData.name) {
@@ -7696,7 +7914,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSkillSetAPIcall();
-
+              setEditStatus(false);
+              setShowAudit(false)
               const logData = {}
               if (skillSetData.title !== skillSetDataForAuditLog.title) {
                 Object.assign(logData, {
@@ -7784,6 +8003,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getSubscriptionAPIcall();
+              setEditStatus(false);
+    setShowAudit(false)
               //For Audit Log
               const logData = {}
               if (subscriptionData.planName !== subscriptionDataForAudit.planName) {
@@ -7886,6 +8107,8 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               setOpenAlertMsg(true);
               getUserAPIcall();
+              setEditStatus(false);
+              setShowAudit(false)
               //For Audit Log
               const logData = {}
               if (updateUserData.fullName !== updateUserDataForAudit.fullName) {
@@ -9708,7 +9931,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                       </div>
                         <ListItem>
-                        {editStatus?(<AuditLog />):""}
+                        {showAudit && editStatus?(<AuditLog />):""}
                       </ListItem>
                     </Box>
                   </List>
@@ -10002,7 +10225,7 @@ const ContentLogic = (props) => {
                             EXIT
                           </Button>
                         </ListItem>
-                        {editStatus? (<AuditLog />):""}
+                        {showAudit && editStatus? (<AuditLog />):""}
                       </div>
                     </Box>
                   </List>
@@ -10306,7 +10529,6 @@ const ContentLogic = (props) => {
                     accept=".xlsx"
                     onChange={(e) => {
                       setUploadBulkCnd(e.target.files[0]);
-                      console.log("testing ");
                       handleFileUploadCndUpload(e);
                     }}
                     style={{ display: "none" }}
@@ -10547,6 +10769,7 @@ const ContentLogic = (props) => {
                 </ol>
               </ListItem>
             </Box>
+            {<AuditLog/>}
           </>
         );
       case "candidate-verification":
@@ -12335,7 +12558,7 @@ const ContentLogic = (props) => {
                 </Box>
               </TabContext>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "agent-master":
@@ -13012,7 +13235,7 @@ const ContentLogic = (props) => {
                   </FormControl>
                 </TabPanel>
               </TabContext>
-              {editStatus?(<AuditLog/>):""}
+              {showAudit && editStatus?(<AuditLog/>):""}
             </Box>
           </>
         );
@@ -13443,7 +13666,7 @@ const ContentLogic = (props) => {
                   </List>
                 ) : null}
               </Box>
-              {editStatus?(<AuditLog/>):""}
+              {showAudit && editStatus?(<AuditLog/>):""}
             </Box>
           </>
         );
@@ -13543,7 +13766,7 @@ const ContentLogic = (props) => {
                 </ul>
               </List>
             </div>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "company":
@@ -13655,7 +13878,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "customer":
@@ -13804,7 +14027,7 @@ const ContentLogic = (props) => {
                   )}
                 </List>
               </Box>
-              {editStatus?(<AuditLog/>):""}
+              {showAudit && editStatus?(<AuditLog/>):""}
             </>
           );
       case "industry":
@@ -13880,7 +14103,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "role":
@@ -14013,7 +14236,7 @@ const ContentLogic = (props) => {
                 </Button>
               </List>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "skillset":
@@ -14087,7 +14310,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "subscription":
@@ -14207,7 +14430,7 @@ const ContentLogic = (props) => {
                 </List>
               </Box>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       case "user":
@@ -14737,7 +14960,7 @@ const ContentLogic = (props) => {
                 )}
               </List>
             </Box>
-            {editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus?(<AuditLog/>):""}
           </>
         );
       default:
@@ -14773,7 +14996,8 @@ const ContentLogic = (props) => {
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
-            {/* <Button sx={{ ml: 155, color: "white" }}>Save</Button> */}
+            {editStatus?<Button sx={{ ml: 135, color: "white",backgroundColor:'black' }} 
+            onClick={()=>setShowAudit(true)}>Show Audit Log</Button>:""}
           </Box>
           <DialogContent>{handleModalInput()}</DialogContent>
         </Dialog>

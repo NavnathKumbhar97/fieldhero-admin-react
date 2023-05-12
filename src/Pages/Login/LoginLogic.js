@@ -84,7 +84,6 @@ const loginAPIcall = async (e) => {
                   })
                   .then((resp) => {
                     if (resp.status == 201) {
-                      console.log(resp);
                       // setOpenCandidateModal(false);
                       // getSkillSetAPIcall();
                       // setOpenAlertMsg(true);
@@ -100,7 +99,6 @@ const loginAPIcall = async (e) => {
                       // setErrMsg(error.data.message);
                       // setOpenErrtMsg(true);
                     }
-                    console.error("There was an error!- createCompany", error);
                   });
                   // setPermission(permissions)
                   // console.log("response",response);
@@ -126,7 +124,6 @@ const loginAPIcall = async (e) => {
           } 
       } 
   } catch (ex) {
-      console.error(ex)
       setOpenErrtMsg(true)
       setLoader(false)
   }
@@ -148,7 +145,7 @@ const loginAPIcall = async (e) => {
     handleChange,validateEmail,setErrorTextEmail,
     loginAPIcall,
     loader,setLoader,
-    openErrMsg,setOpenErrtMsg
+    openErrMsg,setOpenErrtMsg,
   };
 };
 

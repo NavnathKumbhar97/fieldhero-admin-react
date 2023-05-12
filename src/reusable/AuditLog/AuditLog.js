@@ -235,7 +235,7 @@ const AuditLog = (props) => {
                   {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.OperationName}</StyledTableCell>
                   <StyledTableCell align="left">{row.UpdateFile.map((i,z)=>(
-                    i[0]==="Profile Image"?i[0]:""
+                    i[0]==="Profile Image"?<a href={`${i[1]}`} target="_blank">{i[0]}</a>:""
                   ))}</StyledTableCell>
                   <StyledTableCell align="left">{row.Date}</StyledTableCell>
                   <StyledTableCell align="left">

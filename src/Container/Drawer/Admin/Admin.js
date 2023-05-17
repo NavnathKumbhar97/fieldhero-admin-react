@@ -44,6 +44,9 @@ export default function Admin() {
           <ListItemButton component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
             <ListItemText primary="User Activity"/>
           </ListItemButton>
+          <ListItemButton component={Link} to={'admin-user-login-activity'} sx={{ pl: 4 }}>
+            <ListItemText primary="User Login Activity"/>
+          </ListItemButton>
         </List>
       </Collapse>
     </List>

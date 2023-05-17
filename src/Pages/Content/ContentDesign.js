@@ -1286,6 +1286,8 @@ export default function ContentDesign(props) {
           return null;
       case "admin-user-activity":
           return null;
+      case "admin-user-login-activity":
+          return null;
       default:
         return (
           <>

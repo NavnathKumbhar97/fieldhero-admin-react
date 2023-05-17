@@ -35,7 +35,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 
-import AdminUserActivityLogic from "./AdminUserActivityLogic";
+import AdminUserLoginActivityLogic from "./AdminUserLoginActivityLogic";
 
 //Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -58,7 +58,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const AdminUserActivityDesign = (props) => {
+const AdminUserLoginActivityDesign = (props) => {
   let {
     tblUserData,
     tblUserHeader,
@@ -82,10 +82,10 @@ const AdminUserActivityDesign = (props) => {
     handleSelect,
     getDataId, setGetDataId,
     exportToExcel
-  } = AdminUserActivityLogic();
+  } = AdminUserLoginActivityLogic();
 
   return (
-    <>
+    <Box>
       {!isFilter ? (
         <Button
           style={{
@@ -119,9 +119,8 @@ const AdminUserActivityDesign = (props) => {
       ) : (
         ""
       )}
-           
-<Box style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-      <FormControl sx={{ mb: 2, width: 250 }}>
+      <Box style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <FormControl sx={{ mb: 2, width: 350 }}>
       <Autocomplete
         id="free-solo-demo"
         freeSolo
@@ -133,14 +132,13 @@ const AdminUserActivityDesign = (props) => {
         options={getById.map((option) => option.fullName)}
         renderInput={(params) => <TextField {...params} label="Select User To View" />}
       />
-      
       </FormControl>
       <Tooltip title="Export to Excel">
       <Button style={{height:1}} onClick={exportToExcel}>
       <svg style={{color:"green"}} xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6m1.8 18H14l-2-3.4l-2 3.4H8.2l2.9-4.5L8.2 11H10l2 3.4l2-3.4h1.8l-2.9 4.5l2.9 4.5M13 9V3.5L18.5 9H13Z"/></svg>
       </Button>
       </Tooltip>
-      </Box>
+    </Box>
       <TableContainer component={Paper}>
         <Backdrop
           sx={{ color: "#7d1810", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -152,7 +150,7 @@ const AdminUserActivityDesign = (props) => {
           <TableHead>
             <TableRow>
               {tblUserHeader.map((item) => (
-                <StyledTableCell align="left">{item.label}</StyledTableCell>
+                <StyledTableCell align={item.align}>{item.label}</StyledTableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -164,20 +162,10 @@ const AdminUserActivityDesign = (props) => {
                 </StyledTableCell>
                 {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                 <StyledTableCell align="left">
-                  {row.operationName}
+                  {row.email}
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.createdOn}</StyledTableCell>
-                {/* <StyledTableCell align="left">{row.id}</StyledTableCell> */}
-                <StyledTableCell align="left">
-                  <Button
-                    onClick={() => {
-                      handleOpen();
-                      setUserChangeData(row.userActivity);
-                    }}
-                  >
-                    <ViewHeadlineIcon></ViewHeadlineIcon>
-                  </Button>
-                </StyledTableCell>
+                <StyledTableCell align="center">{row.loggedInTime}</StyledTableCell>
+               
               </StyledTableRow>
             ))}
           </TableBody>
@@ -243,8 +231,8 @@ const AdminUserActivityDesign = (props) => {
           </DialogActions>
         </Dialog>
       </div>
-    </>
+    </Box>
   );
 };
 
-export default AdminUserActivityDesign;
+export default AdminUserLoginActivityDesign;

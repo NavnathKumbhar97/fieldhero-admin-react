@@ -87,8 +87,8 @@ export default function LoginHistoryDesign() {
         <TableHead>
           <TableRow>
             <StyledTableCell>User Name</StyledTableCell>
-            <StyledTableCell align="center">Email</StyledTableCell>
-            <StyledTableCell align="center">Logged in Date and Time</StyledTableCell>
+            <StyledTableCell align="left">Email</StyledTableCell>
+            <StyledTableCell align="left">Logged in Date and Time</StyledTableCell>
 
           </TableRow>
         </TableHead>
@@ -98,8 +98,8 @@ export default function LoginHistoryDesign() {
               <StyledTableCell component="th" scope="row">
                 {row.userName}
               </StyledTableCell>
-              <StyledTableCell align="center">{row.email}</StyledTableCell>
-              <StyledTableCell align="center">{moment(row.loggedInTime).format('DD/MM/YYYY HH:mm:ss')}</StyledTableCell>
+              <StyledTableCell align="left">{row.email}</StyledTableCell>
+              <StyledTableCell align="left">{moment(row.loggedInTime).format('DD/MM/YYYY HH:mm:ss')}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

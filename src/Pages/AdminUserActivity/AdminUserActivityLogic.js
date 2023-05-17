@@ -4,7 +4,7 @@ import generalHandlers from '../../handlers/generalHandlers';
 
 const AdminUserActivityLogic = () => {
   const [getById,setGetById] = useState([]);
-
+  const [getDataId, setGetDataId] = useState([])
   //State for the set and get the data
   const [tblUserData, setTblUserData] = useState([]);
   const [userChangeData, setUserChangeData] = useState([]);
@@ -159,6 +159,7 @@ const AdminUserActivityLogic = () => {
     loader, setLoader,
     isFilter,setIsFilter,
     selectionRange,handleSelect,
+    getDataId, setGetDataId
   }
 }
 

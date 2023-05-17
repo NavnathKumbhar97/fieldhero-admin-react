@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
+import generalHandlers from '../../handlers/generalHandlers';
 import * as XLSX from "xlsx";
 
-import generalHandlers from '../../handlers/generalHandlers';
 
-const AdminUserActivityLogic = () => {
+const AdminUserLoginActivityLogic = () => {
   const [getById,setGetById] = useState([]);
   const [getDataId, setGetDataId] = useState([])
   //State for the set and get the data
@@ -27,29 +27,24 @@ const AdminUserActivityLogic = () => {
   //tbl heading
   const tblUserHeader = [
     {
-      id: "PersonName",
-      numeric: false,
+      id: "userName",
+      align: "left",
       disablePadding: true,
-      label: "Person Name",
+      label: "User Name",
     },
     {
-      id: "OperationName",
-      numeric: true,
+      id: "email",
+      align: "left",
       disablePadding: false,
-      label: "Operation Name",
+      label: "Email",
     },
     {
-      id: "Date",
-      numeric: true,
+      id: "Logged In Date and Time",
+      align: "center",
       disablePadding: false,
-      label: "Date",
+      label: "Logged In Date and Time",
     },
-    {
-      id: "View",
-      numeric: true,
-      disablePadding: false,
-      label: "View",
-    },
+   
   ];
 
   //Handle the user activity log Modal
@@ -59,7 +54,7 @@ const AdminUserActivityLogic = () => {
      //Handle and filter the data based on date range
      const handleSelect = (date) =>{
       let filtered = filteredData.filter((product)=>{
-        let productDate = new Date(product["createdOn"]);
+        let productDate = new Date(product["loggedInTime"]);
         return(productDate>= date.selection.startDate &&
           productDate<= date.selection.endDate);
       })
@@ -81,7 +76,7 @@ const AdminUserActivityLogic = () => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true)
       try {
-        let response = await generalHandlers.dataGet(`/v1/userActivity/${id}`,
+        let response = await generalHandlers.dataGet(`/v1/user-history/${id}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -92,12 +87,8 @@ const AdminUserActivityLogic = () => {
           ? response.data.data.map((item, index) => {
               return {
                 userName: item.userName,
-                operationName: item.operationName,
-                createdOn: moment(item.createdOn, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
-                userActivity: item.userActivity
-                  ? Object.entries(JSON.parse(item.userActivity))
-                  : [],
-                userActivities:item.userActivity,
+                email: item.email,
+                loggedInTime: moment(item.loggedInTime, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
                 id: item.id,
               };
             })
@@ -113,7 +104,6 @@ const AdminUserActivityLogic = () => {
         console.error("fetchLogDetails", err);
       }
     };
-    //fetch all the user 
    const fetchAllUser = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
@@ -133,24 +123,23 @@ const AdminUserActivityLogic = () => {
         console.error("fetchLogDetails", err);
       }
     };
-    
+
     //export into to excel 
     const exportToExcel = () => {
-      const formattedData = tblUserData.map((user) => {
-        return {
-          userName: user.userName,
-          operationName: user.operationName,
-          Date: user.createdOn,
-          userActivities:user.userActivities,
-          id: user.id
-        };
-      });
-      const worksheet = XLSX.utils.json_to_sheet(formattedData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(workbook, "userActivity.xlsx");
-    }
-  
+        const formattedData = tblUserData.map((user) => {
+          return {
+            userName: user.userName,
+            email: user.email,
+            loggedInDateTime: user.loggedInTime,
+            id: user.id
+          };
+        });
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        XLSX.writeFile(workbook, "userLoginActivity.xlsx");
+      }
+    
 
   useEffect(()=>{
     // fetchUserActivity()
@@ -185,4 +174,4 @@ const AdminUserActivityLogic = () => {
   }
 }
 
-export default AdminUserActivityLogic
+export default AdminUserLoginActivityLogic

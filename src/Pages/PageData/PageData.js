@@ -116,6 +116,12 @@ const pageData = () => {
       pageTitle:"Admin - User Activity",
       // modalTitle:'Add Customer'
     },
+    userLoginActivityAdmin: {
+      page: "admin-user-login-activity",
+      // buttonText: "New",
+      pageTitle:"Admin - User Login Activity",
+      // modalTitle:'Add Customer'
+    },
     
   };
 

@@ -119,6 +119,7 @@ import UserActivityDesign from "../../reusable/UserActivity/UserActivityDesign";
 import AdminUserActivityDesign from "../AdminUserActivity/AdminUserActivityDesign";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import AdminUserLoginActivityDesign from "../AdminUserLoginActivity/AdminUserLoginActivityDesign";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -8593,6 +8594,8 @@ const ContentLogic = (props) => {
         return null;
       case "admin-user-activity":
         return null;
+      case "admin-user-login-activity":
+        return null;
 
       default:
         return (
@@ -9294,6 +9297,12 @@ const ContentLogic = (props) => {
         return (
           <>
           <AdminUserActivityDesign/>
+          </>
+        )
+      case "Admin - User Login Activity":
+        return (
+          <>
+          <AdminUserLoginActivityDesign/>
           </>
         )
       default:
@@ -15360,7 +15369,7 @@ const ContentLogic = (props) => {
                   <InputLabel id="demo-multiple-checkbox-label">
                     Assigned To
                   </InputLabel>
-                  <Autocomplete
+                  {/* <Autocomplete
       multiple
       // value={createBatchPriorityData.id}
       id="checkboxes-tags-demo"
@@ -15393,7 +15402,7 @@ const ContentLogic = (props) => {
           });
         }} placeholder="Favorites" />
       )}
-    />
+    /> */}
                   <TextField
                     select
                     labelId="demo-multiple-checkbox-label"

@@ -28,7 +28,9 @@ export default function () {
     otherIndustyCategory,
     userLoginHistory,
     userActivity,
-    userActivityAdmin
+    userActivityAdmin,
+    userLoginActivityAdmin,
+    
   } = pageData()
   return (
     <Router>
@@ -62,6 +64,7 @@ export default function () {
           <Route path="login-history" element={<ContentDesign data={userLoginHistory}/>} />
           <Route path="user-activity" element={<ContentDesign data={userActivity}/>} />
           <Route path="admin-user-activity" element={<ContentDesign data={userActivityAdmin}/>} />
+          <Route path="admin-user-login-activity" element={<ContentDesign data={userLoginActivityAdmin}/>} />
           <Route path="help" element={<Help/>} />
           <Route path="about" element={<TheContent />} />
 

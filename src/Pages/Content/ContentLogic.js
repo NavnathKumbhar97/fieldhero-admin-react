@@ -31,6 +31,7 @@ import { read, utils } from "xlsx";
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
+  Autocomplete,
   Backdrop,
   Button,
   Card,
@@ -116,6 +117,12 @@ import handlers from "../../handlers";
 import LoginHistoryDesign from "../LoginHistory/LoginHistoryDesign";
 import UserActivityDesign from "../../reusable/UserActivity/UserActivityDesign";
 import AdminUserActivityDesign from "../AdminUserActivity/AdminUserActivityDesign";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 
 const ContentLogic = (props) => {
   //Common States
@@ -8767,7 +8774,7 @@ const ContentLogic = (props) => {
                   <Typography variant="body2" color="text.secondary">
                     <b>Assigned To</b>
                     <p style={{ marginLeft: "40px", marginBottom: "-30px" }}>
-                      {updateBatchPriority[item].assignedTo[item].fullName}
+                      {/* {updateBatchPriority[item].assignedTo[item].fullName} */}
                     </p>
                   </Typography>
                   {/* ))} */}
@@ -9307,6 +9314,22 @@ const ContentLogic = (props) => {
           </>
         );
     }
+  };
+
+  const handleCheckboxChange = (event, itemId) => {
+    if (event.target.checked) {
+      setCheckedP([...checkedp, itemId]);
+      console.log("checked",checkedp);
+    } else {
+      roleData.permissionId.splice(
+              checkedp.indexOf(event.target.value),
+              1
+            );}
+
+    setRoleData({
+      ...roleData,
+      permissionId: [...checkedp],
+    });
   };
 
 
@@ -13926,7 +13949,7 @@ const ContentLogic = (props) => {
               <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
                 {/* <List> */}
                 <p sx={{mb:4}}>Select Profile Image</p>
-                <TextField type="file" sx={{mb:4}} onChange={(e)=>{
+                <TextField accept="image/png, image/jpeg" type="file" sx={{mb:4}} onChange={(e)=>{
                   setImage(e.target.files[0])
                 }}/>
                 <Button onClick={()=>addCustomerProfileImg()}>upload</Button>
@@ -14216,19 +14239,18 @@ const ContentLogic = (props) => {
                         {item.items.map((i, s) => (
                           <>
                             <FormControlLabel
+                            key={i.id}
                               style={{ display: "flex" }}
                               control={
                                 <Checkbox
                                   // checked={uroleData.permissions?true:false}
-                                  value={roleData.permissionId}
+                                  // value={roleData.permissionId}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      console.log("permissions[item].id", i.id);
-                                      checkedp.push(i.id);
-                                      console.log(checkedp);
+                                      checkedp.push(Number(i.id));
                                       setRoleData({
                                         ...roleData,
-                                        permissionId: checkedp,
+                                        permissionId: [...checkedp],
                                       });
                                     } else {
                                       roleData.permissionId.splice(
@@ -14237,6 +14259,9 @@ const ContentLogic = (props) => {
                                       );
                                     }
                                   }}
+                                  value={i.id}
+                                  checked={uroleData.permissions.includes(Number(i.id))}
+                                  // onChange={(e) => handleCheckboxChange(e, i.id)}
                                 />
                               }
                               label={i.displayName}
@@ -15335,6 +15360,40 @@ const ContentLogic = (props) => {
                   <InputLabel id="demo-multiple-checkbox-label">
                     Assigned To
                   </InputLabel>
+                  <Autocomplete
+      multiple
+      // value={createBatchPriorityData.id}
+      id="checkboxes-tags-demo"
+      options={createBatchPriorityData}
+      disableCloseOnSelect
+      getOptionLabel={(option) => option.fullName}
+      renderOption={(props, option, { selected }) => (
+        <li {...props}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checkedIcon}
+            style={{ marginRight: 8 }}
+            checked={selected}
+            onChange={(e) => {
+              setCreateBatchPriorityData({
+                ...createBatchPriorityData,
+                id: e.target.value,
+              });
+            }}
+          />
+          {option.fullName}
+        </li>
+      )}
+      style={{ width: 500 }}
+      renderInput={(params) => (
+        <TextField {...params} label="Checkboxes"  onChange={(e) => {
+          setCreateBatchPriorityData({
+            ...createBatchPriorityData,
+            id: e.target.value,
+          });
+        }} placeholder="Favorites" />
+      )}
+    />
                   <TextField
                     select
                     labelId="demo-multiple-checkbox-label"

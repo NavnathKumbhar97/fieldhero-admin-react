@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Autocomplete,
   Backdrop,
   Button,
   CircularProgress,
@@ -77,6 +78,7 @@ const AdminUserActivityDesign = (props) => {
     setIsFilter,
     selectionRange,
     handleSelect,
+    getDataId, setGetDataId
   } = AdminUserActivityLogic();
 
   return (
@@ -115,6 +117,16 @@ const AdminUserActivityDesign = (props) => {
         ""
       )}
       <FormControl sx={{ mb: 2, width: 250 }}>
+      <Autocomplete
+        id="free-solo-demo"
+        freeSolo
+        onChange={(e) => {
+          setEditIdForData(e.target.value);
+          fetchUserActivity(e.target.value);
+        }} 
+        options={getById.map((option) => option.fullName)}
+        renderInput={(params) => <TextField {...params} label="Select User To View" />}
+      />
         {/* <InputLabel id="demo-simple-select-label">Select User To View</InputLabel> */}
         <TextField
           select

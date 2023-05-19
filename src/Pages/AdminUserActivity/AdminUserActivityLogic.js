@@ -17,7 +17,8 @@ const AdminUserActivityLogic = () => {
   //State For Open and Close the Modal
   const [open, setOpen] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [isFilter,setIsFilter,] = useState(false);
+  const [isFilter,setIsFilter] = useState(false);
+  const [isVisible,setIsVisible] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
  //State for store the handled start date and end date
  const [startDate,setStartDate]= useState(new Date());
@@ -107,6 +108,7 @@ const AdminUserActivityLogic = () => {
             setTblUserData(refineData)
             setFilteredData(refineData);
             setLoader(false)
+            setIsVisible(true)
         }
       } catch (err) {
         setLoader(false)
@@ -117,6 +119,7 @@ const AdminUserActivityLogic = () => {
    const fetchAllUser = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
       try {
         let response = await generalHandlers.dataGet(`/v1/all-users`,
         {
@@ -125,6 +128,7 @@ const AdminUserActivityLogic = () => {
         );
         console.log("users ",response);
         if(response.status == 200){
+          setLoader(false)
             setGetById(response.data.data.result)
             console.log("response data",response.data.data.result);
 
@@ -181,7 +185,8 @@ const AdminUserActivityLogic = () => {
     isFilter,setIsFilter,
     selectionRange,handleSelect,
     getDataId, setGetDataId,
-    exportToExcel
+    exportToExcel,
+    isVisible,setIsVisible
   }
 }
 

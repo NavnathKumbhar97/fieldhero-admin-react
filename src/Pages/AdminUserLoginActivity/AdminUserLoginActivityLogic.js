@@ -18,6 +18,7 @@ const AdminUserLoginActivityLogic = () => {
   const [open, setOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [isFilter,setIsFilter,] = useState(false);
+  const [isVisible,setIsVisible,] = useState(false);
   const [editIdForData,setEditIdForData] = useState("")
  //State for store the handled start date and end date
  const [startDate,setStartDate]= useState(new Date());
@@ -88,7 +89,8 @@ const AdminUserLoginActivityLogic = () => {
               return {
                 userName: item.userName,
                 email: item.email,
-                loggedInTime: moment(item.loggedInTime, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
+                loggedInTime: new Date(item.loggedInTime).toLocaleString(undefined,{timeZone: 'Asia/Kolkata'}),
+                // moment(item.loggedInTime, "YYYY-MM-DD HH:mm:ss").format("MM/DD/YYYY HH:mm:ss"),
                 id: item.id,
               };
             })
@@ -98,6 +100,7 @@ const AdminUserLoginActivityLogic = () => {
             setTblUserData(refineData)
             setFilteredData(refineData);
             setLoader(false)
+            setIsVisible(true)
         }
       } catch (err) {
         setLoader(false)
@@ -107,6 +110,7 @@ const AdminUserLoginActivityLogic = () => {
    const fetchAllUser = async () => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true)
       try {
         let response = await generalHandlers.dataGet(`/v1/all-users`,
         {
@@ -115,6 +119,7 @@ const AdminUserLoginActivityLogic = () => {
         );
         console.log("users ",response);
         if(response.status == 200){
+            setLoader(false)
             setGetById(response.data.data.result)
             console.log("response data",response.data.data.result);
 
@@ -170,7 +175,8 @@ const AdminUserLoginActivityLogic = () => {
     isFilter,setIsFilter,
     selectionRange,handleSelect,
     getDataId, setGetDataId,
-    exportToExcel
+    exportToExcel,
+    isVisible
   }
 }
 

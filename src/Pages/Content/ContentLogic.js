@@ -844,26 +844,26 @@ const ContentLogic = (props) => {
     },
   );
   const [filterDataForIndustry, setFilterDataForIndustry] = useState([]);
-  const [checkedp, setCheckedP] = useState([]);
-
+  
   //state for store the input fields value of role
   const [permissions, setPermissions] = useState([]);
+  const [uroleData, setURoleData] = useState({
+    permissions: [],
+  });
   const [roleData, setRoleData] = useState({
     name: "",
     description: "",
     isActive: true,
     id: 0,
-    permissionId: [],
+    permissionId: [...uroleData.permissions],
   });
   const [filterDataForRole, setFilterDataForRole] = useState([]);
-  const [uroleData, setURoleData] = useState({
-    permissions: [],
-  });
   const [roleForUser, setRoleForUSer] = useState({
     id: 0,
     name: "",
   });
-
+  const [checkedp, setCheckedP] = useState([...uroleData.permissions]);
+  const [isChecked,setIsChecked] = useState(false)
   //state for store the input fields value of skillset
   const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
   const [skillSetData, setSkillSetData] = useState({
@@ -2929,7 +2929,9 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setURoleData(response.data.data);
+          setURoleData({...uroleData,permissions:response.data.data.permissions});
+          setIsChecked(uroleData.permissions.includes(Number(uroleData.permissions)))
+          console.log("uroleData",uroleData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -14261,6 +14263,9 @@ const ContentLogic = (props) => {
                                         ...roleData,
                                         permissionId: [...checkedp],
                                       });
+                                      console.log("checkedp",checkedp);
+                                      console.log("value",e.target.value);
+                                      console.log("roleData",roleData);
                                     } else {
                                       roleData.permissionId.splice(
                                         checkedp.indexOf(e.target.value),
@@ -14270,7 +14275,6 @@ const ContentLogic = (props) => {
                                   }}
                                   value={i.id}
                                   checked={uroleData.permissions.includes(Number(i.id))}
-                                  // onChange={(e) => handleCheckboxChange(e, i.id)}
                                 />
                               }
                               label={i.displayName}

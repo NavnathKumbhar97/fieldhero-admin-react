@@ -862,6 +862,7 @@ const ContentLogic = (props) => {
     id: 0,
     name: "",
   });
+  const [checkedValues, setCheckedValues] = useState([]);
   const [checkedp, setCheckedP] = useState([...uroleData.permissions]);
   const [isChecked,setIsChecked] = useState(false)
   //state for store the input fields value of skillset
@@ -2930,8 +2931,8 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setURoleData({...uroleData,permissions:response.data.data.permissions});
-          setIsChecked(uroleData.permissions.includes(Number(uroleData.permissions)))
-          console.log("uroleData",uroleData);
+          setCheckedValues(response.data.data.permissions)
+          console.log("cheked",checkedValues);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -6675,7 +6676,7 @@ const ContentLogic = (props) => {
             }
           })
           .catch((error) => {
-            if (error.status == 400) {
+            if (error.status == 409) {
               setErrMsg(error.data.message);
               // window.alert(error.data.message);
               setErrMsg(true);
@@ -9327,20 +9328,22 @@ const ContentLogic = (props) => {
     }
   };
 
-  const handleCheckboxChange = (event, itemId) => {
-    if (event.target.checked) {
-      setCheckedP([...checkedp, itemId]);
-      console.log("checked",checkedp);
-    } else {
-      roleData.permissionId.splice(
-              checkedp.indexOf(event.target.value),
-              1
-            );}
 
-    setRoleData({
-      ...roleData,
-      permissionId: [...checkedp],
-    });
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    const numericValue = Number(value);
+    if (checked) {
+      // Add the checkbox value to the array
+      setCheckedValues([...checkedValues, numericValue]);
+      setRoleData({...roleData,permissionId:checkedValues})
+      console.log("checkedValues",checkedValues);
+      console.log("roledata",roleData);
+    } else {
+      // Remove the checkbox value from the array
+      setCheckedValues(checkedValues.filter((item) => item !== numericValue));
+      console.log("checkedValues after remove",checkedValues);
+
+    }
   };
 
 
@@ -14254,27 +14257,9 @@ const ContentLogic = (props) => {
                               style={{ display: "flex" }}
                               control={
                                 <Checkbox
-                                  // checked={uroleData.permissions?true:false}
-                                  // value={roleData.permissionId}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      checkedp.push(Number(i.id));
-                                      setRoleData({
-                                        ...roleData,
-                                        permissionId: [...checkedp],
-                                      });
-                                      console.log("checkedp",checkedp);
-                                      console.log("value",e.target.value);
-                                      console.log("roleData",roleData);
-                                    } else {
-                                      roleData.permissionId.splice(
-                                        checkedp.indexOf(e.target.value),
-                                        1
-                                      );
-                                    }
-                                  }}
+                                  onChange={handleCheckboxChange}
                                   value={i.id}
-                                  checked={uroleData.permissions.includes(Number(i.id))}
+                                  checked={checkedValues.includes(Number(i.id))}
                                 />
                               }
                               label={i.displayName}

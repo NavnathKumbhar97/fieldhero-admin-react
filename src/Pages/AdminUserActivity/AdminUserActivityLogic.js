@@ -82,7 +82,7 @@ const AdminUserActivityLogic = () => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true)
       try {
-        let response = await generalHandlers.dataGet(`/v1/userActivity/${id}`,
+        let response = await generalHandlers.dataGet(`/v1/admin-userActivity/${id}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }

@@ -9336,13 +9336,10 @@ const ContentLogic = (props) => {
       // Add the checkbox value to the array
       setCheckedValues([...checkedValues, numericValue]);
       setRoleData({...roleData,permissionId:checkedValues})
-      console.log("checkedValues",checkedValues);
-      console.log("roledata",roleData);
+      
     } else {
       // Remove the checkbox value from the array
       setCheckedValues(checkedValues.filter((item) => item !== numericValue));
-      console.log("checkedValues after remove",checkedValues);
-
     }
   };
 

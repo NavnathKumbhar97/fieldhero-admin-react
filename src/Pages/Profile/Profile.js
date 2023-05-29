@@ -238,7 +238,7 @@ export default function Profile() {
           <MenuItem component={Link} to={"/login-history"}>
             <HistoryIcon style={{ color: "blue" }}></HistoryIcon>
             <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
-              Login History
+              Login Activity
             </Typography>
           </MenuItem>
           <Divider></Divider>

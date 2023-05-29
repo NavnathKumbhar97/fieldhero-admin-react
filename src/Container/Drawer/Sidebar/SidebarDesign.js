@@ -32,6 +32,7 @@ import Admin from "../Admin/Admin";
 import { Link, Outlet } from "react-router-dom";
 import SidebarLogic from "./SidebarLogic";
 import { LogoDev } from "@mui/icons-material";
+import helpers from "../../../helpers";
 
 const drawerWidth = 300;
 
@@ -109,6 +110,30 @@ function SidebarDesign() {
     handleDrawerOpen
   } = SidebarLogic();
 
+  const localData = localStorage.getItem("user")
+  let convertTokenToObj = JSON.parse(localData);
+
+  const getAllPermission = convertTokenToObj.permissions
+
+  // Candidate Master Array
+const masterArray = [
+  helpers.permissions.candidate_read_all,
+  
+]
+const checkMaster = masterArray.filter((data) =>
+  getAllPermission.includes(data)
+)
+
+ // Candidate upload batch master array
+ const candidateUBatchArray = [
+  helpers.permissions.candidate_upload_batch_read_all,
+  
+]
+const checkCandidateUBatchArray = candidateUBatchArray.filter((data) =>
+  getAllPermission.includes(data)
+)
+
+
   return (
     <Box sx={{ display: "flex", }}>
       <CssBaseline />
@@ -168,7 +193,7 @@ function SidebarDesign() {
           </ListItem>
           {/* </Link> */}
           {/* <Link to="/candidate-master"> */}
-          <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+         {checkMaster.length? <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton >
               <ListItemIcon style={{ color: "white" }}>
                 <PermContactCalendarIcon />
@@ -176,10 +201,10 @@ function SidebarDesign() {
               Candidate Master
               <ListItemText />
             </ListItemButton>
-          </ListItem>
+          </ListItem>:""}
           {/* </Link> */}
           {/* <Link to=''> */}
-          <ListItem component={Link} to={"/candidate-upload-batch"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+          {checkCandidateUBatchArray.length?<ListItem component={Link} to={"/candidate-upload-batch"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <LayersIcon />
@@ -187,7 +212,7 @@ function SidebarDesign() {
               Candidate Upload Batch
               <ListItemText />
             </ListItemButton>
-          </ListItem>
+          </ListItem>:""}
           {/* </Link> */}
           {/* <Link to='/candidate-verification'> */}
           <ListItem component={Link} to={"/candidate-verification"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>

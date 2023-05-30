@@ -9,6 +9,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { ExpandLess } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import helpers from "../../../helpers";
 
 export default function Admin() {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +17,21 @@ export default function Admin() {
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const localData = localStorage.getItem("user")
+  let convertTokenToObj = JSON.parse(localData);
+
+  const getAllPermission = convertTokenToObj.permissions
+
+
+  // admin candidate upload batch array
+const adminCandidateUBatchArray = [
+  helpers.permissions.admin_candidate_upload_batch_change_pricing_template
+  
+]
+const checkAdminCandidateUBatchArrayy = adminCandidateUBatchArray.filter((data) =>
+  getAllPermission.includes(data)
+)
 
   return (
     <List
@@ -32,9 +48,9 @@ export default function Admin() {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List style={{ paddingLeft: "60px" }} component="div" disablePadding>
-          <ListItemButton component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
+         {checkAdminCandidateUBatchArrayy.length? <ListItemButton component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
             <ListItemText primary="Candidate Upload Batch" />
-          </ListItemButton>
+          </ListItemButton>:""}
           <ListItemButton component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
             <ListItemText primary="Batch Priority" />
           </ListItemButton>

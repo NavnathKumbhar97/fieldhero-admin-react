@@ -33,36 +33,73 @@ const checkAdminCandidateUBatchArrayy = adminCandidateUBatchArray.filter((data) 
   getAllPermission.includes(data)
 )
 
+  // admin batch priority array
+  const adminBatchPriorityArray = [
+    helpers.permissions.batch_priority_read_all
+    
+  ]
+  const checkBatchPriorityArrayy = adminBatchPriorityArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // admin other industry category array
+  const adminOtherIndustryArray = [
+    helpers.permissions.admin_other_industry_category_read_all
+    
+  ]
+  const checkOtherIndustryArrayy = adminOtherIndustryArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // admin user activity array
+  const adminUserActivityArray = [
+    helpers.permissions.admin_user_activity_read_all
+    
+  ]
+  const checkUserActivityArrayy = adminUserActivityArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // admin user login activity array
+  const adminUserLoginActivityArray = [
+    helpers.permissions.admin_user_activity_read_all
+    
+  ]
+  const checkUserLoginActivityArrayy = adminUserLoginActivityArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
   return (
     <List
       sx={{ width: "100%", maxWidth: 360, bgcolor: "brown" }}
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
-      <ListItemButton onClick={handleClick}>
+      {checkAdminCandidateUBatchArrayy.length || checkBatchPriorityArrayy.length || checkOtherIndustryArrayy.length
+      || checkUserActivityArrayy.length || checkUserLoginActivityArrayy.length ?<ListItemButton onClick={handleClick}>
         <ListItemIcon style={{ color: "white" }}>
           <AdminPanelSettingsIcon />
         </ListItemIcon>
         <ListItemText primary="Admin" />
         {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
+      </ListItemButton>:""}
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List style={{ paddingLeft: "60px" }} component="div" disablePadding>
          {checkAdminCandidateUBatchArrayy.length? <ListItemButton component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
             <ListItemText primary="Candidate Upload Batch" />
           </ListItemButton>:""}
-          <ListItemButton component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
+          {checkBatchPriorityArrayy.length?<ListItemButton component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
             <ListItemText primary="Batch Priority" />
-          </ListItemButton>
-          <ListItemButton component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
+          </ListItemButton>:""}
+          {checkOtherIndustryArrayy.length?<ListItemButton component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
             <ListItemText primary="Other Industry Category" />
-          </ListItemButton>
-          <ListItemButton component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
+          </ListItemButton>:""}
+          {checkUserActivityArrayy.length?<ListItemButton component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
             <ListItemText primary="User Activity"/>
-          </ListItemButton>
-          <ListItemButton component={Link} to={'admin-user-login-activity'} sx={{ pl: 4 }}>
+          </ListItemButton>:""}
+          {checkUserLoginActivityArrayy.length?<ListItemButton component={Link} to={'admin-user-login-activity'} sx={{ pl: 4 }}>
             <ListItemText primary="User Login Activity"/>
-          </ListItemButton>
+          </ListItemButton>:""}
         </List>
       </Collapse>
     </List>

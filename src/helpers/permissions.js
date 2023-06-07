@@ -71,7 +71,7 @@ export default {
     category_read_all: 69,
     category_read: 70,
     category_create: 71,
-    category_update: 72,
+    category_update: 372,
     admin_candidate_upload_batch_change_pricing_template: 73,
     admin_candidate_upload_batch_create: 74,
     candidate_upload_batch_create: 75,

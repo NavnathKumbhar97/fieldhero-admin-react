@@ -12,6 +12,7 @@ import ContentLogic from "./ContentLogic";
 import { Download, Edit, Visibility } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
 import moment from "moment";
+import helpers from "../../helpers";
 
 export default function ContentDesign(props) {
   const { data } = props;
@@ -158,6 +159,111 @@ export default function ContentDesign(props) {
     }
   }, [data.page, rowsPerPage]);
 
+
+
+  const localData = localStorage.getItem("user")
+  let convertTokenToObj = JSON.parse(localData);
+
+  const getAllPermission = convertTokenToObj.permissions
+
+     // Candidate upload batch Array
+     const candidateMasterArray = [
+      helpers.permissions.candidate_update,
+      
+    ]
+    const checkCandidateMasterArrayArray = candidateMasterArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const candidateVerificationArray = [
+      helpers.permissions.candidate_verification_update,
+      
+    ]
+    const checkCandidateVerificationArray = candidateVerificationArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const agentMasterArray = [
+      helpers.permissions.agent_update,
+      
+    ]
+    const checkAgentMasterArray = agentMasterArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const agentPricingTemlateArray = [
+      helpers.permissions.agent_pricing_template_read,
+      
+    ]
+    const checkAgentPricingTemlateArrayArray = agentPricingTemlateArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const adminCandidateUploadBatchArray = [
+      helpers.permissions.admin_candidate_upload_batch_approval,
+      
+    ]
+    const checkAdminCandidateUploadBatchArrayArray = adminCandidateUploadBatchArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const categoryArray = [
+      helpers.permissions.category_update,
+      
+    ]
+    const checkCategoryArray = categoryArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+    
+     // Candidate upload batch Array
+     const companyArray = [
+      helpers.permissions.company_update,
+      
+    ]
+    const checkCompanyArray = companyArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const customerArray = [
+      helpers.permissions.customer_subscription_update,
+      
+    ]
+    const checkCustomerArray = customerArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const industryArray = [
+      helpers.permissions.industry_update,
+      
+    ]
+    const checkIndustryArray = industryArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const skillsetArray = [
+      helpers.permissions.skill_update,
+      
+    ]
+    const checkSkillsetArray = skillsetArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const subscriptionArray = [
+      helpers.permissions.subscription_update,
+      
+    ]
+    const checkSubscriptionArray = subscriptionArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+     // Candidate upload batch Array
+     const userArray = [
+      helpers.permissions.user_update,
+      
+    ]
+    const checkUserArray = userArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+
   //handle the table data
   const handleTblData = () => {
     switch (data.page) {
@@ -229,7 +335,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Button
+                    {checkCandidateMasterArrayArray.length?<Button
                       style={{ color: "brown", marginLeft: "-10px" }}
                       onClick={() => {
                         setEditId(tblData[item].id);
@@ -240,7 +346,7 @@ export default function ContentDesign(props) {
                       }}
                     >
                       <Edit /> Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -340,7 +446,7 @@ export default function ContentDesign(props) {
                     {tblData[item].callStatus}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                   {checkCandidateVerificationArray.length? <Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -354,7 +460,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -431,7 +537,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                   {checkAgentMasterArray.length? <Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -444,7 +550,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -524,7 +630,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkAgentPricingTemlateArrayArray.length?<Button
                       onClick={() => {
                         handleOpenCandidateModal();
                         setEditId(tblData[item].id);
@@ -536,7 +642,7 @@ export default function ContentDesign(props) {
                     >
                       <Visibility />
                       View
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -598,14 +704,14 @@ export default function ContentDesign(props) {
                   <TableCell align="left">{tblData[item].createdBy}</TableCell>
                   <TableCell align="left">{tblData[item].role}</TableCell>
                   <TableCell aria-label="Approval" align="center">
-                    {filterTableOnTabs==="pending-approval"?<Button onClick={(e)=>{
+                    {filterTableOnTabs==="pending-approval"?(<>{checkAdminCandidateUploadBatchArrayArray.length?<Button onClick={(e)=>{
                       handleOpenConfirmation()
                       setOpenApproval(tblData[item].AgentPricingTemplate===null?false:true)
                       console.log("testing id",tblData[item].AgentPricingTemplate===null?"working":"not working")
                       setConfirmationData(tblData[item])
                       }} title="Approval">
                       <ArticleIcon />
-                    </Button>:null}
+                    </Button>:""}</>):null}
                     <Button title="Download Rejection Summary">
                       <Download />
                     </Button>
@@ -675,7 +781,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkCategoryArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -687,7 +793,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -762,7 +868,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkCompanyArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -775,7 +881,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -838,7 +944,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkCustomerArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -850,7 +956,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -912,7 +1018,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkIndustryArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -925,7 +1031,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -1070,7 +1176,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkSkillsetArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -1083,7 +1189,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -1158,7 +1264,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkSubscriptionArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -1171,7 +1277,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>
@@ -1247,7 +1353,7 @@ export default function ContentDesign(props) {
                     )}
                   </TableCell>
                   <TableCell align="left">
-                    <Button
+                    {checkUserArray.length?<Button
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();
@@ -1259,7 +1365,7 @@ export default function ContentDesign(props) {
                     >
                       <Edit />
                       Edit
-                    </Button>
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>

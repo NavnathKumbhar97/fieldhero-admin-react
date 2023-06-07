@@ -8485,6 +8485,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
           const checkUpdateRoleArray = roleUpdateArray.filter((data) =>
             getAllPermission.includes(data)
           )
+
   //it handle the buttons of content page
   const handleButtons = () => {
     switch (pageName) {
@@ -8998,14 +8999,14 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   style={{ alignItem: "center", marginLeft: "110px" }}
                   action={
                     <IconButton aria-label="Edit">
-                      <EditIcon
+                     {checkAdminBatchPriorityArrayArray.length? <EditIcon
                         onClick={() => {
                           setEditStatus(true);
                           setId(updateBatchPriority[item].assignedTo[item].id);
                           setOpenAddBtchprty(true);
                         }}
                         style={{ color: "#d32f2f" }}
-                      />
+                      />:""}
                     </IconButton>
                   }
                   title="Batch no"

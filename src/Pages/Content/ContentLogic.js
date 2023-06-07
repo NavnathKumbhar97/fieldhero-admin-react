@@ -8324,13 +8324,174 @@ const ContentLogic = (props) => {
     }
   };
 
+  const localData = localStorage.getItem("user")
+  let convertTokenToObj = JSON.parse(localData);
+
+  const getAllPermission = convertTokenToObj.permissions
+
+    // Candidate Master Array
+const masterArray = [
+  helpers.permissions.candidate_create,
+  
+]
+const checkMaster = masterArray.filter((data) =>
+  getAllPermission.includes(data)
+)
+    // Candidate upload batch Array
+const candidateUploadBatchArray = [
+  helpers.permissions.candidate_upload_batch_create,
+  
+]
+const checkCandidateUploadBatchArray = candidateUploadBatchArray.filter((data) =>
+  getAllPermission.includes(data)
+)
+    // Candidate upload batch Array
+const candidateUploadBatchChangePricingArray = [
+  helpers.permissions.admin_candidate_upload_batch_change_pricing_template,
+  
+]
+const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePricingArray.filter((data) =>
+  getAllPermission.includes(data)
+)
+
+   // Candidate upload batch Array
+    const candidateVerificationArray = [
+      helpers.permissions.candidate_verification_create,
+      
+    ]
+    const checkCandidateVerificationPricingArray = candidateVerificationArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+  // Candidate upload batch Array
+  const agentMasterArray = [
+    helpers.permissions.agent_create,
+    
+  ]
+  const checkAgentMasterArray = agentMasterArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // Candidate upload batch Array
+  const agentPricingTempleteArray = [
+    helpers.permissions.agent_pricing_template_create,
+    
+  ]
+  const checkAgentPricingTemplateArray = agentPricingTempleteArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+  // Candidate upload batch Array
+  const agentPricingTempleteSetActiveArray = [
+    helpers.permissions.agent_pricing_template_set_active,
+    
+  ]
+  const checkAgentPricingTempleteSetActiveArrayArray = agentPricingTempleteSetActiveArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // Candidate upload batch Array
+  const adminCandidateUploadBatchArray = [
+    helpers.permissions.admin_candidate_upload_batch_create,
+    
+  ]
+  const checkAdminCandidateUploadBatchArray = adminCandidateUploadBatchArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+  // Candidate upload batch Array
+  const adminBatchPriorityArray = [
+    helpers.permissions.batch_priority_create,
+    
+  ]
+  const checkAdminBatchPriorityArrayArray = adminBatchPriorityArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+   // Candidate upload batch Array
+   const categoryArray = [
+    helpers.permissions.category_create,
+    
+  ]
+  const checkCategoryArrayArray = categoryArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+   // Candidate upload batch Array
+   const companyArray = [
+    helpers.permissions.company_create,
+    
+  ]
+  const checkCompanyArray = companyArray.filter((data) =>
+    getAllPermission.includes(data)
+  )
+
+     // Candidate upload batch Array
+     const customerArray = [
+      helpers.permissions.customer_subscription_create,
+      
+    ]
+    const checkCustomerArray = customerArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+
+      // Candidate upload batch Array
+      const industryArray = [
+        helpers.permissions.industry_create,
+        
+      ]
+      const checkIndustryArray = industryArray.filter((data) =>
+        getAllPermission.includes(data)
+      )
+    // Candidate upload batch Array
+    const skillsetArray = [
+      helpers.permissions.skill_create,
+      
+    ]
+    const checkSkillsetArray = skillsetArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+  
+    // Candidate upload batch Array
+    const subscriptionArray = [
+      helpers.permissions.subscription_create,
+      
+    ]
+    const checkSubscriptionArray = subscriptionArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+
+     // Candidate upload batch Array
+     const userArray = [
+      helpers.permissions.user_create,
+      
+    ]
+    const checkUserArray = userArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+
+      // Candidate upload batch Array
+      const roleArray = [
+        helpers.permissions.role_create,
+        
+      ]
+      const checkRoleArray = roleArray.filter((data) =>
+        getAllPermission.includes(data)
+      )
+    
+          // Candidate upload batch Array
+          const roleUpdateArray = [
+            helpers.permissions.role_update,
+            
+          ]
+          const checkUpdateRoleArray = roleUpdateArray.filter((data) =>
+            getAllPermission.includes(data)
+          )
   //it handle the buttons of content page
   const handleButtons = () => {
     switch (pageName) {
       case "candidate-master":
         return (
           <>
-            <Button
+            {checkMaster.length?<Button
               onClick={handleOpenCandidateModal}
               style={{
                 marginTop: "0px",
@@ -8342,14 +8503,14 @@ const ContentLogic = (props) => {
             >
               <AddIcon />
               {buttonText}
-            </Button>
+            </Button>:"twst"}
           </>
         );
       case "candidate-upload-batch":
         return (
           <>
-            {!editStatus ? (
-              <Button
+            {!editStatus ? (<>
+              {checkCandidateUploadBatchArray.length?<Button
                 onClick={handleOpenCandidateModal}
                 style={{
                   marginTop: "60px",
@@ -8357,13 +8518,15 @@ const ContentLogic = (props) => {
                   backgroundColor: "brown",
                   color: "white",
                 }}
+                
                 variant="outlined"
               >
                 <FileUploadIcon />
                 {buttonText}
-              </Button>
-            ) : (
-              <Button
+              </Button>:""}
+              </>
+            ) : (<>
+              {checkCandidateUploadBatchChangePricingArray.length?<Button
                 onClick={() => {
                   handleClickOpenAdminCanUplBtch();
                   getAgentPricingForCndUplBatchAPICalls();
@@ -8378,14 +8541,14 @@ const ContentLogic = (props) => {
               >
                 {/* <FileUploadIcon /> */}
                 Change Pricing Template
-              </Button>
+              </Button>:""}</>
             )}
           </>
         );
       case "candidate-verification":
         return (
           <>
-            <Button
+            {checkCandidateVerificationPricingArray.length?<Button
               onClick={() => addAPICalls("candidate-verification")}
               style={{
                 marginTop: "80px",
@@ -8397,13 +8560,13 @@ const ContentLogic = (props) => {
             >
               <AddIcon />
               {buttonText}
-            </Button>
+            </Button>:""}
           </>
         );
       case "agent-master":
         return (
           <>
-            <Button
+            {checkAgentMasterArray.length?<Button
               onClick={handleOpenCandidateModal}
               style={{
                 marginTop: "50px",
@@ -8415,14 +8578,14 @@ const ContentLogic = (props) => {
             >
               <AddIcon />
               {buttonText}
-            </Button>
+            </Button>:""}
           </>
         );
       case "agent-pricing-template":
         return (
           <>
-            {editStatus ? (
-              <Button
+            {editStatus ? (<>
+              {checkAgentPricingTempleteSetActiveArrayArray.length?<Button
                 onClick={() => {
                   updateAPICalls("agent-pricing-template");
                 }}
@@ -8436,9 +8599,10 @@ const ContentLogic = (props) => {
               >
                 <ToggleOn />
                 Set Active
-              </Button>
-            ) : (
-              <Button
+              </Button>:""}
+              </>
+            ) : (<>
+              {checkAgentPricingTemplateArray.length?<Button
                 onClick={handleOpenCandidateModal}
                 style={{
                   marginTop: "80px",
@@ -8450,15 +8614,16 @@ const ContentLogic = (props) => {
               >
                 <AddIcon />
                 {buttonText}
-              </Button>
+              </Button>:""}
+              </>
             )}
           </>
         );
       case "candidate-upload-batch-admin":
         return (
           <>
-            {!editStatus ? (
-              <Button
+            {!editStatus ? (<>
+              {checkAdminCandidateUploadBatchArray.length?<Button
                 onClick={handleClickOpenAdminCanUplBtch}
                 style={{
                   marginTop: "80px",
@@ -8470,7 +8635,8 @@ const ContentLogic = (props) => {
               >
                 <FileUploadIcon />
                 {buttonText}
-              </Button>
+              </Button>:""}
+              </>
             ) : (
               <Button
                 onClick={() => {
@@ -8495,7 +8661,7 @@ const ContentLogic = (props) => {
       case "batch-priority":
         return (
           <>
-            <Button
+            {checkAdminBatchPriorityArrayArray.length?<Button
               onClick={handleClickOpenAddBtchprty}
               style={{
                 marginTop: "0px",
@@ -8507,7 +8673,7 @@ const ContentLogic = (props) => {
             >
               <AddIcon />
               {buttonText}
-            </Button>
+            </Button>:""}
           </>
         );
       case "other-industry-category":
@@ -8515,8 +8681,8 @@ const ContentLogic = (props) => {
       case "role":
         return (
           <>
-            {editStatus ? (
-              <Button
+            {editStatus ? (<>
+              {checkUpdateRoleArray.length?<Button
                 onClick={() => {
                   handleOpenCandidateModal();
                   getRoleByIdAPIcall();
@@ -8533,9 +8699,10 @@ const ContentLogic = (props) => {
               >
                 <EditIcon />
                 Edit
-              </Button>
-            ) : (
-              <Button
+              </Button>:""}
+              </>
+            ) : (<>
+              {checkRoleArray.length?<Button
                 onClick={() => {
                   handleOpenCandidateModal();
                   getPermissionsAPIcall();
@@ -8550,32 +8717,15 @@ const ContentLogic = (props) => {
               >
                 <AddIcon />
                 {buttonText}
-              </Button>
+              </Button>:""}</>
             )}
           </>
         );
       case "user":
         return (
           <>
-            {editStatus ? (
-              <Button
-                onClick={() => {
-                  handleOpenCandidateModal();
-                  getUserAPIcallById();
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <EditIcon />
-                Edit
-              </Button>
-            ) : (
-              <Button
+           
+              {checkUserArray.length?<Button
                 onClick={handleOpenCandidateModal}
                 style={{
                   marginTop: "80px",
@@ -8587,8 +8737,8 @@ const ContentLogic = (props) => {
               >
                 <AddIcon />
                 {buttonText}
-              </Button>
-            )}
+              </Button>:""}
+          
           </>
         );
       case "login-history":
@@ -8599,7 +8749,115 @@ const ContentLogic = (props) => {
         return null;
       case "admin-user-login-activity":
         return null;
-
+      case "category":
+        return (
+          <>
+            
+              {checkCategoryArrayArray.length?<Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>:""}
+          </>
+        );
+      case "company":
+        return (
+          <>
+              {checkCompanyArray.length?<Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>:""}
+          </>
+        );
+      case "customer":
+          return (
+            <>
+                {checkCustomerArray.length?<Button
+                  onClick={handleOpenCandidateModal}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>:""}
+            </>
+          );
+      case "industry":
+            return (
+              <>
+                  {checkIndustryArray.length?<Button
+                    onClick={handleOpenCandidateModal}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "5px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <AddIcon />
+                    {buttonText}
+                  </Button>:""}
+              </>
+            );
+      case "skillset":
+        return (
+          <>
+              {checkSkillsetArray.length?<Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>:""}
+          </>
+        );
+      case "subscription":
+          return (
+            <>
+                {checkSubscriptionArray.length?<Button
+                  onClick={handleOpenCandidateModal}
+                  style={{
+                    marginTop: "80px",
+                    marginRight: "5px",
+                    backgroundColor: "brown",
+                    color: "white",
+                  }}
+                  variant="outlined"
+                >
+                  <AddIcon />
+                  {buttonText}
+                </Button>:""}
+            </>
+          );
       default:
         return (
           <>

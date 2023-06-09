@@ -35,6 +35,7 @@ import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import helpers from "../../helpers";
 
 const settings = ["Navnath Kumbhar", "CHANGE PASSWORD", "SIGN OUT"];
 
@@ -118,9 +119,6 @@ export default function Profile() {
 
   const localData = localStorage.getItem("user");
   let loc = JSON.parse(localData);
-  console.log(loc.name);
-  // setLocalStorageData(loc)
-  // console.log(localStorageData);
 
   const validation= Yup.object().shape({
     old_password: Yup.string()
@@ -173,8 +171,20 @@ export default function Profile() {
     height: 22,
     border: `2px solid ${theme.palette.background.paper}`,
   }));
-  
 
+  let convertTokenToObj = JSON.parse(localData);
+
+  const getAllPermission = convertTokenToObj.permissions
+
+     // Candidate upload batch Array
+     const chnagePassArray = [
+      helpers.permissions.user_self_change_password,
+      
+    ]
+    const checkChangePassArray = chnagePassArray.filter((data) =>
+      getAllPermission.includes(data)
+    )
+  
   return (
     <div>
       <Box sx={{ mr: "30px" }}>
@@ -227,13 +237,13 @@ export default function Profile() {
             {loc.userEmail}
           </p>
           <Divider></Divider>
-          <MenuItem onClick={handleOpenChangePassModal}>
+          {checkChangePassArray.length?<MenuItem onClick={handleOpenChangePassModal}>
             <KeyIcon style={{ color: "orange" }}/>
             <Typography textAlign="center" style={{ paddingLeft: "20px" }}>
               {" "}
               Change Password
             </Typography>
-          </MenuItem>
+          </MenuItem>:""}
           <Divider></Divider>
           <MenuItem component={Link} to={"/login-history"}>
             <HistoryIcon style={{ color: "blue" }}></HistoryIcon>

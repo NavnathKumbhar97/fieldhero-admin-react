@@ -32,7 +32,7 @@ export default function OtherMaster() {
 
    // company array
    const otherMasterCompanyArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.company_read_all
     
   ]
   const checkOtherMasterCompanyArrayy = otherMasterCompanyArray.filter((data) =>
@@ -40,7 +40,7 @@ export default function OtherMaster() {
   )
    // industry array
    const otherMasterIndustryArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.industry_read_all
     
   ]
   const checkOtherMasterIndustryArrayy = otherMasterIndustryArray.filter((data) =>
@@ -48,7 +48,7 @@ export default function OtherMaster() {
   )
    // customer array
    const otherMasterCustomerArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.customer_read_all
     
   ]
   const checkOtherMasterCustomerArrayy = otherMasterCustomerArray.filter((data) =>
@@ -56,7 +56,7 @@ export default function OtherMaster() {
   )
    // role array
    const otherMasterRoleArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.role_read_all
     
   ]
   const checkOtherMasterRoleArrayy = otherMasterRoleArray.filter((data) =>
@@ -64,7 +64,7 @@ export default function OtherMaster() {
   )
    // skillset array
    const otherMasterSkillsetArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.skill_read_all
     
   ]
   const checkOtherMasterSkillsetArrayy = otherMasterSkillsetArray.filter((data) =>
@@ -72,7 +72,7 @@ export default function OtherMaster() {
   )
    // subscription array
    const otherMasterSubscriptionArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.subscription_read_all
     
   ]
   const checkOtherMasterSubscriptionArrayy = otherMasterSubscriptionArray.filter((data) =>
@@ -80,7 +80,7 @@ export default function OtherMaster() {
   )
    // user array
    const otherMasterUserArray = [
-    helpers.permissions.category_read_all
+    helpers.permissions.user_read_all
     
   ]
   const checkOtherMasterUserArrayy = otherMasterUserArray.filter((data) =>

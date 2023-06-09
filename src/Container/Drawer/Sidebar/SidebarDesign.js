@@ -219,7 +219,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>
           {/* </Link> */}
           {/* <Link to="/candidate-master"> */}
-         {checkMaster.length? <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+         {getAllPermission.includes(helpers.permissions.candidate_read_all)? <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton >
               <ListItemIcon style={{ color: "white" }}>
                 <PermContactCalendarIcon />

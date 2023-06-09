@@ -11247,7 +11247,6 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                           },
                         }));
                         setCandidateCallStatusVal(e.target.value);
-                        console.log("testing", e.target.value);
                       }}
                       value={
                         updateCandidateVerificationData.callCentre.callStatus

@@ -69,7 +69,7 @@ import {
   TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import CloudDoneIcon from '@mui/icons-material/CloudDone';
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -117,18 +117,20 @@ import handlers from "../../handlers";
 import LoginHistoryDesign from "../LoginHistory/LoginHistoryDesign";
 import UserActivityDesign from "../../reusable/UserActivity/UserActivityDesign";
 import AdminUserActivityDesign from "../AdminUserActivity/AdminUserActivityDesign";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import AdminUserLoginActivityDesign from "../AdminUserLoginActivity/AdminUserLoginActivityDesign";
+import { useScrollTrigger } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-
 const ContentLogic = (props) => {
   //Common States
   const dispatch = useDispatch();
-  const auditLogData = useSelector((state)=>state.user)
+  const auditLogData = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
@@ -185,11 +187,13 @@ const ContentLogic = (props) => {
     });
   const [candidateUploadBatchAdminData, setCandidateUploadBatchAdminData] =
     useState({});
-  const [candidateUploadBatchAdminDataAudit, setCandidateUploadBatchAdminDataAudit] =
-    useState({
-      id:0,
-      templateName:''
-    });
+  const [
+    candidateUploadBatchAdminDataAudit,
+    setCandidateUploadBatchAdminDataAudit,
+  ] = useState({
+    id: 0,
+    templateName: "",
+  });
   const [cndUpdBatchAdmin, setCndUpdBatchAdmin] = useState({
     id: 0,
     templateName: "",
@@ -206,7 +210,7 @@ const ContentLogic = (props) => {
   const [activeStep, setActiveStep] = useState(0);
   const [candidateMasterData, setCandidateMasterData] = useState({
     aadharNo: "",
-    profImgPath:"",
+    profImgPath: "",
     dob: null,
     permAddress: "",
     contactNo1: "",
@@ -246,7 +250,7 @@ const ContentLogic = (props) => {
   const [updateCandidateMasterData, setUpdateCandidateMasterData] = useState({
     aadharNo: "",
     dob: "",
-    profImgPath:"",
+    profImgPath: "",
     gender: "MALE",
     permAddress: "",
     contactNo1: "",
@@ -284,46 +288,47 @@ const ContentLogic = (props) => {
     education: ``,
   });
   //audit log state
-  const [updateCandidateMasterDataAudit, setUpdateCandidateMasterDataAudit] = useState({
-    aadharNo: "",
-    dob: "",
-    profImgPath:"",
-    gender: "MALE",
-    permAddress: "",
-    contactNo1: "",
-    contactNo2: "",
-    currAddress: "",
-    currCity: "",
-    currCountry: "India",
-    currState: "",
-    currZip: "",
-    email1: "",
-    email2: "",
-    fullName: "",
-    gender: "",
-    permAddress: "",
-    permCity: "",
-    permCountry: "India",
-    permState: "",
-    permZip: "",
-    registrationStatus: "",
-    totalExpMonths: "",
-    totalExpYears: "",
-    birthDate: "",
-    isActive: true,
-    industry: ``,
-    category: ``,
-    expYears: ``,
-    prefLocation1: ``,
-    prefLocation2: ``,
-    skill1: ``,
-    skill2: ``,
-    primaryLang: ``,
-    secondaryLang: ``,
-    lastCompany: ``,
-    designation: ``,
-    education: ``,
-  });
+  const [updateCandidateMasterDataAudit, setUpdateCandidateMasterDataAudit] =
+    useState({
+      aadharNo: "",
+      dob: "",
+      profImgPath: "",
+      gender: "MALE",
+      permAddress: "",
+      contactNo1: "",
+      contactNo2: "",
+      currAddress: "",
+      currCity: "",
+      currCountry: "India",
+      currState: "",
+      currZip: "",
+      email1: "",
+      email2: "",
+      fullName: "",
+      gender: "",
+      permAddress: "",
+      permCity: "",
+      permCountry: "India",
+      permState: "",
+      permZip: "",
+      registrationStatus: "",
+      totalExpMonths: "",
+      totalExpYears: "",
+      birthDate: "",
+      isActive: true,
+      industry: ``,
+      category: ``,
+      expYears: ``,
+      prefLocation1: ``,
+      prefLocation2: ``,
+      skill1: ``,
+      skill2: ``,
+      primaryLang: ``,
+      secondaryLang: ``,
+      lastCompany: ``,
+      designation: ``,
+      education: ``,
+    });
 
   const [image, setImage] = useState();
 
@@ -468,125 +473,127 @@ const ContentLogic = (props) => {
         candidateConsent: "",
       },
     });
-    const [updateCandidateVerificationDataAuditLog, setUpdateCandidateVerificationDataAuditLog] =
-    useState({
-      aadharNo: 0,
-      batchNo: 0,
-      callCentre: "",
+  const [
+    updateCandidateVerificationDataAuditLog,
+    setUpdateCandidateVerificationDataAuditLog,
+  ] = useState({
+    aadharNo: 0,
+    batchNo: 0,
+    callCentre: "",
+    category: "",
+    contactNo1: "",
+    contactNo2: "",
+    createdBy: "",
+    currAddress: "",
+    currCity: "",
+    currState: "",
+    currZip: "",
+    designation: "",
+    dlNo: "",
+    dob: "",
+    education: "",
+    educationRaw: "",
+    email1: "",
+    expYears: "",
+    fullName: "",
+    gender: "",
+    industry: "",
+    lastCompany: "",
+    note: "",
+    panNo: "",
+    permAddress: "",
+    permCity: "",
+    permState: "",
+    permZip: "",
+    preferLocation1: "",
+    preferLocation2: "",
+    primaryLanguage: "",
+    primaryLanguageRaw: "",
+    role: "",
+    rowNo: 0,
+    secondaryLanguage: "",
+    secondaryLanguageRaw: "",
+    skill1: "",
+    skill2: "",
+    status: "",
+    thirdLanguage: "",
+    industries: [
+      {
+        id: 3,
+        title: "",
+      },
+      {
+        id: 5,
+        title: "",
+      },
+    ],
+    verification: {
+      candidateId: 0,
       category: "",
       contactNo1: "",
-      contactNo2: "",
       createdBy: "",
-      currAddress: "",
+      createdOn: "",
       currCity: "",
-      currState: "",
       currZip: "",
       designation: "",
-      dlNo: "",
       dob: "",
       education: "",
-      educationRaw: "",
       email1: "",
       expYears: "",
       fullName: "",
-      gender: "",
+      id: 0,
       industry: "",
       lastCompany: "",
-      note: "",
-      panNo: "",
-      permAddress: "",
-      permCity: "",
-      permState: "",
-      permZip: "",
+      modifiedBy: 0,
+      modifiedOn: "",
       preferLocation1: "",
       preferLocation2: "",
       primaryLanguage: "",
-      primaryLanguageRaw: "",
-      role: "",
-      rowNo: 0,
       secondaryLanguage: "",
-      secondaryLanguageRaw: "",
       skill1: "",
       skill2: "",
-      status: "",
-      thirdLanguage: "",
-      industries: [
-        {
-          id: 3,
-          title: "",
-        },
-        {
-          id: 5,
-          title: "",
-        },
-      ],
-      verification: {
-        candidateId: 0,
-        category: "",
-        contactNo1: "",
-        createdBy: "",
-        createdOn: "",
-        currCity: "",
-        currZip: "",
-        designation: "",
-        dob: "",
-        education: "",
-        email1: "",
-        expYears: "",
-        fullName: "",
-        id: 0,
-        industry: "",
-        lastCompany: "",
-        modifiedBy: 0,
-        modifiedOn: "",
-        preferLocation1: "",
-        preferLocation2: "",
-        primaryLanguage: "",
-        secondaryLanguage: "",
-        skill1: "",
-        skill2: "",
-      },
+    },
 
-      categories: [
-        {
-          id: 0,
-          title: "",
-        },
-      ],
-      CandidateCategory: [
-        {
-          categoryId: 0,
-          id: 0,
-          title: "",
-        },
-      ],
-      CandidateIndustry: [
-        {
-          title: "",
-          industryId: 0,
-          id: 0,
-        },
-      ],
-      CandidateWorkHistory: [
-        {
-          industryId: 0,
-          id: 0,
-          company: "",
-          industryTitle: "",
-          categoryId: 0,
-          categoryTitle: "",
-          endDate: "",
-          startDate: "",
-          isEmployed: false,
-          description: "",
-        },
-      ],
-      callCentre: {
+    categories: [
+      {
         id: 0,
-        callStatus: "",
-        candidateConsent: "",
+        title: "",
       },
-    });
+    ],
+    CandidateCategory: [
+      {
+        categoryId: 0,
+        id: 0,
+        title: "",
+      },
+    ],
+    CandidateIndustry: [
+      {
+        title: "",
+        industryId: 0,
+        id: 0,
+      },
+    ],
+    CandidateWorkHistory: [
+      {
+        industryId: 0,
+        id: 0,
+        company: "",
+        industryTitle: "",
+        categoryId: 0,
+        categoryTitle: "",
+        endDate: "",
+        startDate: "",
+        isEmployed: false,
+        description: "",
+      },
+    ],
+    callCentre: {
+      id: 0,
+      callStatus: "",
+      candidateConsent: "",
+    },
+  });
   const [filterForCndVerifiction, setFilterForCndVerifiction] = useState();
 
   //states for the agent master module
@@ -627,16 +634,16 @@ const ContentLogic = (props) => {
     workLocation1: "",
     workLocation2: "",
     status: "",
-    panCardPath:"",
-    docPoiPath:"",
-    docPoitype:"",
-    docPoiValue:"",
-    docBankPath:"",
-    docBanktype:"",
-    docBankValue:"",
-    docPoaPath:"",
-    docPoaValue:"",
-    docPoatype:""
+    panCardPath: "",
+    docPoiPath: "",
+    docPoitype: "",
+    docPoiValue: "",
+    docBankPath: "",
+    docBanktype: "",
+    docBankValue: "",
+    docPoaPath: "",
+    docPoaValue: "",
+    docPoatype: "",
   });
   const [agentMasterDataAudit, setAgentMasterDataAudit] = useState({
     fullName: "",
@@ -672,16 +679,16 @@ const ContentLogic = (props) => {
     workLocation1: "",
     workLocation2: "",
     status: "",
-    panCardPath:"",
-    docPoiPath:"",
-    docPoitype:"",
-    docPoiValue:"",
-    docBankPath:"",
-    docBanktype:"",
-    docBankValue:"",
-    docPoaPath:"",
-    docPoaValue:"",
-    docPoatype:""
+    panCardPath: "",
+    docPoiPath: "",
+    docPoitype: "",
+    docPoiValue: "",
+    docBankPath: "",
+    docBanktype: "",
+    docBankValue: "",
+    docPoaPath: "",
+    docPoaValue: "",
+    docPoatype: "",
   });
   const [agentPricingTemplateData, setAgentPricingTemplateData] = useState({
     templateName: "",
@@ -717,10 +724,10 @@ const ContentLogic = (props) => {
   const [agentMasterPOA, setAgentMasterPOA] = useState();
   const [agentMasterBankDoc, setAgentMasterBankDoc] = useState();
 
-  const [panUploadDone,setPanUploadDone] = useState(false)
-  const [IdUploadDone,setIdUploadDone] = useState(false)
-  const [pOfAddUploadDone,setPOfAddUploadDone] = useState(false)
-  const [bankDocUploadDone,setBankDocUploadDone] = useState(false)
+  const [panUploadDone, setPanUploadDone] = useState(false);
+  const [IdUploadDone, setIdUploadDone] = useState(false);
+  const [pOfAddUploadDone, setPOfAddUploadDone] = useState(false);
+  const [bankDocUploadDone, setBankDocUploadDone] = useState(false);
 
   // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
@@ -745,9 +752,9 @@ const ContentLogic = (props) => {
   const [editId, setEditId] = useState();
   const [editStatus, setEditStatus] = useState(false);
 
-  const [showAudit,setShowAudit] = useState(false)
+  const [showAudit, setShowAudit] = useState(false);
 
-  //State used for to set the same address 
+  //State used for to set the same address
   const [sameAddress, setSameAddress] = useState(false);
 
   //Used to select multiple value from select field for batch priority module
@@ -772,7 +779,7 @@ const ContentLogic = (props) => {
     modifiedBy: 0,
     modifiedOn: "",
   });
-  //state for handle audit 
+  //state for handle audit
   const [categoryDataAudit, setCategoryDataAudit] = useState({
     title: "",
     description: "",
@@ -805,46 +812,42 @@ const ContentLogic = (props) => {
 
   //state for store the input fields value of customer
   const [customerData, setCustomerData] = useState({
-    fullName:'',
+    fullName: "",
     companyName: " ",
-    dob:null,
-    gender:'',
-    state:'',
-    country:'INDIA',
-    profileImage:'',
+    dob: null,
+    gender: "",
+    state: "",
+    country: "INDIA",
+    profileImage: "",
     isActive: true,
   });
   const [customerDataAudit, setCustomerDataAudit] = useState({
-    fullName:'',
+    fullName: "",
     companyName: " ",
-    dob:null,
-    gender:'',
-    state:'',
-    country:'INDIA',
-    profileImage:'',
+    dob: null,
+    gender: "",
+    state: "",
+    country: "INDIA",
+    profileImage: "",
     isActive: true,
   });
   const [filterDataForCustomer, setFilterDataForCustomer] = useState([]);
 
   //state for store the input fields value of industry
-  const [industryData, setIndustryData] = useState(
-    {
-      title: "",
-      description: "",
-      isActive: true,
-      id: 0,
-    },
-  );
-  const [industryDataAudit, setIndustryDataAudit] = useState(
-    {
-      title: "",
-      description: "",
-      isActive: true,
-      id: 0,
-    },
-  );
+  const [industryData, setIndustryData] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+    id: 0,
+  });
+  const [industryDataAudit, setIndustryDataAudit] = useState({
+    title: "",
+    description: "",
+    isActive: true,
+    id: 0,
+  });
   const [filterDataForIndustry, setFilterDataForIndustry] = useState([]);
-  
+
   //state for store the input fields value of role
   const [permissions, setPermissions] = useState([]);
   const [uroleData, setURoleData] = useState({
@@ -864,7 +867,7 @@ const ContentLogic = (props) => {
   });
   const [checkedValues, setCheckedValues] = useState([]);
   const [checkedp, setCheckedP] = useState([...uroleData.permissions]);
-  const [isChecked,setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
   //state for store the input fields value of skillset
   const [filterDataForSkillSets, setFilterDataForSkillSets] = useState([]);
   const [skillSetData, setSkillSetData] = useState({
@@ -887,7 +890,7 @@ const ContentLogic = (props) => {
     note: "",
     isActive: true,
   });
-  // For Audit Log 
+  // For Audit Log
   const [subscriptionDataForAudit, setSubscriptionDataForAudit] = useState({
     planName: "",
     dataCount: 1,
@@ -989,12 +992,12 @@ const ContentLogic = (props) => {
     description: "",
     id: 20,
     itemIdtoUpdate: 17601,
-    mode: '',
+    mode: "",
     text: "",
     type: "INDUSTRY",
   });
   const [filterDataForCategory, setFilterDataForCategory] = useState([]);
- 
+
   const [otherIndCategory, setOtherIndCategory] = useState([]);
   const [otherIndCategoryResult, setOtherIndCategoryResult] = useState([]);
   const [otherIndCategoryStats, setOtherIndCategoryStats] = useState([]);
@@ -1185,13 +1188,13 @@ const ContentLogic = (props) => {
   const handleCloseCandidateModal = () => {
     setOpenCandidateModal(false);
     setEditStatus(false);
-    setShowAudit(false)
+    setShowAudit(false);
   };
   const handleOpenCandidateModal = () => {
     setOpenCandidateModal(true);
   };
 
-  //Used to Exapand info about batch priority 
+  //Used to Exapand info about batch priority
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -2033,7 +2036,7 @@ const ContentLogic = (props) => {
       label: "Actions",
     },
   ];
-  const loginHistory =[
+  const loginHistory = [
     {
       id: "SrNo",
       numeric: false,
@@ -2058,7 +2061,7 @@ const ContentLogic = (props) => {
       disablePadding: true,
       label: "Logged In Date And Time",
     },
-  ]
+  ];
 
   //Candidate Master API Call
   const getCandidateMasterAPIcall = () => {
@@ -2930,9 +2933,12 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setURoleData({...uroleData,permissions:response.data.data.permissions});
-          setCheckedValues(response.data.data.permissions)
-          console.log("cheked",checkedValues);
+          setURoleData({
+            ...uroleData,
+            permissions: response.data.data.permissions,
+          });
+          setCheckedValues(response.data.data.permissions);
+          console.log("cheked", checkedValues);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -2989,7 +2995,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setCompanyData(response.data.data);
-          setCompanyDataAudit(response.data.data)
+          setCompanyDataAudit(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3013,7 +3019,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setUpdateUserData(response.data.data);
-          setUpdateUserDataForAudit(response.data.data)
+          setUpdateUserDataForAudit(response.data.data);
           // setTblDataCount(response.data.data.users);
           console.log("user Data to update by id", updateUserData);
         } else if (response.status == 400) {
@@ -3039,8 +3045,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setUpdateCandidateVerificationData(response.data.data);
-          setUpdateCandidateVerificationDataAuditLog(response.data.data)
-
+          setUpdateCandidateVerificationDataAuditLog(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3177,7 +3182,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setIndustryData(response.data.data);
-          setIndustryDataAudit(response.data.data)
+          setIndustryDataAudit(response.data.data);
           // console.log("industy by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
@@ -3203,8 +3208,8 @@ const ContentLogic = (props) => {
       .then((response) => {
         if (response.status == 200) {
           setLoader(false);
-          setCustomerData(response.data.data)
-          setCustomerDataAudit(response.data.data)          
+          setCustomerData(response.data.data);
+          setCustomerDataAudit(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3229,7 +3234,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setSkillSetData(response.data.data);
-          setSkillSetDataForAuditLog(response.data.data)
+          setSkillSetDataForAuditLog(response.data.data);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3254,7 +3259,7 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setLoader(false);
           setSubscriptionData(response.data.data);
-          setSubscriptionDataForAudit(response.data.data)
+          setSubscriptionDataForAudit(response.data.data);
           // console.log("agent by id",response.data.data);
           // console.log("getAgentMasterData",agentMasterData);
         } else if (response.status == 400) {
@@ -3283,7 +3288,9 @@ const ContentLogic = (props) => {
           setCandidateUploadBatchAdminData(
             response.data.data.agentPricingTemplates
           );
-          setCandidateUploadBatchAdminDataAudit(response.data.data.agentPricingTemplates)
+          setCandidateUploadBatchAdminDataAudit(
+            response.data.data.agentPricingTemplates
+          );
           setCndUpdBatchAdmin(response.data.data.agentPricingTemplates);
           console.log("agent template data", candidateUploadBatchAdminData);
         } else if (response.status == 400) {
@@ -3527,10 +3534,14 @@ const ContentLogic = (props) => {
         console.log(response);
         if (response.status == 200) {
           setErrMsg(response.data.message);
-          setCandidateMasterData({...candidateMasterData,
-            profImgPath:response.data.path})
-          setUpdateCandidateMasterData({...updateCandidateMasterData,
-            profImgPath:response.data.path})
+          setCandidateMasterData({
+            ...candidateMasterData,
+            profImgPath: response.data.path,
+          });
+          setUpdateCandidateMasterData({
+            ...updateCandidateMasterData,
+            profImgPath: response.data.path,
+          });
           setOpenErrtMsg(true);
         } else {
           setErrMsg(response.data.message);
@@ -3551,7 +3562,7 @@ const ContentLogic = (props) => {
     const formData = new FormData();
     // console.log(image.forEach((file) =>formData.append("image", file)));
     // image.forEach((file) => formData.append("image", file));
-    formData.append('image',image)
+    formData.append("image", image);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
@@ -3563,7 +3574,10 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-          setCustomerData({...customerData,profileImage:response.data.path})
+          setCustomerData({
+            ...customerData,
+            profileImage: response.data.path,
+          });
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3589,17 +3603,19 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${!editId ? id : editId}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
         console.log(response);
         if (response.status == 200) {
-          setAgentMasterData({...agentMasterData,
-            panCardPath:response.data.path})
+          setAgentMasterData({
+            ...agentMasterData,
+            panCardPath: response.data.path,
+          });
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-          setPanUploadDone(true)
+          setPanUploadDone(true);
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3619,7 +3635,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${!editId ? id : editId}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3627,9 +3643,11 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-          setIdUploadDone(true)
-          setAgentMasterData({...agentMasterData,
-            docPoiPath:response.data.path})
+          setIdUploadDone(true);
+          setAgentMasterData({
+            ...agentMasterData,
+            docPoiPath: response.data.path,
+          });
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3645,12 +3663,12 @@ const ContentLogic = (props) => {
   };
 
   const addPOfAddAgentMasterDocs = async (id) => {
-    const formData = new FormData();   
+    const formData = new FormData();
     formData.append("file", agentMasterPOA);
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${!editId ? id : editId}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3658,9 +3676,11 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-          setPOfAddUploadDone(true)
-          setAgentMasterData({...agentMasterData,
-            docPoaPath:response.data.path})
+          setPOfAddUploadDone(true);
+          setAgentMasterData({
+            ...agentMasterData,
+            docPoaPath: response.data.path,
+          });
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3681,7 +3701,7 @@ const ContentLogic = (props) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     handler
-      .dataPost(`/v1/upload-agent-master/${!editId ?id:editId}`, formData, {
+      .dataPost(`/v1/upload-agent-master/${!editId ? id : editId}`, formData, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -3689,9 +3709,11 @@ const ContentLogic = (props) => {
         if (response.status == 200) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-          setBankDocUploadDone(true)
-          setAgentMasterData({...agentMasterData,
-            docBankPath:response.data.path})
+          setBankDocUploadDone(true);
+          setAgentMasterData({
+            ...agentMasterData,
+            docBankPath: response.data.path,
+          });
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3723,7 +3745,6 @@ const ContentLogic = (props) => {
           addBulkDataAdminCnd(response.data.path);
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
-
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3753,49 +3774,57 @@ const ContentLogic = (props) => {
           // getCandidateMasterAPIcall();
           setOpenAlertMsg(true);
           // handleNext();
-          const logData = {}
-          console.log("upload 1",path);
+          const logData = {};
+          console.log("upload 1", path);
 
           if (bulkData) {
-            console.log("upload",path);
+            console.log("upload", path);
             Object.assign(logData, {
-                "Uploaded File": path,
-            })
-        }
-              let logDataString = JSON.stringify(logData)
-                  let fullName = convertTokenToObj.name
-                  let Email = convertTokenToObj.userEmail
-                  let auditlog = {
-                    userName: fullName
-                        ? fullName:"",
-                    email: Email
-                        ? Email
-                        : "",
-                    updatedFiled: logDataString,
-                    operationName: "Admin Candidate upload batch file uploaded sucessfully"
-                }
-                let userActivities = {
-                  userName: fullName
-                      ? fullName:"",
-                  email: Email
-                      ? Email
-                      : "",
-                  dataId:response.data.data.id,
-                  userLoginId:convertTokenToObj.id,
-                  userActivity: logDataString,
-                  operationName: "Admin Candidate upload batch file uploaded sucessfully"
+              "Uploaded File": path,
+            });
+          }
+          let logDataString = JSON.stringify(logData);
+          let fullName = convertTokenToObj.name;
+          let Email = convertTokenToObj.userEmail;
+          let auditlog = {
+            userName: fullName ? fullName : "",
+            email: Email ? Email : "",
+            updatedFiled: logDataString,
+            operationName:
+              "Admin Candidate upload batch file uploaded sucessfully",
+          };
+          let userActivities = {
+            userName: fullName ? fullName : "",
+            email: Email ? Email : "",
+            dataId: response.data.data.id,
+            userLoginId: convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName:
+              "Admin Candidate upload batch file uploaded sucessfully",
+          };
+          handler
+            .dataPost(
+              `/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,
+              userActivities,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
               }
-                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("user activity added")
-                })
-                handlers.auditLog.addAuditLog(auditlog,
-                  helpers.auditLog.candidateUploadBatch,response.data.data.id,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("Audit log added")
-                })
+            )
+            .then(() => {
+              console.log("user activity added");
+            });
+          handlers.auditLog
+            .addAuditLog(
+              auditlog,
+              helpers.auditLog.candidateUploadBatch,
+              response.data.data.id,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }
+            )
+            .then(() => {
+              console.log("Audit log added");
+            });
         } else {
           setOpenErrtMsg(true);
         }
@@ -3826,8 +3855,6 @@ const ContentLogic = (props) => {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
           addBulkDataCndUpload(response.data.path);
-          
-          
         } else {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -3861,49 +3888,55 @@ const ContentLogic = (props) => {
             "response of admin candidate upload file :",
             response.data.data
           );
-          const logData = {}
-          console.log("upload 1",path);
+          const logData = {};
+          console.log("upload 1", path);
 
           if (uploadBulkCnd) {
-            console.log("upload",path);
+            console.log("upload", path);
             Object.assign(logData, {
-                "Uploaded File": path,
-            })
-        }
-              let logDataString = JSON.stringify(logData)
-                  let fullName = convertTokenToObj.name
-                  let Email = convertTokenToObj.userEmail
-                  let auditlog = {
-                    userName: fullName
-                        ? fullName:"",
-                    email: Email
-                        ? Email
-                        : "",
-                    updatedFiled: logDataString,
-                    operationName: "Candidate upload batch file uploaded sucessfully"
-                }
-                let userActivities = {
-                  userName: fullName
-                      ? fullName:"",
-                  email: Email
-                      ? Email
-                      : "",
-                  dataId:response.data.data.id,
-                  userLoginId:convertTokenToObj.id,
-                  userActivity: logDataString,
-                  operationName: "Candidate upload batch file uploaded sucessfully"
+              "Uploaded File": path,
+            });
+          }
+          let logDataString = JSON.stringify(logData);
+          let fullName = convertTokenToObj.name;
+          let Email = convertTokenToObj.userEmail;
+          let auditlog = {
+            userName: fullName ? fullName : "",
+            email: Email ? Email : "",
+            updatedFiled: logDataString,
+            operationName: "Candidate upload batch file uploaded sucessfully",
+          };
+          let userActivities = {
+            userName: fullName ? fullName : "",
+            email: Email ? Email : "",
+            dataId: response.data.data.id,
+            userLoginId: convertTokenToObj.id,
+            userActivity: logDataString,
+            operationName: "Candidate upload batch file uploaded sucessfully",
+          };
+          handler
+            .dataPost(
+              `/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,
+              userActivities,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
               }
-                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateUploadBatch}`,userActivities,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("user activity added")
-                })
-                handlers.auditLog.addAuditLog(auditlog,
-                  helpers.auditLog.candidateUploadBatch,response.data.data.id,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("Audit log added")
-                })
+            )
+            .then(() => {
+              console.log("user activity added");
+            });
+          handlers.auditLog
+            .addAuditLog(
+              auditlog,
+              helpers.auditLog.candidateUploadBatch,
+              response.data.data.id,
+              {
+                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+              }
+            )
+            .then(() => {
+              console.log("Audit log added");
+            });
         } else {
           setOpenErrtMsg(true);
         }
@@ -3944,75 +3977,75 @@ const ContentLogic = (props) => {
 
   //get all the based on routes with permissions
   const getAllData = (pageName) => {
-      // console.log("getallData pagename :", pageName);
-      switch (pageName) {
-        case "candidate-master":
-          getCandidateMasterAPIcall();
-          break;
-        case "candidate-upload-batch":
-          getCandidateUploadBatchAPIcall();
-          break;
-        case "candidate-verification":
-          getCandidateVerificationAPIcall();
-          break;
-        case "agent-master":
-          getAgentMasterAPIcall();
-          break;
-        case "agent-pricing-template":
-          getAgentTemplatePricingAPIcall();
-          break;
-        case "candidate-upload-batch-admin":
-          getCandidateUploadBatchAdminAPIcall();
-          break;
-        case "batch-priority":
-          getBatchPriorityAPIcall();
-          getBatchPriorityDataAPIcall();
-          break;
-        case "other-industry-category":
-          getOtherIndustryCategoryAPIcall();
-          getPassiveForOtherIndustry()
-          break;
-        case "category":
-          getCategoryAPIcall();
-          getCategoryAPIcallForFilter();
-          break;
-        case "company":
-          getCompanyAPIcall();
-          getCompanyForFilterAPIcall();
-          getIndustryForFilterAPIcall();
-          break;
-        case "customer":
-          getCustomerAPIcall();
-          getCustomerAPIcallFilter();
-          break;
-        case "industry":
-          getIndustryAPIcall();
-          getIndustryForFilterAPIcall();
-          break;
-        case "role":
-          getRoleAPIcall();
-          getRoleForFilterAPIcall();
-          // getPermissionsAPIcall();
-          break;
-        case "skillset":
-          getSkillSetAPIcall();
-          getSkillSetForFilterAPIcall();
-          break;
-        case "subscription":
-          getSubscriptionAPIcall();
-          getSubscriptionForFilterAPIcall();
-          break;
-        case "user":
-          getUserAPIcall();
-          getUserForFilterAPIcall();
-          getRoleForFilterAPIcall();
-          break;
-        default:
-          break;
-      }
-    };
+    // console.log("getallData pagename :", pageName);
+    switch (pageName) {
+      case "candidate-master":
+        getCandidateMasterAPIcall();
+        break;
+      case "candidate-upload-batch":
+        getCandidateUploadBatchAPIcall();
+        break;
+      case "candidate-verification":
+        getCandidateVerificationAPIcall();
+        break;
+      case "agent-master":
+        getAgentMasterAPIcall();
+        break;
+      case "agent-pricing-template":
+        getAgentTemplatePricingAPIcall();
+        break;
+      case "candidate-upload-batch-admin":
+        getCandidateUploadBatchAdminAPIcall();
+        break;
+      case "batch-priority":
+        getBatchPriorityAPIcall();
+        getBatchPriorityDataAPIcall();
+        break;
+      case "other-industry-category":
+        getOtherIndustryCategoryAPIcall();
+        getPassiveForOtherIndustry();
+        break;
+      case "category":
+        getCategoryAPIcall();
+        getCategoryAPIcallForFilter();
+        break;
+      case "company":
+        getCompanyAPIcall();
+        getCompanyForFilterAPIcall();
+        getIndustryForFilterAPIcall();
+        break;
+      case "customer":
+        getCustomerAPIcall();
+        getCustomerAPIcallFilter();
+        break;
+      case "industry":
+        getIndustryAPIcall();
+        getIndustryForFilterAPIcall();
+        break;
+      case "role":
+        getRoleAPIcall();
+        getRoleForFilterAPIcall();
+        // getPermissionsAPIcall();
+        break;
+      case "skillset":
+        getSkillSetAPIcall();
+        getSkillSetForFilterAPIcall();
+        break;
+      case "subscription":
+        getSubscriptionAPIcall();
+        getSubscriptionForFilterAPIcall();
+        break;
+      case "user":
+        getUserAPIcall();
+        getUserForFilterAPIcall();
+        getRoleForFilterAPIcall();
+        break;
+      default:
+        break;
+    }
+  };
 
-  //Method for Table Heading 
+  //Method for Table Heading
   const EnhancedTableHead = (props) => {
     const {
       onSelectAllClick,
@@ -4460,620 +4493,636 @@ const ContentLogic = (props) => {
     return !editStatus ? userData.permState : updateUserData.permState;
   };
 
-    // its handle the call status when we change the consent of candidate verification
-    const handleCallStatus = () => {
-      switch (candidateConsentVal) {
-        case "RECEIVED":
-          return (
-            <div>
-              {callStatus.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </div>
-          );
-        case "PENDING":
-          return (
-            <>
-              {callStatusPending.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </>
-          );
-        case "DECLINED":
-          return (
-            <>
-              {callStatusDeclined.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </>
-          );
-  
-        default:
-          break;
-      }
-    };
-    // handle the tabs value of admin candidate upload batch module
-    const handleTabOfCndtUpBatch = (event, newValue) => {
-      setTabOfCndBatchValue(newValue);
-      // switch (newValue) {
-      //   case "1":
-      //     // console.log("test set name")
-      //     setFilterTableOnTabs("in-progress")
-      //     getAllData('candidate-upload-batch-admin')
-  
-      //     break;
-      //   case "2":
-      //     // console.log("test 2 set name")
-      //     setFilterTableOnTabs("pending-approval")
-      //     getAllData('candidate-upload-batch-admin')
-  
-      //     break;
-      //   case "3":
-      //     // console.log("test 2 set name")
-      //     setFilterTableOnTabs("processed")
-      //     getAllData('candidate-upload-batch-admin')
-  
-      //     break;
-  
-      //   default:
-      //     break;
-      // }
-    };
-  
-    //filter method for candidate verification module
-    let filterCndVerification = (e) => {
-      setFilterForCndVerifiction(tblData);
-      let targetValue = e.target.value;
-      const filteredData = filterForCndVerifiction.filter((item) => {
+  // its handle the call status when we change the consent of candidate verification
+  const handleCallStatus = () => {
+    switch (candidateConsentVal) {
+      case "RECEIVED":
         return (
-          item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
-          item.contactNo1.toString().includes(targetValue)
+          <div>
+            {callStatus.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </div>
         );
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else {
-        getCandidateVerificationAPIcall();
-      }
-    };
-  
-    //filter method for category module
-    let filterCategory = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForCategory.filter((item) => {
-        return item.title.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getCategoryAPIcall();
-    };
-  
-    //filter method for agent pricing template module
-    let filterAgenPT = (e) => {
-      setFilterForAgentPT(tblData);
-      let targetValue = e.target.value;
-      const filteredData = filterForAgentPT.filter((item) => {
+      case "PENDING":
         return (
-          // console.log("item",item),
-          item.templateName.toLowerCase().includes(targetValue.toLowerCase())
-          // item.contactNo1.toString().includes(searchTerm)
+          <>
+            {callStatusPending.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </>
         );
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else {
-        getAgentTemplatePricingAPIcall();
-      }
-    };
-  
-    //filter method for company module
-    let filterCompany = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForCompany.filter((item) => {
-        return item.companyName.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getCompanyAPIcall();
-    };
-  
-    //filter method for industry module
-    let filterIndustry = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForIndustry.filter((item) => {
-        return item.title.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getIndustryAPIcall();
-    };
-  
-    //filter method for role module
-    let filterRole = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForRole.filter((item) => {
-        return item.name.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getRoleAPIcall();
-    };
-    //filter method for skillset module
-    let filterSkillSet = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForSkillSets.filter((item) => {
-        return item.title.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getSkillSetAPIcall();
-    };
+      case "DECLINED":
+        return (
+          <>
+            {callStatusDeclined.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </>
+        );
 
-    //filter method for customer module
-    let filterCustomer = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForCustomer.filter((item) => {
-        return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
-        // item.companyName.toString().includes(searchTerm)
-        console.log(filteredData);
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getCustomerAPIcall();
-    };
-  
-    //filter method for subscription module
-    let filterSubscriptions = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForSubscription.filter((item) => {
-        return item.planName.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getSubscriptionAPIcall();
-    };
-    //filter method for user module
-    let filterUser = (e) => {
-      let targetValue = e.target.value;
-      const filteredData = filterDataForUser.filter((item) => {
-        return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
-        // item.contactNo1.toString().includes(searchTerm)
-      });
-      if (targetValue) {
-        setTblData(filteredData);
-      } else getUserAPIcall();
-    };
-
-    // function for workExperice table of candidate master module
-    function WorkExperianceCol(sr, document, value, upload, status, comments) {
-      return { sr, document, value, upload, status, comments };
+      default:
+        break;
     }
-  
-    // To Upload Documents
-    const handleChangeFileUpload1 = (event) => {
-      setAgentMasterPan(event.target.files[0]);
-    };
-    const handleChangeFileUpload2 = (event) => {
-      setAgentMasterPOI(event.target.files[0]);
-    };
-    const handleChangeFileUpload3 = (event) => {
-      setAgentMasterPOA(event.target.files[0]);
-    };
-    const handleChangeFileUpload4 = (event) => {
-      setAgentMasterBankDoc(event.target.files[0]);
-    };
+  };
+  // handle the tabs value of admin candidate upload batch module
+  const handleTabOfCndtUpBatch = (event, newValue) => {
+    setTabOfCndBatchValue(newValue);
+    // switch (newValue) {
+    //   case "1":
+    //     // console.log("test set name")
+    //     setFilterTableOnTabs("in-progress")
+    //     getAllData('candidate-upload-batch-admin')
 
+    //     break;
+    //   case "2":
+    //     // console.log("test 2 set name")
+    //     setFilterTableOnTabs("pending-approval")
+    //     getAllData('candidate-upload-batch-admin')
 
-    //In professional tab table heading of agent master
-    const rowsAgentMaster = [
-      WorkExperianceCol(
-        1,
-        "Pan card",
-        <p>Pan Card</p>,
-        // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
-        <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload1} />,
-        panUploadDone?(<Button>
-          <CloudDoneIcon></CloudDoneIcon></Button>):
-          (<Button onClick={()=>addAgentMasterDocs()}>
-          <FileUploadIcon></FileUploadIcon></Button>)
-        ,
-        4.0
-      ),
-      WorkExperianceCol(
-        2,
-        "Proof of identity",
-        <TextField
-          sx={{ width: "30ch" }}
-          select
-          label="Select"
-          id="outlined-basic"
-          variant="outlined"
-        >
-           <MenuItem >Pan Card</MenuItem>
-            <MenuItem >Passport</MenuItem>
-            <MenuItem >Driving Licence</MenuItem>
-            <MenuItem >Aadhar Card</MenuItem>
-            <MenuItem >Voter Id</MenuItem>
-        </TextField>,
-        <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload2} />,
-        IdUploadDone?(<Button>
-          <CloudDoneIcon></CloudDoneIcon></Button>):
-          (<Button onClick={(e)=>addIdPrfAgentMasterDocs()}>
-          <FileUploadIcon></FileUploadIcon></Button>)
-      ),
-      WorkExperianceCol(
-        3,
-        "Proof of address",
-        <TextField
-          sx={{ width: "30ch" }}
-          select
-          id="outlined-basic"
-          label="Select"
-          variant="outlined"
-        >
-    <MenuItem >Electricity Bill</MenuItem>
-    <MenuItem >Passport</MenuItem>
-    <MenuItem >Driving Licence</MenuItem>
-    <MenuItem >Aadhar Card</MenuItem>
-    <MenuItem >Voter Id</MenuItem>
-    <MenuItem >House sale deed or rent agreement</MenuItem>
-        </TextField>,
-        <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload3} />,
-        pOfAddUploadDone?(<Button>
-          <CloudDoneIcon></CloudDoneIcon></Button>):
-          (<Button onClick={addPOfAddAgentMasterDocs}>
-          <FileUploadIcon></FileUploadIcon></Button>)
-      ),
-      WorkExperianceCol(
-        4,
-        "Bank Document",
-        <TextField
-          sx={{ width: "30ch" }}
-          select
-          id="outlined-basic"
-          label="Select"
-          variant="outlined"
-        >
-          <MenuItem >Bank Statement</MenuItem>
-            <MenuItem >Cancelled Cheque</MenuItem>
-            <MenuItem >Passbook First Page</MenuItem>
-        </TextField>,
-        <TextField id="outlined-basic" variant="outlined" />,
-        <input type="file" onChange={handleChangeFileUpload4} />,
-        bankDocUploadDone?(<Button>
-          <CloudDoneIcon></CloudDoneIcon></Button>):
-          (<Button onClick={addBankDocAgentMasterDocs}>
-          <FileUploadIcon></FileUploadIcon></Button>)
+    //     break;
+    //   case "3":
+    //     // console.log("test 2 set name")
+    //     setFilterTableOnTabs("processed")
+    //     getAllData('candidate-upload-batch-admin')
 
-      ),
-    ];
-  
-    //professional tabl of agent master module
-    const ProfessionalTab = () => {
+    //     break;
+
+    //   default:
+    //     break;
+    // }
+  };
+
+  //filter method for candidate verification module
+  let filterCndVerification = (e) => {
+    setFilterForCndVerifiction(tblData);
+    let targetValue = e.target.value;
+    const filteredData = filterForCndVerifiction.filter((item) => {
       return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Sr</TableCell>
-                <TableCell align="center">Documents</TableCell>
-                <TableCell align="center"></TableCell>
-                <TableCell align="center">Value</TableCell>
-                <TableCell align="center">Upload</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Comment</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rowsAgentMaster.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.sr}
-                  </TableCell>
-                  <TableCell align="center">{row.document}</TableCell>
-                  <TableCell align="center">{row.value}</TableCell>
-                  <TableCell align="right">{row.upload}</TableCell>
-                  <TableCell align="right">{row.status}</TableCell>
-                  <TableCell align="right">{row.comments}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        item.fullName.toLowerCase().includes(targetValue.toLowerCase()) ||
+        item.contactNo1.toString().includes(targetValue)
       );
-    };
-  
-    // read data from excel file and add into the candidate upload batch module table
-    const handleFileUploadCndUpload = (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-  
-      reader.onload = (e) => {
-        const binaryData = e.target.result;
-        const workbook = XLSX.read(binaryData, { type: "binary" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const sheetData = XLSX.utils.sheet_to_json(sheet);
-        setBulkUpload(sheetData);
-        // console.log("sheet data : ",sheetData);
-      };
-  
-      reader.readAsBinaryString(file);
-      // console.log("ex data --- ",bulkData);
-    };
-  
-    //search city and state by zipcode
-    const searchAddByZip = () => {
-      setLoader(true);
-      axios
-        .get(
-          `https://api.postalpincode.in/pincode/${
-            !editStatus
-              ? candidateMasterData.perm_zip
-              : updateCandidateMasterData.permZip
-          }`
-        )
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setCandidateMasterData({
-                  ...candidateMasterData,
-                  perm_city: e.District,
-                  perm_state: e.State,
-                });
-                setUpdateCandidateMasterData({
-                  ...updateCandidateMasterData,
-                  permCity: e.District,
-                  permState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
-    };
-    //search city and state by zipcode
-    const searchCurrAddByZip = () => {
-      setLoader(true);
-      axios
-        .get(
-          `https://api.postalpincode.in/pincode/${
-            !editStatus
-              ? candidateMasterData.curr_zip
-              : updateCandidateMasterData.currZip
-          }`
-        )
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setCandidateMasterData({
-                  ...candidateMasterData,
-                  curr_city: e.District,
-                  curr_state: e.State,
-                });
-                setUpdateCandidateMasterData({
-                  ...updateCandidateMasterData,
-                  currCity: e.District,
-                  currState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
-    };
-    //search city and state by zipcode
-    const searchAddByZipForAgent = () => {
-      setLoader(true);
-      axios
-        .get(`https://api.postalpincode.in/pincode/${agentMasterData.currZip}`)
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setAgentMasterData({
-                  ...agentMasterData,
-                  currCity: e.District,
-                  currState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
-    };
-    //search city and state by zipcode
-    const searchPermAddByZipForAgent = () => {
-      setLoader(true);
-      axios
-        .get(`https://api.postalpincode.in/pincode/${agentMasterData.permZip}`)
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setAgentMasterData({
-                  ...agentMasterData,
-                  permCity: e.District,
-                  permState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
-    };
-    //search city and state by zipcode
-    const searchAddByZipForUser = () => {
-      setLoader(true);
-      axios
-        .get(
-          `https://api.postalpincode.in/pincode/${
-            !editStatus ? userData.permZip : updateUserData.permZip
-          }`
-        )
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setUserData({
-                  ...userData,
-                  permCity: e.District,
-                  permState: e.State,
-                });
-                setUpdateUserData({
-                  ...updateUserData,
-                  permCity: e.District,
-                  permState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
-    };
-    //search city and state by zipcode
-    const searchCurrAddByZipForUser = () => {
-      setLoader(true);
-      axios
-        .get(
-          `https://api.postalpincode.in/pincode/${
-            !editStatus ? userData.currZip : updateUserData.currZip
-          }`
-        )
-        .then((response) => {
-          if (response.status == 200) {
-            setLoader(false);
-            response.data.map((i) => {
-              i.PostOffice.map((e) => {
-                setUserData({
-                  ...userData,
-                  currCity: e.District,
-                  currState: e.State,
-                });
-                setUpdateUserData({
-                  ...updateUserData,
-                  currCity: e.District,
-                  currState: e.State,
-                });
-              });
-            });
-          } else if (response.status == 400) {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-            setLoader(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!- getzipcode", error);
-        });
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else {
+      getCandidateVerificationAPIcall();
+    }
+  };
+
+  //filter method for category module
+  let filterCategory = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForCategory.filter((item) => {
+      return item.title.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getCategoryAPIcall();
+  };
+
+  //filter method for agent pricing template module
+  let filterAgenPT = (e) => {
+    setFilterForAgentPT(tblData);
+    let targetValue = e.target.value;
+    const filteredData = filterForAgentPT.filter((item) => {
+      return (
+        // console.log("item",item),
+        item.templateName.toLowerCase().includes(targetValue.toLowerCase())
+        // item.contactNo1.toString().includes(searchTerm)
+      );
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else {
+      getAgentTemplatePricingAPIcall();
+    }
+  };
+
+  //filter method for company module
+  let filterCompany = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForCompany.filter((item) => {
+      return item.companyName.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getCompanyAPIcall();
+  };
+
+  //filter method for industry module
+  let filterIndustry = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForIndustry.filter((item) => {
+      return item.title.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getIndustryAPIcall();
+  };
+
+  //filter method for role module
+  let filterRole = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForRole.filter((item) => {
+      return item.name.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getRoleAPIcall();
+  };
+  //filter method for skillset module
+  let filterSkillSet = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForSkillSets.filter((item) => {
+      return item.title.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getSkillSetAPIcall();
+  };
+
+  //filter method for customer module
+  let filterCustomer = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForCustomer.filter((item) => {
+      return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
+      // item.companyName.toString().includes(searchTerm)
+      console.log(filteredData);
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getCustomerAPIcall();
+  };
+
+  //filter method for subscription module
+  let filterSubscriptions = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForSubscription.filter((item) => {
+      return item.planName.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getSubscriptionAPIcall();
+  };
+  //filter method for user module
+  let filterUser = (e) => {
+    let targetValue = e.target.value;
+    const filteredData = filterDataForUser.filter((item) => {
+      return item.fullName.toLowerCase().includes(targetValue.toLowerCase());
+      // item.contactNo1.toString().includes(searchTerm)
+    });
+    if (targetValue) {
+      setTblData(filteredData);
+    } else getUserAPIcall();
+  };
+
+  // function for workExperice table of candidate master module
+  function WorkExperianceCol(sr, document, value, upload, status, comments) {
+    return { sr, document, value, upload, status, comments };
+  }
+
+  // To Upload Documents
+  const handleChangeFileUpload1 = (event) => {
+    setAgentMasterPan(event.target.files[0]);
+  };
+  const handleChangeFileUpload2 = (event) => {
+    setAgentMasterPOI(event.target.files[0]);
+  };
+  const handleChangeFileUpload3 = (event) => {
+    setAgentMasterPOA(event.target.files[0]);
+  };
+  const handleChangeFileUpload4 = (event) => {
+    setAgentMasterBankDoc(event.target.files[0]);
+  };
+
+  //In professional tab table heading of agent master
+  const rowsAgentMaster = [
+    WorkExperianceCol(
+      1,
+      "Pan card",
+      <p>Pan Card</p>,
+      // <TextField sx={{ width: "30ch" }} select id="outlined-basic" label="Pan Card" variant="outlined" />,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" onChange={handleChangeFileUpload1} />,
+      panUploadDone ? (
+        <Button>
+          <CloudDoneIcon></CloudDoneIcon>
+        </Button>
+      ) : (
+        <Button onClick={() => addAgentMasterDocs()}>
+          <FileUploadIcon></FileUploadIcon>
+        </Button>
+      ),
+      4.0
+    ),
+    WorkExperianceCol(
+      2,
+      "Proof of identity",
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        label="Select"
+        id="outlined-basic"
+        variant="outlined"
+      >
+        <MenuItem>Pan Card</MenuItem>
+        <MenuItem>Passport</MenuItem>
+        <MenuItem>Driving Licence</MenuItem>
+        <MenuItem>Aadhar Card</MenuItem>
+        <MenuItem>Voter Id</MenuItem>
+      </TextField>,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" onChange={handleChangeFileUpload2} />,
+      IdUploadDone ? (
+        <Button>
+          <CloudDoneIcon></CloudDoneIcon>
+        </Button>
+      ) : (
+        <Button onClick={(e) => addIdPrfAgentMasterDocs()}>
+          <FileUploadIcon></FileUploadIcon>
+        </Button>
+      )
+    ),
+    WorkExperianceCol(
+      3,
+      "Proof of address",
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        id="outlined-basic"
+        label="Select"
+        variant="outlined"
+      >
+        <MenuItem>Electricity Bill</MenuItem>
+        <MenuItem>Passport</MenuItem>
+        <MenuItem>Driving Licence</MenuItem>
+        <MenuItem>Aadhar Card</MenuItem>
+        <MenuItem>Voter Id</MenuItem>
+        <MenuItem>House sale deed or rent agreement</MenuItem>
+      </TextField>,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" onChange={handleChangeFileUpload3} />,
+      pOfAddUploadDone ? (
+        <Button>
+          <CloudDoneIcon></CloudDoneIcon>
+        </Button>
+      ) : (
+        <Button onClick={addPOfAddAgentMasterDocs}>
+          <FileUploadIcon></FileUploadIcon>
+        </Button>
+      )
+    ),
+    WorkExperianceCol(
+      4,
+      "Bank Document",
+      <TextField
+        sx={{ width: "30ch" }}
+        select
+        id="outlined-basic"
+        label="Select"
+        variant="outlined"
+      >
+        <MenuItem>Bank Statement</MenuItem>
+        <MenuItem>Cancelled Cheque</MenuItem>
+        <MenuItem>Passbook First Page</MenuItem>
+      </TextField>,
+      <TextField id="outlined-basic" variant="outlined" />,
+      <input type="file" onChange={handleChangeFileUpload4} />,
+      bankDocUploadDone ? (
+        <Button>
+          <CloudDoneIcon></CloudDoneIcon>
+        </Button>
+      ) : (
+        <Button onClick={addBankDocAgentMasterDocs}>
+          <FileUploadIcon></FileUploadIcon>
+        </Button>
+      )
+    ),
+  ];
+
+  //professional tabl of agent master module
+  const ProfessionalTab = () => {
+    return (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Sr</TableCell>
+              <TableCell align="center">Documents</TableCell>
+              <TableCell align="center"></TableCell>
+              <TableCell align="center">Value</TableCell>
+              <TableCell align="center">Upload</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Comment</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rowsAgentMaster.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.sr}
+                </TableCell>
+                <TableCell align="center">{row.document}</TableCell>
+                <TableCell align="center">{row.value}</TableCell>
+                <TableCell align="right">{row.upload}</TableCell>
+                <TableCell align="right">{row.status}</TableCell>
+                <TableCell align="right">{row.comments}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
+  // read data from excel file and add into the candidate upload batch module table
+  const handleFileUploadCndUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const binaryData = e.target.result;
+      const workbook = XLSX.read(binaryData, { type: "binary" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const sheetData = XLSX.utils.sheet_to_json(sheet);
+      setBulkUpload(sheetData);
+      // console.log("sheet data : ",sheetData);
     };
 
-  //update the redux state for audit log 
+    reader.readAsBinaryString(file);
+    // console.log("ex data --- ",bulkData);
+  };
+
+  //search city and state by zipcode
+  const searchAddByZip = () => {
+    setLoader(true);
+    axios
+      .get(
+        `https://api.postalpincode.in/pincode/${
+          !editStatus
+            ? candidateMasterData.perm_zip
+            : updateCandidateMasterData.permZip
+        }`
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setCandidateMasterData({
+                ...candidateMasterData,
+                perm_city: e.District,
+                perm_state: e.State,
+              });
+              setUpdateCandidateMasterData({
+                ...updateCandidateMasterData,
+                permCity: e.District,
+                permState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+  //search city and state by zipcode
+  const searchCurrAddByZip = () => {
+    setLoader(true);
+    axios
+      .get(
+        `https://api.postalpincode.in/pincode/${
+          !editStatus
+            ? candidateMasterData.curr_zip
+            : updateCandidateMasterData.currZip
+        }`
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setCandidateMasterData({
+                ...candidateMasterData,
+                curr_city: e.District,
+                curr_state: e.State,
+              });
+              setUpdateCandidateMasterData({
+                ...updateCandidateMasterData,
+                currCity: e.District,
+                currState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+  //search city and state by zipcode
+  const searchAddByZipForAgent = () => {
+    setLoader(true);
+    axios
+      .get(`https://api.postalpincode.in/pincode/${agentMasterData.currZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setAgentMasterData({
+                ...agentMasterData,
+                currCity: e.District,
+                currState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+  //search city and state by zipcode
+  const searchPermAddByZipForAgent = () => {
+    setLoader(true);
+    axios
+      .get(`https://api.postalpincode.in/pincode/${agentMasterData.permZip}`)
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setAgentMasterData({
+                ...agentMasterData,
+                permCity: e.District,
+                permState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+  //search city and state by zipcode
+  const searchAddByZipForUser = () => {
+    setLoader(true);
+    axios
+      .get(
+        `https://api.postalpincode.in/pincode/${
+          !editStatus ? userData.permZip : updateUserData.permZip
+        }`
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setUserData({
+                ...userData,
+                permCity: e.District,
+                permState: e.State,
+              });
+              setUpdateUserData({
+                ...updateUserData,
+                permCity: e.District,
+                permState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+  //search city and state by zipcode
+  const searchCurrAddByZipForUser = () => {
+    setLoader(true);
+    axios
+      .get(
+        `https://api.postalpincode.in/pincode/${
+          !editStatus ? userData.currZip : updateUserData.currZip
+        }`
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          response.data.map((i) => {
+            i.PostOffice.map((e) => {
+              setUserData({
+                ...userData,
+                currCity: e.District,
+                currState: e.State,
+              });
+              setUpdateUserData({
+                ...updateUserData,
+                currCity: e.District,
+                currState: e.State,
+              });
+            });
+          });
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- getzipcode", error);
+      });
+  };
+
+  //update the redux state for audit log
   const handleUpdateAuditData = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.candidateMaster));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataAgentM= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataAgentM = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.agentMaster));
   };
 
-  //update the redux state for audit log 
-  const handleUpdateAuditDataAgentPricing= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataAgentPricing = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.agentPricingTemplate));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataCandidateVerification= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataCandidateVerification = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.candidateVerification));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataAdminCndUpBatch= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataAdminCndUpBatch = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.adminCandidateUploadBatch));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMCategory= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMCategory = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMasterCategory));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMCompany= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMCompany = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMasterCompany));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMIndustry= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMIndustry = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMasterIndustry));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMRole= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMRole = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersRole));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMSkillSet= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMSkillSet = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersSkillSet));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMSubscription= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMSubscription = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersSubscription));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMUser= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMUser = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersUsers));
   };
-  //update the redux state for audit log 
-  const handleUpdateAuditDataOtherMCustomer= (id) => {
+  //update the redux state for audit log
+  const handleUpdateAuditDataOtherMCustomer = (id) => {
     dispatch(auditLogDetails(id, helpers.auditLog.otherMastersCustomer));
   };
 
@@ -5094,139 +5143,148 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               handleNext();
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
-              
-                    if (candidateMasterData.profImgPath) {
-                        Object.assign(logData, {
-                            "Profile Image": candidateMasterData.profImgPath,
-                        })
-                    }
-                    if (candidateMasterData.fullName) {
-                        Object.assign(logData, {
-                            "Full Name": candidateMasterData.fullName,
-                        })
-                    }
-                    if (candidateMasterData.dob) {
-                      Object.assign(logData, {
-                        "BirthDate": candidateMasterData.dob,
-                      })
-                  }
-                    if (candidateMasterData.gender) {
-                      Object.assign(logData, {
-                        "Gender": candidateMasterData.gender,
-                      })
-                  }
-                    if (candidateMasterData.perm_address) {
-                      Object.assign(logData, {
-                        "Permanent address": candidateMasterData.perm_address,
-                      })
-                  }
-                    if (candidateMasterData.perm_city) {
-                      Object.assign(logData, {
-                        "Permanant City": candidateMasterData.perm_city,
-                      })
-                  }
-                    if (candidateMasterData.perm_state) {
-                      Object.assign(logData, {
-                        "Permanent State": candidateMasterData.perm_state,
-                      })
-                  }
-                    if (candidateMasterData.perm_country) {
-                      Object.assign(logData, {
-                        "Permanent Country": candidateMasterData.perm_country,
-                      })
-                  }
-                    if (candidateMasterData.perm_zip) {
-                      Object.assign(logData, {
-                        "Permanent Zip": candidateMasterData.perm_zip,
-                      })
-                  }
-                    if (candidateMasterData.curr_address) {
-                      Object.assign(logData, {
-                        "Current Address": candidateMasterData.curr_address,
-                      })
-                  }
-                    if (candidateMasterData.curr_city) {
-                      Object.assign(logData, {
-                        "Current City": candidateMasterData.curr_city,
-                      })
-                  }
-                    if (candidateMasterData.curr_country) {
-                      Object.assign(logData, {
-                        "Current Country": candidateMasterData.curr_country,
-                      })
-                  }
-                    if (candidateMasterData.curr_zip) {
-                      Object.assign(logData, {
-                        "Current Zip": candidateMasterData.curr_zip,
-                      })
-                  }
-                    if (candidateMasterData.email1) {
-                      Object.assign(logData, {
-                        "Primary Email Address": candidateMasterData.email1,
-                      })
-                  }
-                    if (candidateMasterData.email2) {
-                      Object.assign(logData, {
-                        "Secondary Email Address": candidateMasterData.email2,
-                      })
-                  }
-                    if (candidateMasterData.contactNo1) {
-                      Object.assign(logData, {
-                        "Primary Contact Number": candidateMasterData.contactNo1,
-                      })
-                  }
-                    if (candidateMasterData.contactNo2) {
-                      Object.assign(logData, {
-                        "Secondary Contact Number": candidateMasterData.contactNo2,
-                      })
-                  }
-                    if (candidateMasterData.aadharNo) {
-                      Object.assign(logData, {
-                        "Aadhar Number": candidateMasterData.aadharNo,
-                      })
-                  }
-                    if (candidateMasterData.registrationStatus) {
-                      Object.assign(logData, {
-                        "Registration Status": candidateMasterData.registrationStatus,
-                      })
-                  }
-                  let logDataString = JSON.stringify(logData)
-                  let fullName = convertTokenToObj.name
-                  let Email = convertTokenToObj.userEmail
-                  let auditlog = {
-                    userName: fullName
-                        ? fullName:"",
-                    email: Email
-                        ? Email
-                        : "",
-                    updatedFiled: logDataString,
-                    operationName: "Candidate Master added successfully."
-                }
-                let userActivities = {
-                  userName: fullName
-                      ? fullName:"",
-                  email: Email
-                      ? Email
-                      : "",
-                  dataId:response.data.data.id,
-                  userLoginId:convertTokenToObj.id,
-                  userActivity: logDataString,
-                  operationName: "Candidate Master added successfully."
+              setShowAudit(false);
+              const logData = {};
+
+              if (candidateMasterData.profImgPath) {
+                Object.assign(logData, {
+                  "Profile Image": candidateMasterData.profImgPath,
+                });
               }
-                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("user activity added")
-                })
-                handlers.auditLog.addAuditLog(auditlog,
-                  helpers.auditLog.candidateMaster,response.data.data.id,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("Audit log added")
-                })
-                
+              if (candidateMasterData.fullName) {
+                Object.assign(logData, {
+                  "Full Name": candidateMasterData.fullName,
+                });
+              }
+              if (candidateMasterData.dob) {
+                Object.assign(logData, {
+                  BirthDate: candidateMasterData.dob,
+                });
+              }
+              if (candidateMasterData.gender) {
+                Object.assign(logData, {
+                  Gender: candidateMasterData.gender,
+                });
+              }
+              if (candidateMasterData.perm_address) {
+                Object.assign(logData, {
+                  "Permanent address": candidateMasterData.perm_address,
+                });
+              }
+              if (candidateMasterData.perm_city) {
+                Object.assign(logData, {
+                  "Permanant City": candidateMasterData.perm_city,
+                });
+              }
+              if (candidateMasterData.perm_state) {
+                Object.assign(logData, {
+                  "Permanent State": candidateMasterData.perm_state,
+                });
+              }
+              if (candidateMasterData.perm_country) {
+                Object.assign(logData, {
+                  "Permanent Country": candidateMasterData.perm_country,
+                });
+              }
+              if (candidateMasterData.perm_zip) {
+                Object.assign(logData, {
+                  "Permanent Zip": candidateMasterData.perm_zip,
+                });
+              }
+              if (candidateMasterData.curr_address) {
+                Object.assign(logData, {
+                  "Current Address": candidateMasterData.curr_address,
+                });
+              }
+              if (candidateMasterData.curr_city) {
+                Object.assign(logData, {
+                  "Current City": candidateMasterData.curr_city,
+                });
+              }
+              if (candidateMasterData.curr_country) {
+                Object.assign(logData, {
+                  "Current Country": candidateMasterData.curr_country,
+                });
+              }
+              if (candidateMasterData.curr_zip) {
+                Object.assign(logData, {
+                  "Current Zip": candidateMasterData.curr_zip,
+                });
+              }
+              if (candidateMasterData.email1) {
+                Object.assign(logData, {
+                  "Primary Email Address": candidateMasterData.email1,
+                });
+              }
+              if (candidateMasterData.email2) {
+                Object.assign(logData, {
+                  "Secondary Email Address": candidateMasterData.email2,
+                });
+              }
+              if (candidateMasterData.contactNo1) {
+                Object.assign(logData, {
+                  "Primary Contact Number": candidateMasterData.contactNo1,
+                });
+              }
+              if (candidateMasterData.contactNo2) {
+                Object.assign(logData, {
+                  "Secondary Contact Number": candidateMasterData.contactNo2,
+                });
+              }
+              if (candidateMasterData.aadharNo) {
+                Object.assign(logData, {
+                  "Aadhar Number": candidateMasterData.aadharNo,
+                });
+              }
+              if (candidateMasterData.registrationStatus) {
+                Object.assign(logData, {
+                  "Registration Status": candidateMasterData.registrationStatus,
+                });
+              }
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                updatedFiled: logDataString,
+                operationName: "Candidate Master added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Candidate Master added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.candidateMaster}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.candidateMaster,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setOpenErrtMsg(true);
             }
@@ -5252,42 +5310,54 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
-              let logDataString = JSON.stringify(logData)
-                  let fullName = convertTokenToObj.name
-                  let Email = convertTokenToObj.userEmail
-                  let auditlog = {
-                    userName: fullName
-                        ? fullName:"",
-                    email: Email
-                        ? Email
-                        : "",
-                    updatedFiled: logDataString,
-                    operationName: "Candidate verification new data assigned successfully."
-                }
-                let userActivities = {
-                  userName: fullName
-                      ? fullName:"",
-                  email: Email
-                      ? Email
-                      : "",
-                  dataId:response.data.data.id,
-                  userLoginId:convertTokenToObj.id,
-                  userActivity: logDataString,
-                  operationName: "Candidate verification new data assigned successfully."
-              }
-                handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("user activity added")
-                })
-                handlers.auditLog.addAuditLog(auditlog,
-                  helpers.auditLog.candidateVerification,response.data.data.id,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("Audit log added")
-                })
+              setShowAudit(false);
+              const logData = {};
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                updatedFiled: logDataString,
+                operationName:
+                  "Candidate verification new data assigned successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName:
+                  "Candidate verification new data assigned successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.candidateVerification}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.candidateVerification,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5314,192 +5384,200 @@ const ContentLogic = (props) => {
               getAgentMasterAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
 
               if (agentMasterData.panCardPath) {
                 Object.assign(logData, {
                   "Pan Card Path": agentMasterData.panCardPath,
-                })
+                });
               }
               if (agentMasterData.professionalStatus) {
                 Object.assign(logData, {
                   "Professional Status": agentMasterData.professionalStatus,
-                })
+                });
               }
               if (agentMasterData.note) {
                 Object.assign(logData, {
-                  "Note": agentMasterData.note,
-                })
+                  Note: agentMasterData.note,
+                });
               }
               if (agentMasterData.agentNo) {
                 Object.assign(logData, {
                   "Agent Number": agentMasterData.agentNo,
-                })
+                });
               }
               if (agentMasterData.fullName) {
                 Object.assign(logData, {
                   "Full Name": agentMasterData.fullName,
-                })
+                });
               }
               if (agentMasterData.dob) {
                 Object.assign(logData, {
-                  "BirthDate": agentMasterData.dob,
-                })
+                  BirthDate: agentMasterData.dob,
+                });
               }
               if (agentMasterData.gender) {
                 Object.assign(logData, {
-                  "Gender": agentMasterData.gender,
-                })
+                  Gender: agentMasterData.gender,
+                });
               }
               if (agentMasterData.email) {
                 Object.assign(logData, {
-                  "Email": agentMasterData.email,
-                })
+                  Email: agentMasterData.email,
+                });
               }
               if (agentMasterData.contactNo) {
                 Object.assign(logData, {
                   "Contact Number": agentMasterData.contactNo,
-                })
+                });
               }
               if (agentMasterData.currAddress) {
                 Object.assign(logData, {
                   "Current Address": agentMasterData.currAddress,
-                })
+                });
               }
               if (agentMasterData.currZip) {
                 Object.assign(logData, {
                   "Current Zip": agentMasterData.currZip,
-                })
+                });
               }
               if (agentMasterData.currCity) {
                 Object.assign(logData, {
                   "Current City": agentMasterData.currCity,
-                })
+                });
               }
               if (agentMasterData.currState) {
                 Object.assign(logData, {
                   "Current State": agentMasterData.currState,
-                })
+                });
               }
               if (agentMasterData.permAddress) {
                 Object.assign(logData, {
                   "Permanent Address": agentMasterData.permAddress,
-                })
+                });
               }
               if (agentMasterData.permZip) {
                 Object.assign(logData, {
                   "Permanent Zip": agentMasterData.permZip,
-                })
+                });
               }
               if (agentMasterData.permCity) {
                 Object.assign(logData, {
                   "Permanent City": agentMasterData.permCity,
-                })
+                });
               }
               if (agentMasterData.permState) {
                 Object.assign(logData, {
                   "Permanent State": agentMasterData.permState,
-                })
+                });
               }
               if (agentMasterData.panCard) {
                 Object.assign(logData, {
                   "Pan Card": agentMasterData.panCard,
-                })
+                });
               }
               if (agentMasterData.aadharCard) {
                 Object.assign(logData, {
                   "Aadhar Card ": agentMasterData.aadharCard,
-                })
+                });
               }
               if (agentMasterData.primaryLang) {
                 Object.assign(logData, {
                   "Primary Language": agentMasterData.primaryLang,
-                })
+                });
               }
               if (agentMasterData.secondaryLang) {
                 Object.assign(logData, {
                   "Secondary Language": agentMasterData.secondaryLang,
-                })
+                });
               }
               if (agentMasterData.thirdLang) {
                 Object.assign(logData, {
                   "Third Language": agentMasterData.thirdLang,
-                })
+                });
               }
               if (agentMasterData.isActive) {
                 Object.assign(logData, {
-                  "Status": agentMasterData.isActive,
-                })
+                  Status: agentMasterData.isActive,
+                });
               }
               if (agentMasterData.bankAc) {
                 Object.assign(logData, {
                   "Bank Account": agentMasterData.bankAc,
-                })
+                });
               }
               if (agentMasterData.bankAcType) {
                 Object.assign(logData, {
                   "Bank Account Type": agentMasterData.bankAcType,
-                })
+                });
               }
               if (agentMasterData.bankIfsc) {
                 Object.assign(logData, {
                   "Bank IFSC": agentMasterData.bankIfsc,
-                })
+                });
               }
               if (agentMasterData.bankName) {
                 Object.assign(logData, {
                   "Bank Account": agentMasterData.bankName,
-                })
+                });
               }
               if (agentMasterData.workLocation1) {
                 Object.assign(logData, {
                   "Work Location 1": agentMasterData.workLocation1,
-                })
+                });
               }
               if (agentMasterData.workLocation2) {
                 Object.assign(logData, {
                   "Work Location 2": agentMasterData.workLocation2,
-                })
+                });
               }
 
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Agent Master added successfully."
-              }
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Agent Master added successfully.",
+              };
               let userActivities = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                dataId:response.data.data.id,
-                userLoginId:convertTokenToObj.id,
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
                 userActivity: logDataString,
-                operationName: "Agent Master added successfully."
-            }
-              handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentMaster}`,userActivities,{
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }).then(()=>{
-                console.log("user activity added")
-              })
-              handlers.auditLog.addAuditLog(auditlog,
-                helpers.auditLog.agentMaster,response.data.data.id,{
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }).then(()=>{
-                console.log("Audit log added")
-              })
+                operationName: "Agent Master added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.agentMaster}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.agentMaster,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5526,156 +5604,167 @@ const ContentLogic = (props) => {
               getAgentTemplatePricingAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-    setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (agentPricingTemplateData.templateName) {
                 Object.assign(logData, {
                   "Template Name": agentPricingTemplateData.templateName,
-                })
-            }
-            if (agentPricingTemplateData.description) {
-              Object.assign(logData, {
-                "Description": agentPricingTemplateData.description,
-              })
-            }
+                });
+              }
+              if (agentPricingTemplateData.description) {
+                Object.assign(logData, {
+                  Description: agentPricingTemplateData.description,
+                });
+              }
               if (agentPricingTemplateData.approvalRemarks) {
                 Object.assign(logData, {
                   "Approval Remark": agentPricingTemplateData.approvalRemarks,
-                })
-            }
-            if (agentPricingTemplateData.industry) {
-              Object.assign(logData, {
-                "Industry": agentPricingTemplateData.industry,
-              })
-            }
-            if (agentPricingTemplateData.category) {
-              Object.assign(logData, {
-                "Industry": agentPricingTemplateData.category,
-              })
-            }
-            if (agentPricingTemplateData.education) {
-              Object.assign(logData, {
-                "Education": agentPricingTemplateData.education,
-              })
-            }
-            if (agentPricingTemplateData.fullName) {
-              Object.assign(logData, {
-                "Full Name": agentPricingTemplateData.fullName,
-              })
-            }
-            if (agentPricingTemplateData.dob) {
-              Object.assign(logData, {
-                "BirthDate": agentPricingTemplateData.dob,
-              })
-            }
-            if (agentPricingTemplateData.primaryLanguage) {
-              Object.assign(logData, {
-                "Primary Language": agentPricingTemplateData.primaryLanguage,
-              })
-            }
-            if (agentPricingTemplateData.secondaryLanguage) {
-              Object.assign(logData, {
-                "Secondary Language": agentPricingTemplateData.secondaryLanguage,
-              })
-            }
-            if (agentPricingTemplateData.contactNo1) {
-              Object.assign(logData, {
-                "Mobile No": agentPricingTemplateData.contactNo1,
-              })
-            }
-            if (agentPricingTemplateData.currCity) {
-              Object.assign(logData, {
-                "Current City": agentPricingTemplateData.currCity,
-              })
-            }
-            if (agentPricingTemplateData.currZip) {
-              Object.assign(logData, {
-                "Current Zip": agentPricingTemplateData.currZip,
-              })
-            }
-            if (agentPricingTemplateData.email1) {
-              Object.assign(logData, {
-                "Primary Email": agentPricingTemplateData.email1,
-              })
-            }
-            if (agentPricingTemplateData.preferLocation1) {
-              Object.assign(logData, {
-                "Prefered Location 1": agentPricingTemplateData.preferLocation1,
-              })
-            }
-            if (agentPricingTemplateData.preferLocation2) {
-              Object.assign(logData, {
-                "Prefered Location 2": agentPricingTemplateData.preferLocation2,
-              })
-            }
-            if (agentPricingTemplateData.expYears) {
-              Object.assign(logData, {
-                "Work Exp Yrs": agentPricingTemplateData.expYears,
-              })
-            }
-            if (agentPricingTemplateData.lastCompany) {
-              Object.assign(logData, {
-                "Last Company Name": agentPricingTemplateData.lastCompany,
-              })
-            }
-            if (agentPricingTemplateData.designation) {
-              Object.assign(logData, {
-                "Designation": agentPricingTemplateData.designation,
-              })
-            }
-            if (agentPricingTemplateData.skill1) {
-              Object.assign(logData, {
-                "Skill 1": agentPricingTemplateData.skill1,
-              })
-            }
-            if (agentPricingTemplateData.skill2) {
-              Object.assign(logData, {
-                "Skill 2": agentPricingTemplateData.skill2,
-              })
-            }
-            if (agentPricingTemplateData.isActive) {
-              Object.assign(logData, {
-                "Is Active": agentPricingTemplateData.isActive,
-              })
-            }
+                });
+              }
+              if (agentPricingTemplateData.industry) {
+                Object.assign(logData, {
+                  Industry: agentPricingTemplateData.industry,
+                });
+              }
+              if (agentPricingTemplateData.category) {
+                Object.assign(logData, {
+                  Industry: agentPricingTemplateData.category,
+                });
+              }
+              if (agentPricingTemplateData.education) {
+                Object.assign(logData, {
+                  Education: agentPricingTemplateData.education,
+                });
+              }
+              if (agentPricingTemplateData.fullName) {
+                Object.assign(logData, {
+                  "Full Name": agentPricingTemplateData.fullName,
+                });
+              }
+              if (agentPricingTemplateData.dob) {
+                Object.assign(logData, {
+                  BirthDate: agentPricingTemplateData.dob,
+                });
+              }
+              if (agentPricingTemplateData.primaryLanguage) {
+                Object.assign(logData, {
+                  "Primary Language": agentPricingTemplateData.primaryLanguage,
+                });
+              }
+              if (agentPricingTemplateData.secondaryLanguage) {
+                Object.assign(logData, {
+                  "Secondary Language":
+                    agentPricingTemplateData.secondaryLanguage,
+                });
+              }
+              if (agentPricingTemplateData.contactNo1) {
+                Object.assign(logData, {
+                  "Mobile No": agentPricingTemplateData.contactNo1,
+                });
+              }
+              if (agentPricingTemplateData.currCity) {
+                Object.assign(logData, {
+                  "Current City": agentPricingTemplateData.currCity,
+                });
+              }
+              if (agentPricingTemplateData.currZip) {
+                Object.assign(logData, {
+                  "Current Zip": agentPricingTemplateData.currZip,
+                });
+              }
+              if (agentPricingTemplateData.email1) {
+                Object.assign(logData, {
+                  "Primary Email": agentPricingTemplateData.email1,
+                });
+              }
+              if (agentPricingTemplateData.preferLocation1) {
+                Object.assign(logData, {
+                  "Prefered Location 1":
+                    agentPricingTemplateData.preferLocation1,
+                });
+              }
+              if (agentPricingTemplateData.preferLocation2) {
+                Object.assign(logData, {
+                  "Prefered Location 2":
+                    agentPricingTemplateData.preferLocation2,
+                });
+              }
+              if (agentPricingTemplateData.expYears) {
+                Object.assign(logData, {
+                  "Work Exp Yrs": agentPricingTemplateData.expYears,
+                });
+              }
+              if (agentPricingTemplateData.lastCompany) {
+                Object.assign(logData, {
+                  "Last Company Name": agentPricingTemplateData.lastCompany,
+                });
+              }
+              if (agentPricingTemplateData.designation) {
+                Object.assign(logData, {
+                  Designation: agentPricingTemplateData.designation,
+                });
+              }
+              if (agentPricingTemplateData.skill1) {
+                Object.assign(logData, {
+                  "Skill 1": agentPricingTemplateData.skill1,
+                });
+              }
+              if (agentPricingTemplateData.skill2) {
+                Object.assign(logData, {
+                  "Skill 2": agentPricingTemplateData.skill2,
+                });
+              }
+              if (agentPricingTemplateData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": agentPricingTemplateData.isActive,
+                });
+              }
 
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Agent Pricing Template added successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:response.data.data.id,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName: "Agent Pricing Template added successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentPricingTemplate}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.agentPricingTemplate,response.data.data.id,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Agent Pricing Template added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Agent Pricing Template added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.agentPricingTemplate}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.agentPricingTemplate,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5686,7 +5775,10 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- createAgentPricingTemplate", error);
+            console.error(
+              "There was an error!- createAgentPricingTemplate",
+              error
+            );
           });
         break;
       case "candidate-upload-batch-admin":
@@ -5705,31 +5797,36 @@ const ContentLogic = (props) => {
               // console.log(response.data.message);
               getCandidateUploadBatchAdminAPIcall();
               setOpenAlertMsg(true);
-              setOpenConfirmation(false)
+              setOpenConfirmation(false);
               // setOpenAddBtchprty(false);
               setLoader(false);
               setEditStatus(false);
-    setShowAudit(false)
-              const logData ={}
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
-                let userActivities = {
-                  userName: fullName
-                      ? fullName:"",
-                  email: Email
-                      ? Email
-                      : "",
-                  dataId:helpers.auditLog.adminCandidateUploadBatch,
-                  userLoginId:convertTokenToObj.id,
-                  userActivity: logDataString,
-                  operationName: "Batch approval done successful."
-              }
-                handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,userActivities,{
-                  headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-                }).then(()=>{
-                  console.log("user activity added")
-                })
+              setShowAudit(false);
+              const logData = {};
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: helpers.auditLog.adminCandidateUploadBatch,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Batch approval done successful.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -5760,7 +5857,7 @@ const ContentLogic = (props) => {
               setOpenAddBtchprty(false);
               setLoader(true);
               setEditStatus(false);
-    setShowAudit(false)
+              setShowAudit(false);
             } else {
               // setErrMsg(response.data.message);
               // setOpenErrtMsg(true);
@@ -5790,80 +5887,90 @@ const ContentLogic = (props) => {
               setOpenOtherIndCategory(false);
               setLoader(false);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (otherIndustryC.candidateId) {
                 Object.assign(logData, {
-                  "CandidateId": otherIndustryC.candidateId,
-                })
+                  CandidateId: otherIndustryC.candidateId,
+                });
               }
               if (otherIndustryC.description) {
                 Object.assign(logData, {
-                  "Description": otherIndustryC.description,
-                })
+                  Description: otherIndustryC.description,
+                });
               }
               if (otherIndustryC.id) {
                 Object.assign(logData, {
-                  "Id": otherIndustryC.id,
-                })
+                  Id: otherIndustryC.id,
+                });
               }
               if (otherIndustryC.mode) {
                 Object.assign(logData, {
-                  "Mode": otherIndustryC.mode,
-                })
+                  Mode: otherIndustryC.mode,
+                });
               }
               if (otherIndustryC.text) {
                 Object.assign(logData, {
-                  "Text": otherIndustryC.text,
-                })
+                  Text: otherIndustryC.text,
+                });
               }
               if (otherIndustryC.type) {
                 Object.assign(logData, {
-                  "Type": otherIndustryC.type,
-                })
+                  Type: otherIndustryC.type,
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: (otherIndustryC.mode === "New"?
-              "Other Industry Category Added Successfully.":
-              "Other Industry Category Updated Successfully.")
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName: (otherIndustryC.mode === "New"?
-              "Other Industry Category Added Successfully.":
-              "Other Industry Category Updated Successfully.")
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminOtherIndustryCategory}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.adminOtherIndustryCategory,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName:
+                  otherIndustryC.mode === "New"
+                    ? "Other Industry Category Added Successfully."
+                    : "Other Industry Category Updated Successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName:
+                  otherIndustryC.mode === "New"
+                    ? "Other Industry Category Added Successfully."
+                    : "Other Industry Category Updated Successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.adminOtherIndustryCategory}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.adminOtherIndustryCategory,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setOpenAddBtchprty(false);
               setLoader(false);
@@ -5890,61 +5997,69 @@ const ContentLogic = (props) => {
               getCategoryAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (categoryData.title) {
                 Object.assign(logData, {
-                  "Title": categoryData.title,
-                })
+                  Title: categoryData.title,
+                });
               }
               if (categoryData.description) {
                 Object.assign(logData, {
-                  "Description": categoryData.description,
-                })
+                  Description: categoryData.description,
+                });
               }
               if (categoryData.isActive) {
                 Object.assign(logData, {
                   "Is Active": categoryData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Category added successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Category added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMasterCategory,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Category added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Category added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterCategory,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -5971,71 +6086,79 @@ const ContentLogic = (props) => {
               getCompanyAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (companyData.companyName) {
                 Object.assign(logData, {
                   "Company Name": companyData.companyName,
-                })
+                });
               }
               if (companyData.description) {
                 Object.assign(logData, {
-                  "Description": companyData.description,
-                })
+                  Description: companyData.description,
+                });
               }
               if (companyData.industryId) {
                 Object.assign(logData, {
                   "Industry Id": companyData.industryId,
-                })
+                });
               }
               if (companyData.title) {
                 Object.assign(logData, {
                   "Industry Title": companyData.title,
-                })
+                });
               }
               if (companyData.isActive) {
                 Object.assign(logData, {
                   "Is Active": companyData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Company added successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Company added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMasterCompany,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Company added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Company added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterCompany,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6052,111 +6175,119 @@ const ContentLogic = (props) => {
         break;
       case "customer":
         handler
-        .dataPost(`/v1/customer`, customerData, {
-          headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.status == 201) {
-            console.log(response.data.message);
-            setOpenCandidateModal(false);
-            getCustomerAPIcall();
-            setOpenAlertMsg(true);
-            setEditStatus(false);
-    setShowAudit(false)
-            const logData = {}
+          .dataPost(`/v1/customer`, customerData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 201) {
+              console.log(response.data.message);
+              setOpenCandidateModal(false);
+              getCustomerAPIcall();
+              setOpenAlertMsg(true);
+              setEditStatus(false);
+              setShowAudit(false);
+              const logData = {};
               if (customerData.fullName) {
                 Object.assign(logData, {
                   "Full Name": customerData.fullName,
-                })
+                });
               }
               if (customerData.country) {
                 Object.assign(logData, {
-                  "Country": customerData.country,
-                })
+                  Country: customerData.country,
+                });
               }
               if (customerData.companyName) {
                 Object.assign(logData, {
                   "Company Name": customerData.companyName,
-                })
+                });
               }
               if (customerData.dob) {
                 Object.assign(logData, {
-                  "BirthDate": customerData.dob,
-                })
+                  BirthDate: customerData.dob,
+                });
               }
               if (customerData.gender) {
                 Object.assign(logData, {
-                  "Gender": customerData.gender,
-                })
+                  Gender: customerData.gender,
+                });
               }
               if (customerData.profileImage) {
                 Object.assign(logData, {
                   "Profile Image": customerData.profileImage,
-                })
+                });
               }
               if (customerData.state) {
                 Object.assign(logData, {
-                  "State": customerData.state,
-                })
+                  State: customerData.state,
+                });
               }
               if (customerData.isActive) {
                 Object.assign(logData, {
                   "Is Active": customerData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Customer added successfully."
+                operationName: "Customer added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Customer added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersCustomer,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
+            } else {
+              setErrMsg(response.data.message);
+              setOpenErrtMsg(true);
             }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Customer added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersCustomer,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
-          } else {
-            setErrMsg(response.data.message);
-            setOpenErrtMsg(true);
-          }
-        })
-        .catch((error) => {
-          if (error.status == 400) {
-            // window.alert(error.data.message);
-            setErrMsg(error.data.message);
-            setOpenErrtMsg(true);
-          }
-          console.error("There was an error!- createCustomer", error);
-        });
-      break;
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              // window.alert(error.data.message);
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- createCustomer", error);
+          });
+        break;
       case "industry":
         handler
           .dataPost(`/v1/industries`, industryData, {
@@ -6170,61 +6301,69 @@ const ContentLogic = (props) => {
               getIndustryAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (industryData.title) {
                 Object.assign(logData, {
-                  "Title": industryData.title,
-                })
+                  Title: industryData.title,
+                });
               }
               if (industryData.description) {
                 Object.assign(logData, {
-                  "Description": industryData.description,
-                })
+                  Description: industryData.description,
+                });
               }
               if (industryData.isActive) {
                 Object.assign(logData, {
                   "Is Active": industryData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Industry added successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Industry added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMasterIndustry,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Industry added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Industry added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterIndustry,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6252,66 +6391,74 @@ const ContentLogic = (props) => {
               getRoleAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (roleData.title) {
                 Object.assign(logData, {
-                  "Title": roleData.title,
-                })
+                  Title: roleData.title,
+                });
               }
               if (roleData.description) {
                 Object.assign(logData, {
-                  "Description": roleData.description,
-                })
+                  Description: roleData.description,
+                });
               }
               if (roleData.isActive) {
                 Object.assign(logData, {
                   "Is Active": roleData.isActive,
-                })
+                });
               }
               if (roleData.permissionId) {
                 Object.assign(logData, {
                   "Permission Id": roleData.permissionId,
-                })
+                });
               }
-              
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Role added successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Role added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersRole}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersRole,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Role added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Role added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersRole}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersRole,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6339,61 +6486,69 @@ const ContentLogic = (props) => {
               getSkillSetAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (skillSetData.title) {
                 Object.assign(logData, {
-                  "Title": skillSetData.title,
-                })
+                  Title: skillSetData.title,
+                });
               }
               if (skillSetData.description) {
                 Object.assign(logData, {
-                  "Description": skillSetData.description,
-                })
+                  Description: skillSetData.description,
+                });
               }
               if (skillSetData.isActive) {
                 Object.assign(logData, {
                   "Is Active": skillSetData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "SkillSet added successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"SkillSet added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersSkillSet,response.data.data.id,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "SkillSet added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "SkillSet added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersSkillSet,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6421,77 +6576,85 @@ const ContentLogic = (props) => {
               getSubscriptionAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-    setShowAudit(false)
-               //For Audit Log
-               const logData = {}
-               if (subscriptionData.planName) {
-                 Object.assign(logData, {
-                   "Plan Name": subscriptionData.planName,
-                 })
-               }
-               if (subscriptionData.dataCount) {
-                 Object.assign(logData, {
-                   "Data Count": subscriptionData.description,
-                 })
-               }
-               if (subscriptionData.durationMonths ) {
-                 Object.assign(logData, {
-                   "Duration in Month": subscriptionData.durationMonths,
-                 })
-               }
-               if (subscriptionData.price) {
-                 Object.assign(logData, {
-                   "Price": subscriptionData.price,
-                 })
-               }
-               if (subscriptionData.note) {
-                 Object.assign(logData, {
-                   "Note": subscriptionData.note,
-                 })
-               }
-               if (subscriptionData.isActive) {
-                 Object.assign(logData, {
-                   "Is Active": subscriptionData.isActive,
-                 })
-               }
-   
-               let logDataString = JSON.stringify(logData)
-               let fullName = convertTokenToObj.name
-               let Email = convertTokenToObj.userEmail
-               let auditlog = {
-                 userName: fullName
-                     ? fullName:"",
-                 email: Email
-                     ? Email
-                     : "",
-                 contactNumber: auditLogData
-                     ? auditLogData.contactNo
-                     : "",
-                 updatedFiled: logDataString,
-                 operationName: "Subscription Added successfully."
-             }
-             let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Subscription Added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-             handlers.auditLog.addAuditLog(auditlog,
-               helpers.auditLog.otherMastersSubscription,response.data.data.id,{
-               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-             }).then(()=>{
-               console.log("Audit log added")
-             })
+              setShowAudit(false);
+              //For Audit Log
+              const logData = {};
+              if (subscriptionData.planName) {
+                Object.assign(logData, {
+                  "Plan Name": subscriptionData.planName,
+                });
+              }
+              if (subscriptionData.dataCount) {
+                Object.assign(logData, {
+                  "Data Count": subscriptionData.description,
+                });
+              }
+              if (subscriptionData.durationMonths) {
+                Object.assign(logData, {
+                  "Duration in Month": subscriptionData.durationMonths,
+                });
+              }
+              if (subscriptionData.price) {
+                Object.assign(logData, {
+                  Price: subscriptionData.price,
+                });
+              }
+              if (subscriptionData.note) {
+                Object.assign(logData, {
+                  Note: subscriptionData.note,
+                });
+              }
+              if (subscriptionData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": subscriptionData.isActive,
+                });
+              }
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Subscription Added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Subscription Added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersSubscription,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6519,157 +6682,165 @@ const ContentLogic = (props) => {
               getUserAPIcall();
               setOpenAlertMsg(true);
               setEditStatus(false);
-    setShowAudit(false)
-               //For Audit Log
-               const logData = {}
-               if (userData.fullName) {
-                 Object.assign(logData, {
-                   "Full Name": userData.fullName,
-                 })
-               }
-               if (userData.dob) {
-                 Object.assign(logData, {
-                   "BirthDate": userData.dob,
-                 })
-               }
-               if (userData.gender ) {
-                 Object.assign(logData, {
-                   "Gender": userData.gender,
-                 })
-               }
-               if (userData.email) {
-                 Object.assign(logData, {
-                   "Email": userData.email,
-                 })
-               }
-               if (userData.contactNo) {
-                 Object.assign(logData, {
-                   "Contact No": userData.contactNo,
-                 })
-               }
-               if (userData.roleId) {
-                 Object.assign(logData, {
-                   "Role Id": userData.roleId,
-                 })
-               }
-               if (userData.currAddress) {
-                 Object.assign(logData, {
-                   "Current Address": userData.currAddress,
-                 })
-               }
-               if (userData.currCity) {
-                 Object.assign(logData, {
-                   "Current City": userData.currCity,
-                 })
-               }
-               if (userData.currState) {
-                 Object.assign(logData, {
-                   "Current State": userData.currState,
-                 })
-               }
-               if (userData.currCountry) {
-                 Object.assign(logData, {
-                   "Current Country": userData.currCountry,
-                 })
-               }
-               if (userData.currZip) {
-                 Object.assign(logData, {
-                   "Current Zip": userData.currZip,
-                 })
-               }
-               if (userData.permAddress) {
-                 Object.assign(logData, {
-                   "Permanent Address": userData.permAddress,
-                 })
-               }
-               if (userData.permCity) {
-                 Object.assign(logData, {
-                   "Permanent City": userData.permCity,
-                 })
-               }
-               if (userData.permState) {
-                 Object.assign(logData, {
-                   "Permanent State": userData.permState,
-                 })
-               }
-               if (userData.permZip) {
-                 Object.assign(logData, {
-                   "Permanent Zip": userData.permZip,
-                 })
-               }
-               if (userData.panCard) {
-                 Object.assign(logData, {
-                   "Pan Card": userData.panCard,
-                 })
-               }
-               if (userData.aadharCard) {
-                 Object.assign(logData, {
-                   "Aadhar Card": userData.aadharCard,
-                 })
-               }
-               if (userData.primaryLang) {
-                 Object.assign(logData, {
-                   "Primary Language": userData.primaryLang,
-                 })
-               }
-               if (userData.secondaryLang) {
-                 Object.assign(logData, {
-                   "Secondary Language": userData.secondaryLang,
-                 })
-               }
-               if (userData.thirdLang) {
-                 Object.assign(logData, {
-                   "Third Language": userData.thirdLang,
-                 })
-               }
-               if (userData.note) {
-                 Object.assign(logData, {
-                   "Note": userData.note,
-                 })
-               }
-               if (userData.isActive) {
-                 Object.assign(logData, {
-                   "Is Active": userData.isActive,
-                 })
-               }
-   
-               let logDataString = JSON.stringify(logData)
-               let fullName = convertTokenToObj.name
-               let Email = convertTokenToObj.userEmail
-               let auditlog = {
-                 userName: fullName
-                     ? fullName:"",
-                 email: Email
-                     ? Email
-                     : "",
-                 contactNumber: auditLogData
-                     ? auditLogData.contactNo
-                     : "",
-                 updatedFiled: logDataString,
-                 operationName: "User Added successfully."
-             }
-             let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:response.data.data.id,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"User Added successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-             handlers.auditLog.addAuditLog(auditlog,
-               helpers.auditLog.otherMastersUsers,response.data.data.id,{
-               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-             }).then(()=>{
-               console.log("Audit log added")
-             })
+              setShowAudit(false);
+              //For Audit Log
+              const logData = {};
+              if (userData.fullName) {
+                Object.assign(logData, {
+                  "Full Name": userData.fullName,
+                });
+              }
+              if (userData.dob) {
+                Object.assign(logData, {
+                  BirthDate: userData.dob,
+                });
+              }
+              if (userData.gender) {
+                Object.assign(logData, {
+                  Gender: userData.gender,
+                });
+              }
+              if (userData.email) {
+                Object.assign(logData, {
+                  Email: userData.email,
+                });
+              }
+              if (userData.contactNo) {
+                Object.assign(logData, {
+                  "Contact No": userData.contactNo,
+                });
+              }
+              if (userData.roleId) {
+                Object.assign(logData, {
+                  "Role Id": userData.roleId,
+                });
+              }
+              if (userData.currAddress) {
+                Object.assign(logData, {
+                  "Current Address": userData.currAddress,
+                });
+              }
+              if (userData.currCity) {
+                Object.assign(logData, {
+                  "Current City": userData.currCity,
+                });
+              }
+              if (userData.currState) {
+                Object.assign(logData, {
+                  "Current State": userData.currState,
+                });
+              }
+              if (userData.currCountry) {
+                Object.assign(logData, {
+                  "Current Country": userData.currCountry,
+                });
+              }
+              if (userData.currZip) {
+                Object.assign(logData, {
+                  "Current Zip": userData.currZip,
+                });
+              }
+              if (userData.permAddress) {
+                Object.assign(logData, {
+                  "Permanent Address": userData.permAddress,
+                });
+              }
+              if (userData.permCity) {
+                Object.assign(logData, {
+                  "Permanent City": userData.permCity,
+                });
+              }
+              if (userData.permState) {
+                Object.assign(logData, {
+                  "Permanent State": userData.permState,
+                });
+              }
+              if (userData.permZip) {
+                Object.assign(logData, {
+                  "Permanent Zip": userData.permZip,
+                });
+              }
+              if (userData.panCard) {
+                Object.assign(logData, {
+                  "Pan Card": userData.panCard,
+                });
+              }
+              if (userData.aadharCard) {
+                Object.assign(logData, {
+                  "Aadhar Card": userData.aadharCard,
+                });
+              }
+              if (userData.primaryLang) {
+                Object.assign(logData, {
+                  "Primary Language": userData.primaryLang,
+                });
+              }
+              if (userData.secondaryLang) {
+                Object.assign(logData, {
+                  "Secondary Language": userData.secondaryLang,
+                });
+              }
+              if (userData.thirdLang) {
+                Object.assign(logData, {
+                  "Third Language": userData.thirdLang,
+                });
+              }
+              if (userData.note) {
+                Object.assign(logData, {
+                  Note: userData.note,
+                });
+              }
+              if (userData.isActive) {
+                Object.assign(logData, {
+                  "Is Active": userData.isActive,
+                });
+              }
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "User Added successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: response.data.data.id,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "User Added successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersUsers,
+                  response.data.data.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6715,152 +6886,222 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateMasterAPIcall();
               setEditStatus(false);
-    setShowAudit(false)
-              const logData = {}
-              if (updateCandidatesMasterData.profImgPath !== 
-                updateCandidateMasterDataAudit.profImgPath) 
-                {
+              setShowAudit(false);
+              const logData = {};
+              if (
+                updateCandidatesMasterData.profImgPath !==
+                updateCandidateMasterDataAudit.profImgPath
+              ) {
                 Object.assign(logData, {
                   "Profile Image": `${updateCandidatesMasterData.profImgPath}`,
-                })
+                });
               }
-              if (updateCandidatesMasterData.fullName !== updateCandidateMasterDataAudit.fullName) {
+              if (
+                updateCandidatesMasterData.fullName !==
+                updateCandidateMasterDataAudit.fullName
+              ) {
                 Object.assign(logData, {
                   "Full Name": updateCandidatesMasterData.fullName,
-                })
+                });
               }
-              if (updateCandidatesMasterData.dob !== updateCandidateMasterDataAudit.dob) {
+              if (
+                updateCandidatesMasterData.dob !==
+                updateCandidateMasterDataAudit.dob
+              ) {
                 Object.assign(logData, {
-                  "BirthDate": updateCandidatesMasterData.dob,
-                })
+                  BirthDate: updateCandidatesMasterData.dob,
+                });
               }
-              if (updateCandidatesMasterData.gender !== updateCandidateMasterDataAudit.gender) {
+              if (
+                updateCandidatesMasterData.gender !==
+                updateCandidateMasterDataAudit.gender
+              ) {
                 Object.assign(logData, {
-                  "Gender": updateCandidatesMasterData.gender,
-                })
+                  Gender: updateCandidatesMasterData.gender,
+                });
               }
-              if (updateCandidatesMasterData.permAddress !== updateCandidateMasterDataAudit.permAddress) {
+              if (
+                updateCandidatesMasterData.permAddress !==
+                updateCandidateMasterDataAudit.permAddress
+              ) {
                 Object.assign(logData, {
                   "Permanent Address": updateCandidatesMasterData.permAddress,
-                })
+                });
               }
-              if (updateCandidatesMasterData.permCity !== updateCandidateMasterDataAudit.permCity) {
+              if (
+                updateCandidatesMasterData.permCity !==
+                updateCandidateMasterDataAudit.permCity
+              ) {
                 Object.assign(logData, {
                   "Permanent City": updateCandidatesMasterData.permCity,
-                })
+                });
               }
-              if (updateCandidatesMasterData.permState !== updateCandidateMasterDataAudit.permState) {
+              if (
+                updateCandidatesMasterData.permState !==
+                updateCandidateMasterDataAudit.permState
+              ) {
                 Object.assign(logData, {
                   "Permanent State": updateCandidatesMasterData.permState,
-                })
+                });
               }
-              if (updateCandidatesMasterData.permCountry !== updateCandidateMasterDataAudit.permCountry) {
+              if (
+                updateCandidatesMasterData.permCountry !==
+                updateCandidateMasterDataAudit.permCountry
+              ) {
                 Object.assign(logData, {
                   "Permanent Country": updateCandidatesMasterData.permCountry,
-                })
+                });
               }
-              if (updateCandidatesMasterData.permZip !== updateCandidateMasterDataAudit.permZip) {
+              if (
+                updateCandidatesMasterData.permZip !==
+                updateCandidateMasterDataAudit.permZip
+              ) {
                 Object.assign(logData, {
                   "Permanent Zip": updateCandidatesMasterData.permZip,
-                })
+                });
               }
-              if (updateCandidatesMasterData.currAddress !== updateCandidateMasterDataAudit.currAddress) {
+              if (
+                updateCandidatesMasterData.currAddress !==
+                updateCandidateMasterDataAudit.currAddress
+              ) {
                 Object.assign(logData, {
                   "Current Address": updateCandidatesMasterData.currAddress,
-                })
+                });
               }
-              if (updateCandidatesMasterData.currCity !== updateCandidateMasterDataAudit.currCity) {
+              if (
+                updateCandidatesMasterData.currCity !==
+                updateCandidateMasterDataAudit.currCity
+              ) {
                 Object.assign(logData, {
                   "Current Address": updateCandidatesMasterData.currCity,
-                })
+                });
               }
-              if (updateCandidatesMasterData.currCountry !== updateCandidateMasterDataAudit.currCountry) {
+              if (
+                updateCandidatesMasterData.currCountry !==
+                updateCandidateMasterDataAudit.currCountry
+              ) {
                 Object.assign(logData, {
                   "Current Country": updateCandidatesMasterData.currCountry,
-                })
+                });
               }
-              if (updateCandidatesMasterData.currState !== updateCandidateMasterDataAudit.currState) {
+              if (
+                updateCandidatesMasterData.currState !==
+                updateCandidateMasterDataAudit.currState
+              ) {
                 Object.assign(logData, {
                   "Current State": updateCandidatesMasterData.currState,
-                })
+                });
               }
-              if (updateCandidatesMasterData.currZip !== updateCandidateMasterDataAudit.currZip) {
+              if (
+                updateCandidatesMasterData.currZip !==
+                updateCandidateMasterDataAudit.currZip
+              ) {
                 Object.assign(logData, {
-                  "Gender": updateCandidatesMasterData.currZip,
-                })
+                  Gender: updateCandidatesMasterData.currZip,
+                });
               }
-              if (updateCandidatesMasterData.email1 !== updateCandidateMasterDataAudit.email1) {
+              if (
+                updateCandidatesMasterData.email1 !==
+                updateCandidateMasterDataAudit.email1
+              ) {
                 Object.assign(logData, {
                   "Primary Email": updateCandidatesMasterData.email1,
-                })
+                });
               }
-              if (updateCandidatesMasterData.email2 !== updateCandidateMasterDataAudit.email2) {
+              if (
+                updateCandidatesMasterData.email2 !==
+                updateCandidateMasterDataAudit.email2
+              ) {
                 Object.assign(logData, {
                   "Secondary Email": updateCandidatesMasterData.email2,
-                })
+                });
               }
-              if (updateCandidatesMasterData.contactNo1 !== updateCandidateMasterDataAudit.contactNo1) {
+              if (
+                updateCandidatesMasterData.contactNo1 !==
+                updateCandidateMasterDataAudit.contactNo1
+              ) {
                 Object.assign(logData, {
                   "Primary Contact": updateCandidatesMasterData.contactNo1,
-                })
+                });
               }
-              if (updateCandidatesMasterData.contactNo2 !== updateCandidateMasterDataAudit.contactNo2) {
+              if (
+                updateCandidatesMasterData.contactNo2 !==
+                updateCandidateMasterDataAudit.contactNo2
+              ) {
                 Object.assign(logData, {
                   "Secondary Contact": updateCandidatesMasterData.contactNo2,
-                })
+                });
               }
-              if (updateCandidatesMasterData.aadharNo !== updateCandidateMasterDataAudit.aadharNo) {
+              if (
+                updateCandidatesMasterData.aadharNo !==
+                updateCandidateMasterDataAudit.aadharNo
+              ) {
                 Object.assign(logData, {
                   "Aadhar Number": updateCandidatesMasterData.aadharNo,
-                })
+                });
               }
-              if (updateCandidatesMasterData.registrationStatus !== updateCandidateMasterDataAudit.registrationStatus) {
+              if (
+                updateCandidatesMasterData.registrationStatus !==
+                updateCandidateMasterDataAudit.registrationStatus
+              ) {
                 Object.assign(logData, {
-                  "Registration Status": updateCandidatesMasterData.registrationStatus,
-                })
+                  "Registration Status":
+                    updateCandidatesMasterData.registrationStatus,
+                });
               }
-              if (updateCandidatesMasterData.isActive !== updateCandidateMasterDataAudit.isActive) {
+              if (
+                updateCandidatesMasterData.isActive !==
+                updateCandidateMasterDataAudit.isActive
+              ) {
                 Object.assign(logData, {
                   "Is Active": updateCandidatesMasterData.isActive,
-                })
+                });
               }
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Candidate Master Updated successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName: "Candidate Master updated successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateMaster}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.candidateMaster,updateCandidatesMasterData.id,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Candidate Master Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Candidate Master updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.candidateMaster}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.candidateMaster,
+                  updateCandidatesMasterData.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -6897,220 +7138,339 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateVerificationAPIcall();
               setEditStatus(false);
-    setShowAudit(false)
-              const logData = {}
-              if (updateCandidateVerificationData.callCentre
-                .candidateConsent  !== updateCandidateVerificationDataAuditLog.callCentre
-                .candidateConsent) {
+              setShowAudit(false);
+              const logData = {};
+              if (
+                updateCandidateVerificationData.callCentre.candidateConsent !==
+                updateCandidateVerificationDataAuditLog.callCentre
+                  .candidateConsent
+              ) {
                 Object.assign(logData, {
-                  "Candidate Consent": updateCandidateVerificationData.callCentre
-                  .candidateConsent,
-                })
+                  "Candidate Consent":
+                    updateCandidateVerificationData.callCentre.candidateConsent,
+                });
               }
-              if (updateCandidateVerificationData.callCentre.callStatus 
-                !== updateCandidateVerificationDataAuditLog.callCentre.callStatus) {
+              if (
+                updateCandidateVerificationData.callCentre.callStatus !==
+                updateCandidateVerificationDataAuditLog.callCentre.callStatus
+              ) {
                 Object.assign(logData, {
-                  "Call Status": updateCandidateVerificationData.callCentre.callStatus
-                })
+                  "Call Status":
+                    updateCandidateVerificationData.callCentre.callStatus,
+                });
               }
-              if (updateCandidateVerificationData.industry !== updateCandidateVerificationDataAuditLog.industry) {
+              if (
+                updateCandidateVerificationData.industry !==
+                updateCandidateVerificationDataAuditLog.industry
+              ) {
                 Object.assign(logData, {
-                  "Old Industry": updateCandidateVerificationData.industry
-                })
+                  "Old Industry": updateCandidateVerificationData.industry,
+                });
               }
-              if (updateCandidateVerificationData.category !== updateCandidateVerificationDataAuditLog.category) {
+              if (
+                updateCandidateVerificationData.category !==
+                updateCandidateVerificationDataAuditLog.category
+              ) {
                 Object.assign(logData, {
-                  "Old Category": updateCandidateVerificationData.category
-                })
+                  "Old Category": updateCandidateVerificationData.category,
+                });
               }
-              if (updateCandidateVerificationData.education !== updateCandidateVerificationDataAuditLog.education) {
+              if (
+                updateCandidateVerificationData.education !==
+                updateCandidateVerificationDataAuditLog.education
+              ) {
                 Object.assign(logData, {
-                  "Old Education": updateCandidateVerificationData.education
-                })
+                  "Old Education": updateCandidateVerificationData.education,
+                });
               }
-              if (updateCandidateVerificationData.fullName !== updateCandidateVerificationDataAuditLog.fullName) {
+              if (
+                updateCandidateVerificationData.fullName !==
+                updateCandidateVerificationDataAuditLog.fullName
+              ) {
                 Object.assign(logData, {
-                  "Full Name": updateCandidateVerificationData.fullName
-                })
+                  "Full Name": updateCandidateVerificationData.fullName,
+                });
               }
-              if (updateCandidateVerificationData.contactNo1 !== updateCandidateVerificationDataAuditLog.contactNo1) {
+              if (
+                updateCandidateVerificationData.contactNo1 !==
+                updateCandidateVerificationDataAuditLog.contactNo1
+              ) {
                 Object.assign(logData, {
-                  "Primary Mobile No": updateCandidateVerificationData.contactNo1
-                })
+                  "Primary Mobile No":
+                    updateCandidateVerificationData.contactNo1,
+                });
               }
-              if (updateCandidateVerificationData.contactNo2 !== updateCandidateVerificationDataAuditLog.contactNo2) {
+              if (
+                updateCandidateVerificationData.contactNo2 !==
+                updateCandidateVerificationDataAuditLog.contactNo2
+              ) {
                 Object.assign(logData, {
-                  "secondary Mobile No": updateCandidateVerificationData.contactNo2
-                })
+                  "secondary Mobile No":
+                    updateCandidateVerificationData.contactNo2,
+                });
               }
-              if (updateCandidateVerificationData.email1 !== updateCandidateVerificationDataAuditLog.email1) {
+              if (
+                updateCandidateVerificationData.email1 !==
+                updateCandidateVerificationDataAuditLog.email1
+              ) {
                 Object.assign(logData, {
-                  "Primary Email": updateCandidateVerificationData.email1
-                })
+                  "Primary Email": updateCandidateVerificationData.email1,
+                });
               }
-              if (updateCandidateVerificationData.expYears !== updateCandidateVerificationDataAuditLog.expYears) {
+              if (
+                updateCandidateVerificationData.expYears !==
+                updateCandidateVerificationDataAuditLog.expYears
+              ) {
                 Object.assign(logData, {
-                  "Total Exp Years": updateCandidateVerificationData.expYears
-                })
+                  "Total Exp Years": updateCandidateVerificationData.expYears,
+                });
               }
-              if (updateCandidateVerificationData.education !== updateCandidateVerificationDataAuditLog.education) {
+              if (
+                updateCandidateVerificationData.education !==
+                updateCandidateVerificationDataAuditLog.education
+              ) {
                 Object.assign(logData, {
-                  "Education": updateCandidateVerificationData.education
-                })
+                  Education: updateCandidateVerificationData.education,
+                });
               }
-              if (updateCandidateVerificationData.dob !== updateCandidateVerificationDataAuditLog.dob) {
+              if (
+                updateCandidateVerificationData.dob !==
+                updateCandidateVerificationDataAuditLog.dob
+              ) {
                 Object.assign(logData, {
-                  "BirthDate": updateCandidateVerificationData.dob
-                })
+                  BirthDate: updateCandidateVerificationData.dob,
+                });
               }
-              if (updateCandidateVerificationData.gender !== updateCandidateVerificationDataAuditLog.gender) {
+              if (
+                updateCandidateVerificationData.gender !==
+                updateCandidateVerificationDataAuditLog.gender
+              ) {
                 Object.assign(logData, {
-                  "Gender": updateCandidateVerificationData.gender
-                })
+                  Gender: updateCandidateVerificationData.gender,
+                });
               }
-              if (updateCandidateVerificationData.industries !== updateCandidateVerificationDataAuditLog.industries) {
+              if (
+                updateCandidateVerificationData.industries !==
+                updateCandidateVerificationDataAuditLog.industries
+              ) {
                 Object.assign(logData, {
-                  "Industry": updateCandidateVerificationData.industries
-                })
+                  Industry: updateCandidateVerificationData.industries,
+                });
               }
-              if (updateCandidateVerificationData.categories !== updateCandidateVerificationDataAuditLog.categories) {
+              if (
+                updateCandidateVerificationData.categories !==
+                updateCandidateVerificationDataAuditLog.categories
+              ) {
                 Object.assign(logData, {
-                  "Category": updateCandidateVerificationData.categories
-                })
+                  Category: updateCandidateVerificationData.categories,
+                });
               }
-              if (updateCandidateVerificationData.skill1 !== updateCandidateVerificationDataAuditLog.skill1) {
+              if (
+                updateCandidateVerificationData.skill1 !==
+                updateCandidateVerificationDataAuditLog.skill1
+              ) {
                 Object.assign(logData, {
-                  "Primary Skill Name": updateCandidateVerificationData.skill1
-                })
+                  "Primary Skill Name": updateCandidateVerificationData.skill1,
+                });
               }
-              if (updateCandidateVerificationData.skill2 !== updateCandidateVerificationDataAuditLog.skill2) {
+              if (
+                updateCandidateVerificationData.skill2 !==
+                updateCandidateVerificationDataAuditLog.skill2
+              ) {
                 Object.assign(logData, {
-                  "Secondary Skill Name": updateCandidateVerificationData.skill2
-                })
+                  "Secondary Skill Name":
+                    updateCandidateVerificationData.skill2,
+                });
               }
-              if (updateCandidateVerificationData.preferLocation1 !== updateCandidateVerificationDataAuditLog.preferLocation1) {
+              if (
+                updateCandidateVerificationData.preferLocation1 !==
+                updateCandidateVerificationDataAuditLog.preferLocation1
+              ) {
                 Object.assign(logData, {
-                  "Prefered Location 1": updateCandidateVerificationData.preferLocation1
-                })
+                  "Prefered Location 1":
+                    updateCandidateVerificationData.preferLocation1,
+                });
               }
-              if (updateCandidateVerificationData.preferLocation2 !== updateCandidateVerificationDataAuditLog.preferLocation2) {
+              if (
+                updateCandidateVerificationData.preferLocation2 !==
+                updateCandidateVerificationDataAuditLog.preferLocation2
+              ) {
                 Object.assign(logData, {
-                  "Prefered Location 2": updateCandidateVerificationData.preferLocation2
-                })
+                  "Prefered Location 2":
+                    updateCandidateVerificationData.preferLocation2,
+                });
               }
-              if (updateCandidateVerificationData.primaryLanguage !== updateCandidateVerificationDataAuditLog.primaryLanguage) {
+              if (
+                updateCandidateVerificationData.primaryLanguage !==
+                updateCandidateVerificationDataAuditLog.primaryLanguage
+              ) {
                 Object.assign(logData, {
-                  "Primary Language": updateCandidateVerificationData.primaryLanguage
-                })
+                  "Primary Language":
+                    updateCandidateVerificationData.primaryLanguage,
+                });
               }
-              if (updateCandidateVerificationData.secondaryLanguage !== updateCandidateVerificationDataAuditLog.secondaryLanguage) {
+              if (
+                updateCandidateVerificationData.secondaryLanguage !==
+                updateCandidateVerificationDataAuditLog.secondaryLanguage
+              ) {
                 Object.assign(logData, {
-                  "Secondary Language": updateCandidateVerificationData.secondaryLanguage
-                })
+                  "Secondary Language":
+                    updateCandidateVerificationData.secondaryLanguage,
+                });
               }
-              if (updateCandidateVerificationData.thirdLanguag !== updateCandidateVerificationDataAuditLog.thirdLanguage) {
+              if (
+                updateCandidateVerificationData.thirdLanguag !==
+                updateCandidateVerificationDataAuditLog.thirdLanguage
+              ) {
                 Object.assign(logData, {
-                  "Third Language": updateCandidateVerificationData.thirdLanguage
-                })
+                  "Third Language":
+                    updateCandidateVerificationData.thirdLanguage,
+                });
               }
-              if (updateCandidateVerificationData.currZip !== updateCandidateVerificationDataAuditLog.currZip) {
+              if (
+                updateCandidateVerificationData.currZip !==
+                updateCandidateVerificationDataAuditLog.currZip
+              ) {
                 Object.assign(logData, {
-                  "Current Pincode": updateCandidateVerificationData.currZip
-                })
+                  "Current Pincode": updateCandidateVerificationData.currZip,
+                });
               }
-              if (updateCandidateVerificationData.currCity !== updateCandidateVerificationDataAuditLog.currCity) {
+              if (
+                updateCandidateVerificationData.currCity !==
+                updateCandidateVerificationDataAuditLog.currCity
+              ) {
                 Object.assign(logData, {
-                  "Current City": updateCandidateVerificationData.currCity
-                })
+                  "Current City": updateCandidateVerificationData.currCity,
+                });
               }
-              if (updateCandidateVerificationData.currState !== updateCandidateVerificationDataAuditLog.currState) {
+              if (
+                updateCandidateVerificationData.currState !==
+                updateCandidateVerificationDataAuditLog.currState
+              ) {
                 Object.assign(logData, {
-                  "Current State": updateCandidateVerificationData.currState
-                })
+                  "Current State": updateCandidateVerificationData.currState,
+                });
               }
-              if (updateCandidateVerificationData.currAddress !== updateCandidateVerificationDataAuditLog.currAddress) {
+              if (
+                updateCandidateVerificationData.currAddress !==
+                updateCandidateVerificationDataAuditLog.currAddress
+              ) {
                 Object.assign(logData, {
-                  "Current Address": updateCandidateVerificationData.currAddress
-                })
+                  "Current Address":
+                    updateCandidateVerificationData.currAddress,
+                });
               }
-              if (updateCandidateVerificationData.permZip !== updateCandidateVerificationDataAuditLog.permZip) {
+              if (
+                updateCandidateVerificationData.permZip !==
+                updateCandidateVerificationDataAuditLog.permZip
+              ) {
                 Object.assign(logData, {
-                  "Permanent Pincode": updateCandidateVerificationData.permZip
-                })
+                  "Permanent Pincode": updateCandidateVerificationData.permZip,
+                });
               }
-              if (updateCandidateVerificationData.permCity !== updateCandidateVerificationDataAuditLog.permCity) {
+              if (
+                updateCandidateVerificationData.permCity !==
+                updateCandidateVerificationDataAuditLog.permCity
+              ) {
                 Object.assign(logData, {
-                  "Permanent City": updateCandidateVerificationData.permCity
-                })
+                  "Permanent City": updateCandidateVerificationData.permCity,
+                });
               }
-              if (updateCandidateVerificationData.permState !== updateCandidateVerificationDataAuditLog.permState) {
+              if (
+                updateCandidateVerificationData.permState !==
+                updateCandidateVerificationDataAuditLog.permState
+              ) {
                 Object.assign(logData, {
-                  "Permanent State": updateCandidateVerificationData.permState
-                })
+                  "Permanent State": updateCandidateVerificationData.permState,
+                });
               }
-              if (updateCandidateVerificationData.permAddress !== updateCandidateVerificationDataAuditLog.permAddress) {
+              if (
+                updateCandidateVerificationData.permAddress !==
+                updateCandidateVerificationDataAuditLog.permAddress
+              ) {
                 Object.assign(logData, {
-                  "Permanent Address": updateCandidateVerificationData.permAddress
-                })
+                  "Permanent Address":
+                    updateCandidateVerificationData.permAddress,
+                });
               }
-              if (updateCandidateVerificationData.aadharNo !== updateCandidateVerificationDataAuditLog.aadharNo) {
+              if (
+                updateCandidateVerificationData.aadharNo !==
+                updateCandidateVerificationDataAuditLog.aadharNo
+              ) {
                 Object.assign(logData, {
-                  "Aadhar Number": updateCandidateVerificationData.aadharNo
-                })
+                  "Aadhar Number": updateCandidateVerificationData.aadharNo,
+                });
               }
-              if (updateCandidateVerificationData.panNo !== updateCandidateVerificationDataAuditLog.panNo) {
+              if (
+                updateCandidateVerificationData.panNo !==
+                updateCandidateVerificationDataAuditLog.panNo
+              ) {
                 Object.assign(logData, {
-                  "Pan Card": updateCandidateVerificationData.panNo
-                })
+                  "Pan Card": updateCandidateVerificationData.panNo,
+                });
               }
-              if (updateCandidateVerificationData.dlNo !== updateCandidateVerificationDataAuditLog.dlNo) {
+              if (
+                updateCandidateVerificationData.dlNo !==
+                updateCandidateVerificationDataAuditLog.dlNo
+              ) {
                 Object.assign(logData, {
-                  "Driving Licence no": updateCandidateVerificationData.dlNo
-                })
+                  "Driving Licence no": updateCandidateVerificationData.dlNo,
+                });
               }
-              if (updateCandidateVerificationData.note !== updateCandidateVerificationDataAuditLog.note) {
+              if (
+                updateCandidateVerificationData.note !==
+                updateCandidateVerificationDataAuditLog.note
+              ) {
                 Object.assign(logData, {
-                  "Note": updateCandidateVerificationData.note
-                })
+                  Note: updateCandidateVerificationData.note,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Candidate Verification Updated successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName: "Candidate Verification Updated successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.candidateVerification}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.candidateVerification,updateCandidateVerifnData.id,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Candidate Verification Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Candidate Verification Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.candidateVerification}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.candidateVerification,
+                  updateCandidateVerifnData.id,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7121,7 +7481,10 @@ const ContentLogic = (props) => {
               setErrMsg(error.data.message);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- updateCandidateVerification", error);
+            console.error(
+              "There was an error!- updateCandidateVerification",
+              error
+            );
           });
         break;
       case "agent-master":
@@ -7142,196 +7505,233 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getAgentMasterAPIcall();
               setEditStatus(false);
-    setShowAudit(false)
-              const logData = {}
-              if (agentMasterData.panCardPath !==agentMasterDataAudit.panCardPath) {
+              setShowAudit(false);
+              const logData = {};
+              if (
+                agentMasterData.panCardPath !== agentMasterDataAudit.panCardPath
+              ) {
                 Object.assign(logData, {
                   "Pan Card": agentMasterData.panCardPath,
-                })
+                });
               }
-              if (agentMasterData.docPoiPath !==agentMasterDataAudit.docPoiPath) {
+              if (
+                agentMasterData.docPoiPath !== agentMasterDataAudit.docPoiPath
+              ) {
                 Object.assign(logData, {
                   "Proof Of Identity": agentMasterData.docPoiPath,
-                })
+                });
               }
-              if (agentMasterData.professionalStatus !==agentMasterDataAudit.professionalStatus) {
+              if (
+                agentMasterData.professionalStatus !==
+                agentMasterDataAudit.professionalStatus
+              ) {
                 Object.assign(logData, {
                   "Professional Status": agentMasterData.professionalStatus,
-                })
+                });
               }
-              if (agentMasterData.note!==agentMasterDataAudit.note) {
+              if (agentMasterData.note !== agentMasterDataAudit.note) {
                 Object.assign(logData, {
-                  "Note": agentMasterData.note,
-                })
+                  Note: agentMasterData.note,
+                });
               }
-              if (agentMasterData.agentNo !==agentMasterDataAudit.agentNo) {
+              if (agentMasterData.agentNo !== agentMasterDataAudit.agentNo) {
                 Object.assign(logData, {
                   "Agent Number": agentMasterData.agentNo,
-                })
+                });
               }
-              if (agentMasterData.fullName!==agentMasterDataAudit.fullName) {
+              if (agentMasterData.fullName !== agentMasterDataAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": agentMasterData.fullName,
-                })
+                });
               }
-              if (agentMasterData.dob !==agentMasterDataAudit.dob) {
+              if (agentMasterData.dob !== agentMasterDataAudit.dob) {
                 Object.assign(logData, {
-                  "BirthDate": agentMasterData.dob,
-                })
+                  BirthDate: agentMasterData.dob,
+                });
               }
-              if (agentMasterData.gender !==agentMasterDataAudit.gender) {
+              if (agentMasterData.gender !== agentMasterDataAudit.gender) {
                 Object.assign(logData, {
-                  "Gender": agentMasterData.gender,
-                })
+                  Gender: agentMasterData.gender,
+                });
               }
-              if (agentMasterData.email !==agentMasterDataAudit.email) {
+              if (agentMasterData.email !== agentMasterDataAudit.email) {
                 Object.assign(logData, {
-                  "Email": agentMasterData.email,
-                })
+                  Email: agentMasterData.email,
+                });
               }
-              if (agentMasterData.contactNo !==agentMasterDataAudit.contactNo) {
+              if (
+                agentMasterData.contactNo !== agentMasterDataAudit.contactNo
+              ) {
                 Object.assign(logData, {
                   "Contact Number": agentMasterData.contactNo,
-                })
+                });
               }
-              if (agentMasterData.currAddress !==agentMasterDataAudit.currAddress) {
+              if (
+                agentMasterData.currAddress !== agentMasterDataAudit.currAddress
+              ) {
                 Object.assign(logData, {
                   "Current Address": agentMasterData.currAddress,
-                })
+                });
               }
-              if (agentMasterData.currZip !==agentMasterDataAudit.currZip) {
+              if (agentMasterData.currZip !== agentMasterDataAudit.currZip) {
                 Object.assign(logData, {
                   "Current Zip": agentMasterData.currZip,
-                })
+                });
               }
-              if (agentMasterData.currCity !==agentMasterDataAudit.currCity) {
+              if (agentMasterData.currCity !== agentMasterDataAudit.currCity) {
                 Object.assign(logData, {
                   "Current City": agentMasterData.currCity,
-                })
+                });
               }
-              if (agentMasterData.currState !==agentMasterDataAudit.currState) {
+              if (
+                agentMasterData.currState !== agentMasterDataAudit.currState
+              ) {
                 Object.assign(logData, {
                   "Current State": agentMasterData.currState,
-                })
+                });
               }
-              if (agentMasterData.permAddress !==agentMasterDataAudit.permAddress) {
+              if (
+                agentMasterData.permAddress !== agentMasterDataAudit.permAddress
+              ) {
                 Object.assign(logData, {
                   "Permanent Address": agentMasterData.permAddress,
-                })
+                });
               }
-              if (agentMasterData.permZip !==agentMasterDataAudit.permZip) {
+              if (agentMasterData.permZip !== agentMasterDataAudit.permZip) {
                 Object.assign(logData, {
                   "Permanent Zip": agentMasterData.permZip,
-                })
+                });
               }
-              if (agentMasterData.permCity!==agentMasterDataAudit.permCity) {
+              if (agentMasterData.permCity !== agentMasterDataAudit.permCity) {
                 Object.assign(logData, {
                   "Permanent City": agentMasterData.permCity,
-                })
+                });
               }
-              if (agentMasterData.permState !==agentMasterDataAudit.permState) {
+              if (
+                agentMasterData.permState !== agentMasterDataAudit.permState
+              ) {
                 Object.assign(logData, {
                   "Permanent State": agentMasterData.permState,
-                })
+                });
               }
-              if (agentMasterData.panCard !==agentMasterDataAudit.panCard) {
+              if (agentMasterData.panCard !== agentMasterDataAudit.panCard) {
                 Object.assign(logData, {
                   "Pan Card": agentMasterData.panCard,
-                })
+                });
               }
-              if (agentMasterData.aadharCard !==agentMasterDataAudit.aadharCard) {
+              if (
+                agentMasterData.aadharCard !== agentMasterDataAudit.aadharCard
+              ) {
                 Object.assign(logData, {
                   "Aadhar Card ": agentMasterData.aadharCard,
-                })
+                });
               }
-              if (agentMasterData.primaryLang !==agentMasterDataAudit.primaryLang) {
+              if (
+                agentMasterData.primaryLang !== agentMasterDataAudit.primaryLang
+              ) {
                 Object.assign(logData, {
                   "Primary Language": agentMasterData.primaryLang,
-                })
+                });
               }
-              if (agentMasterData.secondaryLang !==agentMasterDataAudit.secondaryLang) {
+              if (
+                agentMasterData.secondaryLang !==
+                agentMasterDataAudit.secondaryLang
+              ) {
                 Object.assign(logData, {
                   "Secondary Language": agentMasterData.secondaryLang,
-                })
+                });
               }
-              if (agentMasterData.thirdLang !==agentMasterDataAudit.thirdLang) {
+              if (
+                agentMasterData.thirdLang !== agentMasterDataAudit.thirdLang
+              ) {
                 Object.assign(logData, {
                   "Third Language": agentMasterData.thirdLang,
-                })
+                });
               }
-              if (agentMasterData.isActive !==agentMasterDataAudit.isActive) {
+              if (agentMasterData.isActive !== agentMasterDataAudit.isActive) {
                 Object.assign(logData, {
-                  "Status": agentMasterData.isActive,
-                })
+                  Status: agentMasterData.isActive,
+                });
               }
-              if (agentMasterData.bankAc !==agentMasterDataAudit.bankAc) {
+              if (agentMasterData.bankAc !== agentMasterDataAudit.bankAc) {
                 Object.assign(logData, {
                   "Bank Account": agentMasterData.bankAc,
-                })
+                });
               }
-              if (agentMasterData.bankAcType !==agentMasterDataAudit.bankAcType) {
+              if (
+                agentMasterData.bankAcType !== agentMasterDataAudit.bankAcType
+              ) {
                 Object.assign(logData, {
                   "Bank Account Type": agentMasterData.bankAcType,
-                })
+                });
               }
-              if (agentMasterData.bankIfsc !==agentMasterDataAudit.bankIfsc) {
+              if (agentMasterData.bankIfsc !== agentMasterDataAudit.bankIfsc) {
                 Object.assign(logData, {
                   "Bank IFSC": agentMasterData.bankIfsc,
-                })
+                });
               }
-              if (agentMasterData.bankName!==agentMasterDataAudit.bankName) {
+              if (agentMasterData.bankName !== agentMasterDataAudit.bankName) {
                 Object.assign(logData, {
                   "Bank Account": agentMasterData.bankName,
-                })
+                });
               }
-              if (agentMasterData.workLocation1 !==agentMasterDataAudit.workLocation1) {
+              if (
+                agentMasterData.workLocation1 !==
+                agentMasterDataAudit.workLocation1
+              ) {
                 Object.assign(logData, {
                   "Work Location 1": agentMasterData.workLocation1,
-                })
+                });
               }
-              if (agentMasterData.workLocation2 !==agentMasterDataAudit.workLocation2) {
+              if (
+                agentMasterData.workLocation2 !==
+                agentMasterDataAudit.workLocation2
+              ) {
                 Object.assign(logData, {
                   "Work Location 2": agentMasterData.workLocation2,
-                })
+                });
               }
 
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Agent Master updated successfully."
-              }
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Agent Master updated successfully.",
+              };
               let userActivities = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                dataId:editId,
-                userLoginId:convertTokenToObj.id,
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
                 userActivity: logDataString,
-                operationName: "Agent Master updated successfully."
-            }
-              handler.dataPost(`/v1/user-activity/${helpers.auditLog.agentMaster}`,userActivities,{
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }).then(()=>{
-                console.log("user activity added")
-              })
-              handlers.auditLog.addAuditLog(auditlog,
-                helpers.auditLog.agentMaster,editId,{
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }).then(()=>{
-                console.log("Audit log added")
-              })
+                operationName: "Agent Master updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.agentMaster}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(auditlog, helpers.auditLog.agentMaster, editId, {
+                  headers: {
+                    Authorization: `Bearer ${convertTokenToObj.token}`,
+                  },
+                })
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7366,7 +7766,6 @@ const ContentLogic = (props) => {
               // setOpenAlertMsg(true);
               setOpenCandidateModal(false);
               getAgentTemplatePricingAPIcall();
-              
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7404,53 +7803,64 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCandidateUploadBatchAdminAPIcall();
               setEditStatus(false);
-    setShowAudit(false)
-              //add logData 
-              const logData = {}
-              if (updateCandidateUploadBatchAdmin.templateId 
-                !== candidateUploadBatchAdminDataAudit.id) {
+              setShowAudit(false);
+              //add logData
+              const logData = {};
+              if (
+                updateCandidateUploadBatchAdmin.templateId !==
+                candidateUploadBatchAdminDataAudit.id
+              ) {
                 Object.assign(logData, {
-                  "Agent Pricing Template Id":updateCandidateUploadBatchAdmin.templateId,
-                  })
+                  "Agent Pricing Template Id":
+                    updateCandidateUploadBatchAdmin.templateId,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Pricing template changed successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName: "Pricing template changed successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.adminCandidateUploadBatch,editId,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Pricing template changed successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Pricing template changed successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.adminCandidateUploadBatch}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.adminCandidateUploadBatch,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7485,61 +7895,71 @@ const ContentLogic = (props) => {
               setOpenCandidateModal(false);
               getCategoryAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (updateCategoryData.title !== categoryDataAudit.title) {
                 Object.assign(logData, {
-                  "Title":updateCategoryData.title,
-                  })
+                  Title: updateCategoryData.title,
+                });
               }
-              if (updateCategoryData.description !== categoryDataAudit.description) {
+              if (
+                updateCategoryData.description !== categoryDataAudit.description
+              ) {
                 Object.assign(logData, {
-                  "Description":updateCategoryData.description,
-                  })
+                  Description: updateCategoryData.description,
+                });
               }
               if (updateCategoryData.isActive !== categoryDataAudit.isActive) {
                 Object.assign(logData, {
-                  "Is Active":updateCategoryData.isActive,
-                  })
+                  "Is Active": updateCategoryData.isActive,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Category Data Updated Successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName:"Category Data Updated Successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.otherMasterCategory,editId,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Category Data Updated Successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Category Data Updated Successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterCategory}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterCategory,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7574,71 +7994,79 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getCompanyAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (companyData.companyName !== companyDataAudit.companyName) {
                 Object.assign(logData, {
-                  "Title":companyData.companyName,
-                  })
+                  Title: companyData.companyName,
+                });
               }
               if (companyData.description !== companyDataAudit.description) {
                 Object.assign(logData, {
-                  "Description":companyData.description,
-                  })
+                  Description: companyData.description,
+                });
               }
               if (companyData.title !== companyDataAudit.description) {
                 Object.assign(logData, {
-                  "Industry Title":companyData.title,
-                  })
+                  "Industry Title": companyData.title,
+                });
               }
               if (companyData.industryId !== companyDataAudit.industryId) {
                 Object.assign(logData, {
-                  "Industry Id":companyData.industryId,
-                  })
+                  "Industry Id": companyData.industryId,
+                });
               }
               if (companyData.isActive !== companyDataAudit.isActive) {
                 Object.assign(logData, {
-                  "Is Active":companyData.isActive,
-                  })
+                  "Is Active": companyData.isActive,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Company Data Updated successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName:"Company Data Updated successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.otherMasterCompany,editId,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Company Data Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Company Data Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterCompany}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterCompany,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7653,116 +8081,121 @@ const ContentLogic = (props) => {
           });
         break;
       case "customer":
-          handler
-            .dataPut(
-              `/v1/customers/:${editId}`,
-              customerData,
-              {
-                headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-              }
-            )
-            .then((response) => {
-              console.log(response);
-              if (response.status == 204) {
-                setOpenCandidateModal(false);
-                setOpenAlertMsg(true);
-                getCustomerAPIcall();
-                setEditStatus(false);
-                setShowAudit(false)
-                const logData = {}
+        handler
+          .dataPut(`/v1/customers/:${editId}`, customerData, {
+            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.status == 204) {
+              setOpenCandidateModal(false);
+              setOpenAlertMsg(true);
+              getCustomerAPIcall();
+              setEditStatus(false);
+              setShowAudit(false);
+              const logData = {};
 
-                
               if (customerData.fullName !== customerDataAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": customerData.fullName,
-                })
+                });
               }
-              if (customerData.country!== customerDataAudit.country) {
+              if (customerData.country !== customerDataAudit.country) {
                 Object.assign(logData, {
-                  "Country": customerData.country,
-                })
+                  Country: customerData.country,
+                });
               }
-              if (customerData.companyName!== customerDataAudit.companyName) {
+              if (customerData.companyName !== customerDataAudit.companyName) {
                 Object.assign(logData, {
                   "Company Name": customerData.companyName,
-                })
+                });
               }
-              if (customerData.dob!== customerDataAudit.dob) {
+              if (customerData.dob !== customerDataAudit.dob) {
                 Object.assign(logData, {
-                  "BirthDate": customerData.dob,
-                })
+                  BirthDate: customerData.dob,
+                });
               }
-              if (customerData.gender!== customerDataAudit.gender) {
+              if (customerData.gender !== customerDataAudit.gender) {
                 Object.assign(logData, {
-                  "Gender": customerData.gender,
-                })
+                  Gender: customerData.gender,
+                });
               }
-              if (customerData.profileImage !== customerDataAudit.profileImage) {
+              if (
+                customerData.profileImage !== customerDataAudit.profileImage
+              ) {
                 Object.assign(logData, {
                   "Profile Image": customerData.profileImage,
-                })
+                });
               }
               if (customerData.state !== customerDataAudit.state) {
                 Object.assign(logData, {
-                  "State": customerData.state,
-                })
+                  State: customerData.state,
+                });
               }
-              if (customerData.isActive!== customerDataAudit.state) {
+              if (customerData.isActive !== customerDataAudit.state) {
                 Object.assign(logData, {
                   "Is Active": customerData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Customer Data Updated successfully."
+                operationName: "Customer Data Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Customer Data Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersCustomer,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
+            } else {
+              setErrMsg(response.data.message);
+              setOpenErrtMsg(true);
             }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:editId,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Customer Data Updated successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersCustomer}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersCustomer,editId,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
-              } else {
-                setErrMsg(response.data.message);
-                setOpenErrtMsg(true);
-              }
-            })
-            .catch((error) => {
-              if (error.status == 400) {
-                setErrMsg(error.data.message);
-                setOpenErrtMsg(true);
-              }
-              console.error("There was an error!- updateCustomerAPICall", error);
-            });
-          break;
+          })
+          .catch((error) => {
+            if (error.status == 400) {
+              setErrMsg(error.data.message);
+              setOpenErrtMsg(true);
+            }
+            console.error("There was an error!- updateCustomerAPICall", error);
+          });
+        break;
       case "industry":
         let updateIndustryData = {
           ...industryData,
@@ -7784,66 +8217,74 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getIndustryAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (industryData.title !== industryDataAudit.title) {
                 Object.assign(logData, {
-                  "Title":industryData.title,
-                  })
+                  Title: industryData.title,
+                });
               }
               if (industryData.description !== industryDataAudit.description) {
                 Object.assign(logData, {
-                  "Description":industryData.description,
-                  })
+                  Description: industryData.description,
+                });
               }
               if (industryData.id !== industryDataAudit.id) {
                 Object.assign(logData, {
-                  "Id":industryData.id,
-                  })
+                  Id: industryData.id,
+                });
               }
               if (industryData.isActive !== industryDataAudit.isActive) {
                 Object.assign(logData, {
-                  "Is Active":industryData.isActive,
-                  })
+                  "Is Active": industryData.isActive,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Industry changed successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName:"Industry Data Updated Successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.otherMasterIndustry,editId,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Industry changed successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Industry Data Updated Successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMasterIndustry}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMasterIndustry,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7874,67 +8315,75 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getRoleAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
+              setShowAudit(false);
               //audit log
-              const logData = {}
+              const logData = {};
               if (roleData.name) {
                 Object.assign(logData, {
-                  "Title":roleData.name,
-                  })
+                  Title: roleData.name,
+                });
               }
               if (roleData.description) {
                 Object.assign(logData, {
-                  "Description":roleData.description,
-                  })
+                  Description: roleData.description,
+                });
               }
               if (roleData.isActive) {
                 Object.assign(logData, {
-                  "Is Active":roleData.isActive,
-                  })
+                  "Is Active": roleData.isActive,
+                });
               }
               if (roleData.permissionId) {
                 Object.assign(logData, {
-                  "Permission Id":roleData.permissionId,
-                  })
+                  "Permission Id": roleData.permissionId,
+                });
               }
-              
-            let logDataString = JSON.stringify(logData)
-            let fullName = convertTokenToObj.name
-            let Email = convertTokenToObj.userEmail
-            let auditlog = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              contactNumber: auditLogData
-                  ? auditLogData.contactNo
-                  : "",
-              updatedFiled: logDataString,
-              operationName: "Role Updated successfully."
-          }
-          let userActivities = {
-            userName: fullName
-                ? fullName:"",
-            email: Email
-                ? Email
-                : "",
-            dataId:editId,
-            userLoginId:convertTokenToObj.id,
-            userActivity: logDataString,
-            operationName:"Role Updated successfully."
-        }
-          handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersRole}`,userActivities,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("user activity added")
-          })
-          handlers.auditLog.addAuditLog(auditlog,
-            helpers.auditLog.otherMastersRole,editId,{
-            headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-          }).then(()=>{
-            console.log("Audit log added")
-          })
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
+              let auditlog = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
+                updatedFiled: logDataString,
+                operationName: "Role Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Role Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersRole}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersRole,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -7965,61 +8414,71 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getSkillSetAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
-              const logData = {}
+              setShowAudit(false);
+              const logData = {};
               if (skillSetData.title !== skillSetDataForAuditLog.title) {
                 Object.assign(logData, {
-                  "Title": skillSetData.title,
-                })
+                  Title: skillSetData.title,
+                });
               }
-              if (skillSetData.description!== skillSetDataForAuditLog.description) {
+              if (
+                skillSetData.description !== skillSetDataForAuditLog.description
+              ) {
                 Object.assign(logData, {
-                  "Description": skillSetData.description,
-                })
+                  Description: skillSetData.description,
+                });
               }
               if (skillSetData.isActive !== skillSetDataForAuditLog.isActive) {
                 Object.assign(logData, {
                   "Is Active": skillSetData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Skill Set Data Updated successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:editId,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Skill Set Data Updated successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersSkillSet,editId,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Skill Set Data Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Skill Set Data Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersSkillSet}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersSkillSet,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -8054,77 +8513,95 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getSubscriptionAPIcall();
               setEditStatus(false);
-    setShowAudit(false)
+              setShowAudit(false);
               //For Audit Log
-              const logData = {}
-              if (subscriptionData.planName !== subscriptionDataForAudit.planName) {
+              const logData = {};
+              if (
+                subscriptionData.planName !== subscriptionDataForAudit.planName
+              ) {
                 Object.assign(logData, {
                   "Plan Name": subscriptionData.title,
-                })
+                });
               }
-              if (subscriptionData.dataCount!== subscriptionDataForAudit.dataCount) {
+              if (
+                subscriptionData.dataCount !==
+                subscriptionDataForAudit.dataCount
+              ) {
                 Object.assign(logData, {
                   "Data Count": subscriptionData.description,
-                })
+                });
               }
-              if (subscriptionData.durationMonths !== subscriptionDataForAudit.durationMonths) {
+              if (
+                subscriptionData.durationMonths !==
+                subscriptionDataForAudit.durationMonths
+              ) {
                 Object.assign(logData, {
                   "Duration in Month": subscriptionData.durationMonths,
-                })
+                });
               }
               if (subscriptionData.price !== subscriptionDataForAudit.price) {
                 Object.assign(logData, {
-                  "Price": subscriptionData.price,
-                })
+                  Price: subscriptionData.price,
+                });
               }
               if (subscriptionData.note !== subscriptionDataForAudit.note) {
                 Object.assign(logData, {
-                  "Note": subscriptionData.note,
-                })
+                  Note: subscriptionData.note,
+                });
               }
-              if (subscriptionData.isActive !== subscriptionDataForAudit.isActive) {
+              if (
+                subscriptionData.isActive !== subscriptionDataForAudit.isActive
+              ) {
                 Object.assign(logData, {
                   "Is Active": subscriptionData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "Subscription Data Updated successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:editId,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"Subscription Data Updated successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersSubscription,editId,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "Subscription Data Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "Subscription Data Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersSubscription}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersSubscription,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -8158,153 +8635,183 @@ const ContentLogic = (props) => {
               setOpenAlertMsg(true);
               getUserAPIcall();
               setEditStatus(false);
-              setShowAudit(false)
+              setShowAudit(false);
               //For Audit Log
-              const logData = {}
+              const logData = {};
               if (updateUserData.fullName !== updateUserDataForAudit.fullName) {
                 Object.assign(logData, {
                   "Full Name": updateUserData.fullName,
-                })
+                });
               }
-              if (updateUserData.dob!== updateUserDataForAudit.dob) {
+              if (updateUserData.dob !== updateUserDataForAudit.dob) {
                 Object.assign(logData, {
-                  "BirthDate": updateUserData.dob,
-                })
+                  BirthDate: updateUserData.dob,
+                });
               }
-              if (updateUserData.gender!== updateUserDataForAudit.gender ) {
+              if (updateUserData.gender !== updateUserDataForAudit.gender) {
                 Object.assign(logData, {
-                  "Gender": updateUserData.gender,
-                })
+                  Gender: updateUserData.gender,
+                });
               }
-              if (updateUserData.email!== updateUserDataForAudit.email) {
+              if (updateUserData.email !== updateUserDataForAudit.email) {
                 Object.assign(logData, {
-                  "Email": updateUserData.email,
-                })
+                  Email: updateUserData.email,
+                });
               }
-              if (updateUserData.contactNo!== updateUserDataForAudit.contactNo) {
+              if (
+                updateUserData.contactNo !== updateUserDataForAudit.contactNo
+              ) {
                 Object.assign(logData, {
                   "Contact No": updateUserData.contactNo,
-                })
+                });
               }
-              if (updateUserData.roleId!== updateUserDataForAudit.roleId) {
+              if (updateUserData.roleId !== updateUserDataForAudit.roleId) {
                 Object.assign(logData, {
                   "Role Id": updateUserData.roleId,
-                })
+                });
               }
-              if (updateUserData.currAddress!== updateUserDataForAudit.currAddress) {
+              if (
+                updateUserData.currAddress !==
+                updateUserDataForAudit.currAddress
+              ) {
                 Object.assign(logData, {
                   "Current Address": updateUserData.currAddress,
-                })
+                });
               }
-              if (updateUserData.currCity!== updateUserDataForAudit.currCity) {
+              if (updateUserData.currCity !== updateUserDataForAudit.currCity) {
                 Object.assign(logData, {
                   "Current City": updateUserData.currCity,
-                })
+                });
               }
-              if (updateUserData.currState!== updateUserDataForAudit.currState) {
+              if (
+                updateUserData.currState !== updateUserDataForAudit.currState
+              ) {
                 Object.assign(logData, {
                   "Current State": updateUserData.currState,
-                })
+                });
               }
-              
-              if (updateUserData.currZip!== updateUserDataForAudit.currZip) {
+
+              if (updateUserData.currZip !== updateUserDataForAudit.currZip) {
                 Object.assign(logData, {
                   "Current Zip": updateUserData.currZip,
-                })
+                });
               }
-              if (updateUserData.permAddress!== updateUserDataForAudit.permAddress) {
+              if (
+                updateUserData.permAddress !==
+                updateUserDataForAudit.permAddress
+              ) {
                 Object.assign(logData, {
                   "Permanent Address": updateUserData.permAddress,
-                })
+                });
               }
               if (updateUserData.permCity !== updateUserDataForAudit.permCity) {
                 Object.assign(logData, {
                   "Permanent City": updateUserData.permCity,
-                })
+                });
               }
-              if (updateUserData.permState !== updateUserDataForAudit.permState) {
+              if (
+                updateUserData.permState !== updateUserDataForAudit.permState
+              ) {
                 Object.assign(logData, {
                   "Permanent State": updateUserData.permState,
-                })
+                });
               }
               if (updateUserData.permZip !== updateUserDataForAudit.permZip) {
                 Object.assign(logData, {
                   "Permanent Zip": updateUserData.permZip,
-                })
+                });
               }
               if (updateUserData.panCard !== updateUserDataForAudit.panCard) {
                 Object.assign(logData, {
                   "Pan Card": updateUserData.panCard,
-                })
+                });
               }
-              if (updateUserData.aadharCard !== updateUserDataForAudit.aadharCard) {
+              if (
+                updateUserData.aadharCard !== updateUserDataForAudit.aadharCard
+              ) {
                 Object.assign(logData, {
                   "Aadhar Card": updateUserData.aadharCard,
-                })
+                });
               }
-              if (updateUserData.primaryLang !== updateUserDataForAudit.primaryLang) {
+              if (
+                updateUserData.primaryLang !==
+                updateUserDataForAudit.primaryLang
+              ) {
                 Object.assign(logData, {
                   "Primary Language": updateUserData.primaryLang,
-                })
+                });
               }
-              if (updateUserData.secondaryLang !== updateUserDataForAudit.secondaryLang) {
+              if (
+                updateUserData.secondaryLang !==
+                updateUserDataForAudit.secondaryLang
+              ) {
                 Object.assign(logData, {
                   "Secondary Language": updateUserData.secondaryLang,
-                })
+                });
               }
-              if (updateUserData.thirdLang !== updateUserDataForAudit.thirdLang) {
+              if (
+                updateUserData.thirdLang !== updateUserDataForAudit.thirdLang
+              ) {
                 Object.assign(logData, {
                   "Third Language": updateUserData.thirdLang,
-                })
+                });
               }
               if (updateUserData.note !== updateUserDataForAudit.note) {
                 Object.assign(logData, {
-                  "Note": updateUserData.note,
-                })
+                  Note: updateUserData.note,
+                });
               }
               if (updateUserData.isActive !== updateUserDataForAudit.isActive) {
                 Object.assign(logData, {
                   "Is Active": updateUserData.isActive,
-                })
+                });
               }
-  
-              let logDataString = JSON.stringify(logData)
-              let fullName = convertTokenToObj.name
-              let Email = convertTokenToObj.userEmail
+
+              let logDataString = JSON.stringify(logData);
+              let fullName = convertTokenToObj.name;
+              let Email = convertTokenToObj.userEmail;
               let auditlog = {
-                userName: fullName
-                    ? fullName:"",
-                email: Email
-                    ? Email
-                    : "",
-                contactNumber: auditLogData
-                    ? auditLogData.contactNo
-                    : "",
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                contactNumber: auditLogData ? auditLogData.contactNo : "",
                 updatedFiled: logDataString,
-                operationName: "User Updated successfully."
-            }
-            let userActivities = {
-              userName: fullName
-                  ? fullName:"",
-              email: Email
-                  ? Email
-                  : "",
-              dataId:editId,
-              userLoginId:convertTokenToObj.id,
-              userActivity: logDataString,
-              operationName:"User Updated successfully."
-          }
-            handler.dataPost(`/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,userActivities,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("user activity added")
-            })
-            handlers.auditLog.addAuditLog(auditlog,
-              helpers.auditLog.otherMastersUsers,editId,{
-              headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
-            }).then(()=>{
-              console.log("Audit log added")
-            })
+                operationName: "User Updated successfully.",
+              };
+              let userActivities = {
+                userName: fullName ? fullName : "",
+                email: Email ? Email : "",
+                dataId: editId,
+                userLoginId: convertTokenToObj.id,
+                userActivity: logDataString,
+                operationName: "User Updated successfully.",
+              };
+              handler
+                .dataPost(
+                  `/v1/user-activity/${helpers.auditLog.otherMastersUsers}`,
+                  userActivities,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("user activity added");
+                });
+              handlers.auditLog
+                .addAuditLog(
+                  auditlog,
+                  helpers.auditLog.otherMastersUsers,
+                  editId,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${convertTokenToObj.token}`,
+                    },
+                  }
+                )
+                .then(() => {
+                  console.log("Audit log added");
+                });
             } else {
               setErrMsg(response.data.message);
               setOpenErrtMsg(true);
@@ -8324,167 +8831,129 @@ const ContentLogic = (props) => {
     }
   };
 
-  const localData = localStorage.getItem("user")
+  const localData = localStorage.getItem("user");
   let convertTokenToObj = JSON.parse(localData);
 
-  const getAllPermission = convertTokenToObj.permissions
+  const getAllPermission = convertTokenToObj.permissions;
 
-    // Candidate Master Array
-const masterArray = [
-  helpers.permissions.candidate_create,
-  
-]
-const checkMaster = masterArray.filter((data) =>
-  getAllPermission.includes(data)
-)
-    // Candidate upload batch Array
-const candidateUploadBatchArray = [
-  helpers.permissions.candidate_upload_batch_create,
-  
-]
-const checkCandidateUploadBatchArray = candidateUploadBatchArray.filter((data) =>
-  getAllPermission.includes(data)
-)
-    // Candidate upload batch Array
-const candidateUploadBatchChangePricingArray = [
-  helpers.permissions.admin_candidate_upload_batch_change_pricing_template,
-  
-]
-const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePricingArray.filter((data) =>
-  getAllPermission.includes(data)
-)
-
-   // Candidate upload batch Array
-    const candidateVerificationArray = [
-      helpers.permissions.candidate_verification_create,
-      
-    ]
-    const checkCandidateVerificationPricingArray = candidateVerificationArray.filter((data) =>
-      getAllPermission.includes(data)
-    )
+  // Candidate Master Array
+  const masterArray = [helpers.permissions.candidate_create];
+  const checkMaster = masterArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
   // Candidate upload batch Array
-  const agentMasterArray = [
-    helpers.permissions.agent_create,
-    
-  ]
+  const candidateUploadBatchArray = [
+    helpers.permissions.candidate_upload_batch_create,
+  ];
+  const checkCandidateUploadBatchArray = candidateUploadBatchArray.filter(
+    (data) => getAllPermission.includes(data)
+  );
+  // Candidate upload batch Array
+  const candidateUploadBatchChangePricingArray = [
+    helpers.permissions.admin_candidate_upload_batch_change_pricing_template,
+  ];
+  const checkCandidateUploadBatchChangePricingArray =
+    candidateUploadBatchChangePricingArray.filter((data) =>
+      getAllPermission.includes(data)
+    );
+
+  // Candidate upload batch Array
+  const candidateVerificationArray = [
+    helpers.permissions.candidate_verification_create,
+  ];
+  const checkCandidateVerificationPricingArray =
+    candidateVerificationArray.filter((data) =>
+      getAllPermission.includes(data)
+    );
+  // Candidate upload batch Array
+  const agentMasterArray = [helpers.permissions.agent_create];
   const checkAgentMasterArray = agentMasterArray.filter((data) =>
     getAllPermission.includes(data)
-  )
+  );
 
   // Candidate upload batch Array
   const agentPricingTempleteArray = [
     helpers.permissions.agent_pricing_template_create,
-    
-  ]
-  const checkAgentPricingTemplateArray = agentPricingTempleteArray.filter((data) =>
-    getAllPermission.includes(data)
-  )
+  ];
+  const checkAgentPricingTemplateArray = agentPricingTempleteArray.filter(
+    (data) => getAllPermission.includes(data)
+  );
   // Candidate upload batch Array
   const agentPricingTempleteSetActiveArray = [
     helpers.permissions.agent_pricing_template_set_active,
-    
-  ]
-  const checkAgentPricingTempleteSetActiveArrayArray = agentPricingTempleteSetActiveArray.filter((data) =>
-    getAllPermission.includes(data)
-  )
+  ];
+  const checkAgentPricingTempleteSetActiveArrayArray =
+    agentPricingTempleteSetActiveArray.filter((data) =>
+      getAllPermission.includes(data)
+    );
 
   // Candidate upload batch Array
   const adminCandidateUploadBatchArray = [
     helpers.permissions.admin_candidate_upload_batch_create,
-    
-  ]
-  const checkAdminCandidateUploadBatchArray = adminCandidateUploadBatchArray.filter((data) =>
-    getAllPermission.includes(data)
-  )
+  ];
+  const checkAdminCandidateUploadBatchArray =
+    adminCandidateUploadBatchArray.filter((data) =>
+      getAllPermission.includes(data)
+    );
 
   // Candidate upload batch Array
-  const adminBatchPriorityArray = [
-    helpers.permissions.batch_priority_create,
-    
-  ]
-  const checkAdminBatchPriorityArrayArray = adminBatchPriorityArray.filter((data) =>
-    getAllPermission.includes(data)
-  )
+  const adminBatchPriorityArray = [helpers.permissions.batch_priority_create];
+  const checkAdminBatchPriorityArrayArray = adminBatchPriorityArray.filter(
+    (data) => getAllPermission.includes(data)
+  );
 
-   // Candidate upload batch Array
-   const categoryArray = [
-    helpers.permissions.category_create,
-    
-  ]
+  // Candidate upload batch Array
+  const categoryArray = [helpers.permissions.category_create];
   const checkCategoryArrayArray = categoryArray.filter((data) =>
     getAllPermission.includes(data)
-  )
+  );
 
-   // Candidate upload batch Array
-   const companyArray = [
-    helpers.permissions.company_create,
-    
-  ]
+  // Candidate upload batch Array
+  const companyArray = [helpers.permissions.company_create];
   const checkCompanyArray = companyArray.filter((data) =>
     getAllPermission.includes(data)
-  )
+  );
 
-     // Candidate upload batch Array
-     const customerArray = [
-      helpers.permissions.customer_subscription_create,
-      
-    ]
-    const checkCustomerArray = customerArray.filter((data) =>
-      getAllPermission.includes(data)
-    )
+  // Candidate upload batch Array
+  const customerArray = [helpers.permissions.customer_subscription_create];
+  const checkCustomerArray = customerArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
 
-      // Candidate upload batch Array
-      const industryArray = [
-        helpers.permissions.industry_create,
-        
-      ]
-      const checkIndustryArray = industryArray.filter((data) =>
-        getAllPermission.includes(data)
-      )
-    // Candidate upload batch Array
-    const skillsetArray = [
-      helpers.permissions.skill_create,
-      
-    ]
-    const checkSkillsetArray = skillsetArray.filter((data) =>
-      getAllPermission.includes(data)
-    )
-  
-    // Candidate upload batch Array
-    const subscriptionArray = [
-      helpers.permissions.subscription_create,
-      
-    ]
-    const checkSubscriptionArray = subscriptionArray.filter((data) =>
-      getAllPermission.includes(data)
-    )
+  // Candidate upload batch Array
+  const industryArray = [helpers.permissions.industry_create];
+  const checkIndustryArray = industryArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
+  // Candidate upload batch Array
+  const skillsetArray = [helpers.permissions.skill_create];
+  const checkSkillsetArray = skillsetArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
 
-     // Candidate upload batch Array
-     const userArray = [
-      helpers.permissions.user_create,
-      
-    ]
-    const checkUserArray = userArray.filter((data) =>
-      getAllPermission.includes(data)
-    )
+  // Candidate upload batch Array
+  const subscriptionArray = [helpers.permissions.subscription_create];
+  const checkSubscriptionArray = subscriptionArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
 
-      // Candidate upload batch Array
-      const roleArray = [
-        helpers.permissions.role_create,
-        
-      ]
-      const checkRoleArray = roleArray.filter((data) =>
-        getAllPermission.includes(data)
-      )
-    
-          // Candidate upload batch Array
-          const roleUpdateArray = [
-            helpers.permissions.role_update,
-            
-          ]
-          const checkUpdateRoleArray = roleUpdateArray.filter((data) =>
-            getAllPermission.includes(data)
-          )
+  // Candidate upload batch Array
+  const userArray = [helpers.permissions.user_create];
+  const checkUserArray = userArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
+
+  // Candidate upload batch Array
+  const roleArray = [helpers.permissions.role_create];
+  const checkRoleArray = roleArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
+
+  // Candidate upload batch Array
+  const roleUpdateArray = [helpers.permissions.role_update];
+  const checkUpdateRoleArray = roleUpdateArray.filter((data) =>
+    getAllPermission.includes(data)
+  );
 
   //it handle the buttons of content page
   const handleButtons = () => {
@@ -8492,46 +8961,80 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
       case "candidate-master":
         return (
           <>
-            {checkMaster.length?<Button
-              onClick={handleOpenCandidateModal}
-              style={{
-                marginTop: "0px",
-                // marginRight: "5px",
-                backgroundColor: "brown",
-                color: "white",
-              }}
-              variant="outlined"
-            >
-              <AddIcon />
-              {buttonText}
-            </Button>:"twst"}
+            {checkMaster.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "0px",
+                  // marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              "twst"
+            )}
           </>
         );
       case "candidate-upload-batch":
         return (
           <>
-            {!editStatus ? (<>
-              {checkCandidateUploadBatchArray.length?<Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "60px",
-                  marginBottom: "6px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                
-                variant="outlined"
-              >
-                <FileUploadIcon />
-                {buttonText}
-              </Button>:""}
+            {!editStatus ? (
+              <>
+                {checkCandidateUploadBatchArray.length ? (
+                  <Button
+                    onClick={handleOpenCandidateModal}
+                    style={{
+                      marginTop: "60px",
+                      marginBottom: "6px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <FileUploadIcon />
+                    {buttonText}
+                  </Button>
+                ) : (
+                  ""
+                )}
               </>
-            ) : (<>
-              {checkCandidateUploadBatchChangePricingArray.length?<Button
-                onClick={() => {
-                  handleClickOpenAdminCanUplBtch();
-                  getAgentPricingForCndUplBatchAPICalls();
-                }}
+            ) : (
+              <>
+                {checkCandidateUploadBatchChangePricingArray.length ? (
+                  <Button
+                    onClick={() => {
+                      handleClickOpenAdminCanUplBtch();
+                      getAgentPricingForCndUplBatchAPICalls();
+                    }}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "0px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    {/* <FileUploadIcon /> */}
+                    Change Pricing Template
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </>
+            )}
+          </>
+        );
+      case "candidate-verification":
+        return (
+          <>
+            {checkCandidateVerificationPricingArray.length ? (
+              <Button
+                onClick={() => addAPICalls("candidate-verification")}
                 style={{
                   marginTop: "80px",
                   marginRight: "0px",
@@ -8540,73 +9043,22 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 }}
                 variant="outlined"
               >
-                {/* <FileUploadIcon /> */}
-                Change Pricing Template
-              </Button>:""}</>
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
             )}
-          </>
-        );
-      case "candidate-verification":
-        return (
-          <>
-            {checkCandidateVerificationPricingArray.length?<Button
-              onClick={() => addAPICalls("candidate-verification")}
-              style={{
-                marginTop: "80px",
-                marginRight: "0px",
-                backgroundColor: "brown",
-                color: "white",
-              }}
-              variant="outlined"
-            >
-              <AddIcon />
-              {buttonText}
-            </Button>:""}
           </>
         );
       case "agent-master":
         return (
           <>
-            {checkAgentMasterArray.length?<Button
-              onClick={handleOpenCandidateModal}
-              style={{
-                marginTop: "50px",
-                marginRight: "5px",
-                backgroundColor: "brown",
-                color: "white",
-              }}
-              variant="outlined"
-            >
-              <AddIcon />
-              {buttonText}
-            </Button>:""}
-          </>
-        );
-      case "agent-pricing-template":
-        return (
-          <>
-            {editStatus ? (<>
-              {checkAgentPricingTempleteSetActiveArrayArray.length?<Button
-                onClick={() => {
-                  updateAPICalls("agent-pricing-template");
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <ToggleOn />
-                Set Active
-              </Button>:""}
-              </>
-            ) : (<>
-              {checkAgentPricingTemplateArray.length?<Button
+            {checkAgentMasterArray.length ? (
+              <Button
                 onClick={handleOpenCandidateModal}
                 style={{
-                  marginTop: "80px",
+                  marginTop: "50px",
                   marginRight: "5px",
                   backgroundColor: "brown",
                   color: "white",
@@ -8615,7 +9067,56 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
               >
                 <AddIcon />
                 {buttonText}
-              </Button>:""}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "agent-pricing-template":
+        return (
+          <>
+            {editStatus ? (
+              <>
+                {checkAgentPricingTempleteSetActiveArrayArray.length ? (
+                  <Button
+                    onClick={() => {
+                      updateAPICalls("agent-pricing-template");
+                    }}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "5px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <ToggleOn />
+                    Set Active
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              <>
+                {checkAgentPricingTemplateArray.length ? (
+                  <Button
+                    onClick={handleOpenCandidateModal}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "5px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <AddIcon />
+                    {buttonText}
+                  </Button>
+                ) : (
+                  ""
+                )}
               </>
             )}
           </>
@@ -8623,27 +9124,32 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
       case "candidate-upload-batch-admin":
         return (
           <>
-            {!editStatus ? (<>
-              {checkAdminCandidateUploadBatchArray.length?<Button
-                onClick={handleClickOpenAdminCanUplBtch}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "0px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <FileUploadIcon />
-                {buttonText}
-              </Button>:""}
+            {!editStatus ? (
+              <>
+                {checkAdminCandidateUploadBatchArray.length ? (
+                  <Button
+                    onClick={handleClickOpenAdminCanUplBtch}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "0px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <FileUploadIcon />
+                    {buttonText}
+                  </Button>
+                ) : (
+                  ""
+                )}
               </>
             ) : (
               <Button
                 onClick={() => {
                   handleClickOpenAdminCanUplBtch();
                   getAgentPricingForCndUplBatchAPICalls();
-                  handleUpdateAuditDataAdminCndUpBatch(editId)
+                  handleUpdateAuditDataAdminCndUpBatch(editId);
                 }}
                 style={{
                   marginTop: "80px",
@@ -8662,19 +9168,23 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
       case "batch-priority":
         return (
           <>
-            {checkAdminBatchPriorityArrayArray.length?<Button
-              onClick={handleClickOpenAddBtchprty}
-              style={{
-                marginTop: "0px",
-                marginRight: "0px",
-                backgroundColor: "brown",
-                color: "white",
-              }}
-              variant="outlined"
-            >
-              <AddIcon />
-              {buttonText}
-            </Button>:""}
+            {checkAdminBatchPriorityArrayArray.length ? (
+              <Button
+                onClick={handleClickOpenAddBtchprty}
+                style={{
+                  marginTop: "0px",
+                  marginRight: "0px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
           </>
         );
       case "other-industry-category":
@@ -8682,134 +9192,39 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
       case "role":
         return (
           <>
-            {editStatus ? (<>
-              {checkUpdateRoleArray.length?<Button
-                onClick={() => {
-                  handleOpenCandidateModal();
-                  getRoleByIdAPIcall();
-                  getPermissionsAPIcall();
-                  handleUpdateAuditDataOtherMRole(editId)
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <EditIcon />
-                Edit
-              </Button>:""}
-              </>
-            ) : (<>
-              {checkRoleArray.length?<Button
-                onClick={() => {
-                  handleOpenCandidateModal();
-                  getPermissionsAPIcall();
-                }}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>:""}</>
-            )}
-          </>
-        );
-      case "user":
-        return (
-          <>
-           
-              {checkUserArray.length?<Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>:""}
-          
-          </>
-        );
-      case "login-history":
-        return null;
-      case "user-activity":
-        return null;
-      case "admin-user-activity":
-        return null;
-      case "admin-user-login-activity":
-        return null;
-      case "category":
-        return (
-          <>
-            
-              {checkCategoryArrayArray.length?<Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>:""}
-          </>
-        );
-      case "company":
-        return (
-          <>
-              {checkCompanyArray.length?<Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>:""}
-          </>
-        );
-      case "customer":
-          return (
-            <>
-                {checkCustomerArray.length?<Button
-                  onClick={handleOpenCandidateModal}
-                  style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>:""}
-            </>
-          );
-      case "industry":
-            return (
+            {editStatus ? (
               <>
-                  {checkIndustryArray.length?<Button
-                    onClick={handleOpenCandidateModal}
+                {checkUpdateRoleArray.length ? (
+                  <Button
+                    onClick={() => {
+                      handleOpenCandidateModal();
+                      getRoleByIdAPIcall();
+                      getPermissionsAPIcall();
+                      handleUpdateAuditDataOtherMRole(editId);
+                    }}
+                    style={{
+                      marginTop: "80px",
+                      marginRight: "5px",
+                      backgroundColor: "brown",
+                      color: "white",
+                    }}
+                    variant="outlined"
+                  >
+                    <EditIcon />
+                    Edit
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              <>
+                {checkRoleArray.length ? (
+                  <Button
+                    onClick={() => {
+                      handleOpenCandidateModal();
+                      getPermissionsAPIcall();
+                    }}
                     style={{
                       marginTop: "80px",
                       marginRight: "5px",
@@ -8820,49 +9235,18 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   >
                     <AddIcon />
                     {buttonText}
-                  </Button>:""}
+                  </Button>
+                ) : (
+                  ""
+                )}
               </>
-            );
-      case "skillset":
-        return (
-          <>
-              {checkSkillsetArray.length?<Button
-                onClick={handleOpenCandidateModal}
-                style={{
-                  marginTop: "80px",
-                  marginRight: "5px",
-                  backgroundColor: "brown",
-                  color: "white",
-                }}
-                variant="outlined"
-              >
-                <AddIcon />
-                {buttonText}
-              </Button>:""}
+            )}
           </>
         );
-      case "subscription":
-          return (
-            <>
-                {checkSubscriptionArray.length?<Button
-                  onClick={handleOpenCandidateModal}
-                  style={{
-                    marginTop: "80px",
-                    marginRight: "5px",
-                    backgroundColor: "brown",
-                    color: "white",
-                  }}
-                  variant="outlined"
-                >
-                  <AddIcon />
-                  {buttonText}
-                </Button>:""}
-            </>
-          );
-      default:
+      case "user":
         return (
           <>
-            
+            {checkUserArray.length ? (
               <Button
                 onClick={handleOpenCandidateModal}
                 style={{
@@ -8876,6 +9260,167 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 <AddIcon />
                 {buttonText}
               </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "login-history":
+        return null;
+      case "user-activity":
+        return null;
+      case "admin-user-activity":
+        return null;
+      case "admin-user-login-activity":
+        return null;
+      case "category":
+        return (
+          <>
+            {checkCategoryArrayArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "company":
+        return (
+          <>
+            {checkCompanyArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "customer":
+        return (
+          <>
+            {checkCustomerArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "industry":
+        return (
+          <>
+            {checkIndustryArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "skillset":
+        return (
+          <>
+            {checkSkillsetArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      case "subscription":
+        return (
+          <>
+            {checkSubscriptionArray.length ? (
+              <Button
+                onClick={handleOpenCandidateModal}
+                style={{
+                  marginTop: "80px",
+                  marginRight: "5px",
+                  backgroundColor: "brown",
+                  color: "white",
+                }}
+                variant="outlined"
+              >
+                <AddIcon />
+                {buttonText}
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      default:
+        return (
+          <>
+            <Button
+              onClick={handleOpenCandidateModal}
+              style={{
+                marginTop: "80px",
+                marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
           </>
         );
     }
@@ -8999,14 +9544,20 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   style={{ alignItem: "center", marginLeft: "110px" }}
                   action={
                     <IconButton aria-label="Edit">
-                     {checkAdminBatchPriorityArrayArray.length? <EditIcon
-                        onClick={() => {
-                          setEditStatus(true);
-                          setId(updateBatchPriority[item].assignedTo[item].id);
-                          setOpenAddBtchprty(true);
-                        }}
-                        style={{ color: "#d32f2f" }}
-                      />:""}
+                      {checkAdminBatchPriorityArrayArray.length ? (
+                        <EditIcon
+                          onClick={() => {
+                            setEditStatus(true);
+                            setId(
+                              updateBatchPriority[item].assignedTo[item].id
+                            );
+                            setOpenAddBtchprty(true);
+                          }}
+                          style={{ color: "#d32f2f" }}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </IconButton>
                   }
                   title="Batch no"
@@ -9047,12 +9598,12 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 <CardActions disableSpacing>
                   <p
                     expand={expanded}
-                    onClick={()=>{
-                      handleExpandClick()
+                    onClick={() => {
+                      handleExpandClick();
                       // setBatchPriorityId(updateBatchPriority[item].batchId);
                       // console.log(batchPriorityId);
-                      getBatchPriorityStatsDataAPIcall();}
-                    }
+                      getBatchPriorityStatsDataAPIcall();
+                    }}
                     aria-expanded={expanded}
                     aria-label="SHOW STATS"
                     style={{
@@ -9067,14 +9618,14 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   </p>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent style={{fontSize:'15px'}}>
+                  <CardContent style={{ fontSize: "15px" }}>
                     <List>
-                  {Object.keys(batchPriorityAssingend).map((stats, i) => (
-                      <tr>
-                        <td>Owner:</td>
-                        <td>{batchPriorityAssingend[stats].name}</td>
-                      </tr>
-                        ))} 
+                      {Object.keys(batchPriorityAssingend).map((stats, i) => (
+                        <tr>
+                          <td>Owner:</td>
+                          <td>{batchPriorityAssingend[stats].name}</td>
+                        </tr>
+                      ))}
                       <tr>
                         <td>Uploaded by:</td>
                         <td>Navnath</td>
@@ -9140,23 +9691,21 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 noValidate
                 autoComplete="off"
               >
-                    <ListItem
-                      sx={{ display: "flex", flex: "0", fontSize: "15px" }}
-                    >
-                      Title:
-                      <b style={{ marginRight: "20px",fontSize:"13px"}}>
-                        {otherIndCategoryResult.text}
-                      </b>
-                      Type:
-                      <b style={{ marginRight: "20px",fontSize:"13px" }}>
-                        {otherIndCategoryResult.type}
-                      </b>
-                      BatchNo:
-                      <b style={{ marginRight: "20px" ,fontSize:"13px"}}>
-                        {otherIndCategoryResult.batchNo}
-                      </b>
-                    </ListItem>
-                   
+                <ListItem sx={{ display: "flex", flex: "0", fontSize: "15px" }}>
+                  Title:
+                  <b style={{ marginRight: "20px", fontSize: "13px" }}>
+                    {otherIndCategoryResult.text}
+                  </b>
+                  Type:
+                  <b style={{ marginRight: "20px", fontSize: "13px" }}>
+                    {otherIndCategoryResult.type}
+                  </b>
+                  BatchNo:
+                  <b style={{ marginRight: "20px", fontSize: "13px" }}>
+                    {otherIndCategoryResult.batchNo}
+                  </b>
+                </ListItem>
+
                 <TextField
                   select
                   // style={{width:'50px',marginRight:20}}
@@ -9164,8 +9713,11 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   id="outlined-basic"
                   label="Choose"
                   variant="outlined"
-                  onChange={(e)=>{
-                    setOtherIndustryC({...otherIndustryC,mode:e.target.value})
+                  onChange={(e) => {
+                    setOtherIndustryC({
+                      ...otherIndustryC,
+                      mode: e.target.value,
+                    });
                   }}
                 >
                   {categoryList.map((option) => (
@@ -9186,8 +9738,11 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                     id="outlined-basic"
                     label="Title"
                     variant="outlined"
-                    onChange={(e)=>{
-                      setOtherIndustryC({...otherIndustryC,text:e.target.value})
+                    onChange={(e) => {
+                      setOtherIndustryC({
+                        ...otherIndustryC,
+                        text: e.target.value,
+                      });
                     }}
                   />
                 ) : null}
@@ -9197,17 +9752,18 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                     id="outlined-basic"
                     label="Select"
                     variant="outlined"
-                    onChange={(e)=>{
-                      setOtherIndustryC({...otherIndustryC,text:e.target.value})
+                    onChange={(e) => {
+                      setOtherIndustryC({
+                        ...otherIndustryC,
+                        text: e.target.value,
+                      });
                     }}
                   >
-                    {
-                      otherIndCategoryPassive.map((data,i)=>(
-                        <MenuItem key={data.id} value={data.title}>
+                    {otherIndCategoryPassive.map((data, i) => (
+                      <MenuItem key={data.id} value={data.title}>
                         {data.title}
-                        </MenuItem>
-                      ))
-                    }
+                      </MenuItem>
+                    ))}
                   </TextField>
                 ) : null}
                 {categoryFields === "New" ? (
@@ -9215,8 +9771,11 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                     id="outlined-basic"
                     label="Description"
                     variant="outlined"
-                    onChange={(e)=>{
-                      setOtherIndustryC({...otherIndustryC,description:e.target.value})
+                    onChange={(e) => {
+                      setOtherIndustryC({
+                        ...otherIndustryC,
+                        description: e.target.value,
+                      });
                     }}
                   />
                 ) : null}
@@ -9530,10 +10089,10 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
         );
       case "Login-History":
         return (
-                <>
-                <LoginHistoryDesign setLoader={setLoader}/>
-                </>
-              )
+          <>
+            <LoginHistoryDesign setLoader={setLoader} />
+          </>
+        );
       case "Customer - Master":
         return (
           <>
@@ -9545,28 +10104,26 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 width: "700px",
                 marginBottom: "20px",
               }}
-              onChange={(e)=>{
-                filterCustomer(e)
+              onChange={(e) => {
+                filterCustomer(e);
               }}
             />
           </>
-        )
+        );
       case "User - Activity":
-        return (
-          <UserActivityDesign/>
-        )
+        return <UserActivityDesign />;
       case "Admin - User Activity":
         return (
           <>
-          <AdminUserActivityDesign/>
+            <AdminUserActivityDesign />
           </>
-        )
+        );
       case "Admin - User Login Activity":
         return (
           <>
-          <AdminUserLoginActivityDesign/>
+            <AdminUserLoginActivityDesign />
           </>
-        )
+        );
       default:
         return (
           <>
@@ -9587,28 +10144,94 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
     }
   };
 
-
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     const numericValue = Number(value);
     if (checked) {
       // Add the checkbox value to the array
       setCheckedValues([...checkedValues, numericValue]);
-      setRoleData({...roleData,permissionId:checkedValues})
-      
+      setRoleData({ ...roleData, permissionId: checkedValues });
     } else {
       // Remove the checkbox value from the array
       setCheckedValues(checkedValues.filter((item) => item !== numericValue));
     }
   };
 
-
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
       case "candidate-master":
         return (
+
           <>
+           {/* <div>
+                        <ListItem style={{display:'flex',justifyContent:'end'}}>
+                          <Button
+                            style={{
+                              backgroundColor: "grey",
+                              color: "white",
+                              margin: "10px",
+                            }}
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                          >
+                            PREV
+                          </Button>
+                          {!editStatus ? (
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              onClick={handleSubmit(onSubmit)}
+                            >
+                              SAVE AND NEXT
+                            </Button>
+                          ) : (
+                            <Button
+                              style={{
+                                backgroundColor: "brown",
+                                color: "white",
+                                margin: "10px",
+                              }}
+                              onClick={() => {
+                                // onSubmitData()
+                                updateAPICalls("candidate-master");
+                                getExperienceData();
+                                getTrainingCertData();
+                              }}
+                            >
+                              UPDATE AND NEXT
+                            </Button>
+                          )}
+                          <Button
+                            onClick={() => {
+                              handleNext();
+                              getExperienceData();
+                              getTrainingCertData();
+                            }}
+                            style={{
+                              backgroundColor: "brown",
+                              color: "white",
+                            }}
+                          >
+                            NEXT
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setOpenCandidateModal(false);
+                            }}
+                            style={{
+                              backgroundColor: "black",
+                              color: "white",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            EXIT
+                          </Button>
+                        </ListItem>
+                      </div> */}
             <Box sx={{ width: "100%" }}>
               <Typography sx={{ mt: 2, mb: 1 }}>
                 {/* Step {activeStep + 1} */}
@@ -9697,7 +10320,10 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                           />
                         </ListItem>
                         <ListItem>
-                          <FormLabel id="demo-row-radio-buttons-group-label">
+                          <FormLabel
+                            id="demo-row-radio-buttons-group-label"
+                            style={{ marginRight: "10px" }}
+                          >
                             Gender
                           </FormLabel>
                           <FormControl
@@ -9741,6 +10367,17 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                                   />
                                 }
                                 label="Female"
+                              />
+                              <FormControlLabel
+                                value="OTHER"
+                                control={
+                                  <Radio
+                                    checked={
+                                      candidateMasterData.gender === "OTHER"
+                                    }
+                                  />
+                                }
+                                label="Other"
                               />
                             </RadioGroup>
                           </FormControl>
@@ -10193,7 +10830,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                           />
                         </ListItem>
                       </div>
-                      
+
                       <div>
                         <ListItem>
                           <Button
@@ -10262,8 +10899,8 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                           </Button>
                         </ListItem>
                       </div>
-                        <ListItem>
-                        {showAudit && editStatus?(<AuditLog />):""}
+                      <ListItem>
+                        {showAudit && editStatus ? <AuditLog /> : ""}
                       </ListItem>
                     </Box>
                   </List>
@@ -10504,7 +11141,6 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                         </ListItem>
                       </div>
 
-                    
                       <div>
                         <ListItem>
                           <Button
@@ -10557,7 +11193,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                             EXIT
                           </Button>
                         </ListItem>
-                        {showAudit && editStatus? (<AuditLog />):""}
+                        {showAudit && editStatus ? <AuditLog /> : ""}
                       </div>
                     </Box>
                   </List>
@@ -11101,7 +11737,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 </ol>
               </ListItem>
             </Box>
-            {<AuditLog/>}
+            {<AuditLog />}
           </>
         );
       case "candidate-verification":
@@ -12889,7 +13525,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 </Box>
               </TabContext>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "agent-master":
@@ -13566,7 +14202,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   </FormControl>
                 </TabPanel>
               </TabContext>
-              {showAudit && editStatus?(<AuditLog/>):""}
+              {showAudit && editStatus ? <AuditLog /> : ""}
             </Box>
           </>
         );
@@ -13997,7 +14633,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   </List>
                 ) : null}
               </Box>
-              {showAudit && editStatus?(<AuditLog/>):""}
+              {showAudit && editStatus ? <AuditLog /> : ""}
             </Box>
           </>
         );
@@ -14097,7 +14733,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 </ul>
               </List>
             </div>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "company":
@@ -14209,158 +14845,163 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 )}
               </List>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "customer":
-          return (
-            <>
-              <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
-                {/* <List> */}
-                <p sx={{mb:4}}>Select Profile Image</p>
-                <TextField accept="image/png, image/jpeg" type="file" sx={{mb:4}} onChange={(e)=>{
-                  setImage(e.target.files[0])
-                }}/>
-                <Button onClick={()=>addCustomerProfileImg()}>upload</Button>
-                <TextField
-                    required
-                    id="filled-basic"
-                    label="Full Name"
-                    value={customerData.fullName}
-                    variant="filled"
+        return (
+          <>
+            <Box sx={{ width: "100%", typography: "body1", ml: 17 }}>
+              {/* <List> */}
+              <p sx={{ mb: 4 }}>Select Profile Image</p>
+              <TextField
+                accept="image/png, image/jpeg"
+                type="file"
+                sx={{ mb: 4 }}
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+              <Button onClick={() => addCustomerProfileImg()}>upload</Button>
+              <TextField
+                required
+                id="filled-basic"
+                label="Full Name"
+                value={customerData.fullName}
+                variant="filled"
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    fullName: e.target.value,
+                  });
+                }}
+                sx={{ width: "130ch", mb: 4 }}
+              />
+              <TextField
+                required
+                id="filled-basic"
+                label="Company Name"
+                value={customerData.companyName}
+                variant="filled"
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    companyName: e.target.value,
+                  });
+                }}
+                sx={{ width: "130ch", mb: 4 }}
+              />
+              <TextField
+                required
+                id="filled-basic"
+                type="date"
+                label="BirthDate"
+                value={customerData.dob}
+                variant="filled"
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    dob: e.target.value,
+                  });
+                }}
+                sx={{ width: "130ch", mb: 4 }}
+              />
+              {/* </List> */}
+              <TextField
+                select
+                id="filled-basic"
+                label="Gender"
+                value={customerData.gender}
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    gender: e.target.value,
+                  });
+                }}
+                variant="filled"
+                sx={{ width: "130ch", mb: 4 }}
+              >
+                {gender.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                required
+                id="filled-basic"
+                label="State"
+                value={customerData.state}
+                variant="filled"
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    state: e.target.value,
+                  });
+                }}
+                sx={{ width: "130ch", mb: 4 }}
+              />
+              <TextField
+                disabled
+                required
+                id="filled-basic"
+                label="Country"
+                value={customerData.country}
+                variant="filled"
+                onChange={(e) => {
+                  setCustomerData({
+                    ...customerData,
+                    country: e.target.value,
+                  });
+                }}
+                sx={{ width: "130ch", mb: 4 }}
+              />
+              <List>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Is Active"
+                    value={customerData.isActive}
                     onChange={(e) => {
                       setCustomerData({
                         ...customerData,
-                        fullName: e.target.value,
+                        isActive: e.target.checked,
                       });
                     }}
-                    sx={{ width: "130ch",mb:4 }}
                   />
-                  <TextField
-                    required
-                    id="filled-basic"
-                    label="Company Name"
-                    value={customerData.companyName}
-                    variant="filled"
-                    onChange={(e) => {
-                      setCustomerData({
-                        ...customerData,
-                        companyName: e.target.value,
-                      });
+                </FormGroup>
+              </List>
+              <List>
+                {editStatus === false ? (
+                  <Button
+                    onClick={() => addAPICalls("customer")}
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginTop: "12px",
                     }}
-                    sx={{ width: "130ch",mb:4}}
-                  />
-                  <TextField
-                    required
-                    id="filled-basic"
-                    type="date"
-                    label="BirthDate"
-                    value={customerData.dob}
-                    variant="filled"
-                    onChange={(e) => {
-                      setCustomerData({
-                        ...customerData,
-                        dob: e.target.value,
-                      });
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      updateAPICalls("customer");
                     }}
-                    sx={{ width: "130ch",mb:4 }}
-                  />
-                {/* </List> */}
-                <TextField
-                  select
-                  id="filled-basic"
-                  label="Gender"
-                  value={customerData.gender}
-                  onChange={(e) => {
-                     setCustomerData({
-                          ...customerData,
-                          gender: e.target.value,
-                        });
-                  }}
-                  variant="filled"
-                  sx={{ width: "130ch", mb: 4 }}
-                >
-                  {gender.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                    required
-                    id="filled-basic"
-                    label="State"
-                    value={customerData.state}
-                    variant="filled"
-                    onChange={(e) => {
-                      setCustomerData({
-                        ...customerData,
-                        state: e.target.value,
-                      });
+                    style={{
+                      backgroundColor: "brown",
+                      color: "white",
+                      marginTop: "12px",
                     }}
-                    sx={{ width: "130ch",mb:4 }}
-                  />
-                  <TextField
-                  disabled
-                    required
-                    id="filled-basic"
-                    label="Country"
-                    value={customerData.country}
-                    variant="filled"
-                    onChange={(e) => {
-                      setCustomerData({
-                        ...customerData,
-                        country: e.target.value,
-                      });
-                    }}
-                    sx={{ width: "130ch",mb:4 }}
-                  />
-                <List>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Is Active"
-                      value={customerData.isActive}
-                      onChange={(e) => {
-                        setCustomerData({
-                          ...customerData,
-                          isActive: e.target.checked,
-                        });
-                      }}
-                    />
-                  </FormGroup>
-                </List>
-                <List>
-                  {editStatus === false ? (
-                    <Button
-                      onClick={()=>addAPICalls("customer")}
-                      style={{
-                        backgroundColor: "brown",
-                        color: "white",
-                        marginTop: "12px",
-                      }}
-                    >
-                      Save
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => {
-                        updateAPICalls("customer");
-                      }}
-                      style={{
-                        backgroundColor: "brown",
-                        color: "white",
-                        marginTop: "12px",
-                      }}
-                    >
-                      Update
-                    </Button>
-                  )}
-                </List>
-              </Box>
-              {showAudit && editStatus?(<AuditLog/>):""}
-            </>
-          );
+                  >
+                    Update
+                  </Button>
+                )}
+              </List>
+            </Box>
+            {showAudit && editStatus ? <AuditLog /> : ""}
+          </>
+        );
       case "industry":
         return (
           <>
@@ -14434,7 +15075,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 )}
               </List>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "role":
@@ -14508,7 +15149,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                         {item.items.map((i, s) => (
                           <>
                             <FormControlLabel
-                            key={i.id}
+                              key={i.id}
                               style={{ display: "flex" }}
                               control={
                                 <Checkbox
@@ -14553,7 +15194,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 </Button>
               </List>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "skillset":
@@ -14627,7 +15268,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 )}
               </List>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "subscription":
@@ -14747,7 +15388,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 </List>
               </Box>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       case "user":
@@ -15277,12 +15918,41 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                 )}
               </List>
             </Box>
-            {showAudit && editStatus?(<AuditLog/>):""}
+            {showAudit && editStatus ? <AuditLog /> : ""}
           </>
         );
       default:
         break;
     }
+  };
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 100,
+  });
+
+  const handleScroll = (direction) => {
+    const scrollHeight = document.getElementById('scrollable-content').scrollHeight;
+    const clientHeight = document.getElementById('scrollable-content').clientHeight;
+    const scrollTop = document.getElementById('scrollable-content').scrollTop;
+
+    if (direction === 'up') {
+      document.getElementById('scrollable-content').scrollTo({
+        top: scrollTop - clientHeight,
+        behavior: 'smooth',
+      });
+    } else if (direction === 'down') {
+      document.getElementById('scrollable-content').scrollTo({
+        top: scrollTop + clientHeight,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleScrollPosition = () => {
+    const scrollTop = document.getElementById('scrollable-content').scrollTop;
+    setScrollPosition(scrollTop);
   };
 
   //Common Modal For evey Module
@@ -15313,10 +15983,37 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
               <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
-            {editStatus?<Button sx={{ ml: 135, color: "white",backgroundColor:'black' }} 
-            onClick={()=>setShowAudit(true)}>Show Audit Log</Button>:""}
+            {editStatus ? (
+              <Button
+                sx={{ ml: 135, color: "white", backgroundColor: "black" }}
+                onClick={() => setShowAudit(true)}
+              >
+                Show Audit Log
+              </Button>
+            ) : (
+              ""
+            )}
+           
           </Box>
-          <DialogContent>{handleModalInput()}</DialogContent>
+          <DialogContent id="scrollable-content" onScroll={handleScrollPosition} 
+          style={{ maxHeight: '1200px', overflowY: 'scroll',marginBottom:"-200px" }}
+          >{handleModalInput()}</DialogContent>
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+        <IconButton
+          aria-label="scroll up"
+          onClick={() => handleScroll('up')}
+          style={{  margin: '8px' }}
+        >
+          <KeyboardArrowUpIcon />
+        </IconButton>
+        <IconButton
+          aria-label="scroll down"
+          onClick={() => handleScroll('down')}
+          style={{ margin: '8px' }}
+        >
+          <KeyboardArrowDownIcon />
+        </IconButton>
+      </div>
         </Dialog>
       </div>
     );
@@ -15551,7 +16248,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
                   <p>*indicates required field</p>
                 </tr>
               </DialogContent>
-              {editStatus?(<AuditLog/>):""}
+              {editStatus ? <AuditLog /> : ""}
             </>
           )}
           <DialogActions>
@@ -16093,7 +16790,7 @@ const checkCandidateUploadBatchChangePricingArray = candidateUploadBatchChangePr
     handleUpdateAuditDataOtherMSubscription,
     handleUpdateAuditDataOtherMUser,
     getCustomerById,
-    handleUpdateAuditDataOtherMCustomer
+    handleUpdateAuditDataOtherMCustomer,
   };
 
   return StateContainer;

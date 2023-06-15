@@ -305,7 +305,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="left">{tblData[item].fullName}</TableCell>
+                  <TableCell align="center">{tblData[item].fullName}</TableCell>
                   <TableCell align="left">{tblData[item].contactNo1}</TableCell>
                   <TableCell align="left">
                     {tblData[item].isActive === true ? (

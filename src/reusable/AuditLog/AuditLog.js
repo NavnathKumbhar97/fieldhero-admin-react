@@ -90,12 +90,12 @@ const AuditLog = (props) => {
   //Get the State Data From redux
   const AuditLogDataId = useSelector((state) => state.auditLog)
   const tblLogHeader = [
-    // {
-    //   id: "SrNo",
-    //   numeric: false,
-    //   disablePadding: true,
-    //   label: "Sr.No",
-    // },
+    {
+      id: "SrNo",
+      numeric: false,
+      disablePadding: true,
+      label: "Sr.No",
+    },
     {
       id: "PersonName",
       numeric: false,
@@ -227,12 +227,12 @@ const AuditLog = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tblLogData.map((row) => (
+              {tblLogData.map((row,i) => (
                 <StyledTableRow key={row.id}>
+                  <StyledTableCell align="left">{i}</StyledTableCell>
                   <StyledTableCell component="th" scope="row">
                     {row.PersonName}
                   </StyledTableCell>
-                  {/* <StyledTableCell align="left">{row.calories}</StyledTableCell> */}
                   <StyledTableCell align="left">{row.OperationName}</StyledTableCell>
                   <StyledTableCell align="left">{row.UpdateFile.map((i,z)=>(
                     i[0]==="Profile Image"||"Pan Card"||"Proof Of Identity"?<a href={`-${i[1]}`} target="_blank">{i[0]}</a>:""

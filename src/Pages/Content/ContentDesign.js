@@ -104,7 +104,10 @@ export default function ContentDesign(props) {
     handleUpdateAuditDataOtherMSkillSet,
     handleUpdateAuditDataOtherMSubscription,
     handleUpdateAuditDataOtherMUser,
-    getCustomerById,handleUpdateAuditDataOtherMCustomer
+    getCustomerById,handleUpdateAuditDataOtherMCustomer,
+    getPermissionsAPIcall,
+    handleUpdateAuditDataOtherMRole,
+    checkUpdateRoleArray
   } = ContentLogic();
 
   //UseEffect For Page
@@ -1048,16 +1051,6 @@ export default function ContentDesign(props) {
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setEditId(tblData[item].id);
-                          setEditStatus(true);
-                          setRoleData(tblData[item]);
-                        } else {
-                          setEditStatus(false);
-                          setRoleData([]);
-                        }
-                      }}
                     />
                   </TableCell>
                   <TableCell
@@ -1103,6 +1096,23 @@ export default function ContentDesign(props) {
                         Inactive
                       </p>
                     )}
+                  </TableCell>
+                  <TableCell align="left">
+                    {checkUpdateRoleArray.length?<Button
+                      style={{ color: "brown" }}
+                      onClick={() => {
+                        handleOpenCandidateModal();
+                        setEditId(tblData[item].id);
+                        setEditStatus(true);
+                        setRoleData(tblData[item]);
+                        getRoleByIdAPIcall(tblData[item].id);
+                      getPermissionsAPIcall();
+                      handleUpdateAuditDataOtherMRole(tblData[item].id);
+                      }}
+                    >
+                      <Edit />
+                      Edit
+                    </Button>:""}
                   </TableCell>
                 </TableRow>
               </>

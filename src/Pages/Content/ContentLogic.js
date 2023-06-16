@@ -1245,7 +1245,9 @@ const ContentLogic = (props) => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const validationSchemaForCandidateMaster = Yup.object().shape({
-    fullname: Yup.string().required("Full Name is required"),
+    fullname: Yup.string().required("Full Name is required")
+    .min(3,"Minimun 3 word required")
+    .max(100,"Full Name is out of range maximum 100 word"),
     mobileNo: Yup.string()
       .required("Contact number is not valid")
       .min(10, "Contact number is not valid"),
@@ -1253,6 +1255,9 @@ const ContentLogic = (props) => {
       .required("Aadhar number is required")
       .min(12, "Aadhar number is not valid"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
+    perm_zip:Yup.string()
+    .min(6,"Enter 6 digit zipcode")
+    .max(6,"Enter 6 digit zipcode")
     // photo: Yup.mixed()
     // .test("required", "photo is required", value => value.length > 0)
     // .test("fileSize", "File Size is too large", (value) =>
@@ -1938,6 +1943,12 @@ const ContentLogic = (props) => {
       numeric: false,
       disablePadding: false,
       label: "Status",
+    },
+    {
+      id: "Actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
     },
   ];
   const skillSetMaster = [
@@ -2922,12 +2933,12 @@ const ContentLogic = (props) => {
   };
 
   // Fetch the Role By id
-  const getRoleByIdAPIcall = async () => {
+  const getRoleByIdAPIcall = async (id) => {
     let authTok = localStorage.getItem("user"); // string
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     await handler
-      .dataGet(`/v1/roles/${editId}`, {
+      .dataGet(`/v1/roles/${id}`, {
         headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
       })
       .then((response) => {
@@ -9191,35 +9202,7 @@ const ContentLogic = (props) => {
         return null;
       case "role":
         return (
-          <>
-            {editStatus ? (
-              <>
-                {checkUpdateRoleArray.length ? (
-                  <Button
-                    onClick={() => {
-                      handleOpenCandidateModal();
-                      getRoleByIdAPIcall();
-                      getPermissionsAPIcall();
-                      handleUpdateAuditDataOtherMRole(editId);
-                    }}
-                    style={{
-                      marginTop: "80px",
-                      marginRight: "5px",
-                      backgroundColor: "brown",
-                      color: "white",
-                    }}
-                    variant="outlined"
-                  >
-                    <EditIcon />
-                    Edit
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </>
-            ) : (
-              <>
-                {checkRoleArray.length ? (
+          <>    
                   <Button
                     onClick={() => {
                       handleOpenCandidateModal();
@@ -9236,11 +9219,6 @@ const ContentLogic = (props) => {
                     <AddIcon />
                     {buttonText}
                   </Button>
-                ) : (
-                  ""
-                )}
-              </>
-            )}
           </>
         );
       case "user":
@@ -9939,7 +9917,7 @@ const ContentLogic = (props) => {
             <CandidateVerification />
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Candidate Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -9956,7 +9934,7 @@ const ContentLogic = (props) => {
         return (
           <TextField
             id="filled-basic"
-            label="Search"
+            label="Search Template Name"
             variant="filled"
             style={{
               width: "700px",
@@ -9973,7 +9951,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Category Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -9990,7 +9968,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Company Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10007,7 +9985,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Industry Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10024,7 +10002,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Role Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10041,7 +10019,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Skill Set Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10058,7 +10036,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Subscription Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10075,7 +10053,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search User Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10098,7 +10076,7 @@ const ContentLogic = (props) => {
           <>
             <TextField
               id="filled-basic"
-              label="Search"
+              label="Search Customer Name"
               variant="filled"
               style={{
                 width: "700px",
@@ -10485,7 +10463,11 @@ const ContentLogic = (props) => {
                           />
                           <TextField
                             id="filled-basic"
+                            variant="filled"
                             label="Zip Code"
+                            {...register("perm_zip")}
+                            error={errors.perm_zip ? true : false}
+                            helperText={errors.perm_zip?.message}
                             value={
                               !editStatus
                                 ? candidateMasterData.perm_zip
@@ -10512,7 +10494,6 @@ const ContentLogic = (props) => {
                               ),
                             }}
                             // onMouseOut={searchAddByZip}
-                            variant="filled"
                             sx={{ ml: 3, width: "69ch" }}
                           />
                         </ListItem>
@@ -15993,6 +15974,7 @@ const ContentLogic = (props) => {
             ) : (
               ""
             )}
+            <Button sx={{ ml: 150,mt:-9.5, color: "white", backgroundColor: "black" }}>Test</Button>
            
           </Box>
           <DialogContent id="scrollable-content" onScroll={handleScrollPosition} 
@@ -16791,6 +16773,9 @@ const ContentLogic = (props) => {
     handleUpdateAuditDataOtherMUser,
     getCustomerById,
     handleUpdateAuditDataOtherMCustomer,
+    getPermissionsAPIcall,
+    handleUpdateAuditDataOtherMRole,
+    checkUpdateRoleArray
   };
 
   return StateContainer;

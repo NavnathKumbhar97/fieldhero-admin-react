@@ -1411,7 +1411,7 @@ export default function ContentDesign(props) {
               <Table
                 sx={{ minWidth: 750 }}
                 aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
+                size={"medium"}
               >
                 <EnhancedTableHead
                   // numSelected={selected.length}

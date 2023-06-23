@@ -2116,7 +2116,7 @@ const ContentLogic = (props) => {
       .dataGet(
         `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${
           filterData.contact
-        }&id=${17562}`,
+        }`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -5302,10 +5302,15 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              setErrMsg(error.data.message);
+              let errorMsg = '';
+                error.data.errors.forEach((error) => {
+                  errorMsg += error.msg + ' ';
+                });
+              setErrMsg(errorMsg);
+              console.log("errorMsg",errorMsg);
               setOpenErrtMsg(true);
             }
-            console.error("There was an error!- createCompany", error);
+            console.error("There was an error!- createCategory", error);
           });
         break;
       case "candidate-verification":
@@ -15974,7 +15979,7 @@ const ContentLogic = (props) => {
             ) : (
               ""
             )}
-            <Button sx={{ ml: 150,mt:-9.5, color: "white", backgroundColor: "black" }}>Test</Button>
+            {/* <Button sx={{ ml: 150,mt:-9.5, color: "white", backgroundColor: "black" }}>Test</Button> */}
            
           </Box>
           <DialogContent id="scrollable-content" onScroll={handleScrollPosition} 

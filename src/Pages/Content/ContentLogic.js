@@ -120,9 +120,9 @@ import AdminUserActivityDesign from "../AdminUserActivity/AdminUserActivityDesig
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import AdminUserLoginActivityDesign from "../AdminUserLoginActivity/AdminUserLoginActivityDesign";
-import { useScrollTrigger } from '@mui/material';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useScrollTrigger } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -1245,9 +1245,10 @@ const ContentLogic = (props) => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const validationSchemaForCandidateMaster = Yup.object().shape({
-    fullname: Yup.string().required("Full Name is required")
-    .min(3,"Minimun 3 word required")
-    .max(100,"Full Name is out of range maximum 100 word"),
+    fullname: Yup.string()
+      .required("Full Name is required")
+      .min(3, "Minimun 3 word required")
+      .max(100, "Full Name is out of range maximum 100 word"),
     mobileNo: Yup.string()
       .required("Contact number is not valid")
       .min(10, "Contact number is not valid"),
@@ -1255,9 +1256,9 @@ const ContentLogic = (props) => {
       .required("Aadhar number is required")
       .min(12, "Aadhar number is not valid"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
-    perm_zip:Yup.string()
-    .min(6,"Enter 6 digit zipcode")
-    .max(6,"Enter 6 digit zipcode")
+    perm_zip: Yup.string()
+      .min(6, "Enter 6 digit zipcode")
+      .max(6, "Enter 6 digit zipcode"),
     // photo: Yup.mixed()
     // .test("required", "photo is required", value => value.length > 0)
     // .test("fileSize", "File Size is too large", (value) =>
@@ -2114,9 +2115,7 @@ const ContentLogic = (props) => {
     setLoader(true);
     handler
       .dataGet(
-        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${
-          filterData.contact
-        }`,
+        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -5302,12 +5301,12 @@ const ContentLogic = (props) => {
           })
           .catch((error) => {
             if (error.status == 400) {
-              let errorMsg = '';
-                error.data.errors.forEach((error) => {
-                  errorMsg += error.msg + ' ';
-                });
+              let errorMsg = "";
+              error.data.errors.forEach((error) => {
+                errorMsg += error.msg + " ";
+              });
               setErrMsg(errorMsg);
-              console.log("errorMsg",errorMsg);
+              console.log("errorMsg", errorMsg);
               setOpenErrtMsg(true);
             }
             console.error("There was an error!- createCategory", error);
@@ -7891,6 +7890,12 @@ const ContentLogic = (props) => {
           });
         break;
       case "category":
+        const updatedFields = {};
+    for (const key in categoryData) {
+      if (categoryData[key] !== '') {
+        updatedFields[key] = categoryData[key];
+      }
+    }
         let updateCategoryData = {
           ...categoryData,
           id: editId,
@@ -7898,7 +7903,7 @@ const ContentLogic = (props) => {
         handler
           .dataPut(
             `/v1/categories/:${updateCategoryData.id}`,
-            updateCategoryData,
+            updatedFields,
             {
               headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
             }
@@ -9207,23 +9212,23 @@ const ContentLogic = (props) => {
         return null;
       case "role":
         return (
-          <>    
-                  <Button
-                    onClick={() => {
-                      handleOpenCandidateModal();
-                      getPermissionsAPIcall();
-                    }}
-                    style={{
-                      marginTop: "80px",
-                      marginRight: "5px",
-                      backgroundColor: "brown",
-                      color: "white",
-                    }}
-                    variant="outlined"
-                  >
-                    <AddIcon />
-                    {buttonText}
-                  </Button>
+          <>
+            <Button
+              onClick={() => {
+                handleOpenCandidateModal();
+                getPermissionsAPIcall();
+              }}
+              style={{
+                marginTop: "80px",
+                marginRight: "5px",
+                backgroundColor: "brown",
+                color: "white",
+              }}
+              variant="outlined"
+            >
+              <AddIcon />
+              {buttonText}
+            </Button>
           </>
         );
       case "user":
@@ -10145,9 +10150,8 @@ const ContentLogic = (props) => {
     switch (pageName) {
       case "candidate-master":
         return (
-
           <>
-           {/* <div>
+            {/* <div>
                         <ListItem style={{display:'flex',justifyContent:'end'}}>
                           <Button
                             style={{
@@ -15919,25 +15923,27 @@ const ContentLogic = (props) => {
   });
 
   const handleScroll = (direction) => {
-    const scrollHeight = document.getElementById('scrollable-content').scrollHeight;
-    const clientHeight = document.getElementById('scrollable-content').clientHeight;
-    const scrollTop = document.getElementById('scrollable-content').scrollTop;
+    const scrollHeight =
+      document.getElementById("scrollable-content").scrollHeight;
+    const clientHeight =
+      document.getElementById("scrollable-content").clientHeight;
+    const scrollTop = document.getElementById("scrollable-content").scrollTop;
 
-    if (direction === 'up') {
-      document.getElementById('scrollable-content').scrollTo({
+    if (direction === "up") {
+      document.getElementById("scrollable-content").scrollTo({
         top: scrollTop - clientHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
-    } else if (direction === 'down') {
-      document.getElementById('scrollable-content').scrollTo({
+    } else if (direction === "down") {
+      document.getElementById("scrollable-content").scrollTo({
         top: scrollTop + clientHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   };
 
   const handleScrollPosition = () => {
-    const scrollTop = document.getElementById('scrollable-content').scrollTop;
+    const scrollTop = document.getElementById("scrollable-content").scrollTop;
     setScrollPosition(scrollTop);
   };
 
@@ -15980,27 +15986,34 @@ const ContentLogic = (props) => {
               ""
             )}
             {/* <Button sx={{ ml: 150,mt:-9.5, color: "white", backgroundColor: "black" }}>Test</Button> */}
-           
           </Box>
-          <DialogContent id="scrollable-content" onScroll={handleScrollPosition} 
-          style={{ maxHeight: '1200px', overflowY: 'scroll',marginBottom:"-200px" }}
-          >{handleModalInput()}</DialogContent>
-          <div style={{ display: 'flex', justifyContent: 'end' }}>
-        <IconButton
-          aria-label="scroll up"
-          onClick={() => handleScroll('up')}
-          style={{  margin: '8px' }}
-        >
-          <KeyboardArrowUpIcon />
-        </IconButton>
-        <IconButton
-          aria-label="scroll down"
-          onClick={() => handleScroll('down')}
-          style={{ margin: '8px' }}
-        >
-          <KeyboardArrowDownIcon />
-        </IconButton>
-      </div>
+          <DialogContent
+            id="scrollable-content"
+            onScroll={handleScrollPosition}
+            style={{
+              maxHeight: "1200px",
+              overflowY: "scroll",
+              marginBottom: "-200px",
+            }}
+          >
+            {handleModalInput()}
+          </DialogContent>
+          <div style={{ display: "flex", justifyContent: "end" }}>
+            <IconButton
+              aria-label="scroll up"
+              onClick={() => handleScroll("up")}
+              style={{ margin: "8px" }}
+            >
+              <KeyboardArrowUpIcon />
+            </IconButton>
+            <IconButton
+              aria-label="scroll down"
+              onClick={() => handleScroll("down")}
+              style={{ margin: "8px" }}
+            >
+              <KeyboardArrowDownIcon />
+            </IconButton>
+          </div>
         </Dialog>
       </div>
     );
@@ -16780,7 +16793,7 @@ const ContentLogic = (props) => {
     handleUpdateAuditDataOtherMCustomer,
     getPermissionsAPIcall,
     handleUpdateAuditDataOtherMRole,
-    checkUpdateRoleArray
+    checkUpdateRoleArray,
   };
 
   return StateContainer;

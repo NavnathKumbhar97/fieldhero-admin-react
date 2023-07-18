@@ -194,7 +194,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
          {/* <img src="https://apexa.in/wp-content/uploads/elementor/thum…al-pjmk2duu7uzmt6g1cpme5i5x49b6w0wl06ydvzs9da.png"></img> */}
          <img style={{width:'50px',height:'45px',background:"white"}} 
          src="https://apexa.in/wp-content/uploads/elementor/thumbs/Logo-final-pjmk2duu7uzmt6g1cpme5i5x49b6w0wl06ydvzs9da.png"></img>
-         <p style={{paddingLeft:'60px'}}>
+         <p style={{paddingLeft:'60px'}} id="brandName">
            Apexa Group
           </p>
           <IconButton style={{color:'white'}} onClick={handleDrawerClose}>
@@ -220,7 +220,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           {/* </Link> */}
           {/* <Link to="/candidate-master"> */}
          {getAllPermission.includes(helpers.permissions.candidate_read_all)? <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
-            <ListItemButton >
+            <ListItemButton id='candidateMasterBtn'>
               <ListItemIcon style={{ color: "white" }}>
                 <PermContactCalendarIcon />
               </ListItemIcon>

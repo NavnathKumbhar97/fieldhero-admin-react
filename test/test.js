@@ -16,21 +16,24 @@ describe("Testing Login form",()=> {
     await page.waitForSelector('#email')
     await page.click('#email')
     await page.click('#password')
-    // await page.waitForSelector("#email-helper-text")
-    // const text = await page.$eval("#email-helper-text", (e) => e.textContent);
-    // expect(text).contain("E-mail is required");
+    await page.waitForSelector("#email-helper-text")
+    const text = await page.$eval("#email-helper-text", (e) => e.textContent);
+    expect(text).contain("E-mail is required");
     heading = await page.$eval('h1', heading => heading.innerText);
     expect(heading).is.eql("Admin - Login")
-    await page.type("#email", "test@gmail.com", { delay: 70 });
-    await page.type("#password", "123123123", { delay: 70 });
+    await page.type("#email", "snayak@apexaglobal.com", { delay: 70 });
+    await page.type("#password", "1234", { delay: 70 });
     await page.click("#loginbtn");
-    
-    await page.click('#clrbtn')
-    await page.click('#forgotbtn')
-    await page.click("#email2")
-    await page.type("#email2","test@gmail.com")
-    await page.click("#sendbtn")
-    await page.click('#lgnbtn') 
+    heading = await page.$eval('#brandName', heading => heading.innerText);
+    expect(heading).is.eql("Apexa Group");
+    await page.click("#candidateMasterBtn");
+
+    // await page.click('#clrbtn')
+    // await page.click('#forgotbtn')
+    // await page.click("#email2")
+    // await page.type("#email2","test@gmail.com")
+    // await page.click("#sendbtn")
+    // await page.click('#lgnbtn') 
     await browser.close();
   }).timeout(50000);
 

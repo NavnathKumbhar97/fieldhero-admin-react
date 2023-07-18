@@ -336,8 +336,9 @@ const ContentLogic = (props) => {
   const [filterData, setFilterData] = useState({
     fullName: "",
     contact: "",
-    id: 0,
-    isActive: true,
+    id,
+    isActive:Boolean,
+    skill:null
   });
 
   //States for the candidate varification modules
@@ -1010,9 +1011,9 @@ const ContentLogic = (props) => {
   const [workExperianceData, setWorkExperianceData] = useState({
     companyId: 5,
     description: "",
-    endDate: moment("").date(),
+    endDate:Date(),
     skillId: [2, 3, 4],
-    startDate: moment("").date(),
+    startDate:Date(),
   });
   const [trainingCert, setTrainCert] = useState(false);
   const [trainingCertData, setTrainingCertData] = useState({
@@ -2092,7 +2093,6 @@ const ContentLogic = (props) => {
           setLoader(false);
           setTblData(response.data.data.result.Candidates);
           setTblDataCount(response.data.data.count);
-          console.log("tbldataCandidate", tblData);
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -2114,8 +2114,8 @@ const ContentLogic = (props) => {
     let convertTokenToObj = JSON.parse(authTok);
     setLoader(true);
     handler
-      .dataGet(
-        `/v1/filter-candidate?fullName=${filterData.fullName}&contact=${filterData.contact}`,
+      .dataPost(
+        `/v1/filter-candidate`,filterData,
         {
           headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
         }
@@ -2132,10 +2132,10 @@ const ContentLogic = (props) => {
         }
       })
       .catch((error) => {
-        setErrMsg("Timeout - Login Again");
-        setOpenErrtMsg(true);
+        // setErrMsg("Timeout - Login Again");
+        // setOpenErrtMsg(true);
         setLoader(false);
-        navigate("/login");
+        // navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
       });
   };
@@ -4153,6 +4153,17 @@ const ContentLogic = (props) => {
       value: "OTHER",
       label: "OTHER",
     },
+  ];
+  const candidateStatus = [
+    {
+      value: "Active",
+      label: "Active",
+    },
+    {
+      value: "Not Active",
+      label: "Not Active",
+    },
+    
   ];
   const states = [
     {
@@ -9464,21 +9475,49 @@ const ContentLogic = (props) => {
                 id="outlined-basic"
                 label="Id"
                 variant="outlined"
+                value={filterData.id}
+                onChange={(e) => {
+                  setFilterData({
+                    ...filterData,
+                    id: e.target.value,
+                  });
+                }}
               />
               <TextField
+              select
                 size="small"
                 id="outlined-basic"
                 label="Status"
                 variant="outlined"
-              />
+                value={filterData.isActive ? "Active" : "Not Active"}
+                onChange={(e) => {
+                  setFilterData({
+                    ...filterData,
+                    isActive: e.target.value=="Active"?true:false
+                  });
+                }}
+              >
+                 {candidateStatus.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
-                select
+                // select
                 size="small"
                 id="outlined-basic"
                 label="Skill"
                 variant="outlined"
+                value={filterData.skill}
+                onChange={(e) => {
+                  setFilterData({
+                    ...filterData,
+                    skill: e.target.value,
+                  });
+                }}
               />
-              <TextField
+              {/* <TextField
                 select
                 size="small"
                 id="outlined-basic"
@@ -9491,7 +9530,7 @@ const ContentLogic = (props) => {
                 id="outlined-basic"
                 label="Category"
                 variant="outlined"
-              />
+              /> */}
               <Button
                 style={{
                   marginLeft: "1100px",
@@ -9565,7 +9604,7 @@ const ContentLogic = (props) => {
                 </h3>
 
                 <CircularProgress
-                  style={{ marginLeft: "140px", marginBottom: "-20px" }}
+                  style={{ marginLeft: "148px", marginBottom: "-20px" }}
                   color="error"
                   variant="determinate"
                   value={100}
@@ -9579,6 +9618,9 @@ const ContentLogic = (props) => {
                     <b>Assigned To</b>
                     <p style={{ marginLeft: "40px", marginBottom: "-30px" }}>
                       {/* {updateBatchPriority[item].assignedTo[item].fullName} */}
+                      {updateBatchPriority[item].assignedTo.map((assignedToItem) => (
+                        <div key={assignedToItem.id}>{assignedToItem.fullName}</div>
+                      ))}
                     </p>
                   </Typography>
                   {/* ))} */}
@@ -9602,7 +9644,7 @@ const ContentLogic = (props) => {
                       cursor: "pointer",
                     }}
                   >
-                    SHOW STATS
+                    {expanded?"HIDE STATS":"SHOW STATS"}
                   </p>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -10132,6 +10174,7 @@ const ContentLogic = (props) => {
     }
   };
 
+  // to check the checkbox of permission 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     const numericValue = Number(value);
@@ -10289,17 +10332,20 @@ const ContentLogic = (props) => {
                             value={
                               !editStatus
                                 ? candidateMasterData.birthDate
+                                ?candidateMasterData.birthDate.slice(0, 10) : ''
                                 : updateCandidateMasterData.dob
+                                ? updateCandidateMasterData.dob.slice(0, 10) : ''
                             }
                             onChange={(e) => {
+                              const formattedDate = new Date(e.target.value).toISOString();
                               !editStatus
                                 ? setCandidateMasterData({
-                                    ...candidateMasterData,
-                                    birthDate: e.target.value,
-                                  })
+                                  ...candidateMasterData,
+                                  birthDate: formattedDate,
+                                })
                                 : setUpdateCandidateMasterData({
                                     ...updateCandidateMasterData,
-                                    dob: e.target.value,
+                                    birthDate: formattedDate,
                                   });
                             }}
                             variant="filled"
@@ -11237,14 +11283,15 @@ const ContentLogic = (props) => {
                       label="Start Date"
                       InputLabelProps={{ shrink: true }}
                       type="date"
-                      value={workExperianceData.startDate}
+                      value={workExperianceData.startDate ? workExperianceData.startDate.slice(0, 10) : ''}
                       {...register2("startDate")}
                       error={errors2.startDate ? true : false}
                       helperText={errors2.startDate?.message}
                       onChange={(e) => {
+                        const formattedDate = new Date(e.target.value).toISOString();
                         setWorkExperianceData({
                           ...workExperianceData,
-                          startDate: e.target.value,
+                          startDate: formattedDate,
                         });
                       }}
                       sx={{ width: "30ch", ml: 4 }}
@@ -11252,6 +11299,7 @@ const ContentLogic = (props) => {
                     />
                     <TextField
                       id="date"
+                      name="endDate"
                       label="End Date"
                       {...register2("endDate")}
                       error={errors2.endDate ? true : false}
@@ -11260,11 +11308,12 @@ const ContentLogic = (props) => {
                       type="date"
                       sx={{ width: "30ch", ml: 4 }}
                       variant="filled"
-                      value={workExperianceData.endDate}
+                      value={workExperianceData.endDate ? workExperianceData.endDate.slice(0, 10) : ''}
                       onChange={(e) => {
+                        const formattedDate = new Date(e.target.value).toISOString();
                         setWorkExperianceData({
                           ...workExperianceData,
-                          endDate: e.target.value,
+                          endDate: formattedDate,
                         });
                       }}
                     />
@@ -15915,6 +15964,7 @@ const ContentLogic = (props) => {
         break;
     }
   };
+
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const trigger = useScrollTrigger({
@@ -16310,40 +16360,6 @@ const ContentLogic = (props) => {
                   <InputLabel id="demo-multiple-checkbox-label">
                     Assigned To
                   </InputLabel>
-                  {/* <Autocomplete
-      multiple
-      // value={createBatchPriorityData.id}
-      id="checkboxes-tags-demo"
-      options={createBatchPriorityData}
-      disableCloseOnSelect
-      getOptionLabel={(option) => option.fullName}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-            onChange={(e) => {
-              setCreateBatchPriorityData({
-                ...createBatchPriorityData,
-                id: e.target.value,
-              });
-            }}
-          />
-          {option.fullName}
-        </li>
-      )}
-      style={{ width: 500 }}
-      renderInput={(params) => (
-        <TextField {...params} label="Checkboxes"  onChange={(e) => {
-          setCreateBatchPriorityData({
-            ...createBatchPriorityData,
-            id: e.target.value,
-          });
-        }} placeholder="Favorites" />
-      )}
-    /> */}
                   <TextField
                     select
                     labelId="demo-multiple-checkbox-label"

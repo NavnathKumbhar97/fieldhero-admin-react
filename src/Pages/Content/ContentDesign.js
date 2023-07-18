@@ -276,7 +276,7 @@ export default function ContentDesign(props) {
             {Object.keys(tblData).map((item, i) => (
               <>
                 <TableRow hover role="checkbox" tabIndex={-1}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" >
                     <Checkbox
                       color="primary"
                       onChange={(e) => {
@@ -296,6 +296,7 @@ export default function ContentDesign(props) {
                     align="left"
                     scope="row"
                     padding="none"
+
                   >
                     {i + 1}
                   </TableCell>
@@ -308,7 +309,7 @@ export default function ContentDesign(props) {
                   >
                     {tblData[item].id}
                   </TableCell>
-                  <TableCell align="center">{tblData[item].fullName}</TableCell>
+                  <TableCell align="left">{tblData[item].fullName}</TableCell>
                   <TableCell align="left">{tblData[item].contactNo1}</TableCell>
                   <TableCell align="left">
                     {tblData[item].isActive === true ? (

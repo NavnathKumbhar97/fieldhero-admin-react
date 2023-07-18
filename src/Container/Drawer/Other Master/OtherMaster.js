@@ -106,9 +106,9 @@ export default function OtherMaster() {
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>:""}
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List style={{paddingLeft:"60px"}} component="div" disablePadding>
+        <List style={{paddingLeft:"60px"}} component="div" disablePadding >
           {checkOtherMasterCategoryArrayy.length?
-          <ListItemButton sx={{ pl: 4 }} component={Link} to={'category'}>
+          <ListItemButton sx={{ pl: 4 }} component={Link} to={'category'} id='categoryBtn'>
             <ListItemText primary="Category" />
           </ListItemButton>:""}
          {checkOtherMasterCompanyArrayy.length? <ListItemButton sx={{ pl: 4 }} component={Link} to={'company'}>

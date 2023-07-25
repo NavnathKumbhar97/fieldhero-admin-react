@@ -77,7 +77,7 @@ const checkAdminCandidateUBatchArrayy = adminCandidateUBatchArray.filter((data) 
     >
       {checkAdminCandidateUBatchArrayy.length || checkBatchPriorityArrayy.length || checkOtherIndustryArrayy.length
       || checkUserActivityArrayy.length || checkUserLoginActivityArrayy.length ?<ListItemButton onClick={handleClick}>
-        <ListItemIcon style={{ color: "white" }}>
+        <ListItemIcon id="adminsection" style={{ color: "white" }}>
           <AdminPanelSettingsIcon />
         </ListItemIcon>
         <ListItemText primary="Admin" />
@@ -85,19 +85,19 @@ const checkAdminCandidateUBatchArrayy = adminCandidateUBatchArray.filter((data) 
       </ListItemButton>:""}
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List style={{ paddingLeft: "60px" }} component="div" disablePadding>
-         {checkAdminCandidateUBatchArrayy.length? <ListItemButton component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
+         {checkAdminCandidateUBatchArrayy.length? <ListItemButton id="admincandidate" component={Link} to={'candidate-upload-batch-admin'} sx={{ pl: 4 }}>
             <ListItemText primary="Candidate Upload Batch" />
           </ListItemButton>:""}
-          {checkBatchPriorityArrayy.length?<ListItemButton component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
+          {checkBatchPriorityArrayy.length?<ListItemButton id="adminbatchpriority" component={Link} to={'batch-priority'} sx={{ pl: 4 }}>
             <ListItemText primary="Batch Priority" />
           </ListItemButton>:""}
-          {checkOtherIndustryArrayy.length?<ListItemButton component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
+          {checkOtherIndustryArrayy.length?<ListItemButton id="adminotherindustry" component={Link} to={'other-industry-category'} sx={{ pl: 4 }}>
             <ListItemText primary="Other Industry Category" />
           </ListItemButton>:""}
-          {checkUserActivityArrayy.length?<ListItemButton component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
+          {checkUserActivityArrayy.length?<ListItemButton id="adminuseractivity" component={Link} to={'admin-user-activity'} sx={{ pl: 4 }}>
             <ListItemText primary="User Activity"/>
           </ListItemButton>:""}
-          {checkUserLoginActivityArrayy.length?<ListItemButton component={Link} to={'admin-user-login-activity'} sx={{ pl: 4 }}>
+          {checkUserLoginActivityArrayy.length?<ListItemButton id="adminuserlogin" component={Link} to={'admin-user-login-activity'} sx={{ pl: 4 }}>
             <ListItemText primary="User Login Activity"/>
           </ListItemButton>:""}
         </List>

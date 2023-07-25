@@ -187,7 +187,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
         </Toolbar>
         <Profile/>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} id="drawerbtn" className="drawerbtn">
         <DrawerHeader
           style={{ backgroundColor: "brown", color: "white", fontSize: "20px" }}
         >
@@ -219,8 +219,8 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>
           {/* </Link> */}
           {/* <Link to="/candidate-master"> */}
-         {getAllPermission.includes(helpers.permissions.candidate_read_all)? <ListItem component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
-            <ListItemButton id='candidateMasterBtn'>
+         {getAllPermission.includes(helpers.permissions.candidate_read_all)? <ListItem id='candidateMasterBtn' className="candidateMasterBtn" component={Link} to={"/candidate-master"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+            <ListItemButton >
               <ListItemIcon style={{ color: "white" }}>
                 <PermContactCalendarIcon />
               </ListItemIcon>
@@ -230,7 +230,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>:""}
           {/* </Link> */}
           {/* <Link to=''> */}
-          {checkCandidateUBatchArray.length?<ListItem component={Link} to={"/candidate-upload-batch"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+          {checkCandidateUBatchArray.length?<ListItem component={Link} id='candidateUploadBtn' to={"/candidate-upload-batch"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <LayersIcon />
@@ -241,7 +241,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>:""}
           {/* </Link> */}
           {/* <Link to='/candidate-verification'> */}
-          {checkCandidateVerificationArray.length?<ListItem component={Link} to={"/candidate-verification"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
+          {checkCandidateVerificationArray.length?<ListItem id="candidateVerificationBtn" component={Link} to={"/candidate-verification"} disablePadding style={{ paddingBottom: "10px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <HowToRegIcon />
@@ -252,7 +252,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>:""}
           {/* </Link> */}
           {/* <Link to='/agent-master'> */}
-          {checkAgentMasterArray.length?<ListItem component={Link} to={"/agent-master"} disablePadding style={{ paddingBottom: "10px",color:'white'}}>
+          {checkAgentMasterArray.length?<ListItem id="agentmaster" component={Link} to={"/agent-master"} disablePadding style={{ paddingBottom: "10px",color:'white'}}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <SupervisorAccountIcon />
@@ -263,7 +263,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
           </ListItem>:""}
           {/* </Link> */}
           {/* <Link to='/agent-pricing-template'> */}
-         {checkagentPricingTemplateArray.length? <ListItem component={Link} to={"/agent-pricing-template"} disablePadding style={{ paddingBottom: "0px",color:'white' }}>
+         {checkagentPricingTemplateArray.length? <ListItem id="agentpricing" component={Link} to={"/agent-pricing-template"} disablePadding style={{ paddingBottom: "0px",color:'white' }}>
             <ListItemButton>
               <ListItemIcon style={{ color: "white" }}>
                 <PriceChangeIcon />

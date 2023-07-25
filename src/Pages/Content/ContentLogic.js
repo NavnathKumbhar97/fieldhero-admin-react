@@ -730,6 +730,11 @@ const ContentLogic = (props) => {
   const [pOfAddUploadDone, setPOfAddUploadDone] = useState(false);
   const [bankDocUploadDone, setBankDocUploadDone] = useState(false);
 
+  const [agentDocValue,setAgentDocValue] = useState({
+    poi:"",
+    poa:"",
+    bd:""
+  })
   // states for the batch priority module
   const [batchPriorityData, setBatchPriorityData] = useState([]);
   const [createBatchPriorityData, setCreateBatchPriorityData] = useState({
@@ -1009,12 +1014,14 @@ const ContentLogic = (props) => {
   //State for the Work experience and training/certificate table in candidate master module
   const [candidateId, setCandidateId] = useState("");
   const [workExperianceData, setWorkExperianceData] = useState({
-    companyId: 5,
+    companyId:Number,
     description: "",
     endDate:Date(),
-    skillId: [2, 3, 4],
+    skillId: [],
     startDate:Date(),
   });
+  const [companyCandidate, setCompanyCandidate] = useState({})
+  const [skillsCandidate, setSkillsCandidate] = useState([])
   const [trainingCert, setTrainCert] = useState(false);
   const [trainingCertData, setTrainingCertData] = useState({
     candidateId: !editStatus ? candidateId : editId,
@@ -1023,7 +1030,7 @@ const ContentLogic = (props) => {
     description: "",
     issuedBy: "",
     issueDate: moment("").date(),
-    skillId: 189,
+    skillId: Number,
   });
   const [expData, setExptData] = useState([]);
   const [trainCertData, setTrainCertData] = useState([]);
@@ -1274,7 +1281,7 @@ const ContentLogic = (props) => {
   });
   const validationForWorkExp = Yup.object().shape({
     companyId: Yup.string().required("Company Name is required"),
-    skillId: Yup.string().required("Skills are required"),
+    // skillId: Yup.string().required("Skills are required"),
     startDate: Yup.date()
       .default(() => new Date())
       .required("Start date is required"),
@@ -2093,6 +2100,7 @@ const ContentLogic = (props) => {
           setLoader(false);
           setTblData(response.data.data.result.Candidates);
           setTblDataCount(response.data.data.count);
+          
         } else if (response.status == 400) {
           setErrMsg(response.data.message);
           setOpenErrtMsg(true);
@@ -2105,6 +2113,54 @@ const ContentLogic = (props) => {
         setLoader(false);
         navigate("/login");
         console.error("There was an error!- getCandidateMasterAPIcall", error);
+      });
+  };
+  //fetch the company data for candidate master module
+  let getCompanyAPIcallCandidate = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-companies`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setCompanyCandidate(response.data.data.result);
+          console.log("response.data.data.result",response.data.data.result);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.error("There was an error!- getCompanyAPIcall", error);
+      });
+  };
+
+  //fetch the skillset data
+  const getSkillSetAPIcallCandidate = () => {
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataGet(`/v1/all-skills`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoader(false);
+          setSkillsCandidate(response.data.data.skills);
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+        }
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.error("There was an error!- getSkillSetAPIcall", error);
       });
   };
 
@@ -3991,6 +4047,8 @@ const ContentLogic = (props) => {
     switch (pageName) {
       case "candidate-master":
         getCandidateMasterAPIcall();
+        getCompanyAPIcallCandidate();
+        getSkillSetAPIcallCandidate()
         break;
       case "candidate-upload-batch":
         getCandidateUploadBatchAPIcall();
@@ -4739,11 +4797,11 @@ const ContentLogic = (props) => {
       <TextField id="outlined-basic" variant="outlined" />,
       <input type="file" onChange={handleChangeFileUpload1} />,
       panUploadDone ? (
-        <Button>
+        <Button id="uploaddone">
           <CloudDoneIcon></CloudDoneIcon>
         </Button>
       ) : (
-        <Button onClick={() => addAgentMasterDocs()}>
+        <Button id="upload-file-button" onClick={() => addAgentMasterDocs()}>
           <FileUploadIcon></FileUploadIcon>
         </Button>
       ),
@@ -4756,8 +4814,12 @@ const ContentLogic = (props) => {
         sx={{ width: "30ch" }}
         select
         label="Select"
-        id="outlined-basic"
+        id="poi"
         variant="outlined"
+        value={agentDocValue.poi}
+        onChange={(e)=>{
+          setAgentDocValue({...agentDocValue,poi:e.target.value})
+        }}
       >
         <MenuItem>Pan Card</MenuItem>
         <MenuItem>Passport</MenuItem>
@@ -4783,7 +4845,11 @@ const ContentLogic = (props) => {
       <TextField
         sx={{ width: "30ch" }}
         select
-        id="outlined-basic"
+        id="poa"
+        value={agentDocValue.poa}
+        onChange={(e)=>{
+          setAgentDocValue({...agentDocValue,poa:e.target.value})
+        }}
         label="Select"
         variant="outlined"
       >
@@ -4812,9 +4878,13 @@ const ContentLogic = (props) => {
       <TextField
         sx={{ width: "30ch" }}
         select
-        id="outlined-basic"
+        id="bd"
         label="Select"
         variant="outlined"
+        value={agentDocValue.bd}
+        onChange={(e)=>{
+          setAgentDocValue({...agentDocValue,bd:e.target.value})
+        }}
       >
         <MenuItem>Bank Statement</MenuItem>
         <MenuItem>Cancelled Cheque</MenuItem>
@@ -9002,13 +9072,15 @@ const ContentLogic = (props) => {
                   backgroundColor: "brown",
                   color: "white",
                 }}
+                id="newcandidate"
+                className="newcandidate"
                 variant="outlined"
               >
                 <AddIcon />
                 {buttonText}
               </Button>
             ) : (
-              "twst"
+              ""
             )}
           </>
         );
@@ -9074,6 +9146,7 @@ const ContentLogic = (props) => {
                   color: "white",
                 }}
                 variant="outlined"
+                id="assignbtn"
               >
                 <AddIcon />
                 {buttonText}
@@ -9095,6 +9168,7 @@ const ContentLogic = (props) => {
                   backgroundColor: "brown",
                   color: "white",
                 }}
+                id="addnewagent"
                 variant="outlined"
               >
                 <AddIcon />
@@ -9122,6 +9196,7 @@ const ContentLogic = (props) => {
                       color: "white",
                     }}
                     variant="outlined"
+                    
                   >
                     <ToggleOn />
                     Set Active
@@ -9142,6 +9217,7 @@ const ContentLogic = (props) => {
                       color: "white",
                     }}
                     variant="outlined"
+                    id="addagentpricing"
                   >
                     <AddIcon />
                     {buttonText}
@@ -9446,7 +9522,7 @@ const ContentLogic = (props) => {
             >
               <TextField
                 size="small"
-                id="outlined-basic"
+                id="fullnamec"
                 value={filterData.fullName}
                 label="Full Name"
                 variant="outlined"
@@ -9459,7 +9535,7 @@ const ContentLogic = (props) => {
               />
               <TextField
                 size="small"
-                id="outlined-basic"
+                id="contactc"
                 value={filterData.contact}
                 label="Contact No"
                 variant="outlined"
@@ -9472,7 +9548,7 @@ const ContentLogic = (props) => {
               />
               <TextField
                 size="small"
-                id="outlined-basic"
+                id="ids"
                 label="Id"
                 variant="outlined"
                 value={filterData.id}
@@ -9486,7 +9562,7 @@ const ContentLogic = (props) => {
               <TextField
               select
                 size="small"
-                id="outlined-basic"
+                id="status"
                 label="Status"
                 variant="outlined"
                 value={filterData.isActive ? "Active" : "Not Active"}
@@ -9539,6 +9615,7 @@ const ContentLogic = (props) => {
                   width: "90px",
                   marginTop: "-70px",
                 }}
+                id="filter"
                 variant="outlined"
                 href="#outlined-buttons"
                 onClick={filterCandiateMasterAPICall}
@@ -9936,11 +10013,11 @@ const ContentLogic = (props) => {
                     value="1"
                     onClick={() => {
                       setFilterTableOnTabs("in-progress");
-                      console.log("test set name");
                       getAllData("candidate-upload-batch-admin");
                     }}
                   ></Tab>
                   <Tab
+                  id="pendingapproval"
                     label="PENDING APPROVAL"
                     value="2"
                     onClick={() => {
@@ -9950,6 +10027,7 @@ const ContentLogic = (props) => {
                     }}
                   />
                   <Tab
+                  id="processed"
                     label="PROCESSED"
                     value="3"
                     onClick={() => {
@@ -9968,7 +10046,7 @@ const ContentLogic = (props) => {
           <>
             <CandidateVerification />
             <TextField
-              id="filled-basic"
+              id="candidateVerification"
               label="Search Candidate Name"
               variant="filled"
               style={{
@@ -9985,7 +10063,7 @@ const ContentLogic = (props) => {
       case "Agent Pricing Template":
         return (
           <TextField
-            id="filled-basic"
+            id="agentpri"
             label="Search Template Name"
             variant="filled"
             style={{
@@ -10188,80 +10266,35 @@ const ContentLogic = (props) => {
     }
   };
 
+  const deleteCandidateExperiance =(id)=>{
+    let authTok = localStorage.getItem("user"); // string
+    let convertTokenToObj = JSON.parse(authTok);
+    setLoader(true);
+    handler
+      .dataDelete(`/v1/candidates/${editId}/work-history/${id}`, {
+        headers: { Authorization: `Bearer ${convertTokenToObj.token}` },
+      })
+      .then((response) => {
+        if (response.status == 204) {
+          setLoader(false);
+          getExperienceData();
+        } else if (response.status == 400) {
+          setErrMsg(response.data.message);
+          setOpenErrtMsg(true);
+          setLoader(false);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!- deleteCandidateExperiance", error);
+      });
+  }
+
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
     switch (pageName) {
       case "candidate-master":
         return (
           <>
-            {/* <div>
-                        <ListItem style={{display:'flex',justifyContent:'end'}}>
-                          <Button
-                            style={{
-                              backgroundColor: "grey",
-                              color: "white",
-                              margin: "10px",
-                            }}
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
-                          >
-                            PREV
-                          </Button>
-                          {!editStatus ? (
-                            <Button
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                                margin: "10px",
-                              }}
-                              onClick={handleSubmit(onSubmit)}
-                            >
-                              SAVE AND NEXT
-                            </Button>
-                          ) : (
-                            <Button
-                              style={{
-                                backgroundColor: "brown",
-                                color: "white",
-                                margin: "10px",
-                              }}
-                              onClick={() => {
-                                // onSubmitData()
-                                updateAPICalls("candidate-master");
-                                getExperienceData();
-                                getTrainingCertData();
-                              }}
-                            >
-                              UPDATE AND NEXT
-                            </Button>
-                          )}
-                          <Button
-                            onClick={() => {
-                              handleNext();
-                              getExperienceData();
-                              getTrainingCertData();
-                            }}
-                            style={{
-                              backgroundColor: "brown",
-                              color: "white",
-                            }}
-                          >
-                            NEXT
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setOpenCandidateModal(false);
-                            }}
-                            style={{
-                              backgroundColor: "black",
-                              color: "white",
-                              marginLeft: "10px",
-                            }}
-                          >
-                            EXIT
-                          </Button>
-                        </ListItem>
-                      </div> */}
             <Box sx={{ width: "100%" }}>
               <Typography sx={{ mt: 2, mb: 1 }}>
                 {/* Step {activeStep + 1} */}
@@ -10300,7 +10333,7 @@ const ContentLogic = (props) => {
                             {...register("fullname")}
                             error={errors.fullname ? true : false}
                             helperText={errors.fullname?.message}
-                            id="filled-basic"
+                            id="fullname"
                             label="Full Name"
                             variant="filled"
                             value={
@@ -10325,7 +10358,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem>
                           <TextField
-                            id="filled-basic"
+                            id="birthdate"
                             label="Birthdate"
                             InputLabelProps={{ shrink: true }}
                             type="date"
@@ -10376,13 +10409,14 @@ const ContentLogic = (props) => {
                                   candidateMasterData.gender
                                 );
                               }}
-                              value={candidateMasterData.gender}
+                              // value={candidateMasterData.gender}
                             >
                               <FormLabel label="Gender" />
                               <FormControlLabel
                                 value="MALE"
                                 control={
                                   <Radio
+                                  id="male"
                                     checked={
                                       candidateMasterData.gender === "MALE"
                                     }
@@ -10421,7 +10455,7 @@ const ContentLogic = (props) => {
                             fullWidth
                             sx={{ width: "140ch" }}
                             label="Permanent Address"
-                            id="filled-basic"
+                            id="permAddress"
                             multiline
                             rows={5}
                             value={
@@ -10448,7 +10482,7 @@ const ContentLogic = (props) => {
                       <div>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="city"
                             label="City"
                             variant="filled"
                             value={
@@ -10470,7 +10504,7 @@ const ContentLogic = (props) => {
                             sx={{ width: "69ch" }}
                           />
                           <TextField
-                            id="filled-basic"
+                            id="state"
                             label="State"
                             variant="filled"
                             value={
@@ -10494,7 +10528,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="country"
                             label="Country"
                             disabled
                             value={
@@ -10517,7 +10551,7 @@ const ContentLogic = (props) => {
                             sx={{ width: "69ch" }}
                           />
                           <TextField
-                            id="filled-basic"
+                            id="zipcode"
                             variant="filled"
                             label="Zip Code"
                             {...register("perm_zip")}
@@ -10543,7 +10577,7 @@ const ContentLogic = (props) => {
                               endAdornment: (
                                 <InputAdornment>
                                   <IconButton>
-                                    <Search onClick={searchAddByZip} />
+                                    <Search id="searchzip" onClick={searchAddByZip} />
                                   </IconButton>
                                 </InputAdornment>
                               ),
@@ -10556,6 +10590,7 @@ const ContentLogic = (props) => {
                           <FormControlLabel
                             control={
                               <Checkbox
+                              id="sameaddress"
                                 // checked={sameAddress}
                                 onChange={(e) => {
                                   if (e.target.checked) {
@@ -10576,7 +10611,7 @@ const ContentLogic = (props) => {
                             fullWidth
                             sx={{ width: "140ch" }}
                             label="Current Address"
-                            id="filled-basic"
+                            id="curraddress"
                             multiline
                             disabled={sameAddress}
                             value={
@@ -10601,7 +10636,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="city"
                             label="City"
                             variant="filled"
                             disabled={sameAddress}
@@ -10706,7 +10741,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="primaryemail"
                             label="Primary email address"
                             required
                             {...register("email")}
@@ -10732,7 +10767,7 @@ const ContentLogic = (props) => {
                             sx={{ width: "69ch" }}
                           />
                           <TextField
-                            id="filled-basic"
+                            id="secondaryemail"
                             label="Secondary email address"
                             variant="filled"
                             value={
@@ -10756,7 +10791,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="primarycontact"
                             type="number"
                             label="Primary contact no"
                             required
@@ -10783,7 +10818,7 @@ const ContentLogic = (props) => {
                             sx={{ width: "69ch" }}
                           />
                           <TextField
-                            id="filled-basic"
+                            id="secondarycontact"
                             type="number"
                             label="Secondary contact no"
                             variant="filled"
@@ -10808,7 +10843,7 @@ const ContentLogic = (props) => {
                         </ListItem>
                         <ListItem sx={{ mb: 5 }}>
                           <TextField
-                            id="filled-basic"
+                            id="aadhar"
                             type="number"
                             label="Aadhar no"
                             {...register("aadharNo")}
@@ -10847,6 +10882,7 @@ const ContentLogic = (props) => {
                           <FormControlLabel
                             control={<Checkbox defaultChecked />}
                             label="Is Active"
+                            id="isactive"
                             value={
                               !editStatus
                                 ? candidateMasterData.isActive
@@ -10882,6 +10918,7 @@ const ContentLogic = (props) => {
                           </Button>
                           {!editStatus ? (
                             <Button
+                            id="savenext"
                               style={{
                                 backgroundColor: "brown",
                                 color: "white",
@@ -10898,6 +10935,7 @@ const ContentLogic = (props) => {
                                 color: "white",
                                 margin: "10px",
                               }}
+                              id="updateandnext"
                               onClick={() => {
                                 // onSubmitData()
                                 updateAPICalls("candidate-master");
@@ -11035,10 +11073,12 @@ const ContentLogic = (props) => {
                                           </TableCell>
                                           <TableCell align="left"> 2</TableCell>
                                           <TableCell align="left">
-                                            <Button>
+                                            <Button >
                                               <EditIcon></EditIcon>
                                             </Button>
-                                            <Button>
+                                            <Button onClick={()=>{
+                                              deleteCandidateExperiance(expData[item].id)
+                                            }}>
                                               <DeleteIcon></DeleteIcon>
                                             </Button>
                                           </TableCell>{" "}
@@ -11246,6 +11286,7 @@ const ContentLogic = (props) => {
                 <DialogContent>
                   <ListItem>
                     <TextField
+                    select
                       id="number"
                       label="Company Name"
                       value={workExperianceData.companyId}
@@ -11257,12 +11298,20 @@ const ContentLogic = (props) => {
                           ...workExperianceData,
                           companyId: e.target.value,
                         });
+                        console.log("company id",workExperianceData);
                       }}
                       sx={{ width: "30ch" }}
                       variant="filled"
                       type="name"
-                    />
-                    <TextField
+                    >
+                      {Object.keys(companyCandidate).map((company) => (
+                        <MenuItem key={companyCandidate[company].id} value={companyCandidate[company].id}>
+                          {companyCandidate[company].companyName}
+                        </MenuItem>
+        ))}
+                    </TextField>
+                    <Select
+                      multiple
                       id="name"
                       label="Skills"
                       value={workExperianceData.skillId}
@@ -11274,10 +11323,17 @@ const ContentLogic = (props) => {
                           ...workExperianceData,
                           skillId: e.target.value,
                         });
+                        console.log("ids",workExperianceData);
                       }}
-                      sx={{ width: "30ch", ml: 4 }}
+                      sx={{ width: "60ch", ml: 4 }}
                       variant="filled"
-                    />
+                    >
+                         {skillsCandidate.map((skill) => (
+                          <MenuItem key={skill.id} value={skill.id}>
+                            {skill.title}
+                          </MenuItem>
+                        ))}
+                    </Select>
                     <TextField
                       id="date"
                       label="Start Date"
@@ -11423,10 +11479,19 @@ const ContentLogic = (props) => {
                     />
                   </ListItem>
                   <ListItem>
-                    <TextField
+                    {/* <TextField
                       id="name"
                       select
                       children
+                      
+                      label="Skills"
+                      sx={{ width: "45ch" }}
+                      variant="filled"
+                    /> */}
+                     <Select
+                      // multiple
+                      id="name"
+                      label="Skills"
                       value={trainingCertData.skillId}
                       onChange={(e) => {
                         setTrainingCertData({
@@ -11434,10 +11499,15 @@ const ContentLogic = (props) => {
                           skillId: e.target.value,
                         });
                       }}
-                      label="Skills"
-                      sx={{ width: "45ch" }}
+                      sx={{ width: "30ch" }}
                       variant="filled"
-                    />
+                    >
+                         {skillsCandidate.map((skill) => (
+                          <MenuItem key={skill.id} value={skill.id}>
+                            {skill.title}
+                          </MenuItem>
+                        ))}
+                    </Select>
                     <TextField
                       id="date"
                       label="Issued Date"
@@ -13577,8 +13647,8 @@ const ContentLogic = (props) => {
                     onChange={handleChangeTab}
                     aria-label="lab API tabs example"
                   >
-                    <Tab label="BASIC" value="1" style={{ color: "brown" }} />
-                    <Tab label="PROFESSIONAL" value="2" />
+                    <Tab label="BASIC" id="basic" value="1" style={{ color: "brown" }} />
+                    <Tab id="professional" label="PROFESSIONAL" value="2" />
                   </TabList>
                 </Box>
                 <TabPanel value="1">
@@ -13593,18 +13663,18 @@ const ContentLogic = (props) => {
                     >
                       <FormControlLabel
                         value="individual"
-                        control={<Radio />}
-                        onClick={() => {
+                        control={<Radio id="individualid" onClick={() => {
                           setCmpyValue("individual");
-                        }}
+                        }}/>}
+                        
                         label="Individual"
                       />
                       <FormControlLabel
                         value="company"
-                        control={<Radio />}
-                        onClick={() => {
+                        control={<Radio id="companyid" onClick={() => {
                           setCmpyValue("company");
-                        }}
+                        }}/>}
+                        
                         label="Company"
                       />
                     </RadioGroup>
@@ -13614,7 +13684,7 @@ const ContentLogic = (props) => {
                       <List sx={{ mb: 5 }}>
                         <TextField
                           required
-                          id="filled-basic"
+                          id="agentNo"
                           label="Agent No"
                           variant="filled"
                           disabled={editStatus}
@@ -13634,7 +13704,7 @@ const ContentLogic = (props) => {
                         {cmpyvalue === "company" ? (
                           <>
                             <TextField
-                              id="filled-basic"
+                              id="companyname"
                               label="Company Name"
                               type="name"
                               value={agentMasterData.companyName}
@@ -13648,7 +13718,7 @@ const ContentLogic = (props) => {
                               sx={{ width: "30ch", ml: 4 }}
                             />
                             <TextField
-                              id="filled-basic"
+                              id="gstin"
                               label="GSTIN"
                               type="name"
                               value={agentMasterData.gstin}
@@ -13666,7 +13736,7 @@ const ContentLogic = (props) => {
                       </List>
                       <List>
                         <TextField
-                          id="filled-basic"
+                          id="agentfullname"
                           label="Full Name"
                           required
                           value={agentMasterData.fullName}
@@ -13684,7 +13754,7 @@ const ContentLogic = (props) => {
                           sx={{ width: "30ch" }}
                         />
                         <TextField
-                          id="filled-basic"
+                          id="agentbirth"
                           label="Birthdate"
                           InputLabelProps={{ shrink: true }}
                           type="date"
@@ -13725,6 +13795,7 @@ const ContentLogic = (props) => {
                         <FormControlLabel
                           control={
                             <Radio
+                            id="agentgender"
                               value={agentMasterData.gender}
                               onChange={(e) => {
                                 setAgentMasterData({
@@ -13751,7 +13822,7 @@ const ContentLogic = (props) => {
                       </List>
                       <List>
                         <TextField
-                          id="filled-basic"
+                          id="agentemail"
                           label="Email"
                           required
                           disabled={editStatus}
@@ -13770,7 +13841,7 @@ const ContentLogic = (props) => {
                           }}
                         />
                         <TextField
-                          id="filled-basic"
+                          id="agentcontact"
                           label="Contact no"
                           required
                           type="number"
@@ -13790,7 +13861,7 @@ const ContentLogic = (props) => {
                       </List>
                       <List>
                         <TextField
-                          id="filled-basic"
+                          id="curraddress"
                           label="Current Address"
                           required
                           rows={3}
@@ -13812,7 +13883,7 @@ const ContentLogic = (props) => {
                       </List>
                       <List>
                         <TextField
-                          id="filled-basic"
+                          id="currpin"
                           label="Current pincode"
                           required
                           type="name"
@@ -13839,7 +13910,7 @@ const ContentLogic = (props) => {
                           sx={{ width: "30ch" }}
                         />
                         <TextField
-                          id="filled-basic"
+                          id="currcity"
                           label="Current city"
                           required
                           value={agentMasterData.currCity}
@@ -13857,7 +13928,7 @@ const ContentLogic = (props) => {
                           sx={{ width: "30ch", ml: 4 }}
                         />
                         <TextField
-                          id="filled-basic"
+                          id="currstate"
                           label="Current state"
                           required
                           value={agentMasterData.currState}
@@ -13879,6 +13950,7 @@ const ContentLogic = (props) => {
                         <FormControlLabel
                           control={
                             <Checkbox
+                            id="sameaddress"
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   setSameAddressAgent(true);
@@ -13987,7 +14059,7 @@ const ContentLogic = (props) => {
                       </List>
                       <List sx={{ mt: 5 }}>
                         <TextField
-                          id="filled-basic"
+                          id="pancard"
                           label="Pan Card"
                           value={agentMasterData.panCard}
                           onChange={(e) => {
@@ -14001,7 +14073,7 @@ const ContentLogic = (props) => {
                           sx={{ width: "30ch" }}
                         />
                         <TextField
-                          id="filled-basic"
+                          id="aadharcard"
                           label="Aadhar card"
                           value={agentMasterData.aadharCard}
                           onChange={(e) => {
@@ -14086,6 +14158,7 @@ const ContentLogic = (props) => {
                           defaultChecked
                           control={<Checkbox />}
                           label="Is Active"
+                          id="activeagent"
                           value={agentMasterData.isActive}
                           onChange={(e) => {
                             setAgentMasterData({
@@ -14098,6 +14171,7 @@ const ContentLogic = (props) => {
                       <List>
                         {!editStatus ? (
                           <Button
+                          id="savbtn"
                             onClick={handleSubmitAgentMstr(onSubmitAgentMstr)}
                             style={{ color: "white", backgroundColor: "brown" }}
                           >
@@ -14122,7 +14196,7 @@ const ContentLogic = (props) => {
                         <b>Bank details</b>
                       </List>
                       <TextField
-                        id="filled-basic"
+                        id="bankname"
                         label="Bank name"
                         type="name"
                         value={agentMasterData.bankName}
@@ -14136,7 +14210,7 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch" }}
                       />
                       <TextField
-                        id="filled-basic"
+                        id="acno"
                         label="A/C no"
                         type="name"
                         value={agentMasterData.bankAc}
@@ -14150,7 +14224,7 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch", ml: 4 }}
                       />
                       <TextField
-                        id="filled-basic"
+                        id="ifcs"
                         label="IFSC Code"
                         type="name"
                         value={agentMasterData.bankIfsc}
@@ -14164,7 +14238,7 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch", ml: 4 }}
                       />
                       <TextField
-                        id="filled-basic"
+                        id="actype"
                         label="A/C Type"
                         type="name"
                         value={agentMasterData.bankAcType}
@@ -14183,7 +14257,7 @@ const ContentLogic = (props) => {
                         <b>Professional details</b>
                       </List>
                       <TextField
-                        id="filled-basic"
+                        id="pfstatus"
                         label="Professional Status"
                         type="name"
                         value={agentMasterData.professionalStatus}
@@ -14197,7 +14271,7 @@ const ContentLogic = (props) => {
                         sx={{ width: "30ch" }}
                       />
                       <TextField
-                        id="filled-basic"
+                        id="subwork"
                         label="Sub work location 1 "
                         type="name"
                         value={agentMasterData.workLocation1}
@@ -14234,6 +14308,7 @@ const ContentLogic = (props) => {
                           backgroundColor: "brown",
                           marginTop: 3,
                         }}
+                        id="savbtn"
                       >
                         Save
                       </Button>
@@ -14290,7 +14365,7 @@ const ContentLogic = (props) => {
                   <TextField
                     disabled={editStatus}
                     required
-                    id="filled-basic"
+                    id="tempName"
                     label="Template Name"
                     type="name"
                     variant="filled"
@@ -14323,7 +14398,7 @@ const ContentLogic = (props) => {
                   />
                   <TextField
                     disabled={editStatus}
-                    id="filled-basic"
+                    id="approval"
                     label="Approval Remarks"
                     type="name"
                     value={agentPricingTemplateData.approvalRemarks}
@@ -14656,6 +14731,7 @@ const ContentLogic = (props) => {
                 {!editStatus ? (
                   <List sx={{ mt: 4, mb: 4 }}>
                     <Button
+                    id="saveagentp"
                       onClick={handleSubmitAgentTmpt(onSubmitAgentTmpt)}
                       style={{ color: "white", backgroundColor: "brown" }}
                     >
@@ -16019,10 +16095,11 @@ const ContentLogic = (props) => {
             <IconButton
               edge="start"
               color="inherit"
+              id="closemodal"
               onClick={handleCloseCandidateModal}
               aria-label="close"
             >
-              <CloseIcon style={{ marginLeft: "10px", fontSize: "35px" }} />
+              <CloseIcon  style={{ marginLeft: "10px", fontSize: "35px" }} />
             </IconButton>
             {!editStatus ? modalTitle : `Edit Record - ${editId}`}
             {editStatus ? (

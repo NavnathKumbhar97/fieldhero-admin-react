@@ -451,6 +451,7 @@ export default function ContentDesign(props) {
                   </TableCell>
                   <TableCell align="left">
                    {checkCandidateVerificationArray.length? <Button
+                   id="editrecord"
                       style={{ color: "brown" }}
                       onClick={() => {
                         handleOpenCandidateModal();

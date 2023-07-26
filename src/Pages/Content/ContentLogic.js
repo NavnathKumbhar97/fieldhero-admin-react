@@ -123,6 +123,7 @@ import AdminUserLoginActivityDesign from "../AdminUserLoginActivity/AdminUserLog
 import { useScrollTrigger } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CallHostry from "../CallHistory/CallHistory";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -9650,6 +9651,7 @@ const ContentLogic = (props) => {
                     <IconButton aria-label="Edit">
                       {checkAdminBatchPriorityArrayArray.length ? (
                         <EditIcon
+                        id="editbtn"
                           onClick={() => {
                             setEditStatus(true);
                             setId(
@@ -12025,13 +12027,13 @@ const ContentLogic = (props) => {
                     display: "flex",
                     flexDirection: "column",
                     flexWrap: "nowrap",
-                    alignItems: "flex-end",
-                    justifyContent: "flex-end",
+                    // alignItems: "flex-end",
+                    // justifyContent: "flex-end",
                     // marginTop:'-150px',
                   }}
                 >
                   <h3>Call Centre History (0)</h3>
-                  <Card
+                  {/* <Card
                     style={{
                       backgroundColor: "#ffeaeb",
                       marginBottom: 2,
@@ -12068,7 +12070,8 @@ const ContentLogic = (props) => {
                         Consent Pending
                       </p>
                     </CardContent>
-                  </Card>
+                  </Card> */}
+                  <CallHostry callCenter={editId}/>
                 </ListItem>
               </ListItem>
               <ListItem
@@ -16410,6 +16413,7 @@ const ContentLogic = (props) => {
                     Batch no
                   </InputLabel>
                   <TextField
+                    id="batchNo"
                     select
                     fullWidth
                     value={batchNo.batchId}
@@ -16485,7 +16489,7 @@ const ContentLogic = (props) => {
                 </List>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseAddBtchprty}>Close</Button>
+                <Button id="closemodals" onClick={handleCloseAddBtchprty}>Close</Button>
                 <Button onClick={handleSubmitBatchPrty(onSubmitBatchPrty)}>
                   Save
                 </Button>

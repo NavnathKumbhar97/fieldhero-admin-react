@@ -170,6 +170,7 @@ const checkagentPricingTemplateArray = agentPricingTemplateArray.filter((data) =
       >
         <Toolbar style={{display:'flex'}}>
           <IconButton
+          id="opendrawer"
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}

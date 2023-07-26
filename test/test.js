@@ -62,10 +62,6 @@ describe("Testing form",()=> {
     // await page.click("#closemodal")
     // await page.waitForTimeout(5000);
     
-    // await page.type("#","This front end testing country")
-    // await page.type("#email2","test@gmail.com")
-    // await page.click('#lgnbtn') 
-
 
     //For the candidate verification module
     await page.click("#candidateUploadBtn")
@@ -75,6 +71,13 @@ describe("Testing form",()=> {
     await page.type("#candidateVerification","RAM JAYNESH")
     await page.waitForTimeout(4000)
     // await page.click("#assignbtn")
+    // await page.click("#editrecord")
+    // await page.waitForTimeout(6000)
+    // await page.select("#candidateConsent","Consent Pending")
+    // await page.select("#callStat","Call Back")
+
+    // await page.click("#closemodal")
+    // await page.waitForTimeout(5000);
 
 
     //For the agent master module
@@ -128,23 +131,30 @@ describe("Testing form",()=> {
     await page.waitForTimeout(5000);
     await page.type("#agentpri","Test 11")
     await page.waitForTimeout(4000)
-    // await page.click("#addagentpricing")
-    // await page.type("#tempName","Adding template Name")
-    // await page.type("#approval","Adding new Demo")
-    // await page.click("#saveagentp")
+    await page.click("#addagentpricing")
+    await page.type("#tempName","Adding temp")
+    await page.type("#approval","Adding new temp")
+    await page.click("#closemodal")
     await page.waitForTimeout(4000)
+    await page.click("#opendrawer")
     await page.click("#adminsection")
     await page.waitForTimeout(4000)
     await page.click("#admincandidate")
     await page.waitForTimeout(5000)
+    // await page.click("#pendingapproval")
+    // await page.waitForTimeout(5000)
+    // await page.click("#processed")
+    // await page.click("#processed")
     await page.click("#adminbatchpriority")
     await page.waitForTimeout(5000)
+    await page.click("#editbtn")
+    // await page.select("#batchNo","187")
+    // await page.click("#closemodals")
     await page.click("#adminotherindustry")
     await page.waitForTimeout(5000)
     await page.click("#adminuseractivity")
     await page.waitForTimeout(5000)
     await page.click("#adminuserlogin")
-
 
   
     await page.waitForTimeout(5000)

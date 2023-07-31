@@ -795,6 +795,7 @@ export default function ContentDesign(props) {
                         getCategoryById(tblData[item].id);
                         handleUpdateAuditDataOtherMCategory(tblData[item].id)
                       }}
+                      id="editrecord"
                     >
                       <Edit />
                       Edit

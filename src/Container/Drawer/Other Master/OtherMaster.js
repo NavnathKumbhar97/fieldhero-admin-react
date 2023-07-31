@@ -99,7 +99,7 @@ export default function OtherMaster() {
       checkOtherMasterCustomerArrayy.length || checkOtherMasterIndustryArrayy.length ||
       checkOtherMasterRoleArrayy.length || checkOtherMasterSkillsetArrayy.length ||
       checkOtherMasterSubscriptionArrayy.length || checkOtherMasterUserArrayy.length ?<ListItemButton onClick={handleClick}>
-      <ListItemIcon style={{ color: "white" }}>
+      <ListItemIcon style={{ color: "white" }} id='otherm'>
                 <ArrowDropDownCircleIcon />
               </ListItemIcon>
         <ListItemText  primary="Other Master"/>
@@ -111,25 +111,25 @@ export default function OtherMaster() {
           <ListItemButton sx={{ pl: 4 }} component={Link} to={'category'} id='categoryBtn'>
             <ListItemText primary="Category" />
           </ListItemButton>:""}
-         {checkOtherMasterCompanyArrayy.length? <ListItemButton sx={{ pl: 4 }} component={Link} to={'company'}>
+         {checkOtherMasterCompanyArrayy.length? <ListItemButton sx={{ pl: 4 }} component={Link} to={'company'} id='companyBtn'>
             <ListItemText primary="Company" />
           </ListItemButton>:""}
-          {checkOtherMasterCustomerArrayy.length?<ListItemButton sx={{ pl: 4 }}  component={Link} to={'customer'}>
+          {checkOtherMasterCustomerArrayy.length?<ListItemButton sx={{ pl: 4 }}  component={Link} to={'customer'} id='customerBtn'>
             <ListItemText primary="Customer"/>
           </ListItemButton>:""}
-          {checkOtherMasterIndustryArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'industry'}>
+          {checkOtherMasterIndustryArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'industry'} id='industryBtn'>
             <ListItemText primary="Industry" />
           </ListItemButton>:""}
-         {checkOtherMasterRoleArrayy.length? <ListItemButton sx={{ pl: 4 }} component={Link} to={'role'}>
+         {checkOtherMasterRoleArrayy.length? <ListItemButton sx={{ pl: 4 }} component={Link} to={'role'} id='roleBtn'>
             <ListItemText primary="Role" />
           </ListItemButton>:""}
-          {checkOtherMasterSkillsetArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'skillset'}>
+          {checkOtherMasterSkillsetArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'skillset'} id='skillsetBtn'>
             <ListItemText primary="Skill Set" />
           </ListItemButton>:""}
-          {checkOtherMasterSubscriptionArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'subscription'}>
+          {checkOtherMasterSubscriptionArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'subscription'} id='subscriptionBtn'>
             <ListItemText primary="Subscription" />
           </ListItemButton>:""}
-          {checkOtherMasterUserArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'user'}>
+          {checkOtherMasterUserArrayy.length?<ListItemButton sx={{ pl: 4 }} component={Link} to={'user'} id='userBtn'>
             <ListItemText primary="User" />
           </ListItemButton>:""}
         </List>

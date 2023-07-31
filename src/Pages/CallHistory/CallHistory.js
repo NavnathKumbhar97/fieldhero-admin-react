@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import { Backdrop, Button, CircularProgress, TablePagination } from '@mui/material';
 import handlers from '../../handlers';
 import generalHandlers from '../../handlers/generalHandlers';
+import moment from 'moment';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -69,7 +70,16 @@ export default function CallHostry(editid) {
         setPage(0);
       };
 
-  return (
+        // Calculate the starting index and ending index for the current page.
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+
+  // Slice the callHistoryData array based on the current page and rowsPerPage.
+  const paginatedData = callHistoryData.slice(startIndex, endIndex);
+
+  return (<>
+ 
+    <h3>Call Centre History ({callHistoryData.length})</h3>
     
     <TableContainer component={Paper}>
         <Backdrop
@@ -84,22 +94,22 @@ export default function CallHostry(editid) {
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell>Date and Time</TableCell>
-            <TableCell align="center">Call Status</TableCell>
-            <TableCell align="center">Consent</TableCell>
+            <TableCell align="left">Date and Time</TableCell>
+            <TableCell align="left">Call Status</TableCell>
+            <TableCell align="left">Consent</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {callHistoryData.map((row) => (
+          {paginatedData.map((row) => (
             <TableRow
               key={row.createdOn}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
-                {row.createdOn}
+              <TableCell align="left">
+                {moment(row.createdOn).format('DD/MM/YYYY')}
               </TableCell>
-              <TableCell align="center">{row.callStatus}</TableCell>
-              <TableCell align="center">{row.candidateConsent}</TableCell>
+              <TableCell align="left">{row.callStatus}</TableCell>
+              <TableCell align="left">{row.candidateConsent}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -114,5 +124,6 @@ export default function CallHostry(editid) {
         />
       </Table>
     </TableContainer>
+    </>
   );
 }

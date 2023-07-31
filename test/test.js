@@ -30,8 +30,8 @@ describe("Testing form",()=> {
     // await page.waitForResponse()
     // await page.goto("http://localhost:3000/candidate-master")
     
-    await page.click("#candidateMasterBtn");
-    await page.waitForTimeout(5000);
+    // await page.click("#candidateMasterBtn");
+    // await page.waitForTimeout(5000);
     // await page.type("#fullnamec","A Karthikeyan")
     // await page.type("#contactc","9591482467")
     // await page.type("#ids","22864")
@@ -64,16 +64,19 @@ describe("Testing form",()=> {
     
 
     //For the candidate verification module
-    await page.click("#candidateUploadBtn")
-    await page.waitForTimeout(5000);
+    // await page.click("#candidateUploadBtn")
+    // await page.waitForTimeout(5000);
     await page.click("#candidateVerificationBtn")
     await page.waitForTimeout(5000);
     await page.type("#candidateVerification","RAM JAYNESH")
     await page.waitForTimeout(4000)
     // await page.click("#assignbtn")
     // await page.click("#editrecord")
-    // await page.waitForTimeout(6000)
-    // await page.select("#candidateConsent","Consent Pending")
+    // await page.waitForTimeout(8000)
+    // await page.waitForSelector("#candidateConsent");
+    // await page.type("#candidateConsent","Consent Pending")
+  
+    // await page.type("#candidateConsent","Consent Pending")
     // await page.select("#callStat","Call Back")
 
     // await page.click("#closemodal")
@@ -155,8 +158,28 @@ describe("Testing form",()=> {
     await page.click("#adminuseractivity")
     await page.waitForTimeout(5000)
     await page.click("#adminuserlogin")
-
-  
+    await page.waitForTimeout(5000)
+    await page.click("#otherm")
+    await page.waitForTimeout(2000)
+    await page.click("#categoryBtn")
+    await page.waitForTimeout(5000)
+    await page.type("#searchCategory","BUSINESS DEVELOPMENT MANAGER")
+    await page.click("#editrecord")
+    await page.waitForTimeout(4000)
+    await page.click("#closemodal")
+    await page.click("#companyBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#customerBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#industryBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#roleBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#skillsetBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#subscriptionBtn")
+    await page.waitForTimeout(5000)
+    await page.click("#userBtn")
     await page.waitForTimeout(5000)
     await browser.close();
 

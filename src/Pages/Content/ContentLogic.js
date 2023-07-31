@@ -38,6 +38,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Chip,
   CircularProgress,
   Collapse,
   Dialog,
@@ -10082,7 +10083,7 @@ const ContentLogic = (props) => {
         return (
           <>
             <TextField
-              id="filled-basic"
+              id="searchCategory"
               label="Search Category Name"
               variant="filled"
               style={{
@@ -10290,6 +10291,8 @@ const ContentLogic = (props) => {
         console.error("There was an error!- deleteCandidateExperiance", error);
       });
   }
+
+  const [candidateIndustruId,setCandidateIndustryId] = useState()
 
   // its handle the module modal inputs based on routes
   const handleModalInput = () => {
@@ -12032,7 +12035,7 @@ const ContentLogic = (props) => {
                     // marginTop:'-150px',
                   }}
                 >
-                  <h3>Call Centre History (0)</h3>
+                  
                   {/* <Card
                     style={{
                       backgroundColor: "#ffeaeb",
@@ -12290,6 +12293,30 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Industry
                       </b>
+                      <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          sx={{
+                            width: "30ch",
+                            marginBottom: 3,
+                          }}
+                          options={Object.keys(industryData).map((option) => industryData[option].title)}
+                          // defaultValue={[Object.keys(categoryData).title]}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                            ))
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="filled"
+                              label="Industry"
+                              placeholder="Select multiple industries"
+                            />
+                          )}
+                        />
 
                       {inputFields.map((data, index) => {
                         const { fullName, emailAddress, salary } = data;
@@ -12451,7 +12478,49 @@ const ContentLogic = (props) => {
                       <b style={{ color: "red", marginBottom: "10px" }}>
                         Category
                       </b>
-                      {inputCategories.map((data, index) => {
+                      <Autocomplete
+                          multiple
+                          id="tags-filled"
+                          sx={{
+                            width: "30ch",
+                            marginBottom: 3,
+                          }}
+                          options={Object.keys(categoryData).map((option) => 
+                            categoryData[option].title
+                          )}
+                          // defaultValue={[Object.keys(categoryData).title]}
+                          freeSolo
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              console.log("value",option),
+                              <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                            ))
+                          }
+                          onChange={(e) => {
+                            // handleChangeFieldForCategory();
+                            {Object.keys(categoryData).map((option) =>( 
+                              setCandidateIndustryId(categoryData[option].id)
+                              ))}
+                            setUpdateCandidateVerificationData(
+                              {
+                                ...updateCandidateVerificationData,
+                                category: e.target.value,
+                              }
+                            );
+                            console.log("e.target",e.target.value);
+                            console.log("setCandidateIndustryId",candidateIndustruId);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="filled"
+                              label="Category"
+                              // value={item.categoryId}
+                              placeholder="Select multiple category"
+                            />
+                          )}
+                        />
+                      {/* {inputCategories.map((data, index) => {
                         return (
                           <div className="row my-3" key={index}>
                             <div className="col">
@@ -12567,8 +12636,8 @@ const ContentLogic = (props) => {
                             </div>
                           </div>
                         );
-                      })}
-                      <Button
+                      })} */}
+                      {/* <Button
                         disabled={
                           candidateConsentVal === "RECEIVED"
                             ? false
@@ -12583,7 +12652,7 @@ const ContentLogic = (props) => {
                         onClick={addInputFieldForCategory}
                       >
                         Add More
-                      </Button>
+                      </Button> */}
                     </ListItem>
                   </Card>
                   <ListItem

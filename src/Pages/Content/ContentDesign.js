@@ -16,6 +16,7 @@ import helpers from "../../helpers";
 
 export default function ContentDesign(props) {
   const { data } = props;
+  console.log("props",data);
 
   //State And Method Import from Content Login
   let {

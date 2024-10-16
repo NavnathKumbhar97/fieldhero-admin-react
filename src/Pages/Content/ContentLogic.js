@@ -776,17 +776,7 @@ const ContentLogic = (props) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
 
   //state for store the input fields value of category
-  const [categoryData, setCategoryData] = useState({
-    title: "",
-    description: "",
-    isActive: false,
-    CreatedBy: "",
-    ModifiedBy: "",
-    createdBy: 0,
-    createdOn: "",
-    modifiedBy: 0,
-    modifiedOn: "",
-  });
+  const [categoryData, setCategoryData] = useState([]);
   //state for handle audit
   const [categoryDataAudit, setCategoryDataAudit] = useState({
     title: "",
@@ -12496,19 +12486,18 @@ const ContentLogic = (props) => {
                               <Chip variant="outlined" label={option} {...getTagProps({ index })} />
                             ))
                           }
-                          onChange={(e) => {
+                          onChange={(e,value) => {
                             // handleChangeFieldForCategory();
-                            {Object.keys(categoryData).map((option) =>( 
-                              setCandidateIndustryId(categoryData[option].id)
-                              ))}
+                            const selectedUser = categoryData.find(user => user.title);
                             setUpdateCandidateVerificationData(
                               {
                                 ...updateCandidateVerificationData,
                                 category: e.target.value,
                               }
                             );
-                            console.log("e.target",e.target.value);
-                            console.log("setCandidateIndustryId",candidateIndustruId);
+                            console.log("value",value);
+                            console.log("selectedUser",selectedUser);
+                            console.log("categoryData",categoryData);
                           }}
                           renderInput={(params) => (
                             <TextField
